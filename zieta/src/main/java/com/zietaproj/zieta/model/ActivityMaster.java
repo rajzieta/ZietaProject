@@ -1,11 +1,14 @@
 package com.zietaproj.zieta.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+//import com.sun.istack.NotNull;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -23,10 +26,10 @@ public class ActivityMaster implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotNull
     private Long client_id;
 
-    @NotBlank
+    @NotNull
     private Long project_id;
     
     @NotBlank
@@ -36,7 +39,7 @@ public class ActivityMaster implements Serializable{
     private String activity_desc;
     
 	@NotBlank
-	private String CREATED_BY;
+	private String created_by;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -49,7 +52,7 @@ public class ActivityMaster implements Serializable{
     private Date modified_date;
 	
 	@NotBlank
-	private String MODIFIED_BY;
+	private String modified_by;
 	
 	private boolean IS_DELETE;
 
@@ -93,12 +96,12 @@ public class ActivityMaster implements Serializable{
 		this.activity_desc = activity_desc;
 	}
 
-	public String getCREATED_BY() {
-		return CREATED_BY;
+	public String getCreated_by() {
+		return created_by;
 	}
 
-	public void setCREATED_BY(String cREATED_BY) {
-		CREATED_BY = cREATED_BY;
+	public void setCreated_by(String created_by) {
+		this.created_by = created_by;
 	}
 
 	public Date getCreated_date() {
@@ -117,12 +120,12 @@ public class ActivityMaster implements Serializable{
 		this.modified_date = modified_date;
 	}
 
-	public String getMODIFIED_BY() {
-		return MODIFIED_BY;
+	public String getModified_by() {
+		return modified_by;
 	}
 
-	public void setMODIFIED_BY(String mODIFIED_BY) {
-		MODIFIED_BY = mODIFIED_BY;
+	public void setModified_by(String modified_by) {
+		this.modified_by = modified_by;
 	}
 
 	public boolean isIS_DELETE() {

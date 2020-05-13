@@ -1,6 +1,8 @@
 package com.zietaproj.zieta.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.sun.istack.NotNull;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -12,7 +14,7 @@ import java.util.Date;
 
 
 @Entity
-@Table(name = "TASK_MASTER")
+@Table(name = "TASK_TYPE_MASTER")
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
         allowGetters = true)
@@ -21,7 +23,7 @@ public class TaskMaster implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotNull
     private Long client_id;
 
     @NotBlank
@@ -37,8 +39,11 @@ public class TaskMaster implements Serializable {
     @LastModifiedDate
     private Date modified_date;
 	
-	@NotBlank
-	private String MODIFIED_BY;
+	@NotBlank(message="Modified_by may not be blank")
+	private String modified_by;
+	
+	@NotBlank(message="created_by may not be blank")
+	private String created_by;
 	
 	private boolean IS_DELETE;
 
@@ -82,12 +87,12 @@ public class TaskMaster implements Serializable {
 		this.modified_date = modified_date;
 	}
 
-	public String getMODIFIED_BY() {
-		return MODIFIED_BY;
+	public String getModified_by() {
+		return modified_by;
 	}
 
-	public void setMODIFIED_BY(String mODIFIED_BY) {
-		MODIFIED_BY = mODIFIED_BY;
+	public void setModified_by(String modified_by) {
+		this.modified_by = modified_by;
 	}
 
 	public boolean isIS_DELETE() {
@@ -96,6 +101,14 @@ public class TaskMaster implements Serializable {
 
 	public void setIS_DELETE(boolean iS_DELETE) {
 		IS_DELETE = iS_DELETE;
+	}
+
+	public String getCreated_by() {
+		return created_by;
+	}
+
+	public void setCreated_by(String created_by) {
+		this.created_by = created_by;
 	}
 
 	

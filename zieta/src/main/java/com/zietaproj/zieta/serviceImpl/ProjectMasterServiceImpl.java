@@ -28,8 +28,8 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 			projectMasterDTO.setId(projectMaster.getId());
 			projectMasterDTO.setProject_type(projectMaster.getProject_type());
 			projectMasterDTO.setClient_id(projectMaster.getClient_id());
-			projectMasterDTO.setCreated_by(projectMaster.getCREATED_BY());
-			projectMasterDTO.setModified_by(projectMaster.getMODIFIED_BY());
+			projectMasterDTO.setCreated_by(projectMaster.getCreated_by());
+			projectMasterDTO.setModified_by(projectMaster.getModified_by());
 			projectMasterDTOs.add(projectMasterDTO);
 		}
 		return projectMasterDTOs;

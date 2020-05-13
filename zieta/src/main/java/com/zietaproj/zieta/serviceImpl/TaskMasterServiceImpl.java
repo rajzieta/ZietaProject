@@ -27,6 +27,8 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 			taskMasterDTO.setId(taskMaster.getId());
 			taskMasterDTO.setTask_type(taskMaster.getTask_type());
 			taskMasterDTO.setClient_id(taskMaster.getClient_id());
+			taskMasterDTO.setModified_by(taskMaster.getModified_by());
+			taskMasterDTO.setCreated_by(taskMaster.getCreated_by());
 			taskMasterDTOs.add(taskMasterDTO);
 		}
 		return taskMasterDTOs;

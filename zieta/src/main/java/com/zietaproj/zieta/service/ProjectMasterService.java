@@ -11,5 +11,5 @@ public interface ProjectMasterService {
 
 	public List<ProjectMasterDTO> getAllProjects();
 
-	public void addProjectmaster(@Valid ProjectMaster projectmaster);
+	public void addProjectmaster(ProjectMaster projectmaster);
 }

@@ -17,6 +17,8 @@ public class TimeTypeDTO {
     private Long client_id;
     private String time_type;
     private boolean IS_DELETE;
+    private String modified_by;
+    
 	public Long getId() {
 		return id;
 	}
@@ -41,4 +43,11 @@ public class TimeTypeDTO {
 	public void setIS_DELETE(boolean iS_DELETE) {
 		IS_DELETE = iS_DELETE;
 	}
+	public String getModified_by() {
+		return modified_by;
+	}
+	public void setModified_by(String modified_by) {
+		this.modified_by = modified_by;
+	}
+	
 }

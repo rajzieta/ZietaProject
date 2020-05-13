@@ -36,7 +36,7 @@ public class StatusMaster implements Serializable{
 
 	    
 		@NotBlank
-		private String CREATED_BY;
+		private String created_by;
 
 	    @Column(nullable = false, updatable = false)
 	    @Temporal(TemporalType.TIMESTAMP)
@@ -49,7 +49,7 @@ public class StatusMaster implements Serializable{
 	    private Date modified_date;
 		
 		@NotBlank
-		private String MODIFIED_BY;
+		private String modified_by;
 		
 		private boolean IS_DELETE;
 
@@ -69,12 +69,12 @@ public class StatusMaster implements Serializable{
 			this.status = status;
 		}
 
-		public String getCREATED_BY() {
-			return CREATED_BY;
+		public String getCreated_by() {
+			return created_by;
 		}
 
-		public void setCREATED_BY(String cREATED_BY) {
-			CREATED_BY = cREATED_BY;
+		public void setCreated_by(String created_by) {
+			this.created_by = created_by;
 		}
 
 		public Date getCreated_date() {
@@ -93,12 +93,12 @@ public class StatusMaster implements Serializable{
 			this.modified_date = modified_date;
 		}
 
-		public String getMODIFIED_BY() {
-			return MODIFIED_BY;
+		public String getModified_by() {
+			return modified_by;
 		}
 
-		public void setMODIFIED_BY(String mODIFIED_BY) {
-			MODIFIED_BY = mODIFIED_BY;
+		public void setModified_by(String modified_by) {
+			this.modified_by = modified_by;
 		}
 
 		public boolean isIS_DELETE() {

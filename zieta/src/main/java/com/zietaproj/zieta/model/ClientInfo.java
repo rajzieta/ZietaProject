@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -38,7 +40,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 	    @NotBlank
 	    private String client_name;
 	    
-	    @NotBlank
+	    @NotNull
 	    private Long client_status;
 	    
 	    

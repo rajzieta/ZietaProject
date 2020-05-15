@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -30,7 +31,7 @@ public class TimeType implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotNull
     private Long client_id;
 
     @NotBlank
@@ -81,12 +82,12 @@ public class TimeType implements Serializable{
 		this.modified_date = modified_date;
 	}
 
-	public String getMODIFIED_BY() {
-		return MODIFIED_BY;
+	public String getModified_by() {
+		return modified_by;
 	}
 
-	public void setMODIFIED_BY(String mODIFIED_BY) {
-		MODIFIED_BY = mODIFIED_BY;
+	public void setModified_by(String modified_by) {
+		this.modified_by = modified_by;
 	}
 
 	public boolean isIS_DELETE() {
@@ -103,7 +104,7 @@ public class TimeType implements Serializable{
     private Date modified_date;
 	
 	@NotBlank
-	private String MODIFIED_BY;
+	private String modified_by;
 	
 	private boolean IS_DELETE;
 

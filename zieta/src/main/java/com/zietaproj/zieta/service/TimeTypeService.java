@@ -12,8 +12,7 @@ public interface TimeTypeService {
 
 	public List<TimeTypeDTO> getAllTimetypes();
 
-	public void addTimetypemaster(@Valid TimeType timetype);
+	public void addTimetypemaster(TimeType timetype);
 
-//	public TimeType save(@Valid TimeType timetype);
 
 }

@@ -5,10 +5,12 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,9 +40,11 @@ public class StatusMasterController {
 			return response;
 		}
 		
-		// Create a new Task
+		// Create a new Status
 		  
-		  @PostMapping("/addStatusmaster") 
+		 // @PostMapping("/addStatusmaster") 
+		@RequestMapping(value = "addStatusmaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+
 		  public void addStatusmaster(@Valid @RequestBody StatusMaster statusmaster) { 
 		   statusMasterService.addStatusmaster(statusmaster);
 		   }

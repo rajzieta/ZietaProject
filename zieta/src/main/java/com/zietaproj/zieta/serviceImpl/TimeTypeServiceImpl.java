@@ -39,25 +39,11 @@ public class TimeTypeServiceImpl implements TimeTypeService {
 			timetypeDTO.setId(timetype.getId());
 			timetypeDTO.setTime_type(timetype.getTime_type());
 			timetypeDTO.setClient_id(timetype.getClient_id());
+			timetypeDTO.setModified_by(timetype.getModified_by());
 		timetypeDTOs.add(timetypeDTO);
 		}
 		return timetypeDTOs;
 	}
-	/*
-	 * @Override public TimeType save(@Valid TimeType timetype) { // TODO
-	 * Auto-generated method stub return null; }
-	 */
-	/*
-	 * public void save() {
-	 * 
-	 * SimpleJdbcInsert insertActor = new SimpleJdbcInsert(jdbcTemplate);
-	 * insertActor.withTableName("TIME_TYPE_MASTER").usingColumns("id", "Client_id",
-	 * "time_type", "created_date", "modified_by", "modified_date", "is_delete");
-	 * 
-	 * BeanPropertySqlParameterSource param = new
-	 * BeanPropertySqlParameterSource(timetypeRepository);
-	 * insertActor.execute(param); }
-	 */
 	
 	
 	@Override

@@ -14,6 +14,8 @@ public class TaskMasterDTO {
 	private Long id;
     private Long client_id;
     private String task_type;
+    private String modified_by;
+    private String created_by;
     private boolean IS_DELETE;
 	public Long getId() {
 		return id;
@@ -40,5 +42,19 @@ public class TaskMasterDTO {
 	public void setIS_DELETE(boolean iS_DELETE) {
 		IS_DELETE = iS_DELETE;
 	}
+	public String getModified_by() {
+		return modified_by;
+	}
+	public void setModified_by(String modified_by) {
+		this.modified_by = modified_by;
+	}
+	public String getCreated_by() {
+		return created_by;
+	}
+	public void setCreated_by(String created_by) {
+		this.created_by = created_by;
+	}
+	
+	
 	
 }

@@ -32,8 +32,8 @@ public class ActivityMasterServiceImpl implements ActivityMasterService {
 			activityMasterDTO.setProject_id(activityMaster.getProject_id());
 			activityMasterDTO.setActivity_code(activityMaster.getActivity_code());
 			activityMasterDTO.setActivity_desc(activityMaster.getActivity_desc());
-			activityMasterDTO.setCreated_by(activityMaster.getCREATED_BY());
-			activityMasterDTO.setModified_by(activityMaster.getMODIFIED_BY());
+			activityMasterDTO.setCreated_by(activityMaster.getCreated_by());
+			activityMasterDTO.setModified_by(activityMaster.getModified_by());
 			activityMasterDTOs.add(activityMasterDTO);
 		}
 		return activityMasterDTOs;

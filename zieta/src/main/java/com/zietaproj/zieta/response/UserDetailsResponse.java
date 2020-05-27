@@ -17,7 +17,10 @@ public class UserDetailsResponse implements Serializable {
 	
 	private long clientId;
 	private String infoMessage;
-
+	private short status;
+	private String firstName;
+	private String userType;
+	private String userEmailId;
 	
 
 }

@@ -11,7 +11,7 @@
 	<groupId>com.zietaproj</groupId>
 	<artifactId>zieta</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>zieta</name>
 	<description>Zieta project using Spring Boot</description>
 

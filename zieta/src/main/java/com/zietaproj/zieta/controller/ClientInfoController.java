@@ -4,10 +4,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,8 +27,12 @@ public class ClientInfoController {
 	
 	@Autowired
 	ClientInfoService clientinfoService;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClientInfoController.class);
+	
+	
 	// Get All Tasks
-	@GetMapping("/getAllInfo")
+	@GetMapping("/getAllClients")
 	public String getAllInfo() {
 		String response="";
 		try {

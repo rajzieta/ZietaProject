@@ -32,9 +32,10 @@ public class UserInfo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	
+	@Column(name = "client_id")
 	@NotNull
-	private Long client_id;
+	private Long clientId;
 	
 	@NotBlank
 	private String user_fname;

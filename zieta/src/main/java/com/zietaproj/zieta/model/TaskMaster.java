@@ -28,6 +28,12 @@ public class TaskMaster implements Serializable {
 
     @NotBlank
     private String task_type;
+    
+    @NotBlank
+    private String client_code;
+    
+    @NotBlank
+    private String project_code;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -109,6 +115,22 @@ public class TaskMaster implements Serializable {
 
 	public void setCreated_by(String created_by) {
 		this.created_by = created_by;
+	}
+
+	public String getClient_code() {
+		return client_code;
+	}
+
+	public void setClient_code(String client_code) {
+		this.client_code = client_code;
+	}
+
+	public String getProject_code() {
+		return project_code;
+	}
+
+	public void setProject_code(String project_code) {
+		this.project_code = project_code;
 	}
 
 	

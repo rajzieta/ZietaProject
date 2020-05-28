@@ -7,14 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.zietaproj.zieta.model.AccessTypeMaster;
+import com.zietaproj.zieta.model.AccessControlConfig;
 
 @Repository
-public interface AccessTypeMasterRepository extends JpaRepository<AccessTypeMaster, Long> {
+public interface AccessControlConfigRepository extends JpaRepository<AccessControlConfig, Long> {
 	
-	
-	 @Query( "select o.accessType from AccessTypeMaster o where o.clientId= :clientId AND o.id in :accessIds" )
-	  List<String> findByClientIdANDAccessTypeId(@Param("clientId") Long clientId,
+	  @Query( "select o.screenId from AccessControlConfig o where o.clientId= :clientId AND o.accessTypeId in :accessIds" )
+	  List<Long> findByClientIdANDAccessTypeId(@Param("clientId") Long clientId,
 			  @Param("accessIds") List<Long> accessIdList);
 
 }

@@ -14,7 +14,6 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -23,51 +22,49 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 @Entity
-@Table(name = "ACCESS_TYPE_MASTER")
+@Table(name = "user_accesstype_mapping")
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
         allowGetters = true)
 @Data
-public class AccessTypeMaster {
+public class UserAccessType {
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
 	@Column(name = "CLIENT_ID")
 	@NotNull
 	private Long clientId;
 	
-
-    @NotBlank
-    private String client_code;
-    
-    @NotBlank
-    private String project_code;
-    
-    @NotBlank
-    @Column(name = "ACCESS_TYPE")
-    private String accessType;
-    
-	@NotBlank
+	@NotNull
+	@Column( name = "USER_ID")
+	private Long userId;
+	
+	@NotNull
+	@Column( name = "ACCESS_TYPE_ID")
+	private Long accessTypeId;
+	
+	@Column( name = "CREATED_BY")
 	private String created_by;
-
-    @Column(nullable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
-    private Date created_date;
-
-    @Column(nullable = false)
+	
+	
+	@Column(nullable = false, name = "CREATED_DATE" )
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
-    private Date modified_date;
+	private Date created_date;
 	
-	@NotBlank
+	@Column( name = "MODIFIED_BY")
 	private String modified_by;
 	
-	private boolean IS_DELETE;
+	@Column(nullable = false, name="MODIFIED_DATE")
+    @Temporal(TemporalType.TIMESTAMP)
+    @LastModifiedDate
+	private Date modified_date;
+	
+	@Column( name = "IS_DELETE")
+	private short is_delete;
+	
+	
 
-	
-	
-	
 }

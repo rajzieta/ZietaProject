@@ -42,4 +42,12 @@ public class ScreensMasterServiceImpl implements ScreensMasterService {
 	{
 		screensMasterRepository.save(screensmaster);
 	}
+	
+	
+	@Override
+	public List<ScreensMaster> getScreensByIds(List<Long> ids){
+		
+		return screensMasterRepository.findAllById(ids);
+		
+	}
 }

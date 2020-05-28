@@ -2,15 +2,22 @@ package com.zietaproj.zieta.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zietaproj.zieta.dto.UserInfoDTO;
+import com.zietaproj.zieta.model.ScreensMaster;
+import com.zietaproj.zieta.model.UserAccessType;
 import com.zietaproj.zieta.model.UserInfo;
+import com.zietaproj.zieta.repository.AccessControlConfigRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.response.LoginResponse;
 import com.zietaproj.zieta.response.UserDetailsResponse;
+import com.zietaproj.zieta.service.AccessTypeMasterService;
+import com.zietaproj.zieta.service.ScreensMasterService;
+import com.zietaproj.zieta.service.UserAccessTypeService;
 import com.zietaproj.zieta.service.UserInfoService;
 
 
@@ -20,6 +27,18 @@ public class UserInfoServiceImpl implements UserInfoService {
 
 	@Autowired
 	UserInfoRepository userInfoRepositoryRepository;
+	
+	@Autowired
+	AccessControlConfigRepository accessControlConfigRepository;
+	
+	@Autowired
+	UserAccessTypeService userAccessTypeService;
+	
+	@Autowired
+	ScreensMasterService screensMasterService;
+	
+	@Autowired
+	AccessTypeMasterService accessTypeMasterService;
 	
 	@Override
 	public List<UserInfoDTO> getAllUserInfoDetails() {
@@ -58,7 +77,20 @@ public class UserInfoServiceImpl implements UserInfoService {
 	public UserDetailsResponse getUserData(String emailId) {
 		UserInfo userInfo = userInfoRepositoryRepository.findByEmail(emailId);
 		
-		return fillUserData(userInfo);
+		List<UserAccessType> userAccessTypeList = userAccessTypeService.
+				findByClientIdAndUserId(userInfo.getClientId(), userInfo.getId());
+		List<Long> accessIdList = userAccessTypeList.stream().map(UserAccessType::getAccessTypeId)
+										.collect(Collectors.toList());
+				
+		 List<Long> accessControlConfigList = accessControlConfigRepository.
+				 findByClientIdANDAccessTypeId(userInfo.getClientId(), accessIdList);
+		 List<ScreensMaster> screensListByClientId = screensMasterService.getScreensByIds(accessControlConfigList);
+		 List<String> accessTypes = accessTypeMasterService.findByClientIdANDAccessTypeId(userInfo.getClientId(), accessIdList);
+		 UserDetailsResponse userDetails = fillUserData(userInfo);
+		 userDetails.setScreensByClient(screensListByClientId);
+		 userDetails.setAccessTypesByClient(accessTypes);
+		
+		return userDetails;
 	}
 
 	
@@ -69,6 +101,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 		userDetailsResponse.setFirstName(userInfo.getUser_fname());
 		userDetailsResponse.setUserEmailId(userInfo.getEmail());
 		userDetailsResponse.setStatus(userInfo.getIs_active());
+		userDetailsResponse.setUserId(userInfo.getId());
 		userDetailsResponse.setInfoMessage("User details after successful login");
 		
 		return userDetailsResponse;

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zietaproj.zieta.model.TimeTypesByClient;
+import com.zietaproj.zieta.response.TimeTypesByClientResponse;
 import com.zietaproj.zieta.service.TimetypesByClientService;
 
 
@@ -25,12 +25,12 @@ public class GetTimeTypesByclient {
 	
 	//get all tasks by user
 	@GetMapping("/getAllTimeTypesByClient/{client_id}")
-	 public ResponseEntity<List<String>> getAllTimeTypesByClient(@PathVariable Long client_id) {
+	 public ResponseEntity<List<TimeTypesByClientResponse>> getAllTimeTypesByClient(@PathVariable Long client_id) {
 		try {
-	        List<String> timeTypesByClientList = timetypesbyclientservice.getAllTimeTypesByClient(client_id);
-	         return new ResponseEntity<List<String>>(timeTypesByClientList, HttpStatus.OK);
+	        List<TimeTypesByClientResponse> timeTypesByClientList = timetypesbyclientservice.getAllTimeTypesByClient(client_id);
+	         return new ResponseEntity<List<TimeTypesByClientResponse>>(timeTypesByClientList, HttpStatus.OK);
 	     } catch (NoSuchElementException e) {
-	         return new ResponseEntity<List<String>>(HttpStatus.NOT_FOUND);
+	         return new ResponseEntity<List<TimeTypesByClientResponse>>(HttpStatus.NOT_FOUND);
 	     }        
 }
 }

@@ -1,5 +1,6 @@
 package com.zietaproj.zieta.model;
 
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -25,51 +26,55 @@ import lombok.Data;
 
 
 @Entity
-@Table(name = "TASK_USER_MAPPING")
+@Table(name = "project_info")
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
         allowGetters = true)
 @Data
-public class TasksByUser implements Serializable {
+public class ProjectInfo implements Serializable {
 
+	    @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Long id;
 
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotNull
-    private Long client_id;
-
-    @NotNull
-    private Long project_id;
-    
-    @NotNull
-    private Long task_id;
-    
-
-    @NotNull
-    @Column(name= "user_id")
-    private Long userId;
+	    @NotNull
+	    private Long client_id;
 	
-    @NotBlank
-	private String created_by;
+	    @NotBlank
+	    private String project_code;
+	    
+	    @NotBlank
+	    private String project_name;
+	    
+	    @NotBlank
+	    private Long project_type;
+	    
+	    @NotBlank
+	    private Long project_orgnode;
+	    
+	    @NotBlank
+	    private Long project_status;
+	    
+		@NotBlank
+		private String created_by;
 
-    @Column(nullable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
-    private Date created_date;
+	    @Column(nullable = false, updatable = false)
+	    @Temporal(TemporalType.TIMESTAMP)
+	    @CreatedDate
+	    private Date created_date;
 
-    @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
-    private Date modified_date;
-	
-	@NotBlank
-	private String modified_by;
-	
-	private boolean IS_DELETE;
+	    @Column(nullable = false)
+	    @Temporal(TemporalType.TIMESTAMP)
+	    @LastModifiedDate
+	    private Date modified_date;
+		
+		@NotBlank
+		private String modified_by;
+		
+		private boolean IS_DELETE;
 
-	
+		
+		
 	
 	
 }

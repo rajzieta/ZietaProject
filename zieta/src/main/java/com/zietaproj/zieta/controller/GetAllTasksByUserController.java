@@ -1,5 +1,6 @@
 package com.zietaproj.zieta.controller;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zietaproj.zieta.model.TasksByUser;
+import com.zietaproj.zieta.response.TasksByUserModel;
 import com.zietaproj.zieta.service.TasksByUserService;
 
 
@@ -24,12 +26,12 @@ public class GetAllTasksByUserController {
 	
 	//get all tasks by user
 	@GetMapping("/getAllTasksByUser/{user_id}")
-	 public ResponseEntity<TasksByUser> getAllTasksByUser(@PathVariable Long user_id) {
+	 public ResponseEntity<List<TasksByUserModel>> getAllTasksByUser(@PathVariable Long user_id) {
 		try {
-	        TasksByUser tasksbyuser = tasksbyuserservice.getAllTasksByUser(user_id);
-	         return new ResponseEntity<TasksByUser>(tasksbyuser, HttpStatus.OK);
+			List<TasksByUserModel> tasksByUserModelList = tasksbyuserservice.findProjectTasksByUser(user_id);
+	         return new ResponseEntity<List<TasksByUserModel>>(tasksByUserModelList, HttpStatus.OK);
 	     } catch (NoSuchElementException e) {
-	         return new ResponseEntity<TasksByUser>(HttpStatus.NOT_FOUND);
+	         return new ResponseEntity<List<TasksByUserModel>>(HttpStatus.NOT_FOUND);
 	     }        
 }
 	

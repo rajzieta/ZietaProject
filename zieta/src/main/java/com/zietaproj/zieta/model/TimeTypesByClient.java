@@ -14,28 +14,29 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.Data;
+
 @Entity
 @Table(name = "TIME_TYPE_MASTER")
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
         allowGetters = true)
-public class TimeTypesbyClient {
-	//@Id
-   // @GeneratedValue(strategy = GenerationType.IDENTITY)
- //   private Long id;
+@Data
+public class TimeTypesByClient {
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 	
 	//@Primary
-	@Id
 	@NotNull
 	@Column(name="client_id")
-    private Long client_id;
+    private Long clientId;
 
     @NotNull
     private String time_type;
@@ -58,61 +59,6 @@ public class TimeTypesbyClient {
 	
 	private boolean IS_DELETE;
 
-	public Long getClient_id() {
-		return client_id;
-	}
-
-	public void setClient_id(Long client_id) {
-		this.client_id = client_id;
-	}
-
-	public String getTime_type() {
-		return time_type;
-	}
-
-	public void setTime_type(String time_type) {
-		this.time_type = time_type;
-	}
-
-	public String getCreated_by() {
-		return created_by;
-	}
-
-	public void setCreated_by(String created_by) {
-		this.created_by = created_by;
-	}
-
-	public Date getCreated_date() {
-		return created_date;
-	}
-
-	public void setCreated_date(Date created_date) {
-		this.created_date = created_date;
-	}
-
-	public Date getModified_date() {
-		return modified_date;
-	}
-
-	public void setModified_date(Date modified_date) {
-		this.modified_date = modified_date;
-	}
-
-	public String getModified_by() {
-		return modified_by;
-	}
-
-	public void setModified_by(String modified_by) {
-		this.modified_by = modified_by;
-	}
-
-	public boolean isIS_DELETE() {
-		return IS_DELETE;
-	}
-
-	public void setIS_DELETE(boolean iS_DELETE) {
-		IS_DELETE = iS_DELETE;
-	}
 	
 	
 }

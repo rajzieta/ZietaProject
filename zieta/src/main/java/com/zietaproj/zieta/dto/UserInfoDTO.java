@@ -10,12 +10,12 @@ import lombok.Setter;
 @Setter
 public class UserInfoDTO {
 
-	private Long id;
-	private Long client_id;
+    private Long id;
+	private Long clientId;
 	private String user_fname;
 	private String user_mname;
 	private String user_lname;
-	private String email_id;
+	private String email;
 	private String phone_no;
 	private short is_active;
 	private String created_by;

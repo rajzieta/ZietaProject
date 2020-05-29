@@ -1,9 +1,11 @@
 package com.zietaproj.zieta.service;
 
 
-import com.zietaproj.zieta.model.TimeTypesbyClient;
+import java.util.List;
+
+import com.zietaproj.zieta.model.TimeTypesByClient;
 
 public interface TimetypesByClientService {
 
-	public TimeTypesbyClient getAllTimeTypesByClient(Long client_id);
+	public List<String> getAllTimeTypesByClient(Long client_id);
 }

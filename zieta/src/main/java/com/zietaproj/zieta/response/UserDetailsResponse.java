@@ -1,6 +1,9 @@
 package com.zietaproj.zieta.response;
 
 import java.io.Serializable;
+import java.util.List;
+
+import com.zietaproj.zieta.model.ScreensMaster;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,8 +22,11 @@ public class UserDetailsResponse implements Serializable {
 	private String infoMessage;
 	private short status;
 	private String firstName;
-	private String userType;
 	private String userEmailId;
+	private long userId;
+	
+	private List<ScreensMaster> screensByClient;
+	private List<String> accessTypesByClient;
 	
 
 }

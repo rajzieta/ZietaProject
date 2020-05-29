@@ -10,4 +10,6 @@ public interface ScreensMasterService {
 	public List<ScreensMasterDTO> getAllScreens();
 
 	public void addScreensmaster(ScreensMaster screensmaster);
+	
+	public List<ScreensMaster> getScreensByIds(List<Long> ids);
 }

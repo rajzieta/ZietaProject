@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zietaproj.zieta.dto.UserInfoDTO;
+import com.zietaproj.zieta.model.UserAccessType;
 import com.zietaproj.zieta.request.LoginRequest;
 import com.zietaproj.zieta.response.LoginResponse;
 import com.zietaproj.zieta.response.UserDetailsResponse;
+import com.zietaproj.zieta.service.UserAccessTypeService;
 import com.zietaproj.zieta.service.UserInfoService;
 
 @RestController
@@ -24,6 +26,9 @@ public class LoginController {
 
 	@Autowired
 	UserInfoService userInfoService;
+	
+	@Autowired
+	UserAccessTypeService userAccessTypeService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
@@ -50,8 +55,9 @@ public class LoginController {
 
 	@PostMapping("/getUserData")
 	public UserDetailsResponse doAuthorize(@RequestBody String userEmailId) {
-
-		return userInfoService.getUserData(userEmailId);
+		UserDetailsResponse userDetails = userInfoService.getUserData(userEmailId);
+		
+		return userDetails;
 
 	}
 

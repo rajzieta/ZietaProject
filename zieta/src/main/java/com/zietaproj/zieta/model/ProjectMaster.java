@@ -14,7 +14,7 @@ import java.util.Date;
 
 
 @Entity
-@Table(name = "PROJECT_MASTER")
+@Table(name = "PROJECT_TYPE_MASTER")
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
         allowGetters = true)
@@ -27,9 +27,15 @@ public class ProjectMaster implements Serializable {
 
 	    @NotNull
 	    private Long client_id;
+	
+	    @NotBlank
+	    private String client_code;
 
 	    @NotBlank
 	    private String project_type;
+	    
+	    @NotBlank
+	    private String project_code;
 	    
 		@NotBlank
 		private String created_by;
@@ -111,6 +117,26 @@ public class ProjectMaster implements Serializable {
 
 		public void setIS_DELETE(boolean iS_DELETE) {
 			IS_DELETE = iS_DELETE;
+		}
+
+		public String getClient_code() {
+			return client_code;
+		}
+
+		public void setClient_code(String client_code) {
+			this.client_code = client_code;
+		}
+
+		public String getProject_code() {
+			return project_code;
+		}
+
+		public void setProject_code(String project_code) {
+			this.project_code = project_code;
+		}
+
+		public void setCreated_by(String created_by) {
+			this.created_by = created_by;
 		}
 		
 		

@@ -29,11 +29,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
         allowGetters = true)
 public class TasksByUser implements Serializable {
 
+
 	//@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    
     @NotNull
     private Long client_id;
 
@@ -43,6 +43,7 @@ public class TasksByUser implements Serializable {
     @NotNull
     private Long task_id;
     
+
     @Id
     @NotNull
     private Long user_id;

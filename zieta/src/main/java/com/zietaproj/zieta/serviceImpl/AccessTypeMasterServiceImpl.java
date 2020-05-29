@@ -27,8 +27,8 @@ public class AccessTypeMasterServiceImpl implements AccessTypeMasterService {
 		for (AccessTypeMaster accesstypeMaster : accesstypeMasters) {
 			accessTypeMasterDTO = new AccessTypeMasterDTO();
 			accessTypeMasterDTO.setId(accesstypeMaster.getId());
-			accessTypeMasterDTO.setClient_id(accesstypeMaster.getClient_id());
-			accessTypeMasterDTO.setAccess_type(accesstypeMaster.getAccess_type());
+			accessTypeMasterDTO.setClient_id(accesstypeMaster.getClientId());
+			accessTypeMasterDTO.setAccess_type(accesstypeMaster.getAccessType());
 			accessTypeMasterDTO.setCreated_by(accesstypeMaster.getCreated_by());
 			accessTypeMasterDTO.setModified_by(accesstypeMaster.getModified_by());
 			accessTypeMasterDTOs.add(accessTypeMasterDTO);
@@ -40,6 +40,11 @@ public class AccessTypeMasterServiceImpl implements AccessTypeMasterService {
 	public void addAccessTypemaster(AccessTypeMaster accesstypemaster)
 	{
 		accesstypeMasterRepository.save(accesstypemaster);
+	}
+
+	@Override
+	public List<String> findByClientIdANDAccessTypeId(Long clientId, List<Long> accessIdList) {
+		return accesstypeMasterRepository.findByClientIdANDAccessTypeId(clientId, accessIdList);
 	}
 	
 

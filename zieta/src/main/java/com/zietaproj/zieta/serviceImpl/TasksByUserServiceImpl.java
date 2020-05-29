@@ -18,8 +18,11 @@ public class TasksByUserServiceImpl implements TasksByUserService {
 	TasksByUserRepository tasksbyuserRepository;
 
 	@Override
-public TasksByUser getAllTasksByUser(Long user_id) {
+
+	public TasksByUser getAllTasksByUser(Long user_id) {
+
 	   return tasksbyuserRepository.findById(user_id).get();
-	    }
+
+	 }
 
 }

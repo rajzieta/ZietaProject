@@ -1,6 +1,5 @@
 package com.zietaproj.zieta.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -15,38 +14,31 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
 @Entity
-@Table(name = "TASK_USER_MAPPING")
+@Table(name = "TIME_TYPE_MASTER")
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
         allowGetters = true)
-public class TasksByUser implements Serializable {
-
-
+public class TimeTypesbyClient {
 	//@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotNull
+   // @GeneratedValue(strategy = GenerationType.IDENTITY)
+ //   private Long id;
+	
+	//@Primary
+	@Id
+	@NotNull
+	@Column(name="client_id")
     private Long client_id;
 
     @NotNull
-    private Long project_id;
-    
-    @NotNull
-    private Long task_id;
-    
-
-    @Id
-    @NotNull
-    private Long user_id;
+    private String time_type;
 	
     @NotBlank
 	private String created_by;
@@ -66,14 +58,6 @@ public class TasksByUser implements Serializable {
 	
 	private boolean IS_DELETE;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public Long getClient_id() {
 		return client_id;
 	}
@@ -82,28 +66,12 @@ public class TasksByUser implements Serializable {
 		this.client_id = client_id;
 	}
 
-	public Long getProject_id() {
-		return project_id;
+	public String getTime_type() {
+		return time_type;
 	}
 
-	public void setProject_id(Long project_id) {
-		this.project_id = project_id;
-	}
-
-	public Long getTask_id() {
-		return task_id;
-	}
-
-	public void setTask_id(Long task_id) {
-		this.task_id = task_id;
-	}
-
-	public Long getUser_id() {
-		return user_id;
-	}
-
-	public void setUser_id(Long user_id) {
-		this.user_id = user_id;
+	public void setTime_type(String time_type) {
+		this.time_type = time_type;
 	}
 
 	public String getCreated_by() {

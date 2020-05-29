@@ -10,27 +10,26 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zietaproj.zieta.model.TasksByUser;
-import com.zietaproj.zieta.service.TasksByUserService;
+import com.zietaproj.zieta.model.TimeTypesbyClient;
+import com.zietaproj.zieta.service.TimetypesByClientService;
 
 
 
 @RestController
 @RequestMapping("/api")
-public class GetAllTasksByUserController {
+public class GetTimetypesbyclient {
 
 	@Autowired
-	TasksByUserService tasksbyuserservice;
+	TimetypesByClientService timetypesbyclientservice;
 	
 	//get all tasks by user
-	@GetMapping("/getAllTasksByUser/{user_id}")
-	 public ResponseEntity<TasksByUser> getAllTasksByUser(@PathVariable Long user_id) {
+	@GetMapping("/getAllTimeTypesByClient/{client_id}")
+	 public ResponseEntity<TimeTypesbyClient> getAllTimeTypesByClient(@PathVariable Long client_id) {
 		try {
-	        TasksByUser tasksbyuser = tasksbyuserservice.getAllTasksByUser(user_id);
-	         return new ResponseEntity<TasksByUser>(tasksbyuser, HttpStatus.OK);
+	        TimeTypesbyClient timetypesbyclient = timetypesbyclientservice.getAllTimeTypesByClient(client_id);
+	         return new ResponseEntity<TimeTypesbyClient>(timetypesbyclient, HttpStatus.OK);
 	     } catch (NoSuchElementException e) {
-	         return new ResponseEntity<TasksByUser>(HttpStatus.NOT_FOUND);
+	         return new ResponseEntity<TimeTypesbyClient>(HttpStatus.NOT_FOUND);
 	     }        
 }
-	
 }

@@ -1,11 +1,13 @@
 package com.zietaproj.zieta.service;
 
-import com.zietaproj.zieta.model.TasksByUser;
+import java.util.List;
+
+import com.zietaproj.zieta.response.TasksByUserModel;
 
 
 public interface TasksByUserService {
 
 
-	public TasksByUser getAllTasksByUser(Long user_id);
+	List<TasksByUserModel> findProjectTasksByUser(Long userId);
 
 }

@@ -3,6 +3,7 @@ package com.zietaproj.zieta.serviceImpl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,9 @@ public class TimeTypesByClientServiceImpl implements TimetypesByClientService {
 
 	@Autowired
 	TimeTypesByClientRepo timetypesbyclientRepo;
-
+	
+	@Autowired
+	ModelMapper modelMapper;
 	@Override
 	public List<TimeTypesByClientResponse> getAllTimeTypesByClient(Long client_id) {
 
@@ -26,9 +29,8 @@ public class TimeTypesByClientServiceImpl implements TimetypesByClientService {
 		List<TimeTypesByClientResponse> timeTypesByClientResponseList = new ArrayList<>();
 		TimeTypesByClientResponse timeTypesByClientResponse = null;
 		for (TimeTypesByClient timeTypesByClient : timeTypesByClientList) {
-			timeTypesByClientResponse = new TimeTypesByClientResponse();
-			timeTypesByClientResponse.setId(timeTypesByClient.getId());
-			timeTypesByClientResponse.setTime_type(timeTypesByClient.getTime_type());
+			timeTypesByClientResponse = modelMapper.map(timeTypesByClient, 
+					TimeTypesByClientResponse.class);
 			timeTypesByClientResponseList.add(timeTypesByClientResponse);
 		}
 

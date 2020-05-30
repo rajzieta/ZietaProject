@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.zietaproj.zieta.model.ProjectMaster;
-import com.zietaproj.zieta.model.TaskMaster;
+import com.zietaproj.zieta.model.ProjectInfo;
+import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.TasksByUser;
-import com.zietaproj.zieta.repository.ProjectMasterRepository;
-import com.zietaproj.zieta.repository.TaskMasterRepository;
+import com.zietaproj.zieta.repository.ProjectInfoRepository;
+import com.zietaproj.zieta.repository.TaskInfoRepository;
 import com.zietaproj.zieta.repository.TasksByUserRepository;
 import com.zietaproj.zieta.response.TasksByUserModel;
 import com.zietaproj.zieta.service.TasksByUserService;
@@ -24,10 +24,10 @@ public class TasksByUserServiceImpl implements TasksByUserService {
 	TasksByUserRepository tasksbyuserRepository;
 
 	@Autowired
-	ProjectMasterRepository projectMasterRepository;
+	ProjectInfoRepository projectInfoRepository;
 
 	@Autowired
-	TaskMasterRepository taskMasterRepository;
+	TaskInfoRepository taskInfoRepository;
 
 	@Override
 	public List<TasksByUserModel> findProjectTasksByUser(Long userId) {
@@ -39,13 +39,13 @@ public class TasksByUserServiceImpl implements TasksByUserService {
 			tasksByUserModel = new TasksByUserModel();
 			long projectId = tasksByUser.getProject_id();
 			long taskId = tasksByUser.getTask_id();
-			TaskMaster taskMaster = taskMasterRepository.findById(taskId).get();
-			String taskType = taskMaster.getTask_type();
-			ProjectMaster projectMaster = projectMasterRepository.findById(projectId).get();
-			String projectType = projectMaster.getProject_type();
-			tasksByUserModel.setId(projectId);
-			tasksByUserModel.setProject_type(projectType);
-			tasksByUserModel.setTask_type(taskType);
+			TaskInfo taskInfo = taskInfoRepository.findById(taskId).get();
+			String taskName = taskInfo.getTask_name();
+			ProjectInfo projectInfo = projectInfoRepository.findById(projectId).get();
+			String projectName = projectInfo.getProject_name();
+			tasksByUserModel.setProjectId(projectId);
+			tasksByUserModel.setProject_name(projectName);
+			tasksByUserModel.setTask_name(taskName);
 			tasksByUserModelList.add(tasksByUserModel);
 		}
 

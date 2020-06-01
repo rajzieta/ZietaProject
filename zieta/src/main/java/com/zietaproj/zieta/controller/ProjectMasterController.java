@@ -22,6 +22,8 @@ import com.zietaproj.zieta.model.ProjectMaster;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
 import com.zietaproj.zieta.service.ProjectMasterService;
 
+import io.swagger.annotations.ApiOperation;
+
 
 @RestController
 @RequestMapping("/api")
@@ -52,7 +54,8 @@ public class ProjectMasterController {
 	   projectmasterService.addProjectmaster(projectmaster);
 	   }	
 	
-	
+	@ApiOperation(value = "List projects based on the  userId",notes="Table reference: project_user_mapping,"
+			+ " org_info, user_info, cust_info, client_info")
 	@PostMapping("/getAllProjectsByUser")
 	public ResponseEntity<List<ProjectDetailsByUserModel>> getAllProjectsByUser(@RequestBody Long userId) {
 		try {

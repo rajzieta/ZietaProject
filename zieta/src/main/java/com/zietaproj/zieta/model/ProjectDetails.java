@@ -1,5 +1,6 @@
 package com.zietaproj.zieta.model;
 
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -11,7 +12,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -27,47 +27,53 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
 
+
 @Entity
-@Table(name = "client_info")
+@Table(name = "project_details")
 @EntityListeners(AuditingEntityListener.class)
-
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
+        allowGetters = true)
 @Data
-public class ClientInfo implements Serializable {
+public class ProjectDetails implements Serializable {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	    @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Long id;
 
-	@NotBlank
-	private String client_code;
+	    @NotNull
+	    private Long client_id;
+	
+	    @NotBlank
+	    @Column(name = "projectId")
+	    private Long project_id;
 
-	@NotBlank
-	private String client_name;
+	    @NotBlank
+	    private Long project_manager;
+	    
+	    @NotBlank
+	    private short allow_unplanned;
+	    
+	    @NotNull
+	    private Long cust_id;
+	    
+		@NotBlank
+		private String created_by;
 
-	@NotNull
-	private Long client_status;
+	    @Column(nullable = false, updatable = false)
+	    @Temporal(TemporalType.TIMESTAMP)
+	    @CreatedDate
+	    private Date created_date;
 
-	@NotBlank
-	private String created_by;
-
-	@Column(nullable = false, updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	@CreatedDate
-	private Date created_date;
-
-	@Column(nullable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	@LastModifiedDate
-	private Date modified_date;
-
-	@NotBlank
-	private String modified_by;
-
-	private boolean IS_DELETE;
-
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "id")
-	private CustInfo custInfo;
-
+	    @Column(nullable = false)
+	    @Temporal(TemporalType.TIMESTAMP)
+	    @LastModifiedDate
+	    private Date modified_date;
+		
+		@NotBlank
+		private String modified_by;
+		
+		private boolean IS_DELETE;
+		
+		
+	
 }

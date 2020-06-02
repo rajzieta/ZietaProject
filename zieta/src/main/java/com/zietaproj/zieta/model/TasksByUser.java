@@ -38,7 +38,8 @@ public class TasksByUser implements Serializable {
     private Long id;
 
     @NotNull
-    private Long client_id;
+    @Column(name= "client_id")
+    private Long clientId;
 
     @NotNull
     private Long project_id;
@@ -50,6 +51,12 @@ public class TasksByUser implements Serializable {
     @NotNull
     @Column(name= "user_id")
     private Long userId;
+    
+    @NotBlank
+	private String project_code;
+    
+    @NotBlank
+	private String task_code;
 	
     @NotBlank
 	private String created_by;

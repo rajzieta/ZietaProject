@@ -4,10 +4,8 @@ import java.util.List;
 
 import com.zietaproj.zieta.response.TasksByUserModel;
 
-
 public interface TasksByUserService {
 
-
-	List<TasksByUserModel> findProjectTasksByUser(Long userId);
+	List<TasksByUserModel> findByClientIdAndUserId(Long clientId, Long userId);
 
 }

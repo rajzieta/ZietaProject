@@ -47,8 +47,13 @@ public class ClientInfo implements Serializable {
 
 	@NotNull
 	private Long client_status;
-
+	
+	
 	@NotBlank
+	private String client_comments;
+
+
+//	@NotBlank
 	private String created_by;
 
 	@Column(nullable = false, updatable = false)
@@ -61,13 +66,10 @@ public class ClientInfo implements Serializable {
 	@LastModifiedDate
 	private Date modified_date;
 
-	@NotBlank
+//	@NotBlank
 	private String modified_by;
 
 	private boolean IS_DELETE;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "id")
-	private CustInfo custInfo;
 
 }

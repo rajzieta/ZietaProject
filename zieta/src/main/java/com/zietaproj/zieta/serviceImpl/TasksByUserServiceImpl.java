@@ -29,11 +29,14 @@ public class TasksByUserServiceImpl implements TasksByUserService {
 	@Autowired
 	TaskInfoRepository taskInfoRepository;
 
+
 	@Override
-	public List<TasksByUserModel> findProjectTasksByUser(Long userId) {
+	public List<TasksByUserModel> findByClientIdAndUserId(Long clientId, Long userId) {
+
+		
 		List<TasksByUserModel> tasksByUserModelList = new ArrayList<>();
 
-		List<TasksByUser> tasksByUserList = tasksbyuserRepository.findByUserId(userId);
+		List<TasksByUser> tasksByUserList = tasksbyuserRepository.findByClientIdAndUserId(clientId, userId);
 		TasksByUserModel tasksByUserModel = null;
 		for (TasksByUser tasksByUser : tasksByUserList) {
 			tasksByUserModel = new TasksByUserModel();
@@ -46,11 +49,16 @@ public class TasksByUserServiceImpl implements TasksByUserService {
 			tasksByUserModel.setProjectId(projectId);
 			tasksByUserModel.setProject_name(projectName);
 			tasksByUserModel.setTask_name(taskName);
+			tasksByUserModel.setProject_code(tasksByUser.getProject_code());
+			tasksByUserModel.setTask_code(tasksByUser.getTask_code());
 			tasksByUserModelList.add(tasksByUserModel);
 		}
 
 		return tasksByUserModelList;
-
+	
 	}
+	
+
+	
 
 }

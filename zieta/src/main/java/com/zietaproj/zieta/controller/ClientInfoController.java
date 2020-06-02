@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zietaproj.zieta.dto.ClientInfoDTO;
-import com.zietaproj.zieta.model.ClientInfo;
+import com.zietaproj.zieta.request.ClientInfoRequest;
 import com.zietaproj.zieta.service.ClientInfoService;
 
 
@@ -36,7 +36,7 @@ public class ClientInfoController {
 	public String getAllInfo() {
 		String response="";
 		try {
-			List<ClientInfoDTO> clientinfos= clientinfoService.getAllInfo();
+			List<ClientInfoDTO> clientinfos= clientinfoService.getAllClients();
 			System.out.println("ClienInfo size=>"+clientinfos.size());
 			ObjectMapper mapper = new ObjectMapper();
 			response = mapper.writeValueAsString(clientinfos);
@@ -46,13 +46,17 @@ public class ClientInfoController {
 		return response;
 	}
 	
-	// Create a new Task
-	  
 	
-	// @PostMapping("/addclientinfo")
 	@RequestMapping(value = "addClientInfo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 
-	  public void addClientinfo(@Valid @RequestBody ClientInfo clientinfo) { 
+	  public void addClientinfo(@Valid @RequestBody ClientInfoRequest clientinfo) { 
+		 clientinfoService.addClientInfo(clientinfo);
+	  
+	  }
+	
+	@RequestMapping(value = "updateClientInfo", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+
+	  public void updateClientinfo(@Valid @RequestBody ClientInfoRequest clientinfo) { 
 		 clientinfoService.addClientInfo(clientinfo);
 	  
 	  }

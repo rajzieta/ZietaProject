@@ -8,5 +8,6 @@ import com.zietaproj.zieta.model.CustInfo;
 
 @Repository
 public interface CustInfoRepository extends JpaRepository<CustInfo, Long> {
+	
 
 }

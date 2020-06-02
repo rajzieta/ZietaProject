@@ -5,11 +5,12 @@ import java.util.List;
 
 import com.zietaproj.zieta.dto.ClientInfoDTO;
 import com.zietaproj.zieta.model.ClientInfo;
+import com.zietaproj.zieta.request.ClientInfoRequest;
 
 public interface ClientInfoService {
 
 	
-	public List<ClientInfoDTO> getAllInfo();
+	public List<ClientInfoDTO> getAllClients();
 
-	public void addClientInfo(ClientInfo clientinfo);
+	public void addClientInfo(ClientInfoRequest clientinfo);
 }

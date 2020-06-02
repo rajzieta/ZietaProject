@@ -74,8 +74,5 @@ public class ProjectInfo implements Serializable {
 
 	private boolean IS_DELETE;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "id")
-	private ProjectDetails projectDetails;
 
 }

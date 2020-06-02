@@ -6,10 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.zietaproj.zieta.model.TasksByUser;
+import com.zietaproj.zieta.model.UserAccessType;
 
 @Repository
 public interface TasksByUserRepository extends JpaRepository<TasksByUser, Long> {
 	
 	List<TasksByUser> findByUserId(Long userId);
+	
+	List<TasksByUser> findByClientIdAndUserId(Long clientId, Long userId);
 	
 }

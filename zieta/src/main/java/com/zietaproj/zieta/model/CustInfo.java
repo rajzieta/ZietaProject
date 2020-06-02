@@ -37,8 +37,8 @@ import lombok.Data;
 	    private Long id;
 
 	    @NotBlank
-	    @Column(name = "clientId")
-	    private Long client_id;
+	    @Column(name = "client_id")
+	    private Long clientId;
 
 	    @NotBlank
 	    private String cust_name;

@@ -9,5 +9,7 @@ public class TasksByUserModel {
 	long projectId;
 	String project_name;
 	String task_name;
+	String project_code;
+	String task_code;
 
 }

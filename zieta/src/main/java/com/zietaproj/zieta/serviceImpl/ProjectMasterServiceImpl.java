@@ -8,12 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zietaproj.zieta.dto.ProjectMasterDTO;
+import com.zietaproj.zieta.model.CustInfo;
+import com.zietaproj.zieta.model.ProjectDetails;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.ProjectMaster;
 import com.zietaproj.zieta.model.ProjectUserMapping;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.CustInfoRepository;
 import com.zietaproj.zieta.repository.OrgInfoRepository;
+import com.zietaproj.zieta.repository.ProjectDetailsRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
 import com.zietaproj.zieta.repository.ProjectMasterRepository;
 import com.zietaproj.zieta.repository.ProjectUserMappingRepository;
@@ -46,6 +49,10 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	
 	@Autowired
 	UserInfoRepository userInfoRepository;
+	
+	@Autowired
+	ProjectDetailsRepository projectDetailsRepository;
+	
 	
 	@Override
 	public List<ProjectMasterDTO> getAllProjects() {
@@ -87,10 +94,13 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 			projectDetailsByUserModel.setProjectType(projectInfo.getProject_type());
 			projectDetailsByUserModel.setOrgNode(orgInfoRepository.findById(projectInfo.getProject_orgnode())
 					.get().getOrg_node_name());
-			long projectManagerId = projectInfo.getProjectDetails().getProject_manager();
+			ProjectDetails projectDetails =projectDetailsRepository.findById(projectInfo.getId()).get();
+			long projectManagerId = projectDetails.getProject_manager();
 			projectDetailsByUserModel.setProjectManager(userInfoRepository.findById(projectManagerId).get().getUser_fname());
-			projectDetailsByUserModel.setAllowUnplannedActivity(projectInfo.getProjectDetails().getAllow_unplanned());
-			projectDetailsByUserModel.setCustInfo(clientInfoRepository.findById(projectInfo.getClient_id()).get().getCustInfo());
+			projectDetailsByUserModel.setAllowUnplannedActivity(projectDetails.getAllow_unplanned());
+			
+			CustInfo custoInfo = custInfoRepository.findById(projectDetails.getCust_id()).get();
+			projectDetailsByUserModel.setCustInfo(custoInfo);
 			
 			projectDetailsByUserList.add(projectDetailsByUserModel);
 		}

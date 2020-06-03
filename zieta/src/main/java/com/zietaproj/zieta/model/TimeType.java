@@ -21,18 +21,22 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.Data;
+
 @Entity
 @Table(name = "time_type_master")
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
         allowGetters = true)
+@Data
 public class TimeType implements Serializable{
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    private Long client_id;
+	@NotNull
+	@Column(name="client_id")
+    private Long clientId;
 
     @NotBlank
     private String time_type;
@@ -41,62 +45,6 @@ public class TimeType implements Serializable{
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date created_date;
-
-    public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getClient_id() {
-		return client_id;
-	}
-
-	public void setClient_id(Long client_id) {
-		this.client_id = client_id;
-	}
-
-	public String getTime_type() {
-		return time_type;
-	}
-
-	public void setTime_type(String time_type) {
-		this.time_type = time_type;
-	}
-
-	public Date getCreated_date() {
-		return created_date;
-	}
-
-	public void setCreated_date(Date created_date) {
-		this.created_date = created_date;
-	}
-
-	public Date getModified_date() {
-		return modified_date;
-	}
-
-	public void setModified_date(Date modified_date) {
-		this.modified_date = modified_date;
-	}
-
-	public String getModified_by() {
-		return modified_by;
-	}
-
-	public void setModified_by(String modified_by) {
-		this.modified_by = modified_by;
-	}
-
-	public boolean isIS_DELETE() {
-		return IS_DELETE;
-	}
-
-	public void setIS_DELETE(boolean iS_DELETE) {
-		IS_DELETE = iS_DELETE;
-	}
 
 	@Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)

@@ -29,3 +29,25 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+
+*.iml
+*.ipr
+*.iws
+.idea/
+.classpath
+.project
+.settings
+target/
+test-output/
+src/generated/*
+siteData/*
+lib/
+logs/
+bin/
+*.log
+work/
+*.class
+*.DS_Store
+git.properties

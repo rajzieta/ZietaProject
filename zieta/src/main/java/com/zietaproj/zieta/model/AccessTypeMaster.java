@@ -37,14 +37,7 @@ public class AccessTypeMaster {
 	@Column(name = "CLIENT_ID")
 	@NotNull
 	private Long clientId;
-	
 
-    @NotBlank
-    private String client_code;
-    
-    @NotBlank
-    private String project_code;
-    
     @NotBlank
     @Column(name = "ACCESS_TYPE")
     private String accessType;

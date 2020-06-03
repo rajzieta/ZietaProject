@@ -31,7 +31,6 @@ import lombok.Data;
 @Table(name = "client_info")
 @EntityListeners(AuditingEntityListener.class)
 
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @Data
 public class ClientInfo implements Serializable {
 

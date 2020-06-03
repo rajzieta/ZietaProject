@@ -1,94 +1,87 @@
 package com.zietaproj.zieta.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zietaproj.zieta.dto.TaskMasterDTO;
 import com.zietaproj.zieta.model.TaskMaster;
+import com.zietaproj.zieta.response.TasksByClientProjectResponse;
+import com.zietaproj.zieta.response.TasksByUserModel;
 import com.zietaproj.zieta.service.TaskMasterService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api")
+@Api(tags = "Tasks API")
 public class TaskMasterController {
+	
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(TaskMasterController.class);
+	
 	@Autowired
-	TaskMasterService taskmasterService;
-	// Get All Tasks
-	@GetMapping("/getAllTasks")
-	public String getAllTasks() {
-		String response="";
+	TaskMasterService taskMasterService;
+
+
+	@RequestMapping(value = "getAllTasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<TaskMasterDTO> getAllTasks() {
+		List<TaskMasterDTO> taskMasters = null;
 		try {
-			List<TaskMasterDTO> taskMasters= taskmasterService.getAllTasks();
-			System.out.println("taskMasters size=>"+taskMasters.size());
-			ObjectMapper mapper = new ObjectMapper();
-			response = mapper.writeValueAsString(taskMasters);
-		}catch(Exception e) {
-			e.printStackTrace();
+			taskMasters = taskMasterService.getAllTasks();
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in TaskMasterController#getAllTasks",e);
 		}
-		return response;
+		return taskMasters;
+	}
+
+	@RequestMapping(value = "addTaskmaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addTaskmaster(@Valid @RequestBody TaskMaster taskmaster) {
+		taskMasterService.addTaskmaster(taskmaster);
 	}
 
 	
-	  // Create a new Task
-	  
-	 // @PostMapping("/addTaskmaster") 
-	  @RequestMapping(value = "addTaskmaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-
-	  public void addTaskmaster(@Valid @RequestBody TaskMaster taskmaster) { 
-	   taskmasterService.addTaskmaster(taskmaster);
-	   }
-	  
-	  // Get a Single Task
-	  
-		/*
-		 * @GetMapping("/task_master/{id}") public Optional<TaskMaster>
-		 * getTaskById(@PathVariable(value = "id") Long taskmasterId) { return
-		 * taskMasterRepository.findById(taskmasterId); // .orElseThrow(() -> new
-		 * ResourceNotFoundException("TaskMaster", "id", // taskId)); why optional here?
-		 * }
-		 */
-	 
-
-	// Update a Note
+	@GetMapping("/getAllTasksByClientUser")
+	@ApiOperation(value = "List tasks based on the  userId and clientId", notes = "Table reference: task_user_mapping,"
+			+ " task_info, project_info")
+	public ResponseEntity<List<TasksByUserModel>> getAllTasksByUser(@RequestParam(required = true) Long clientId,
+			@RequestParam(required = true) Long userId) {
+		try {
+			List<TasksByUserModel> tasksByUserModelList = taskMasterService.findByClientIdAndUserId(clientId, userId);
+			return new ResponseEntity<List<TasksByUserModel>>(tasksByUserModelList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<TasksByUserModel>>(HttpStatus.NOT_FOUND);
+		}
+	}
 	
-	/*
-	 * @PutMapping("/task_master/{id}") public TaskMaster
-	 * updateTaskmaster(@PathVariable(value = "id") Long taskmasterId,
-	 * 
-	 * @Valid @RequestBody TaskMaster taskmasterdetails) {
-	 * 
-	 * Optional<TaskMaster> taskmaster =
-	 * taskMasterRepository.findById(taskmasterId); // // .orElseThrow(() -> new
-	 * ResourceNotFoundException("TaskMaster", "id",taskmasterId));
-	 * 
-	 * taskmaster.setTask_type(taskmasterdetails.getTask_type());
-	 * taskmaster.setClient_id(taskmasterdetails.getClient_id());
-	 * 
-	 * TaskMaster updatedTaskMaster = taskMasterRepository.save(taskmaster); return
-	 * updatedTaskMaster; }
-	 */
-	 
-	 
-	// Delete a Note
-	/*
-	 * @DeleteMapping("/task_master/{id}") public ResponseEntity<?>
-	 * deleteTaskMaster(@PathVariable(value = "id") Long taskmasterId) { TaskMaster
-	 * taskmaster = taskMasterRepository.findById(taskmasterId) // .orElseThrow(()
-	 * -> new ResourceNotFoundException("Note", "id", noteId));
-	 * 
-	 * taskMasterRepository.delete(taskmaster);
-	 * 
-	 * return ResponseEntity.ok().build(); }
-	 */
 	
+	
+	@GetMapping("/getAllTasksByClientProject")
+	@ApiOperation(value = "List tasks based on the  clientId and projectId", notes = "Table reference:"
+			+ " task_info, project_info")
+	public ResponseEntity<List<TasksByClientProjectResponse>> getAllTasksByClientProject(@RequestParam(required = true) Long clientId,
+			@RequestParam(required = true) Long projectId) {
+		try {
+			List<TasksByClientProjectResponse> tasksByClientProjectResponseList = taskMasterService.findByClientIdAndProjectId(clientId, projectId);
+			return new ResponseEntity<List<TasksByClientProjectResponse>>(tasksByClientProjectResponseList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<TasksByClientProjectResponse>>(HttpStatus.NOT_FOUND);
+		}
+	}
+
 }

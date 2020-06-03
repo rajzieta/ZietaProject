@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.zietaproj.zieta.dto.ClientInfoDTO;
 import com.zietaproj.zieta.model.ClientInfo;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
-import com.zietaproj.zieta.request.ClientInfoRequest;
+import com.zietaproj.zieta.request.ClientInfoAddRequest;
 import com.zietaproj.zieta.service.ClientInfoService;
 
 @Service
@@ -36,7 +36,7 @@ public class ClientInfoServiceImpl implements ClientInfoService {
 	}
 	
 	@Override
-	public void addClientInfo(ClientInfoRequest clientInfoParam) {
+	public void addClientInfo(ClientInfoAddRequest clientInfoParam) {
 	
 	ClientInfo clientInfo = modelMapper.map(clientInfoParam, ClientInfo.class);
 	

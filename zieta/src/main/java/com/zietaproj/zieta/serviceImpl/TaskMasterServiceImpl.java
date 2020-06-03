@@ -7,8 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zietaproj.zieta.dto.TaskMasterDTO;
+import com.zietaproj.zieta.model.ProjectInfo;
+import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.TaskMaster;
+import com.zietaproj.zieta.model.TasksByUser;
+import com.zietaproj.zieta.repository.ProjectInfoRepository;
+import com.zietaproj.zieta.repository.TaskInfoRepository;
 import com.zietaproj.zieta.repository.TaskMasterRepository;
+import com.zietaproj.zieta.repository.TasksByUserRepository;
+import com.zietaproj.zieta.response.TasksByClientProjectResponse;
+import com.zietaproj.zieta.response.TasksByUserModel;
 import com.zietaproj.zieta.service.TaskMasterService;
 
 @Service
@@ -16,10 +24,19 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 
 	@Autowired
 	TaskMasterRepository taskMasterRepository;
-	
+
+	@Autowired
+	TasksByUserRepository tasksByUserRepository;
+
+	@Autowired
+	ProjectInfoRepository projectInfoRepository;
+
+	@Autowired
+	TaskInfoRepository taskInfoRepository;
+
 	@Override
 	public List<TaskMasterDTO> getAllTasks() {
-		List<TaskMaster> taskMasters= taskMasterRepository.findAll();
+		List<TaskMaster> taskMasters = taskMasterRepository.findAll();
 		List<TaskMasterDTO> taskMasterDTOs = new ArrayList<TaskMasterDTO>();
 		TaskMasterDTO taskMasterDTO = null;
 		for (TaskMaster taskMaster : taskMasters) {
@@ -33,12 +50,56 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 		}
 		return taskMasterDTOs;
 	}
-	
+
 	@Override
-	public void addTaskmaster(TaskMaster taskmaster)
-	{
+	public void addTaskmaster(TaskMaster taskmaster) {
 		taskMasterRepository.save(taskmaster);
 	}
 
-	
+	@Override
+	public List<TasksByUserModel> findByClientIdAndUserId(Long clientId, Long userId) {
+
+		List<TasksByUserModel> tasksByUserModelList = new ArrayList<>();
+
+		List<TasksByUser> tasksByUserList = tasksByUserRepository.findByClientIdAndUserId(clientId, userId);
+		TasksByUserModel tasksByUserModel = null;
+		for (TasksByUser tasksByUser : tasksByUserList) {
+			tasksByUserModel = new TasksByUserModel();
+			long projectId = tasksByUser.getProject_id();
+			long taskId = tasksByUser.getTask_id();
+			TaskInfo taskInfo = taskInfoRepository.findById(taskId).get();
+			String taskName = taskInfo.getTask_name();
+			ProjectInfo projectInfo = projectInfoRepository.findById(projectId).get();
+			String projectName = projectInfo.getProject_name();
+			tasksByUserModel.setProjectId(projectId);
+			tasksByUserModel.setProject_name(projectName);
+			tasksByUserModel.setTask_name(taskName);
+			tasksByUserModel.setProject_code(tasksByUser.getProject_code());
+			tasksByUserModel.setTask_code(tasksByUser.getTask_code());
+			tasksByUserModelList.add(tasksByUserModel);
+		}
+
+		return tasksByUserModelList;
+
+	}
+
+	@Override
+	public List<TasksByClientProjectResponse> findByClientIdAndProjectId(Long clientId, Long projectId) {
+		List<TaskInfo> taskInfoList = taskInfoRepository.findByClientIdAndProjectId(clientId, projectId);
+		
+		List<TasksByClientProjectResponse> tasksByClientProjectResponseList = new ArrayList<>();
+		
+		for(TaskInfo taskInfo: taskInfoList) {
+			TasksByClientProjectResponse tasksByClientProjectResponse = new TasksByClientProjectResponse();
+			ProjectInfo projectInfo = projectInfoRepository.findById(taskInfo.getProjectId()).get();
+			tasksByClientProjectResponse.setTaskCode(taskInfo.getTask_code());
+			tasksByClientProjectResponse.setTaskDescription(taskInfo.getTask_name());
+			tasksByClientProjectResponse.setProjectCode(projectInfo.getProject_code());
+			tasksByClientProjectResponse.setProjectDescription(projectInfo.getProject_name());
+			tasksByClientProjectResponseList.add(tasksByClientProjectResponse);
+			
+		}
+		return tasksByClientProjectResponseList;
+	}
+
 }

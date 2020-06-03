@@ -14,52 +14,46 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zietaproj.zieta.dto.ClientInfoDTO;
-import com.zietaproj.zieta.request.ClientInfoRequest;
+import com.zietaproj.zieta.request.ClientInfoAddRequest;
+import com.zietaproj.zieta.request.ClientInfoEditRequest;
 import com.zietaproj.zieta.service.ClientInfoService;
 
+import io.swagger.annotations.Api;
 
 @RestController
 @RequestMapping("/api")
+@Api(tags= "Client Information API")
 public class ClientInfoController {
 
-	
 	@Autowired
 	ClientInfoService clientinfoService;
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(ClientInfoController.class);
-	
-	
-	// Get All Tasks
-	@GetMapping("/getAllClients")
-	public String getAllInfo() {
-		String response="";
+
+	@RequestMapping(value = "getAllClients", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<ClientInfoDTO> getAllInfo() {
+		List<ClientInfoDTO> clientinfos = null;
 		try {
-			List<ClientInfoDTO> clientinfos= clientinfoService.getAllClients();
-			System.out.println("ClienInfo size=>"+clientinfos.size());
-			ObjectMapper mapper = new ObjectMapper();
-			response = mapper.writeValueAsString(clientinfos);
-		}catch(Exception e) {
-			e.printStackTrace();
+			clientinfos = clientinfoService.getAllClients();
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in ClientInfoController#getAllInfo",e);
+
 		}
-		return response;
+		return clientinfos;
 	}
-	
+
 	
 	@RequestMapping(value = "addClientInfo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addClientinfo(@Valid @RequestBody ClientInfoAddRequest clientinfo) {
+		clientinfoService.addClientInfo(clientinfo);
 
-	  public void addClientinfo(@Valid @RequestBody ClientInfoRequest clientinfo) { 
-		 clientinfoService.addClientInfo(clientinfo);
-	  
-	  }
-	
+	}
+
 	@RequestMapping(value = "updateClientInfo", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void updateClientinfo(@Valid @RequestBody ClientInfoEditRequest clientinfo) {
+		clientinfoService.addClientInfo(clientinfo);
 
-	  public void updateClientinfo(@Valid @RequestBody ClientInfoRequest clientinfo) { 
-		 clientinfoService.addClientInfo(clientinfo);
-	  
-	  }
-	 
-	
+	}
+
 }

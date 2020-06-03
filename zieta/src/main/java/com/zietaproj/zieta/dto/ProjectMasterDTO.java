@@ -11,7 +11,5 @@ public class ProjectMasterDTO {
     private String created_by;
     private String modified_by;
     private boolean IS_DELETE;
-    private String client_code;
-    private String project_code;
     
 }

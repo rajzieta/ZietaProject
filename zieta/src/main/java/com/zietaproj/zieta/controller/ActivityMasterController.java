@@ -1,52 +1,49 @@
 package com.zietaproj.zieta.controller;
 
-//import java.awt.PageAttributes.MediaType;
-import org.springframework.http.MediaType;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zietaproj.zieta.dto.ActivityMasterDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
 import com.zietaproj.zieta.service.ActivityMasterService;
 
+import io.swagger.annotations.Api;
 
 @RestController
 @RequestMapping("/api")
+@Api(tags = "Activites API")
 public class ActivityMasterController {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ActivityMasterController.class);
 
 	@Autowired
 	ActivityMasterService activitymasterService;
-	// Get All Tasks
-	@GetMapping("/getAllActivities")
-	public String getAllActivities() {
-		String response="";
+
+	@RequestMapping(value = "getAllActivities", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<ActivityMasterDTO> getAllActivities() {
+		List<ActivityMasterDTO> activityMasters = null;
 		try {
-			List<ActivityMasterDTO> activityMasters= activitymasterService.getAllActivities();
-			System.out.println("ActivityMasters size=>"+activityMasters.size());
-			ObjectMapper mapper = new ObjectMapper();
-			response = mapper.writeValueAsString(activityMasters);
-		}catch(Exception e) {
-			e.printStackTrace();
+			activityMasters = activitymasterService.getAllActivities();
+			
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in ActivityMasterController#getAllActivities",e);
 		}
-		return response;
+		return activityMasters;
 	}
-	
-	// Create a new Task
-	  
-		//  @PostMapping("/addActivitymaster") 
-	 @RequestMapping(value = "addActivitymaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-		  public void addActivitymaster(@Valid @RequestBody ActivityMaster activitymaster) { 
-		   activitymasterService.addActivitymaster(activitymaster);
-		   }
-	
+
+	@RequestMapping(value = "addActivitymaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addActivitymaster(@Valid @RequestBody ActivityMaster activitymaster) {
+		activitymasterService.addActivitymaster(activitymaster);
+	}
+
 }

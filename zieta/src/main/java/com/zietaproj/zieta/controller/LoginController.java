@@ -5,23 +5,26 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zietaproj.zieta.dto.UserInfoDTO;
-import com.zietaproj.zieta.model.UserAccessType;
 import com.zietaproj.zieta.request.LoginRequest;
 import com.zietaproj.zieta.response.LoginResponse;
 import com.zietaproj.zieta.response.UserDetailsResponse;
 import com.zietaproj.zieta.service.UserAccessTypeService;
 import com.zietaproj.zieta.service.UserInfoService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/api")
+@Api(tags = "Login API")
 public class LoginController {
 
 	@Autowired
@@ -32,19 +35,16 @@ public class LoginController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
-	// Get All Users
-	@GetMapping("/getAllUsers")
-	public String getAllUserDetails() {
-		String response = "";
+	@RequestMapping(value = "getAllUsers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<UserInfoDTO> getAllUserDetails() {
+		List<UserInfoDTO> allUserData = null;
 		try {
-			List<UserInfoDTO> allUserData = userInfoService.getAllUserInfoDetails();
-			System.out.println("UsersList size=>" + allUserData.size());
-			ObjectMapper mapper = new ObjectMapper();
-			response = mapper.writeValueAsString(allUserData);
+			allUserData = userInfoService.getAllUserInfoDetails();
+			LOGGER.info("Total number of users: "+allUserData.size());
 		} catch (Exception e) {
 			LOGGER.error("Error Occured in getting all user details",e);
 		}
-		return response;
+		return allUserData;
 	}
 
 	@PostMapping("/authenticate")
@@ -53,7 +53,10 @@ public class LoginController {
 
 	}
 
+	
 	@PostMapping("/getUserData")
+	@ApiOperation(value = "provides user associated data, once login is SUCCESS",notes="Table reference: user_info,"
+			+ " user_accesstype_mapping, access_ctrl_config, screen_master, access_type_master")
 	public UserDetailsResponse doAuthorize(@RequestBody String userEmailId) {
 		UserDetailsResponse userDetails = userInfoService.getUserData(userEmailId);
 		

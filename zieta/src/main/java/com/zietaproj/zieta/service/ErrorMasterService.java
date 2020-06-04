@@ -12,6 +12,8 @@ public interface ErrorMasterService {
 	
 	void addError(ErrorMaster errorMaster);
 	
+	void deleteError(String errorCode);
+	
 	
 
 }

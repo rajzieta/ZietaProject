@@ -54,8 +54,14 @@ public class ErrorMasterController {
 	}
 
 	@RequestMapping(value = "updateErrorDetails", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void updateClientinfo(@Valid @RequestBody ErrorMaster errorMaster) {
+	public void updateErrorDetails(@Valid @RequestBody ErrorMaster errorMaster) {
 		errorMasterService.addError(errorMaster);
+
+	}
+	
+	@RequestMapping(value = "deleteErrorDetails", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteErrorDetails(@RequestParam(required = true) String errorCode) {
+		errorMasterService.deleteError(errorCode);
 
 	}
 	

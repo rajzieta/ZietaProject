@@ -67,6 +67,7 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 			tasksByUserModel = new TasksByUserModel();
 			long projectId = tasksByUser.getProject_id();
 			long taskId = tasksByUser.getTask_id();
+			long userIdent = tasksByUser.getUserId();
 			TaskInfo taskInfo = taskInfoRepository.findById(taskId).get();
 			String taskName = taskInfo.getTask_name();
 			ProjectInfo projectInfo = projectInfoRepository.findById(projectId).get();
@@ -74,6 +75,8 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 			tasksByUserModel.setProjectId(projectId);
 			tasksByUserModel.setProject_name(projectName);
 			tasksByUserModel.setTask_name(taskName);
+			tasksByUserModel.setTaskId(taskId);
+			tasksByUserModel.setUserId(userIdent);
 			tasksByUserModel.setProject_code(tasksByUser.getProject_code());
 			tasksByUserModel.setTask_code(tasksByUser.getTask_code());
 			tasksByUserModelList.add(tasksByUserModel);

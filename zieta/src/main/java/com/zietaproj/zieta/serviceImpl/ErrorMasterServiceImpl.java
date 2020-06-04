@@ -2,6 +2,8 @@ package com.zietaproj.zieta.serviceImpl;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,14 @@ public class ErrorMasterServiceImpl implements ErrorMasterService {
 	@Override
 	public void addError(ErrorMaster errorMaster) {
 		erroMasterRepo.save(errorMaster);
+	}
+
+
+	@Override
+	@Transactional
+	public void deleteError(String errorCode) {
+		erroMasterRepo.deleteByErrorCode(errorCode);
+		
 	}
 
 

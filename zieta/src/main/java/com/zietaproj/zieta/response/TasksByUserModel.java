@@ -7,6 +7,8 @@ import lombok.Setter;
 @Setter
 public class TasksByUserModel {
 	long projectId;
+	long taskId;
+	long userId;
 	String project_name;
 	String task_name;
 	String project_code;

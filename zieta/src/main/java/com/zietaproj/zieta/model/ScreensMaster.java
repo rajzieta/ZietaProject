@@ -2,6 +2,7 @@ package com.zietaproj.zieta.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -26,6 +27,7 @@ public class ScreensMaster implements Serializable {
 	    private Long id;
 
 	    @NotBlank
+	    @Column(name="screen_code")
 	    private String screen_code;
 
 	    @NotBlank
@@ -33,6 +35,9 @@ public class ScreensMaster implements Serializable {
 
 	    @NotBlank
 	    private String screen_desc;
+	    
+	    @NotBlank
+	    private String screen_title;
 
 		public Long getId() {
 			return id;
@@ -41,7 +46,7 @@ public class ScreensMaster implements Serializable {
 		public void setId(Long id) {
 			this.id = id;
 		}
-
+		
 		public String getScreen_code() {
 			return screen_code;
 		}
@@ -64,6 +69,14 @@ public class ScreensMaster implements Serializable {
 
 		public void setScreen_desc(String screen_desc) {
 			this.screen_desc = screen_desc;
+		}
+
+		public String getScreen_title() {
+			return screen_title;
+		}
+
+		public void setScreen_title(String screen_title) {
+			this.screen_title = screen_title;
 		}
 	    
 	    

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,9 +45,9 @@ public class CustInfoController {
 		return clientInformationList;
 	}
 
-	@ApiOperation(value = "List Customers based on the clientId")
-	@RequestMapping(value = "getAllCustomersByClient", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<CustInfo>> getAllCustomersByClient(@RequestBody Long clientId) {
+	@ApiOperation(value = "List Customers based on the clientId", notes = "Table reference: cust_info")
+	@RequestMapping(value = "getAllCustomersByClient", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<CustInfo>> getAllCustomersByClient(@RequestParam(required = true) Long  clientId) {
 		try {
 			List<CustInfo> cusInfoList = custInfoService.getAllCustomersByClient(clientId);
 
@@ -55,5 +56,21 @@ public class CustInfoController {
 			return new ResponseEntity<List<CustInfo>>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	
+	@ApiOperation(value = "List Customers based on the Company", notes = "Table reference:cust_orgnode_mapping,cust_info")
+	@RequestMapping(value = "getAllCustomersByClienCompany", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<CustInfo>> getAllCustomersByClienCompany(@RequestParam(required = true) Long  clientId,
+			@RequestParam(required = true) Long orgNode) {
+		try {
+			List<CustInfo> cusInfoList = custInfoService.findByClientIdAndOrgNode(clientId,orgNode);
+
+			return new ResponseEntity<List<CustInfo>>(cusInfoList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<CustInfo>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	
 
 }

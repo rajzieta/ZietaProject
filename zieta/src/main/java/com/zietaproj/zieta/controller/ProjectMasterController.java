@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zietaproj.zieta.dto.ProjectMasterDTO;
@@ -54,8 +55,8 @@ public class ProjectMasterController {
 
 	@ApiOperation(value = "List projects based on the  userId", notes = "Table reference: project_user_mapping,"
 			+ " org_info, user_info, cust_info, client_info")
-	@PostMapping("/getAllProjectsByUser")
-	public ResponseEntity<List<ProjectDetailsByUserModel>> getAllProjectsByUser(@RequestBody Long userId) {
+	@RequestMapping(value = "getAllProjectsByUser", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<ProjectDetailsByUserModel>> getAllProjectsByUser(@RequestParam(required = true) Long  userId) {
 		try {
 			List<ProjectDetailsByUserModel> projectByUserDetails = projectmasterService.getProjectsByUser(userId);
 

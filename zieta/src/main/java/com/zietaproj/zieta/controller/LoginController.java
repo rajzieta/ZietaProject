@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zietaproj.zieta.dto.UserInfoDTO;
@@ -57,7 +58,7 @@ public class LoginController {
 	@PostMapping("/getUserData")
 	@ApiOperation(value = "provides user associated data, once login is SUCCESS",notes="Table reference: user_info,"
 			+ " user_accesstype_mapping, access_ctrl_config, screen_master, access_type_master")
-	public UserDetailsResponse doAuthorize(@RequestBody String userEmailId) {
+	public UserDetailsResponse doAuthorize(@RequestParam(required = true) String userEmailId) {
 		UserDetailsResponse userDetails = userInfoService.getUserData(userEmailId);
 		
 		return userDetails;

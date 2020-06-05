@@ -29,59 +29,42 @@ import org.slf4j.LoggerFactory;
 @RestController
 @Transactional
 @RequestMapping("/api")
-@Api(tags= "ScreensMaster Information API")
+@Api(tags = "Screens API")
 public class ScreensMasterController {
 
 	@Autowired
 	ScreensMasterService screensmasterService;
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(ScreensMasterController.class);
+
 	// Get All Screens
-		@GetMapping("/getAllScreens")
-		public String getAllScreens() {
-			String response="";
-			try {
-				List<ScreensMasterDTO> screensMasters= screensmasterService.getAllScreens();
-				System.out.println("ScreensMasters size=>"+screensMasters.size());
-				ObjectMapper mapper = new ObjectMapper();
-				response = mapper.writeValueAsString(screensMasters);
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-			return response;
+	@RequestMapping(value = "getAllScreens", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<ScreensMasterDTO> getAllScreens() {
+		List<ScreensMasterDTO> screensMasters = null;
+		try {
+			screensMasters = screensmasterService.getAllScreens();
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in ScreensMasterController#getAllScreens",e);
 		}
-		
-		@RequestMapping(value = "addScreensmaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+		return screensMasters;
+	}
 
-		  public void addScreensmaster(@Valid @RequestBody ScreensMasterAddRequest screensmaster) { 
-		   screensmasterService.addScreensmaster(screensmaster);
-		   }
-		
-		//Delete a screen maser based on id
-		@DeleteMapping("/deleteScreensMaster/{id}")
-		public void deleteScreensMaster(@PathVariable long id) {
-			screensmasterService.deleteById(id);
-}
-		
-//		//Delete a screen maser based on screencode
-//				@DeleteMapping("/deleteScreensMaster/{screen_code}")
-//				public void deleteScreensMaster(@PathVariable String screen_code) {
-//					screensmasterService.deleteByScreencode(screen_code);
-//		}
+	@RequestMapping(value = "addScreensmaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addScreensmaster(@Valid @RequestBody ScreensMasterAddRequest screensmaster) {
+		screensmasterService.addScreensmaster(screensmaster);
+	}
 
-		
+	// Delete a screen maser based on id
+	@DeleteMapping("/deleteScreensMaster/{id}")
+	public void deleteScreensMaster(@PathVariable long id) {
+		screensmasterService.deleteById(id);
+	}
 
-		@RequestMapping(value = "updateScreenMaster", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "updateScreenMaster", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void updateScreenMaster(@Valid @RequestBody ScreensMasterEditRequest screensmaster) {
 		screensmasterService.updateScreensmaster(screensmaster);
-		}
-		
-//			// ------------ Update a Screen based on id ------------
-//			@RequestMapping(value = "/updateScreenMaster/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-//			public void updateScreenMaster(@RequestBody ScreensMaster screensmaster,@PathVariable Long id) {
-//				screensmasterService.updateScreenMaster(id, screensmaster);
-//			}
-//			
+	}
 
-		}
-		
+
+
+}

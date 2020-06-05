@@ -15,9 +15,7 @@ public interface ScreensMasterService {
 	
 	public void updateScreensmaster(ScreensMasterEditRequest screensmaster);
 	
-	//public void updateScreensMaster(Long id, ScreensMaster screensmaster);
-	
-	//public void deleteByScreencode(String screen_code);
-	
 	public void deleteById(Long id);
+	
+	public List<ScreensMaster> getScreensByIds(List<Long> ids);
 }

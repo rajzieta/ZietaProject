@@ -8,6 +8,5 @@ import com.zietaproj.zieta.model.ScreensMaster;
 @Repository
 public interface ScreensMasterRepository extends JpaRepository<ScreensMaster, Long> {
 
-	//public void deleteByScreencod(String screen_code);
 
 }

@@ -62,18 +62,17 @@ public class ScreensMasterServiceImpl implements ScreensMasterService {
 		screensMasterRepository.save(screensmaster);
 	}
 	
-//	@Override
-//	public void updateScreenMaster(Long id, ScreensMaster screensmaster) {
-//		screensMasterRepository.save(screensmaster);
-//	}
 	@Override
 	public void deleteById(Long id) {
 		screensMasterRepository.deleteById(id);
 	}
-	
-//	@Override
-//	public void deleteByScreencode(String screen_code) {
-//		screensMasterRepository.deleteByScreencode(screen_code);
-//	}
+
+	@Override
+	public List<ScreensMaster> getScreensByIds(List<Long> ids){
+		
+		return screensMasterRepository.findAllById(ids);
+		
 	}
+	
+}
 

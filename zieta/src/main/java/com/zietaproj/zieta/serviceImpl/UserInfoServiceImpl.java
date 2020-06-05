@@ -13,6 +13,7 @@ import com.zietaproj.zieta.model.ScreensMaster;
 import com.zietaproj.zieta.model.UserAccessType;
 import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.repository.AccessControlConfigRepository;
+import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.response.LoginResponse;
 import com.zietaproj.zieta.response.UserDetailsResponse;
@@ -40,6 +41,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 	
 	@Autowired
 	AccessTypeMasterService accessTypeMasterService;
+	
+	@Autowired
+	ClientInfoRepository clietinfoRepo;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -82,6 +86,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 		 List<ScreensMaster> screensListByClientId = screensMasterService.getScreensByIds(accessControlConfigList);
 		 List<String> accessTypes = accessTypeMasterService.findByClientIdANDAccessTypeId(userInfo.getClientId(), accessIdList);
 		 UserDetailsResponse userDetails = fillUserData(userInfo);
+		 userDetails.setClientCode(clietinfoRepo.findById(userInfo.getClientId()).get().getClient_code());
 		 userDetails.setScreensByClient(screensListByClientId);
 		 userDetails.setAccessTypesByClient(accessTypes);
 		

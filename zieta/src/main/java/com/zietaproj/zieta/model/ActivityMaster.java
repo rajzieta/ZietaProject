@@ -27,7 +27,8 @@ public class ActivityMaster implements Serializable{
     private Long id;
 
     @NotNull
-    private Long client_id;
+    @Column(name="client_id")
+    private Long clientId;
 
     @NotNull
     private Long project_id;
@@ -64,16 +65,25 @@ public class ActivityMaster implements Serializable{
 		this.id = id;
 	}
 
-	public Long getClient_id() {
-		return client_id;
-	}
+//	public Long getClient_id() {
+//		return client_id;
+//	}
+//
+//	public void setClient_id(Long client_id) {
+//		this.client_id = client_id;
+//	}
 
-	public void setClient_id(Long client_id) {
-		this.client_id = client_id;
-	}
-
+	
 	public Long getProject_id() {
 		return project_id;
+	}
+
+	public Long getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(Long clientId) {
+		this.clientId = clientId;
 	}
 
 	public void setProject_id(Long project_id) {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import com.zietaproj.zieta.model.ProjectDetails;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.ProjectMaster;
 import com.zietaproj.zieta.model.ProjectUserMapping;
+import com.zietaproj.zieta.model.RoleMaster;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.CustInfoRepository;
 import com.zietaproj.zieta.repository.OrgInfoRepository;
@@ -22,6 +24,8 @@ import com.zietaproj.zieta.repository.ProjectMasterRepository;
 import com.zietaproj.zieta.repository.ProjectUserMappingRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
+import com.zietaproj.zieta.response.ProjectsByClientResponse;
+import com.zietaproj.zieta.response.RolesByClientResponse;
 import com.zietaproj.zieta.service.ProjectMasterService;
 
 @Service
@@ -53,6 +57,9 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	@Autowired
 	ProjectDetailsRepository projectDetailsRepository;
 	
+	@Autowired
+	ModelMapper modelMapper;
+	
 	
 	@Override
 	public List<ProjectMasterDTO> getAllProjects() {
@@ -63,7 +70,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 			projectMasterDTO = new ProjectMasterDTO();
 			projectMasterDTO.setId(projectMaster.getId());
 			projectMasterDTO.setProject_type(projectMaster.getProject_type());
-			projectMasterDTO.setClient_id(projectMaster.getClient_id());
+			projectMasterDTO.setClient_id(projectMaster.getClientId());
 			projectMasterDTO.setCreated_by(projectMaster.getCreated_by());
 			projectMasterDTO.setModified_by(projectMaster.getModified_by());
 			projectMasterDTOs.add(projectMasterDTO);
@@ -109,6 +116,23 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		return projectDetailsByUserList;
 		
 		
+	}
+	
+	@Override
+	public List<ProjectsByClientResponse> getProjectsByClient(Long client_id) {
+
+		List<ProjectMaster> projectsByClientList = projectMasterRepository.findByClientId(client_id);
+		List<ProjectsByClientResponse> projectsByClientResponseList = new ArrayList<>();
+		ProjectsByClientResponse projectsByClientResponse = null;
+		for (ProjectMaster projectsByClient : projectsByClientList) {
+			projectsByClientResponse = modelMapper.map(projectsByClient, 
+					ProjectsByClientResponse.class);
+			projectsByClientResponseList.add(projectsByClientResponse);
+		}
+
+		return projectsByClientResponseList;
+		
+	
 	}
 
 }

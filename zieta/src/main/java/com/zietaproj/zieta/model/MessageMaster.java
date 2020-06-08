@@ -28,25 +28,25 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 @Entity
-@Table(name = "error_master")
+@Table(name = "message_master")
 @EntityListeners(AuditingEntityListener.class)
 
 @Data
-public class ErrorMaster implements Serializable {
+public class MessageMaster implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@NotBlank
-	@Column(name = "error_code")
-	private String errorCode;
+	@Column(name = "msg_code")
+	private String msgCode;
 
 	@NotBlank
-	private String error_type;
+	private String msg_type;
 
 	@NotNull
-	private String error_desc;
+	private String msg_desc;
 	
 
 }

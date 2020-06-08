@@ -18,62 +18,62 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zietaproj.zieta.model.ErrorMaster;
-import com.zietaproj.zieta.service.ErrorMasterService;
+import com.zietaproj.zieta.model.MessageMaster;
+import com.zietaproj.zieta.service.MessageMasterService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api")
-@Api(tags= "Error Details API")
+@Api(tags= "Message Details API")
 public class ErrorMasterController {
 
 	@Autowired
-	ErrorMasterService errorMasterService;
+	MessageMasterService messageMasterService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ErrorMasterController.class);
 
-	@RequestMapping(value = "getAllErrors", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<ErrorMaster> getAllErrors() {
-		List<ErrorMaster> errorList = null;
+	@RequestMapping(value = "getAllMsgs", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<MessageMaster> getAllMsgs() {
+		List<MessageMaster> msgList = null;
 		try {
-			errorList = errorMasterService.getAllErrors();
+			msgList = messageMasterService.getAllMsgs();
 		} catch (Exception e) {
 			LOGGER.error("Error Occured in ErrorMasterController#getAllErrors",e);
 
 		}
-		return errorList;
+		return msgList;
 	}
 
 	
-	@RequestMapping(value = "addErrorDetails", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void addErrorDetails(@Valid @RequestBody ErrorMaster errorMaster) {
-		errorMasterService.addError(errorMaster);
+	@RequestMapping(value = "addMsgDetails", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addMsgDetails(@Valid @RequestBody MessageMaster msgMaster) {
+		messageMasterService.addMsg(msgMaster);
 
 	}
 
-	@RequestMapping(value = "updateErrorDetails", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void updateErrorDetails(@Valid @RequestBody ErrorMaster errorMaster) {
-		errorMasterService.addError(errorMaster);
-
-	}
-	
-	@RequestMapping(value = "deleteErrorDetails", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void deleteErrorDetails(@RequestParam(required = true) String errorCode) {
-		errorMasterService.deleteError(errorCode);
+	@RequestMapping(value = "updateMsgDetails", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void updateMsgDetails(@Valid @RequestBody MessageMaster messageMaster) {
+		messageMasterService.addMsg(messageMaster);
 
 	}
 	
-	@GetMapping("/getErrorByCode")
-	@ApiOperation(value = "Error details based on the error code", notes = "Table reference: error_master")
-	public ResponseEntity<ErrorMaster> getErrorByCode(
-			@RequestParam(required = true) String errorCode) {
+	@RequestMapping(value = "deleteMessages", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteErrorDetails(@RequestParam(required = true) String msgCode) {
+		messageMasterService.deleteMsg(msgCode);
+
+	}
+	
+	@GetMapping("/getMsgByCode")
+	@ApiOperation(value = "Message details based on the msg code", notes = "Table reference: msg_master")
+	public ResponseEntity<MessageMaster> getErrorByCode(
+			@RequestParam(required = true) String msgCode) {
 		try {
-			ErrorMaster errorDetails = errorMasterService.findByErrorCode(errorCode);
-			return new ResponseEntity<ErrorMaster>(errorDetails, HttpStatus.OK);
+			MessageMaster errorDetails = messageMasterService.findByMsgCode(msgCode);
+			return new ResponseEntity<MessageMaster>(errorDetails, HttpStatus.OK);
 		} catch (NoSuchElementException e) {
-			return new ResponseEntity<ErrorMaster>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<MessageMaster>(HttpStatus.NOT_FOUND);
 		}
 	}
 

@@ -10,6 +10,8 @@ import lombok.Setter;
 public class ProjectDetailsByUserModel {
 	
 	String projectCode;
+	long projectId;
+	String projectTypeName;
 	String projectName;
 	long projectType;
 	String OrgNode;

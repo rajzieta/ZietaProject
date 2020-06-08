@@ -39,7 +39,7 @@ public class TaskMaster implements Serializable {
     private Long client_id;
 
     @NotBlank
-    private String task_type;
+    private String type_name;
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)

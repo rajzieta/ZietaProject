@@ -43,7 +43,7 @@ public class ProjectMaster implements Serializable {
 	
 
 	    @NotBlank
-	    private String project_type;
+	    private String type_name;
 	    
 		@NotBlank
 		private String created_by;

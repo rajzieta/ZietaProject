@@ -9,14 +9,12 @@ import org.springframework.stereotype.Service;
 
 import com.zietaproj.zieta.dto.ProjectMasterDTO;
 import com.zietaproj.zieta.model.CustInfo;
-import com.zietaproj.zieta.model.ProjectDetails;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.ProjectMaster;
 import com.zietaproj.zieta.model.ProjectUserMapping;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.CustInfoRepository;
 import com.zietaproj.zieta.repository.OrgInfoRepository;
-import com.zietaproj.zieta.repository.ProjectDetailsRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
 import com.zietaproj.zieta.repository.ProjectMasterRepository;
 import com.zietaproj.zieta.repository.ProjectUserMappingRepository;
@@ -50,9 +48,6 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	@Autowired
 	UserInfoRepository userInfoRepository;
 	
-	@Autowired
-	ProjectDetailsRepository projectDetailsRepository;
-	
 	
 	@Override
 	public List<ProjectMasterDTO> getAllProjects() {
@@ -62,7 +57,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		for (ProjectMaster projectMaster : projectMasters) {
 			projectMasterDTO = new ProjectMasterDTO();
 			projectMasterDTO.setId(projectMaster.getId());
-			projectMasterDTO.setProject_type(projectMaster.getProject_type());
+			projectMasterDTO.setProject_type(projectMaster.getType_name());
 			projectMasterDTO.setClient_id(projectMaster.getClient_id());
 			projectMasterDTO.setCreated_by(projectMaster.getCreated_by());
 			projectMasterDTO.setModified_by(projectMaster.getModified_by());
@@ -90,16 +85,18 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 			projectDetailsByUserModel = new ProjectDetailsByUserModel();
 			projectDetailsByUserModel.setClientId(projectInfo.getClient_id());
 			projectDetailsByUserModel.setProjectCode(projectInfo.getProject_code());
+			projectDetailsByUserModel.setProjectTypeName(
+					projectMasterRepository.findById(projectInfo.getProject_type()).get().getType_name());
+			projectDetailsByUserModel.setProjectId(projectInfo.getId());
 			projectDetailsByUserModel.setProjectName(projectInfo.getProject_name());
 			projectDetailsByUserModel.setProjectType(projectInfo.getProject_type());
 			projectDetailsByUserModel.setOrgNode(orgInfoRepository.findById(projectInfo.getProject_orgnode())
 					.get().getOrg_node_name());
-			ProjectDetails projectDetails =projectDetailsRepository.findById(projectInfo.getId()).get();
-			long projectManagerId = projectDetails.getProject_manager();
+			long projectManagerId = projectInfo.getProject_manager();
 			projectDetailsByUserModel.setProjectManager(userInfoRepository.findById(projectManagerId).get().getUser_fname());
-			projectDetailsByUserModel.setAllowUnplannedActivity(projectDetails.getAllow_unplanned());
+			projectDetailsByUserModel.setAllowUnplannedActivity(projectInfo.getAllow_unplanned());
 			
-			CustInfo custoInfo = custInfoRepository.findById(projectDetails.getCust_id()).get();
+			CustInfo custoInfo = custInfoRepository.findById(projectInfo.getCust_id()).get();
 			projectDetailsByUserModel.setCustInfo(custoInfo);
 			
 			projectDetailsByUserList.add(projectDetailsByUserModel);

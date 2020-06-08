@@ -24,6 +24,7 @@ public class UserInfoDTO {
 	private Date modified_date;
 	private short is_delete;
 	private String password;
+	private String clientCode;
 
 
 	

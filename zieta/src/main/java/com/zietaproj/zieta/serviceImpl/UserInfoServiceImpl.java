@@ -56,6 +56,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 		for (UserInfo userInfo : userInfoList) {
 			userInfoDTO =  modelMapper.map(userInfo, UserInfoDTO.class);
 			userInfoDTO.setPassword("********");
+			userInfoDTO.setClientCode(clietinfoRepo.findById(userInfo.getClientId()).get().getClient_code());
 			 userInfoDTOs.add(userInfoDTO);
 		}
 		return userInfoDTOs;

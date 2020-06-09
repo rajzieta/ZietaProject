@@ -58,11 +58,12 @@ public class ActivityMasterController {
 		activitymasterService.addActivitymaster(activitymaster);
 	}
 
-	@ApiOperation(value = "List activities based on the  taskId", notes = "Table reference: task_activity,activity_master")
-	@GetMapping("/getAllActivitiesByTask")
-	public ResponseEntity<List<ActivitiesByTaskResponse>> getAllActivitiesByTask(@RequestParam Long taskId) {
+	@ApiOperation(value = "List activities based on the  clientId, taskId and projectId", notes = "Table reference: task_activity,activity_master")
+	@GetMapping("/getActivitesByClientProjectTask")
+	public ResponseEntity<List<ActivitiesByTaskResponse>> getActivitesByClientProjectTask(@RequestParam(required = true) Long clientId,
+			@RequestParam(required = true) Long taskId, @RequestParam(required = true) Long projectId) {
 		try {
-			List<ActivitiesByTaskResponse> activitiesbytaskList = activitiesbytaskservice.getActivitiesByTask(taskId);
+			List<ActivitiesByTaskResponse> activitiesbytaskList = activitiesbytaskservice.getActivitesByClientProjectTask(clientId, taskId, projectId);
 			return new ResponseEntity<List<ActivitiesByTaskResponse>>(activitiesbytaskList, HttpStatus.OK);
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<List<ActivitiesByTaskResponse>>(HttpStatus.NOT_FOUND);

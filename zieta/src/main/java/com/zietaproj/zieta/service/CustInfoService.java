@@ -4,10 +4,11 @@ import java.util.List;
 
 import com.zietaproj.zieta.model.CustInfo;
 import com.zietaproj.zieta.response.CustomerInfoModel;
+import com.zietaproj.zieta.response.CustomerInformationModel;
 
 public interface CustInfoService {
 
-	public List<CustInfo> getAllCustomers();
+	public List<CustomerInformationModel> getAllCustomers();
 
 	public void addCustInfo(CustInfo custInfo);
 

@@ -27,12 +27,12 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/api")
 @Api(tags= "Message Details API")
-public class ErrorMasterController {
+public class MessageMasterController {
 
 	@Autowired
 	MessageMasterService messageMasterService;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ErrorMasterController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MessageMasterController.class);
 
 	@RequestMapping(value = "getAllMsgs", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<MessageMaster> getAllMsgs() {
@@ -40,7 +40,7 @@ public class ErrorMasterController {
 		try {
 			msgList = messageMasterService.getAllMsgs();
 		} catch (Exception e) {
-			LOGGER.error("Error Occured in ErrorMasterController#getAllErrors",e);
+			LOGGER.error("Error Occured in MessageMasterController#getAllErrors",e);
 
 		}
 		return msgList;
@@ -60,7 +60,7 @@ public class ErrorMasterController {
 	}
 	
 	@RequestMapping(value = "deleteMessages", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void deleteErrorDetails(@RequestParam(required = true) String msgCode) {
+	public void deleteMessage(@RequestParam(required = true) String msgCode) {
 		messageMasterService.deleteMsg(msgCode);
 
 	}

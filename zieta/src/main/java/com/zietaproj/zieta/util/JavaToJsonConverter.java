@@ -13,7 +13,6 @@ public static void main(String args[]) {
 		ActivityMaster activityMaster = new ActivityMaster();
 		activityMaster.setActivity_code("activitycode");
 		activityMaster.setActivity_desc("activity desc");
-		activityMaster.setClient_id(3456L);
 		activityMaster.setCreated_by("xyz");
 		activityMaster.setCreated_date(new Date(System.currentTimeMillis()));
 		activityMaster.setIS_DELETE(false);

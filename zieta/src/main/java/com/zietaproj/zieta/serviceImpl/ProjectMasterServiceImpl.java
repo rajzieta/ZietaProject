@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import com.zietaproj.zieta.repository.ProjectMasterRepository;
 import com.zietaproj.zieta.repository.ProjectUserMappingRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
+import com.zietaproj.zieta.response.ProjectsByClientResponse;
 import com.zietaproj.zieta.service.ProjectMasterService;
 
 @Service
@@ -48,6 +50,9 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	@Autowired
 	UserInfoRepository userInfoRepository;
 	
+	@Autowired
+	ModelMapper modelMapper;
+
 	
 	@Override
 	public List<ProjectMasterDTO> getAllProjects() {
@@ -58,7 +63,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 			projectMasterDTO = new ProjectMasterDTO();
 			projectMasterDTO.setId(projectMaster.getId());
 			projectMasterDTO.setProject_type(projectMaster.getType_name());
-			projectMasterDTO.setClient_id(projectMaster.getClient_id());
+			projectMasterDTO.setClient_id(projectMaster.getClientId());
 			projectMasterDTO.setCreated_by(projectMaster.getCreated_by());
 			projectMasterDTO.setModified_by(projectMaster.getModified_by());
 			projectMasterDTOs.add(projectMasterDTO);
@@ -106,6 +111,23 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		return projectDetailsByUserList;
 		
 		
+	}
+	
+	@Override
+	public List<ProjectsByClientResponse> getProjectsByClient(Long client_id) {
+
+		List<ProjectMaster> projectsByClientList = projectMasterRepository.findByClientId(client_id);
+		List<ProjectsByClientResponse> projectsByClientResponseList = new ArrayList<>();
+		ProjectsByClientResponse projectsByClientResponse = null;
+		for (ProjectMaster projectsByClient : projectsByClientList) {
+			projectsByClientResponse = modelMapper.map(projectsByClient, 
+					ProjectsByClientResponse.class);
+			projectsByClientResponseList.add(projectsByClientResponse);
+		}
+
+		return projectsByClientResponseList;
+		
+	
 	}
 
 }

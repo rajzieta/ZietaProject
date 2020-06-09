@@ -25,8 +25,8 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api")
-@Api(tags = "Login API")
-public class LoginController {
+@Api(tags = "User Details API")
+public class UserController {
 
 	@Autowired
 	UserInfoService userInfoService;
@@ -34,7 +34,7 @@ public class LoginController {
 	@Autowired
 	UserAccessTypeService userAccessTypeService;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
 	@RequestMapping(value = "getAllUsers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<UserInfoDTO> getAllUserDetails() {

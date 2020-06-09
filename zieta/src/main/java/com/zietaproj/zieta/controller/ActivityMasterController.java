@@ -61,7 +61,7 @@ public class ActivityMasterController {
 	@ApiOperation(value = "List activities based on the  clientId, taskId and projectId", notes = "Table reference: task_activity,activity_master")
 	@GetMapping("/getActivitesByClientProjectTask")
 	public ResponseEntity<List<ActivitiesByTaskResponse>> getActivitesByClientProjectTask(@RequestParam(required = true) Long clientId,
-			@RequestParam(required = true) Long taskId, @RequestParam(required = true) Long projectId) {
+			@RequestParam(required = true) Long projectId, @RequestParam(required = true)  Long taskId) {
 		try {
 			List<ActivitiesByTaskResponse> activitiesbytaskList = activitiesbytaskservice.getActivitesByClientProjectTask(clientId, taskId, projectId);
 			return new ResponseEntity<List<ActivitiesByTaskResponse>>(activitiesbytaskList, HttpStatus.OK);

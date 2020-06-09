@@ -52,15 +52,9 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	@Autowired
 	UserInfoRepository userInfoRepository;
 	
-<<<<<<< HEAD
-	@Autowired
-	ProjectDetailsRepository projectDetailsRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
-	
-=======
->>>>>>> f2cf4c65f0dbca52a80662df0b4b71fe11a0f9a7
 	
 	@Override
 	public List<ProjectMasterDTO> getAllProjects() {
@@ -70,13 +64,8 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		for (ProjectMaster projectMaster : projectMasters) {
 			projectMasterDTO = new ProjectMasterDTO();
 			projectMasterDTO.setId(projectMaster.getId());
-<<<<<<< HEAD
-			projectMasterDTO.setProject_type(projectMaster.getProject_type());
-			projectMasterDTO.setClient_id(projectMaster.getClientId());
-=======
 			projectMasterDTO.setProject_type(projectMaster.getType_name());
-			projectMasterDTO.setClient_id(projectMaster.getClient_id());
->>>>>>> f2cf4c65f0dbca52a80662df0b4b71fe11a0f9a7
+			projectMasterDTO.setClient_id(projectMaster.getClientId());
 			projectMasterDTO.setCreated_by(projectMaster.getCreated_by());
 			projectMasterDTO.setModified_by(projectMaster.getModified_by());
 			projectMasterDTOs.add(projectMasterDTO);

@@ -13,7 +13,6 @@ import com.zietaproj.zieta.model.CustInfo;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.ProjectMaster;
 import com.zietaproj.zieta.model.ProjectUserMapping;
-import com.zietaproj.zieta.model.RoleMaster;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.CustInfoRepository;
 import com.zietaproj.zieta.repository.OrgInfoRepository;
@@ -23,7 +22,6 @@ import com.zietaproj.zieta.repository.ProjectUserMappingRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
 import com.zietaproj.zieta.response.ProjectsByClientResponse;
-import com.zietaproj.zieta.response.RolesByClientResponse;
 import com.zietaproj.zieta.service.ProjectMasterService;
 
 @Service

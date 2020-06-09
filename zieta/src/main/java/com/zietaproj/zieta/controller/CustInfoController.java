@@ -9,16 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zietaproj.zieta.model.CustInfo;
+import com.zietaproj.zieta.response.CustomerInfoModel;
 import com.zietaproj.zieta.service.CustInfoService;
 
 import io.swagger.annotations.Api;
@@ -59,15 +56,15 @@ public class CustInfoController {
 	
 	
 	@ApiOperation(value = "List Customers based on the Company", notes = "Table reference:cust_orgnode_mapping,cust_info")
-	@RequestMapping(value = "getAllCustomersByClienCompany", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<CustInfo>> getAllCustomersByClienCompany(@RequestParam(required = true) Long  clientId,
+	@RequestMapping(value = "getAllCustomersByClientCompany", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<CustomerInfoModel>> getAllCustomersByClientCompany(@RequestParam(required = true) Long  clientId,
 			@RequestParam(required = true) Long orgNode) {
 		try {
-			List<CustInfo> cusInfoList = custInfoService.findByClientIdAndOrgNode(clientId,orgNode);
+			List<CustomerInfoModel> cusInfoList = custInfoService.findByClientIdAndOrgNode(clientId,orgNode);
 
-			return new ResponseEntity<List<CustInfo>>(cusInfoList, HttpStatus.OK);
+			return new ResponseEntity<List<CustomerInfoModel>>(cusInfoList, HttpStatus.OK);
 		} catch (NoSuchElementException e) {
-			return new ResponseEntity<List<CustInfo>>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<List<CustomerInfoModel>>(HttpStatus.NOT_FOUND);
 		}
 	}
 	

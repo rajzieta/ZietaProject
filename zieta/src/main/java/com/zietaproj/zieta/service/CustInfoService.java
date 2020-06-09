@@ -3,7 +3,7 @@ package com.zietaproj.zieta.service;
 import java.util.List;
 
 import com.zietaproj.zieta.model.CustInfo;
-import com.zietaproj.zieta.model.CustOrgNodeMapping;
+import com.zietaproj.zieta.response.CustomerInfoModel;
 
 public interface CustInfoService {
 
@@ -13,5 +13,5 @@ public interface CustInfoService {
 
 	public List<CustInfo> getAllCustomersByClient(Long clientId);
 
-	public List<CustInfo> findByClientIdAndOrgNode(long clientId, long orgNode);
+	public List<CustomerInfoModel> findByClientIdAndOrgNode(long clientId, long orgNode);
 }

@@ -52,7 +52,6 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	@Autowired
 	UserInfoRepository userInfoRepository;
 	
-	
 	@Autowired
 	ModelMapper modelMapper;
 	

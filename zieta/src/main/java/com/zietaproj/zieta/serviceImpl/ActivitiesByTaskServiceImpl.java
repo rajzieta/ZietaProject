@@ -25,9 +25,9 @@ public class ActivitiesByTaskServiceImpl implements ActivitiesByTaskService {
 	ActivityMasterRepository activityMasterRepository;
 	
 	@Override
-	public List<ActivitiesByTaskResponse> getActivitiesByTask(Long taskId) {
+	public List<ActivitiesByTaskResponse> getActivitesByClientProjectTask(long clientId,long projectId,long taskId) {
 
-		List<TaskActivity> activitiesbytaskList = activitiesbytaskRepo.findByTaskId(taskId);
+		List<TaskActivity> activitiesbytaskList = activitiesbytaskRepo.findByClientIdAndProjectIdAndTaskId(clientId ,projectId,taskId );
 		List<ActivitiesByTaskResponse> activitiesbytaskResponseList = new ArrayList<ActivitiesByTaskResponse>();
 		ActivitiesByTaskResponse activitiesbytaskResponse = null;
 		for(TaskActivity activitiesbytask : activitiesbytaskList) {

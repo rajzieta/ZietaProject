@@ -63,5 +63,20 @@ public class UserController {
 		
 		return userDetails;
 	}
+	
+	
+	@RequestMapping(value = "getAllUsersByClient", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "lists userdetails based on the provided clientId",notes="Table reference: user_info,"
+			+ "client_info")
+	public List<UserInfoDTO> getAllUsersByClient(@RequestParam(required = true) long clientId) {
+		List<UserInfoDTO> userDataList = null;
+		try {
+			userDataList = userInfoService.findByClientId(clientId);
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in getting user details based on clientId",e);
+		}
+		return userDataList;
+	}
+
 
 }

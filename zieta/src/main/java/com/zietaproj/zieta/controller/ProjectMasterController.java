@@ -40,15 +40,15 @@ public class ProjectMasterController {
 	ProjectMasterService projectmasterService;
 
 	@RequestMapping(value = "getAllProjects", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<ProjectMasterDTO> getAllProjects() {
-		List<ProjectMasterDTO> projectMasters = null;
+	public List<ProjectsByClientResponse> getAllProjects() {
+		List<ProjectsByClientResponse> projectList = null;
 
 		try {
-			projectMasters = projectmasterService.getAllProjects();
+			projectList = projectmasterService.getAllProjects();
 		} catch (Exception e) {
 			LOGGER.error("Error Occured in ProjectMasterController#getAllProjects",e);
 		}
-		return projectMasters;
+		return projectList;
 	}
 
 	@RequestMapping(value = "addProjectmaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -70,7 +70,7 @@ public class ProjectMasterController {
 	}
 	
 	@GetMapping("/getAllProjectsByClient")
-	@ApiOperation(value = "List Projects based on the clientId", notes = "Table reference: project_type_master")
+	@ApiOperation(value = "List Projects based on the clientId", notes = "Table reference: project_type_master,user_info,project_info")
 	public ResponseEntity<List<ProjectsByClientResponse>> getAllProjectsByClient(@RequestParam(required = true) Long clientId) {
 		try {
 			List<ProjectsByClientResponse> projectsbyclientList = projectmasterService.getProjectsByClient(clientId);

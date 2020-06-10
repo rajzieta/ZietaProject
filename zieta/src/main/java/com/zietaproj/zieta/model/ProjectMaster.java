@@ -34,8 +34,6 @@ import lombok.Setter;
         allowGetters = true)
 
 @Data
-@Getter
-@Setter
 public class ProjectMaster implements Serializable {
 
 	    @Id
@@ -68,73 +66,5 @@ public class ProjectMaster implements Serializable {
 		
 		private boolean IS_DELETE;
 
-		public Long getId() {
-			return id;
-		}
-
-		public void setId(Long id) {
-			this.id = id;
-		}
-
-		public Long getClientId() {
-			return clientId;
-		}
-
-		public void setClientId(Long clientId) {
-			this.clientId = clientId;
-		}
-
-		public String getType_name() {
-			return type_name;
-		}
-
-		public void setType_name(String type_name) {
-			this.type_name = type_name;
-		}
-
-		public String getCreated_by() {
-			return created_by;
-		}
-
-		public void setCreated_by(String created_by) {
-			this.created_by = created_by;
-		}
-
-		public Date getCreated_date() {
-			return created_date;
-		}
-
-		public void setCreated_date(Date created_date) {
-			this.created_date = created_date;
-		}
-
-		public Date getModified_date() {
-			return modified_date;
-		}
-
-		public void setModified_date(Date modified_date) {
-			this.modified_date = modified_date;
-		}
-
-		public String getModified_by() {
-			return modified_by;
-		}
-
-		public void setModified_by(String modified_by) {
-			this.modified_by = modified_by;
-		}
-
-		public boolean isIS_DELETE() {
-			return IS_DELETE;
-		}
-
-		public void setIS_DELETE(boolean iS_DELETE) {
-			IS_DELETE = iS_DELETE;
-		}
-
-		
-		
-		
-	
 	
 }

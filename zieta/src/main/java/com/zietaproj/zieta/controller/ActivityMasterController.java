@@ -63,7 +63,7 @@ public class ActivityMasterController {
 	public ResponseEntity<List<ActivitiesByTaskResponse>> getActivitesByClientProjectTask(@RequestParam(required = true) Long clientId,
 			@RequestParam(required = true) Long projectId, @RequestParam(required = true)  Long taskId) {
 		try {
-			List<ActivitiesByTaskResponse> activitiesbytaskList = activitiesbytaskservice.getActivitesByClientProjectTask(clientId, taskId, projectId);
+			List<ActivitiesByTaskResponse> activitiesbytaskList = activitiesbytaskservice.getActivitesByClientProjectTask(clientId, projectId, taskId);
 			return new ResponseEntity<List<ActivitiesByTaskResponse>>(activitiesbytaskList, HttpStatus.OK);
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<List<ActivitiesByTaskResponse>>(HttpStatus.NOT_FOUND);

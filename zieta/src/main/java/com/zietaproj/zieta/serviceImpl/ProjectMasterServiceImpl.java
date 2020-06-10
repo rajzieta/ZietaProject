@@ -55,20 +55,15 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 
 	
 	@Override
-	public List<ProjectMasterDTO> getAllProjects() {
-		List<ProjectMaster> projectMasters= projectMasterRepository.findAll();
-		List<ProjectMasterDTO> projectMasterDTOs = new ArrayList<ProjectMasterDTO>();
-		ProjectMasterDTO projectMasterDTO = null;
-		for (ProjectMaster projectMaster : projectMasters) {
-			projectMasterDTO = new ProjectMasterDTO();
-			projectMasterDTO.setId(projectMaster.getId());
-			projectMasterDTO.setProject_type(projectMaster.getType_name());
-			projectMasterDTO.setClient_id(projectMaster.getClientId());
-			projectMasterDTO.setCreated_by(projectMaster.getCreated_by());
-			projectMasterDTO.setModified_by(projectMaster.getModified_by());
-			projectMasterDTOs.add(projectMasterDTO);
-		}
-		return projectMasterDTOs;
+	public List<ProjectsByClientResponse> getAllProjects() {
+
+		List<ProjectInfo> projectList = projectInfoRepository.findAll();
+		List<ProjectsByClientResponse> projectsByClientResponseList = new ArrayList<>();
+
+		fillProjectDetails(projectList, projectsByClientResponseList);
+
+		return projectsByClientResponseList;
+
 	}
 	
 	@Override
@@ -88,7 +83,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		List<ProjectInfo> projectInfoList = projectInfoRepository.findAllById(projectIdList);
 		for(ProjectInfo projectInfo: projectInfoList) {
 			projectDetailsByUserModel = new ProjectDetailsByUserModel();
-			projectDetailsByUserModel.setClientId(projectInfo.getClient_id());
+			projectDetailsByUserModel.setClientId(projectInfo.getClientId());
 			projectDetailsByUserModel.setProjectCode(projectInfo.getProject_code());
 			projectDetailsByUserModel.setProjectTypeName(
 					projectMasterRepository.findById(projectInfo.getProject_type()).get().getType_name());
@@ -114,20 +109,29 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	}
 	
 	@Override
-	public List<ProjectsByClientResponse> getProjectsByClient(Long client_id) {
+	public List<ProjectsByClientResponse> getProjectsByClient(Long clientId) {
 
-		List<ProjectMaster> projectsByClientList = projectMasterRepository.findByClientId(client_id);
+		List<ProjectInfo> projectList = projectInfoRepository.findByClientId(clientId);
 		List<ProjectsByClientResponse> projectsByClientResponseList = new ArrayList<>();
-		ProjectsByClientResponse projectsByClientResponse = null;
-		for (ProjectMaster projectsByClient : projectsByClientList) {
-			projectsByClientResponse = modelMapper.map(projectsByClient, 
-					ProjectsByClientResponse.class);
-			projectsByClientResponseList.add(projectsByClientResponse);
-		}
+
+		fillProjectDetails(projectList, projectsByClientResponseList);
 
 		return projectsByClientResponseList;
-		
-	
+
+	}
+
+	private void fillProjectDetails(List<ProjectInfo> projectList,
+			List<ProjectsByClientResponse> projectsByClientResponseList) {
+		for (ProjectInfo projectInfo : projectList) {
+			ProjectsByClientResponse projectsByClientResponse = modelMapper.map(projectInfo,
+					ProjectsByClientResponse.class);
+			projectsByClientResponse.setClientCode(clientInfoRepository.findById(projectInfo.getClientId()).get().getClient_code());
+			projectsByClientResponse.setProjectManager(
+					userInfoRepository.findById(projectInfo.getProject_manager()).get().getUser_fname());
+			projectsByClientResponse
+					.setType_name(projectMasterRepository.findById(projectInfo.getProject_type()).get().getType_name());
+			projectsByClientResponseList.add(projectsByClientResponse);
+		}
 	}
 
 }

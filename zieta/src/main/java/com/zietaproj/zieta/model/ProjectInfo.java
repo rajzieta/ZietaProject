@@ -39,7 +39,8 @@ public class ProjectInfo implements Serializable {
 	private Long id;
 
 	@NotNull
-	private Long client_id;
+	@Column(name = "client_id")
+	private Long clientId;
 
 	@NotBlank
 	private String project_code;

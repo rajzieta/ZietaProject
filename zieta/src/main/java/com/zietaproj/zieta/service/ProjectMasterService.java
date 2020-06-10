@@ -9,7 +9,7 @@ import com.zietaproj.zieta.response.ProjectsByClientResponse;
 
 public interface ProjectMasterService {
 
-	public List<ProjectMasterDTO> getAllProjects();
+	public List<ProjectsByClientResponse> getAllProjects();
 
 	public void addProjectmaster(ProjectMaster projectmaster);
 	

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import com.zietaproj.zieta.repository.ProjectMasterRepository;
 import com.zietaproj.zieta.repository.ProjectUserMappingRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
+import com.zietaproj.zieta.response.ProjectsByClientResponse;
 import com.zietaproj.zieta.service.ProjectMasterService;
 
 @Service
@@ -47,6 +49,9 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	
 	@Autowired
 	UserInfoRepository userInfoRepository;
+	
+	@Autowired
+	ModelMapper modelMapper;
 	
 	
 	@Override
@@ -83,7 +88,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		List<ProjectInfo> projectInfoList = projectInfoRepository.findAllById(projectIdList);
 		for(ProjectInfo projectInfo: projectInfoList) {
 			projectDetailsByUserModel = new ProjectDetailsByUserModel();
-			projectDetailsByUserModel.setClientId(projectInfo.getClient_id());
+			projectDetailsByUserModel.setClientId(projectInfo.getClientId());
 			projectDetailsByUserModel.setProjectCode(projectInfo.getProject_code());
 			projectDetailsByUserModel.setProjectTypeName(
 					projectMasterRepository.findById(projectInfo.getProject_type()).get().getType_name());
@@ -106,6 +111,32 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		return projectDetailsByUserList;
 		
 		
+	}
+	
+	@Override
+	public List<ProjectsByClientResponse> getProjectsByClient(Long clientId) {
+
+		List<ProjectInfo> projectList = projectInfoRepository.findByClientId(clientId);
+		List<ProjectsByClientResponse> projectsByClientResponseList = new ArrayList<>();
+
+		fillProjectDetails(projectList, projectsByClientResponseList);
+
+		return projectsByClientResponseList;
+
+	}
+	
+	private void fillProjectDetails(List<ProjectInfo> projectList,
+			List<ProjectsByClientResponse> projectsByClientResponseList) {
+		for (ProjectInfo projectInfo : projectList) {
+			ProjectsByClientResponse projectsByClientResponse = modelMapper.map(projectInfo,
+					ProjectsByClientResponse.class);
+			projectsByClientResponse.setClientCode(clientInfoRepository.findById(projectInfo.getClientId()).get().getClient_code());
+			projectsByClientResponse.setProjectManager(
+					userInfoRepository.findById(projectInfo.getProject_manager()).get().getUser_fname());
+			projectsByClientResponse
+					.setType_name(projectMasterRepository.findById(projectInfo.getProject_type()).get().getType_name());
+			projectsByClientResponseList.add(projectsByClientResponse);
+		}
 	}
 
 }

@@ -22,6 +22,7 @@ import com.zietaproj.zieta.dto.TaskMasterDTO;
 import com.zietaproj.zieta.model.TaskMaster;
 import com.zietaproj.zieta.response.TasksByClientProjectResponse;
 import com.zietaproj.zieta.response.TasksByUserModel;
+import com.zietaproj.zieta.response.TasktypesByClientResponse;
 import com.zietaproj.zieta.service.TaskMasterService;
 
 import io.swagger.annotations.Api;
@@ -84,4 +85,14 @@ public class TaskMasterController {
 		}
 	}
 
+	@GetMapping("/getTaskTypesByClient")
+	@ApiOperation(value = "List TaskTypes based on the clientId", notes = "Table reference: task_type_master")
+	public ResponseEntity<List<TasktypesByClientResponse>> getTaskTypesByClient(@RequestParam(required = true) Long clientId) {
+		try {
+			List<TasktypesByClientResponse> tasksbyclientList = taskMasterService.getTasksByClient(clientId);
+			return new ResponseEntity<List<TasktypesByClientResponse>>(tasksbyclientList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<TasktypesByClientResponse>>(HttpStatus.NOT_FOUND);
+		}
+	}
 }

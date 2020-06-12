@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zietaproj.zieta.dto.ActivityMasterDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
+import com.zietaproj.zieta.response.ActivitiesByClientResponse;
 import com.zietaproj.zieta.response.ActivitiesByTaskResponse;
 import com.zietaproj.zieta.service.ActivitiesByTaskService;
 import com.zietaproj.zieta.service.ActivityMasterService;
@@ -67,4 +68,19 @@ public class ActivityMasterController {
 			return new ResponseEntity<List<ActivitiesByTaskResponse>>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@GetMapping("/getAllActivitiesByClient")
+	public ResponseEntity<List<ActivitiesByClientResponse>> getAllActivitiesByClient(@RequestParam(required=true) Long clientId) {
+		try {
+			List<ActivitiesByClientResponse> activitiesbyclientList = activitymasterService.getActivitiesByClient(clientId);
+			return new ResponseEntity<List<ActivitiesByClientResponse>>(activitiesbyclientList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<ActivitiesByClientResponse>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	
+	
 }
+
+

@@ -3,6 +3,7 @@ package com.zietaproj.zieta.serviceImpl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,13 +11,16 @@ import com.zietaproj.zieta.dto.TaskMasterDTO;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.TaskMaster;
+import com.zietaproj.zieta.model.TasksByClient;
 import com.zietaproj.zieta.model.TasksByUser;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
 import com.zietaproj.zieta.repository.TaskInfoRepository;
 import com.zietaproj.zieta.repository.TaskMasterRepository;
+import com.zietaproj.zieta.repository.TasksByClientRepository;
 import com.zietaproj.zieta.repository.TasksByUserRepository;
 import com.zietaproj.zieta.response.TasksByClientProjectResponse;
 import com.zietaproj.zieta.response.TasksByUserModel;
+import com.zietaproj.zieta.response.TasktypesByClientResponse;
 import com.zietaproj.zieta.service.TaskMasterService;
 
 @Service
@@ -33,6 +37,13 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 
 	@Autowired
 	TaskInfoRepository taskInfoRepository;
+	
+	@Autowired
+	TasksByClientRepository tasksByClientRepository;
+
+	
+	@Autowired
+	ModelMapper modelMapper;
 
 	@Override
 	public List<TaskMasterDTO> getAllTasks() {
@@ -95,14 +106,33 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 		for(TaskInfo taskInfo: taskInfoList) {
 			TasksByClientProjectResponse tasksByClientProjectResponse = new TasksByClientProjectResponse();
 			ProjectInfo projectInfo = projectInfoRepository.findById(taskInfo.getProjectId()).get();
+			tasksByClientProjectResponse.setId(taskInfo.getId());
+			tasksByClientProjectResponse.setProject_id(taskInfo.getProjectId());
 			tasksByClientProjectResponse.setTaskCode(taskInfo.getTask_code());
+			tasksByClientProjectResponse.setTask_type(taskInfo.getTask_type());
+			tasksByClientProjectResponse.setTask_parent(taskInfo.getTask_parent());
+			tasksByClientProjectResponse.setTask_status(taskInfo.getTask_status());
 			tasksByClientProjectResponse.setTaskDescription(taskInfo.getTask_name());
 			tasksByClientProjectResponse.setProjectCode(projectInfo.getProject_code());
 			tasksByClientProjectResponse.setProjectDescription(projectInfo.getProject_name());
+			
 			tasksByClientProjectResponseList.add(tasksByClientProjectResponse);
 			
 		}
 		return tasksByClientProjectResponseList;
 	}
 
+	
+	public List<TasktypesByClientResponse> getTasksByClient(Long clientId) {
+		List<TasksByClient> tasksByClientList = tasksByClientRepository.findByClientId(clientId);
+		List<TasktypesByClientResponse> tasksByClientResponseList = new ArrayList<>();
+		TasktypesByClientResponse tasksByClientResponse = null;
+		for (TasksByClient tasksByClient : tasksByClientList) {
+			tasksByClientResponse = modelMapper.map(tasksByClient, 
+					TasktypesByClientResponse.class);
+		
+			tasksByClientResponseList.add(tasksByClientResponse);
+	}
+		return tasksByClientResponseList;
+}
 }

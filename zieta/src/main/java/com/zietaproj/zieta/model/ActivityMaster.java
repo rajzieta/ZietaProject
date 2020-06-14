@@ -33,8 +33,6 @@ public class ActivityMaster implements Serializable{
     @Column(name="client_id")
     private Long clientId;
 
-    @NotNull
-    private Long project_id;
     
     @NotBlank
     private String activity_code;

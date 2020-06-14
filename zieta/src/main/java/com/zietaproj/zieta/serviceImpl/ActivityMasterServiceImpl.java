@@ -11,6 +11,7 @@ import com.zietaproj.zieta.dto.ActivityMasterDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
 import com.zietaproj.zieta.model.RoleMaster;
 import com.zietaproj.zieta.model.TaskMaster;
+import com.zietaproj.zieta.repository.ActivitiyUserMappingRepository;
 import com.zietaproj.zieta.repository.ActivityMasterRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
@@ -33,6 +34,9 @@ public class ActivityMasterServiceImpl implements ActivityMasterService {
 	ClientInfoRepository  clientInfoRepository;
 	
 	@Autowired
+	ActivitiyUserMappingRepository activitiyUserMappingRepository;
+	
+	@Autowired
 	ModelMapper modelMapper;
 	
 	@Override
@@ -44,15 +48,17 @@ public class ActivityMasterServiceImpl implements ActivityMasterService {
 			activityMasterDTO = new ActivityMasterDTO();
 			activityMasterDTO.setId(activityMaster.getId());
 			activityMasterDTO.setClient_id(activityMaster.getClientId());
-			activityMasterDTO.setProject_id(activityMaster.getProject_id());
 			activityMasterDTO.setActivity_code(activityMaster.getActivity_code());
 			activityMasterDTO.setActivity_desc(activityMaster.getActivity_desc());
 			activityMasterDTO.setCreated_by(activityMaster.getCreated_by());
 			activityMasterDTO.setModified_by(activityMaster.getModified_by());
 			activityMasterDTO
-					.setClient_code(clientInfoRepository.findById(activityMaster.getClientId()).get().getClient_code());
-			activityMasterDTO.setProject_code(
-					projectInfoRepository.findById(activityMaster.getProject_id()).get().getProject_code());
+					.setClient_code(clientInfoRepository.findById(activityMaster.getClientId())
+							.get().getClient_code());
+			long projectId = activitiyUserMappingRepository.findById(
+					activityMaster.getId()).get().getProjectId();
+			activityMasterDTO.setProject_code(projectInfoRepository.findById(projectId).get()
+					.getProject_code());
 			activityMasterDTOs.add(activityMasterDTO);
 		}
 		return activityMasterDTOs;

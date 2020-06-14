@@ -17,6 +17,4 @@ public class ActivityMasterDTO {
 	private boolean IS_DELETE;
 	private String client_code;
 	private String project_code;
-	
 }
-

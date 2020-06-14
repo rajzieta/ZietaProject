@@ -39,10 +39,6 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 	TaskInfoRepository taskInfoRepository;
 	
 	@Autowired
-	TasksByClientRepository tasksByClientRepository;
-
-	
-	@Autowired
 	ModelMapper modelMapper;
 
 	@Override
@@ -54,7 +50,7 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 			taskMasterDTO = new TaskMasterDTO();
 			taskMasterDTO.setId(taskMaster.getId());
 			taskMasterDTO.setTask_type(taskMaster.getType_name());
-			taskMasterDTO.setClient_id(taskMaster.getClient_id());
+			taskMasterDTO.setClient_id(taskMaster.getClientId());
 			taskMasterDTO.setModified_by(taskMaster.getModified_by());
 			taskMasterDTO.setCreated_by(taskMaster.getCreated_by());
 			taskMasterDTOs.add(taskMasterDTO);
@@ -124,10 +120,10 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 
 	
 	public List<TasktypesByClientResponse> getTasksByClient(Long clientId) {
-		List<TasksByClient> tasksByClientList = tasksByClientRepository.findByClientId(clientId);
+		List<TaskMaster> tasksByClientList = taskMasterRepository.findByClientId(clientId);
 		List<TasktypesByClientResponse> tasksByClientResponseList = new ArrayList<>();
 		TasktypesByClientResponse tasksByClientResponse = null;
-		for (TasksByClient tasksByClient : tasksByClientList) {
+		for (TaskMaster tasksByClient : tasksByClientList) {
 			tasksByClientResponse = modelMapper.map(tasksByClient, 
 					TasktypesByClientResponse.class);
 		

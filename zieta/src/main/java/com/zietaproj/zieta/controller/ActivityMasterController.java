@@ -79,4 +79,5 @@ public class ActivityMasterController {
 			return new ResponseEntity<List<ActivitiesByClientResponse>>(HttpStatus.NOT_FOUND);
 		}
 	}
+
 }

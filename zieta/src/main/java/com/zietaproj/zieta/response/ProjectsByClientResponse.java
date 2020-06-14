@@ -15,6 +15,4 @@ public class ProjectsByClientResponse {
 	private String project_name;
 	private String projectManager;
 	
-	
-	
 }

@@ -15,13 +15,13 @@ import com.zietaproj.zieta.repository.ActivityMasterRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
 import com.zietaproj.zieta.response.ActivitiesByClientResponse;
-import com.zietaproj.zieta.response.RolesByClientResponse;
 import com.zietaproj.zieta.service.ActivityMasterService;
 
 
 
 @Service
 public class ActivityMasterServiceImpl implements ActivityMasterService {
+
 
 	@Autowired
 	ActivityMasterRepository activityMasterRepository;
@@ -73,8 +73,6 @@ public class ActivityMasterServiceImpl implements ActivityMasterService {
 		for (ActivityMaster activitiesByClient : activitiesByClientList) {
 			activitiesByClientResponse = modelMapper.map(activitiesByClient, 
 					ActivitiesByClientResponse.class);
-			activitiesByClientResponse.setProjectCode(projectInfoRepository.findById(
-					activitiesByClient.getProject_id()).get().getProject_code());
 			activitiesByClientResponse.setClientCode(clientInfoRepository.findById(clientId).get().getClient_code());
 			activitiesByClientResponseList.add(activitiesByClientResponse);
 		}

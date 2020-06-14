@@ -7,15 +7,10 @@ import lombok.Setter;
 @Setter
 public class ActivitiesByClientResponse {
 
-	
 	long id;
     Long clientId;
-    private Long project_id;
     private String activity_code;
     private String activity_desc;
-    private String projectCode;
     private String clientCode;
 	
-    
-    
 }

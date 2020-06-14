@@ -52,7 +52,6 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	
 	@Autowired
 	ModelMapper modelMapper;
-
 	
 	@Override
 	public List<ProjectsByClientResponse> getAllProjects() {

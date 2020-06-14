@@ -15,7 +15,7 @@ public class ProjectDetailsByUserModel {
 	String projectName;
 	long projectType;
 	String OrgNode;
-	short projectStatus;
+	long projectStatus;
 	long clientId;
 
 	String projectManager;

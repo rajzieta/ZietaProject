@@ -7,18 +7,19 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import com.zietaproj.zieta.dto.ProjectMasterDTO;
+import com.zietaproj.zieta.model.ActivityUserMapping;
 import com.zietaproj.zieta.model.CustInfo;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.ProjectMaster;
-import com.zietaproj.zieta.model.ProjectUserMapping;
+import com.zietaproj.zieta.model.UserInfo;
+import com.zietaproj.zieta.repository.ActivitiyUserMappingRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.CustInfoRepository;
 import com.zietaproj.zieta.repository.OrgInfoRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
 import com.zietaproj.zieta.repository.ProjectMasterRepository;
-import com.zietaproj.zieta.repository.ProjectUserMappingRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
 import com.zietaproj.zieta.response.ProjectsByClientResponse;
@@ -30,9 +31,6 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	
 	@Autowired
 	ProjectMasterRepository projectMasterRepository;
-	
-	@Autowired
-	ProjectUserMappingRepository projectUserMappingRepository;
 	
 	@Autowired
 	OrgInfoRepository orgInfoRepository;
@@ -51,7 +49,12 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	UserInfoRepository userInfoRepository;
 	
 	@Autowired
+	ActivitiyUserMappingRepository activitiyUserMappingRepository;
+	
+	@Autowired
 	ModelMapper modelMapper;
+	
+	private final String SPACE = " ";
 	
 	@Override
 	public List<ProjectsByClientResponse> getAllProjects() {
@@ -76,8 +79,9 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		
 		List<ProjectDetailsByUserModel> projectDetailsByUserList = new ArrayList<>();
 		ProjectDetailsByUserModel projectDetailsByUserModel = null;
-		List<ProjectUserMapping> projectList = projectUserMappingRepository.findByUserId(userId);
-		List<Long> projectIdList = projectList.stream().map(ProjectUserMapping::getProjectId).collect(Collectors.toList());
+		
+		List<ActivityUserMapping> activityUserMappingList = activitiyUserMappingRepository.findByUserId(userId);
+		List<Long> projectIdList = activityUserMappingList.stream().map(ActivityUserMapping::getProjectId).collect(Collectors.toList());
 		
 		List<ProjectInfo> projectInfoList = projectInfoRepository.findAllById(projectIdList);
 		for(ProjectInfo projectInfo: projectInfoList) {
@@ -89,10 +93,11 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 			projectDetailsByUserModel.setProjectId(projectInfo.getId());
 			projectDetailsByUserModel.setProjectName(projectInfo.getProject_name());
 			projectDetailsByUserModel.setProjectType(projectInfo.getProject_type());
+			projectDetailsByUserModel.setProjectStatus(projectInfo.getProject_status());
 			projectDetailsByUserModel.setOrgNode(orgInfoRepository.findById(projectInfo.getProject_orgnode())
 					.get().getOrg_node_name());
-			long projectManagerId = projectInfo.getProject_manager();
-			projectDetailsByUserModel.setProjectManager(userInfoRepository.findById(projectManagerId).get().getUser_fname());
+			String prjManagerName = getProjectManagerName(projectInfo);
+			projectDetailsByUserModel.setProjectManager(prjManagerName);
 			projectDetailsByUserModel.setAllowUnplannedActivity(projectInfo.getAllow_unplanned());
 			
 			CustInfo custoInfo = custInfoRepository.findById(projectInfo.getCust_id()).get();
@@ -105,6 +110,17 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		return projectDetailsByUserList;
 		
 		
+	}
+
+	private String getProjectManagerName(ProjectInfo projectInfo) {
+		long projectManagerId = projectInfo.getProject_manager();
+		UserInfo userInfo = userInfoRepository.findById(projectManagerId).get();
+		StringBuilder prjManagerName = new StringBuilder(userInfo.getUser_fname());
+		if(!StringUtils.isEmpty(userInfo.getUser_mname())) {
+			prjManagerName.append(SPACE).append(userInfo.getUser_mname());
+		}
+		prjManagerName.append(SPACE).append(userInfo.getUser_lname());
+		return prjManagerName.toString();
 	}
 	
 	@Override
@@ -125,10 +141,10 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 			ProjectsByClientResponse projectsByClientResponse = modelMapper.map(projectInfo,
 					ProjectsByClientResponse.class);
 			projectsByClientResponse.setClientCode(clientInfoRepository.findById(projectInfo.getClientId()).get().getClient_code());
-			projectsByClientResponse.setProjectManager(
-					userInfoRepository.findById(projectInfo.getProject_manager()).get().getUser_fname());
+			projectsByClientResponse.setProjectManager(getProjectManagerName(projectInfo));
 			projectsByClientResponse
 					.setType_name(projectMasterRepository.findById(projectInfo.getProject_type()).get().getType_name());
+			projectsByClientResponse.setProjectStatus(projectInfo.getProject_status());
 			projectsByClientResponseList.add(projectsByClientResponse);
 		}
 	}

@@ -53,22 +53,16 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	@Autowired
 	ModelMapper modelMapper;
 	
-	
 	@Override
-	public List<ProjectMasterDTO> getAllProjects() {
-		List<ProjectMaster> projectMasters= projectMasterRepository.findAll();
-		List<ProjectMasterDTO> projectMasterDTOs = new ArrayList<ProjectMasterDTO>();
-		ProjectMasterDTO projectMasterDTO = null;
-		for (ProjectMaster projectMaster : projectMasters) {
-			projectMasterDTO = new ProjectMasterDTO();
-			projectMasterDTO.setId(projectMaster.getId());
-			projectMasterDTO.setProject_type(projectMaster.getType_name());
-			projectMasterDTO.setClient_id(projectMaster.getClient_id());
-			projectMasterDTO.setCreated_by(projectMaster.getCreated_by());
-			projectMasterDTO.setModified_by(projectMaster.getModified_by());
-			projectMasterDTOs.add(projectMasterDTO);
-		}
-		return projectMasterDTOs;
+	public List<ProjectsByClientResponse> getAllProjects() {
+
+		List<ProjectInfo> projectList = projectInfoRepository.findAll();
+		List<ProjectsByClientResponse> projectsByClientResponseList = new ArrayList<>();
+
+		fillProjectDetails(projectList, projectsByClientResponseList);
+
+		return projectsByClientResponseList;
+
 	}
 	
 	@Override
@@ -124,7 +118,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		return projectsByClientResponseList;
 
 	}
-	
+
 	private void fillProjectDetails(List<ProjectInfo> projectList,
 			List<ProjectsByClientResponse> projectsByClientResponseList) {
 		for (ProjectInfo projectInfo : projectList) {

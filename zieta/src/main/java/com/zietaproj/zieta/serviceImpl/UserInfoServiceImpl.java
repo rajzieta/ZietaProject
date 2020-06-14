@@ -1,6 +1,7 @@
 package com.zietaproj.zieta.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,7 +44,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 	AccessTypeMasterService accessTypeMasterService;
 	
 	@Autowired
-	ClientInfoRepository clietinfoRepo;
+	ClientInfoRepository clientInfoRepo;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -52,14 +53,18 @@ public class UserInfoServiceImpl implements UserInfoService {
 	public List<UserInfoDTO> getAllUserInfoDetails() {
 		List<UserInfo> userInfoList= userInfoRepositoryRepository.findAll();
 		List<UserInfoDTO> userInfoDTOs = new ArrayList<UserInfoDTO>();
+		mapUserInfoModelToDTO(userInfoList, userInfoDTOs);
+		return userInfoDTOs;
+	}
+
+	private void mapUserInfoModelToDTO(List<UserInfo> userInfoList, List<UserInfoDTO> userInfoDTOs) {
 		UserInfoDTO userInfoDTO = null;
 		for (UserInfo userInfo : userInfoList) {
 			userInfoDTO =  modelMapper.map(userInfo, UserInfoDTO.class);
 			userInfoDTO.setPassword("********");
-			userInfoDTO.setClientCode(clietinfoRepo.findById(userInfo.getClientId()).get().getClient_code());
+			userInfoDTO.setClientCode(clientInfoRepo.findById(userInfo.getClientId()).get().getClient_code());
 			 userInfoDTOs.add(userInfoDTO);
 		}
-		return userInfoDTOs;
 	}
 
 	@Override
@@ -87,7 +92,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 		 List<ScreensMaster> screensListByClientId = screensMasterService.getScreensByIds(accessControlConfigList);
 		 List<String> accessTypes = accessTypeMasterService.findByClientIdANDAccessTypeId(userInfo.getClientId(), accessIdList);
 		 UserDetailsResponse userDetails = fillUserData(userInfo);
-		 userDetails.setClientCode(clietinfoRepo.findById(userInfo.getClientId()).get().getClient_code());
+		 userDetails.setClientCode(clientInfoRepo.findById(userInfo.getClientId()).get().getClient_code());
 		 userDetails.setScreensByClient(screensListByClientId);
 		 userDetails.setAccessTypesByClient(accessTypes);
 		
@@ -135,9 +140,11 @@ public class UserInfoServiceImpl implements UserInfoService {
 	}
 
 	@Override
-	public UserDetailsResponse findByClientId(Long client_id) {
-		UserInfo userInfo = userInfoRepositoryRepository.findByClientId(client_id);
-		return fillUserData(userInfo);
+	public List<UserInfoDTO> findByClientId(Long client_id) {
+		List<UserInfo> userInfoList = userInfoRepositoryRepository.findByClientId(client_id);
+		List<UserInfoDTO> userInfoDTOs = new ArrayList<UserInfoDTO>();
+		mapUserInfoModelToDTO(userInfoList, userInfoDTOs);
+		return userInfoDTOs;
 	}
 
 	

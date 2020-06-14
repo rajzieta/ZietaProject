@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.zietaproj.zieta.dto.ActivityMasterDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
+import com.zietaproj.zieta.model.RoleMaster;
 import com.zietaproj.zieta.model.TaskMaster;
 import com.zietaproj.zieta.repository.ActivityMasterRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
@@ -72,8 +73,6 @@ public class ActivityMasterServiceImpl implements ActivityMasterService {
 		for (ActivityMaster activitiesByClient : activitiesByClientList) {
 			activitiesByClientResponse = modelMapper.map(activitiesByClient, 
 					ActivitiesByClientResponse.class);
-			//activitiesByClientResponse.setProjectCode(projectInfoRepository.findById(
-				//	activitiesByClient.getProject_id()).get().getProject_code());
 			activitiesByClientResponse.setClientCode(clientInfoRepository.findById(clientId).get().getClient_code());
 			activitiesByClientResponseList.add(activitiesByClientResponse);
 		}

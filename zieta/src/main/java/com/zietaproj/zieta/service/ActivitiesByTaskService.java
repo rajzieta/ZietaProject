@@ -6,5 +6,5 @@ import com.zietaproj.zieta.response.ActivitiesByTaskResponse;
 
 public interface ActivitiesByTaskService {
 
-	List<ActivitiesByTaskResponse> getActivitiesByTask(Long taskId);
+	List<ActivitiesByTaskResponse> getActivitesByClientProjectTask(long clientId,long projectId,long taskId);
 }

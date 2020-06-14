@@ -1,11 +1,5 @@
 package com.zietaproj.zieta.dto;
 
-import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotBlank;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,4 +18,5 @@ public class ActivityMasterDTO {
 	private String client_code;
 	private String project_code;
 	
-	}
+}
+

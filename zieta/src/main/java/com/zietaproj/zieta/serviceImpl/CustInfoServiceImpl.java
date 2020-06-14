@@ -13,6 +13,7 @@ import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.CustInfoRepository;
 import com.zietaproj.zieta.repository.CustOrgNodeMappingRepository;
 import com.zietaproj.zieta.response.CustomerInfoModel;
+import com.zietaproj.zieta.response.CustomerInformationModel;
 import com.zietaproj.zieta.service.CustInfoService;
 
 @Service
@@ -26,7 +27,7 @@ public class CustInfoServiceImpl implements CustInfoService {
 	CustOrgNodeMappingRepository custOrgNodeMappingRepository;
 	
 	@Autowired
-	ClientInfoRepository clietinfoRepo;
+	ClientInfoRepository clientInfoRepo;
 	
 	
 	
@@ -34,9 +35,21 @@ public class CustInfoServiceImpl implements CustInfoService {
 	ModelMapper modelMapper;
 
 	@Override
-	public List<CustInfo> getAllCustomers() {
+	public List<CustomerInformationModel> getAllCustomers() {
 		
-		return custInfoRepository.findAll();
+		List<CustInfo> custInfoList = custInfoRepository.findAll();
+		List<CustomerInformationModel>  customerInfoList = new ArrayList<>();
+		
+		for (CustInfo custInfo : custInfoList) {
+			CustomerInformationModel customerInformationModel = modelMapper.map(
+					custInfo, CustomerInformationModel.class);
+			String client_code = clientInfoRepo.findById(custInfo.getClientId()).get().getClient_code();
+			customerInformationModel.setClient_code(client_code);
+			
+			customerInfoList.add(customerInformationModel);
+			
+		}
+		return customerInfoList;
 	}
 
 	@Override
@@ -59,7 +72,7 @@ public class CustInfoServiceImpl implements CustInfoService {
 			
 			CustInfo custInfo = custInfoRepository.findById(custOrg.getCustId()).get();
 			CustomerInfoModel custInfoModel = modelMapper.map(custInfo, CustomerInfoModel.class);
-			String clientCode = clietinfoRepo.findById(clientId).get().getClient_code();
+			String clientCode = clientInfoRepo.findById(clientId).get().getClient_code();
 			custInfoModel.setClient_code(clientCode);
 			custInfoModel.setOrgNode(orgNode);
 			

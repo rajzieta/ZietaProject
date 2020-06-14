@@ -1,23 +1,31 @@
 package com.zietaproj.zieta.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zietaproj.zieta.dto.RoleMasterDTO;
 import com.zietaproj.zieta.model.RoleMaster;
+import com.zietaproj.zieta.response.ActivitiesByTaskResponse;
+import com.zietaproj.zieta.response.RolesByClientResponse;
 import com.zietaproj.zieta.service.RoleMasterService;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api")
@@ -44,6 +52,17 @@ public class RoleMasterController {
 	@RequestMapping(value = "addRolemaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void addRolemaster(@Valid @RequestBody RoleMaster rolemaster) {
 		rolemasterService.addRolemaster(rolemaster);
+	}
+	
+	@GetMapping("/getAllRolesByClient")
+	@ApiOperation(value = "List Roles based on the clientId", notes = "Table reference: role_master")
+	public ResponseEntity<List<RolesByClientResponse>> getAllRolesByClient(@RequestParam(required = true) Long clientId) {
+		try {
+			List<RolesByClientResponse> rolesbyclientList = rolemasterService.getRolesByClient(clientId);
+			return new ResponseEntity<List<RolesByClientResponse>>(rolesbyclientList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<RolesByClientResponse>>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 }

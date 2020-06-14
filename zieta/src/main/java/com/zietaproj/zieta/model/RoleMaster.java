@@ -33,7 +33,8 @@ public class RoleMaster implements Serializable{
     private Long id;
 
     @NotNull
-    private Long client_id;
+    @Column(name = "client_id")
+    private Long clientId;
     
     @NotBlank
     private String user_role;
@@ -63,13 +64,21 @@ public class RoleMaster implements Serializable{
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
+	
 
-	public Long getClient_id() {
-		return client_id;
+	/*
+	 * public Long getClient_id() { return client_id; }
+	 * 
+	 * public void setClient_id(Long client_id) { this.client_id = client_id; }
+	 */
+
+	public Long getClientId() {
+		return clientId;
 	}
 
-	public void setClient_id(Long client_id) {
-		this.client_id = client_id;
+	public void setClientId(Long clientId) {
+		this.clientId = clientId;
 	}
 
 	public String getUser_role() {

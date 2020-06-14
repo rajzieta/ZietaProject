@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zietaproj.zieta.model.CustInfo;
 import com.zietaproj.zieta.response.CustomerInfoModel;
+import com.zietaproj.zieta.response.CustomerInformationModel;
 import com.zietaproj.zieta.service.CustInfoService;
 
 import io.swagger.annotations.Api;
@@ -30,10 +31,11 @@ public class CustInfoController {
 	CustInfoService custInfoService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustInfoController.class);
-
+	
+	@ApiOperation(value = "List Customers along with clientCode", notes = "Table reference:client_info,cust_info")
 	@RequestMapping(value = "getAllCustomers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<CustInfo>  getAllInfo() {
-		List<CustInfo> clientInformationList = null;
+	public List<CustomerInformationModel>  getAllInfo() {
+		List<CustomerInformationModel> clientInformationList = null;
 		try {
 			clientInformationList = custInfoService.getAllCustomers();
 		} catch (Exception e) {

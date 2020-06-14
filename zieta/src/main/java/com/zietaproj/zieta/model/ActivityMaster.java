@@ -59,8 +59,5 @@ public class ActivityMaster implements Serializable{
 	private String modified_by;
 	
 	private boolean IS_DELETE;
-
-	
-
 	
 }

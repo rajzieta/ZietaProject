@@ -23,6 +23,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @Entity
@@ -39,7 +41,8 @@ public class ProjectMaster implements Serializable {
 	    private Long id;
 
 	    @NotNull
-	    private Long client_id;
+	    @Column(name="client_id")
+	    private Long clientId;
 	
 
 	    @NotBlank
@@ -63,9 +66,5 @@ public class ProjectMaster implements Serializable {
 		
 		private boolean IS_DELETE;
 
-		
-		
-		
-	
 	
 }

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zietaproj.zieta.dto.ProjectMasterDTO;
 import com.zietaproj.zieta.model.ProjectMaster;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
+import com.zietaproj.zieta.response.ProjectsByClientResponse;
+import com.zietaproj.zieta.response.RolesByClientResponse;
 import com.zietaproj.zieta.service.ProjectMasterService;
 
 import io.swagger.annotations.Api;
@@ -37,15 +40,15 @@ public class ProjectMasterController {
 	ProjectMasterService projectmasterService;
 
 	@RequestMapping(value = "getAllProjects", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<ProjectMasterDTO> getAllProjects() {
-		List<ProjectMasterDTO> projectMasters = null;
+	public List<ProjectsByClientResponse> getAllProjects() {
+		List<ProjectsByClientResponse> projectList = null;
 
 		try {
-			projectMasters = projectmasterService.getAllProjects();
+			projectList = projectmasterService.getAllProjects();
 		} catch (Exception e) {
 			LOGGER.error("Error Occured in ProjectMasterController#getAllProjects",e);
 		}
-		return projectMasters;
+		return projectList;
 	}
 
 	@RequestMapping(value = "addProjectmaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -63,6 +66,17 @@ public class ProjectMasterController {
 			return new ResponseEntity<List<ProjectDetailsByUserModel>>(projectByUserDetails, HttpStatus.OK);
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<List<ProjectDetailsByUserModel>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@GetMapping("/getAllProjectsByClient")
+	@ApiOperation(value = "List Projects based on the clientId", notes = "Table reference: project_type_master,user_info,project_info")
+	public ResponseEntity<List<ProjectsByClientResponse>> getAllProjectsByClient(@RequestParam(required = true) Long clientId) {
+		try {
+			List<ProjectsByClientResponse> projectsbyclientList = projectmasterService.getProjectsByClient(clientId);
+			return new ResponseEntity<List<ProjectsByClientResponse>>(projectsbyclientList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<ProjectsByClientResponse>>(HttpStatus.NOT_FOUND);
 		}
 	}
 }

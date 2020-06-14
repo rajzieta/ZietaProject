@@ -25,8 +25,8 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api")
-@Api(tags = "Login API")
-public class LoginController {
+@Api(tags = "User Details API")
+public class UserController {
 
 	@Autowired
 	UserInfoService userInfoService;
@@ -34,7 +34,7 @@ public class LoginController {
 	@Autowired
 	UserAccessTypeService userAccessTypeService;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
 	@RequestMapping(value = "getAllUsers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<UserInfoDTO> getAllUserDetails() {
@@ -63,5 +63,20 @@ public class LoginController {
 		
 		return userDetails;
 	}
+	
+	
+	@RequestMapping(value = "getAllUsersByClient", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "lists userdetails based on the provided clientId",notes="Table reference: user_info,"
+			+ "client_info")
+	public List<UserInfoDTO> getAllUsersByClient(@RequestParam(required = true) long clientId) {
+		List<UserInfoDTO> userDataList = null;
+		try {
+			userDataList = userInfoService.findByClientId(clientId);
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in getting user details based on clientId",e);
+		}
+		return userDataList;
+	}
+
 
 }

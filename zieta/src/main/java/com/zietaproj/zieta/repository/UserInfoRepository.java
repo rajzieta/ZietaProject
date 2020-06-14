@@ -1,5 +1,7 @@
 package com.zietaproj.zieta.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +12,7 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, Long>{
 	
 	UserInfo findByEmail(String email);
 	
-	UserInfo findByClientId(Long client_id);
+	List<UserInfo> findByClientId(Long client_id);
 	
 	
 

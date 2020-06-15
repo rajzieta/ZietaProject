@@ -18,6 +18,7 @@ public class TasksByClientProjectResponse {
 	String taskCode;
 	String projectDescription;
 	String taskDescription;
+	String tasktypeDescription;
 	
 	
 

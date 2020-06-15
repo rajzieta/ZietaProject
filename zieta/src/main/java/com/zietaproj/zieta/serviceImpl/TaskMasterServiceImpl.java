@@ -100,6 +100,7 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 		for(TaskInfo taskInfo: taskInfoList) {
 			TasksByClientProjectResponse tasksByClientProjectResponse = new TasksByClientProjectResponse();
 			ProjectInfo projectInfo = projectInfoRepository.findById(taskInfo.getProjectId()).get();
+			TaskMaster taskmaster = taskMasterRepository.findById(taskInfo.getTask_type()).get();
 			tasksByClientProjectResponse.setId(taskInfo.getId());
 			tasksByClientProjectResponse.setProject_id(taskInfo.getProjectId());
 			tasksByClientProjectResponse.setTaskCode(taskInfo.getTask_code());
@@ -107,9 +108,9 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 			tasksByClientProjectResponse.setTask_parent(taskInfo.getTask_parent());
 			tasksByClientProjectResponse.setTask_status(taskInfo.getTask_status());
 			tasksByClientProjectResponse.setTaskDescription(taskInfo.getTask_name());
+			tasksByClientProjectResponse.setTasktypeDescription(taskmaster.getType_name());
 			tasksByClientProjectResponse.setProjectCode(projectInfo.getProject_code());
-			tasksByClientProjectResponse.setProjectDescription(projectInfo.getProject_name());
-			
+			tasksByClientProjectResponse.setProjectDescription(projectInfo.getProject_name());		
 			tasksByClientProjectResponseList.add(tasksByClientProjectResponse);
 			
 		}

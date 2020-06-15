@@ -74,7 +74,7 @@ public class TaskMasterController {
 	
 	@GetMapping("/getAllTasksByClientProject")
 	@ApiOperation(value = "List tasks based on the  clientId and projectId", notes = "Table reference:"
-			+ " task_info, project_info")
+			+ " task_info, project_info, task_type_master")
 	public ResponseEntity<List<TasksByClientProjectResponse>> getAllTasksByClientProject(@RequestParam(required = true) Long clientId,
 			@RequestParam(required = true) Long projectId) {
 		try {

@@ -20,10 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zietaproj.zieta.dto.ActivityMasterDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
+import com.zietaproj.zieta.request.ActivityTaskUserMappingRequest;
 import com.zietaproj.zieta.response.ActivitiesByClientResponse;
 import com.zietaproj.zieta.response.ActivitiesByTaskResponse;
 import com.zietaproj.zieta.service.ActivitiesByTaskService;
-import com.zietaproj.zieta.service.ActivityMasterService;
+import com.zietaproj.zieta.service.ActivityService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,7 +37,7 @@ public class ActivityMasterController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ActivityMasterController.class);
 
 	@Autowired
-	ActivityMasterService activitymasterService;
+	ActivityService activityService;
 
 	@Autowired
 	ActivitiesByTaskService activitiesbytaskservice;
@@ -45,7 +46,7 @@ public class ActivityMasterController {
 	public List<ActivityMasterDTO> getAllActivities() {
 		List<ActivityMasterDTO> activityMasters = null;
 		try {
-			activityMasters = activitymasterService.getAllActivities();
+			activityMasters = activityService.getAllActivities();
 
 		} catch (Exception e) {
 			LOGGER.error("Error Occured in ActivityMasterController#getAllActivities", e);
@@ -55,7 +56,7 @@ public class ActivityMasterController {
 
 	@RequestMapping(value = "addActivitymaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void addActivitymaster(@Valid @RequestBody ActivityMaster activitymaster) {
-		activitymasterService.addActivitymaster(activitymaster);
+		activityService.addActivitymaster(activitymaster);
 	}
 
 	@ApiOperation(value = "List activities based on the  clientId, taskId and projectId", notes = "Table reference: task_activity,activity_master")
@@ -73,11 +74,17 @@ public class ActivityMasterController {
 	@GetMapping("/getAllActivitiesByClient")
 	public ResponseEntity<List<ActivitiesByClientResponse>> getAllActivitiesByClient(@RequestParam(required=true) Long clientId) {
 		try {
-			List<ActivitiesByClientResponse> activitiesbyclientList = activitymasterService.getActivitiesByClient(clientId);
+			List<ActivitiesByClientResponse> activitiesbyclientList = activityService.getActivitiesByClient(clientId);
 			return new ResponseEntity<List<ActivitiesByClientResponse>>(activitiesbyclientList, HttpStatus.OK);
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<List<ActivitiesByClientResponse>>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@ApiOperation(value = "Maps activities with task and then with user", notes = "Table reference: task_activity,activity_user_mapping")
+	@RequestMapping(value = "addActivitiesByClientProjectTask", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addActivitiesByClientProjectTask(@Valid @RequestBody ActivityTaskUserMappingRequest activityTaskUserMappingRequest) {
+	 activityService.addActivitiesByClientProjectTask(activityTaskUserMappingRequest);
 	}
 
 }

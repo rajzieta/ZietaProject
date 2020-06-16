@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zietaproj.zieta.dto.TaskMasterDTO;
+import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.TaskMaster;
 import com.zietaproj.zieta.response.TasksByClientProjectResponse;
 import com.zietaproj.zieta.response.TasksByUserModel;
@@ -94,5 +95,11 @@ public class TaskMasterController {
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<List<TasktypesByClientResponse>>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@ApiOperation(value = "Persists the tasks related to client and its associated project", notes = "Table reference: task_info")
+	@RequestMapping(value = "addTasksByClientProject", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addTasksByClientProject(@Valid @RequestBody TaskInfo taskInfo) {
+		taskMasterService.saveTaskInfo(taskInfo);
 	}
 }

@@ -28,7 +28,7 @@ import lombok.Data;
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = { "created_date", "modified_date" }, allowGetters = true)
 @Data
-public class TaskActivity implements Serializable {
+public class TaskActivity extends BaseEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,22 +49,6 @@ public class TaskActivity implements Serializable {
 	@NotNull
 	private Long activity_id;
 
-	@NotBlank
-	private String created_by;
-
-	@Column(nullable = false, updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	@CreatedDate
-	private Date created_date;
-
-	@Column(nullable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	@LastModifiedDate
-	private Date modified_date;
-
-	@NotBlank
-	private String modified_by;
-
-	private boolean IS_DELETE;
+	
 
 }

@@ -41,7 +41,7 @@ public class TaskInfo implements Serializable {
 	    @Column(name = "client_id")
 	    private Long clientId;
 	
-	    @NotBlank
+	    @NotNull
 	    @Column(name = "project_id")
 	    private Long projectId;
 	    
@@ -51,15 +51,17 @@ public class TaskInfo implements Serializable {
 	    @NotBlank
 	    private String task_code;
 	    
-	    @NotBlank
+	    @NotNull
 	    private Long task_type;
 	    
 	    
-	    @NotBlank
+	    @NotNull
 	    private Long task_parent;
 	    
+	    @NotNull
+	    private Long task_manager;
 	    
-	    @NotBlank
+	    @NotNull
 	    private Long task_status;
 	    
 	    

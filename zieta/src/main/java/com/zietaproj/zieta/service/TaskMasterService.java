@@ -3,6 +3,7 @@ package com.zietaproj.zieta.service;
 import java.util.List;
 
 import com.zietaproj.zieta.dto.TaskMasterDTO;
+import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.TaskMaster;
 import com.zietaproj.zieta.response.TasksByClientProjectResponse;
 import com.zietaproj.zieta.response.TasksByUserModel;
@@ -18,5 +19,7 @@ public interface TaskMasterService {
 	List<TasksByClientProjectResponse> findByClientIdAndProjectId(Long clientId, Long projectId);
 
 	public List<TasktypesByClientResponse> getTasksByClient(Long clientId);
+	
+	public boolean saveTaskInfo(TaskInfo taskInfo);
 	
 }

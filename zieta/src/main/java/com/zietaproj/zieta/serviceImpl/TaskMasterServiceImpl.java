@@ -3,6 +3,8 @@ package com.zietaproj.zieta.serviceImpl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -130,4 +132,18 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 	}
 		return tasksByClientResponseList;
 }
+
+	@Override
+	@Transactional
+	public boolean saveTaskInfo(TaskInfo taskInfo) {
+		try {
+			TaskInfo taskInfoDB = taskInfoRepository.save(taskInfo);
+			System.out.println("Task ID: "+taskInfoDB.getId());
+			return true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return false;
+		}
+
+	}
 }

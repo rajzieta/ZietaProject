@@ -1,5 +1,7 @@
 package com.zietaproj.zieta.response;
 
+import com.zietaproj.zieta.model.CustInfo;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,12 +9,16 @@ import lombok.Setter;
 @Setter
 public class ProjectsByClientResponse {
 
-	Long id;
+	Long projectId;
 	private Long clientId;
-	private String type_name;
+	private String projectTypeName;
 	private String clientCode;
 	private String project_code;
 	private String project_name;
 	private String projectManager;
-	private long projectStatus;
+	private Long projectStatus;
+	private long projectType;
+	String OrgNode;
+	short allowUnplannedActivity;
+	CustInfo custInfo;
 }

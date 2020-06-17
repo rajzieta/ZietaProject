@@ -11,6 +11,7 @@ public class ActivityMasterDTO {
 	private Long client_id;
 	private String activity_code;
 	private String activity_desc;
+	private boolean IS_ACTIVE;
 	private String created_by;
 	private String modified_by;
 	private boolean IS_DELETE;

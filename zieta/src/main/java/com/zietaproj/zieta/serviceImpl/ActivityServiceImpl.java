@@ -21,6 +21,7 @@ import com.zietaproj.zieta.repository.ActivitiyUserMappingRepository;
 import com.zietaproj.zieta.repository.ActivityMasterRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
+import com.zietaproj.zieta.repository.StatusMasterRepository;
 import com.zietaproj.zieta.request.ActivityTaskUserMappingRequest;
 import com.zietaproj.zieta.response.ActivitiesByClientResponse;
 import com.zietaproj.zieta.service.ActivityService;
@@ -47,6 +48,9 @@ public class ActivityServiceImpl implements ActivityService {
 	ActivitiesTaskRepository activitiesTaskRepository;
 	
 	@Autowired
+	StatusMasterRepository statusMasterRepository;
+	
+	@Autowired
 	ModelMapper modelMapper;
 	
 	@Override
@@ -65,6 +69,7 @@ public class ActivityServiceImpl implements ActivityService {
 			activityMasterDTO
 					.setClient_code(clientInfoRepository.findById(activityMaster.getClientId())
 							.get().getClient_code());
+			activityMasterDTO.setIS_ACTIVE(activityMaster.isIS_ACTIVE());
 			activityMasterDTOs.add(activityMasterDTO);
 		}
 		return activityMasterDTOs;

@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -31,9 +32,14 @@ public class StatusMaster implements Serializable{
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private Long id;
 
+	 @NotNull
+	 private Long client_id;
+	    
 	    @NotBlank
 	    private String status;
 
+	    @NotBlank
+	    private String status_type;
 	    
 		@NotBlank
 		private String created_by;
@@ -59,6 +65,24 @@ public class StatusMaster implements Serializable{
 
 		public void setId(Long id) {
 			this.id = id;
+		}
+		
+		
+
+		public Long getClient_id() {
+			return client_id;
+		}
+
+		public void setClient_id(Long client_id) {
+			this.client_id = client_id;
+		}
+
+		public String getStatus_type() {
+			return status_type;
+		}
+
+		public void setStatus_type(String status_type) {
+			this.status_type = status_type;
 		}
 
 		public String getStatus() {

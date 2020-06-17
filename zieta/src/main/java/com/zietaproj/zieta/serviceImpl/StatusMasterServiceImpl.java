@@ -26,6 +26,7 @@ public class StatusMasterServiceImpl implements StatusMasterService {
 			statusMasterDTO = new StatusMasterDTO();
 			statusMasterDTO.setId(statusMaster.getId());
 			statusMasterDTO.setStatus(statusMaster.getStatus());
+			statusMasterDTO.setStatus_type(statusMaster.getStatus_type());
 			statusMasterDTO.setCreated_by(statusMaster.getCreated_by());
 			statusMasterDTO.setCreated_date(statusMaster.getCreated_date());
 			statusMasterDTO.setModified_by(statusMaster.getModified_by());

@@ -138,8 +138,14 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 			projectsByClientResponse.setClientCode(clientInfoRepository.findById(projectInfo.getClientId()).get().getClient_code());
 			projectsByClientResponse.setProjectManager(getProjectManagerName(projectInfo));
 			projectsByClientResponse
-					.setType_name(projectMasterRepository.findById(projectInfo.getProject_type()).get().getType_name());
+					.setProjectTypeName(projectMasterRepository.findById(projectInfo.getProject_type()).get().getType_name());
 			projectsByClientResponse.setProjectStatus(projectInfo.getProject_status());
+			projectsByClientResponse.setProjectType(projectInfo.getProject_type());
+			projectsByClientResponse.setOrgNode(orgInfoRepository.findById(projectInfo.getProject_orgnode())
+					.get().getOrg_node_name());
+			projectsByClientResponse.setAllowUnplannedActivity(projectInfo.getAllow_unplanned());
+			CustInfo custoInfo = custInfoRepository.findById(projectInfo.getCust_id()).get();
+			projectsByClientResponse.setCustInfo(custoInfo);
 			projectsByClientResponseList.add(projectsByClientResponse);
 		}
 	}

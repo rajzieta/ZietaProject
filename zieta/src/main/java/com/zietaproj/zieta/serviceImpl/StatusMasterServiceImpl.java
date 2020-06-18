@@ -3,6 +3,7 @@ package com.zietaproj.zieta.serviceImpl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +18,16 @@ public class StatusMasterServiceImpl implements StatusMasterService {
 	@Autowired
 	StatusMasterRepository statusMasterRepository;
 	
+	@Autowired
+	ModelMapper modelMapper;
+	
 	@Override
 	public List<StatusMasterDTO> getAllStatus() {
 		List<StatusMaster> statusMasters= statusMasterRepository.findAll();
 		List<StatusMasterDTO> statusMasterDTOs = new ArrayList<StatusMasterDTO>();
 		StatusMasterDTO statusMasterDTO = null;
 		for (StatusMaster statusMaster : statusMasters) {
+
 			statusMasterDTO = new StatusMasterDTO();
 			statusMasterDTO.setId(statusMaster.getId());
 			statusMasterDTO.setStatus(statusMaster.getStatus());
@@ -31,7 +36,7 @@ public class StatusMasterServiceImpl implements StatusMasterService {
 			statusMasterDTO.setCreated_date(statusMaster.getCreated_date());
 			statusMasterDTO.setModified_by(statusMaster.getModified_by());
 			statusMasterDTO.setModified_date(statusMaster.getModified_date());
-			
+	statusMasterDTO = modelMapper.map(statusMaster,StatusMasterDTO.class);
 			statusMasterDTOs.add(statusMasterDTO);
 		}
 		return statusMasterDTOs;

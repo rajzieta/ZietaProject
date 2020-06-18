@@ -40,8 +40,8 @@ public class StatusMasterController {
 		return statusMasters;
 	}
 
-	@RequestMapping(value = "addStatusmaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void addStatusmaster(@Valid @RequestBody StatusMaster statusmaster) {
+	@RequestMapping(value = "addStatusByClientType", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addStatusByClientType(@Valid @RequestBody StatusMaster statusmaster) {
 		statusMasterService.addStatusmaster(statusmaster);
 	}
 

@@ -2,8 +2,14 @@ package com.zietaproj.zieta.dto;
 
 import java.util.Date;
 
+
 import lombok.Data;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @Data
 public class StatusMasterDTO {
 
@@ -16,5 +22,5 @@ public class StatusMasterDTO {
     private String modified_by;
     private Date modified_date;
     private boolean IS_DELETE;
-    
+
 }

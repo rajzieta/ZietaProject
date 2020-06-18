@@ -24,6 +24,7 @@ import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
 import com.zietaproj.zieta.response.ProjectsByClientResponse;
 import com.zietaproj.zieta.service.ProjectMasterService;
+import com.zietaproj.zieta.util.TSMUtil;
 
 @Service
 public class ProjectMasterServiceImpl implements ProjectMasterService{
@@ -54,7 +55,6 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	@Autowired
 	ModelMapper modelMapper;
 	
-	private final String SPACE = " ";
 	
 	@Override
 	public List<ProjectsByClientResponse> getAllProjects() {
@@ -115,12 +115,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	private String getProjectManagerName(ProjectInfo projectInfo) {
 		long projectManagerId = projectInfo.getProject_manager();
 		UserInfo userInfo = userInfoRepository.findById(projectManagerId).get();
-		StringBuilder prjManagerName = new StringBuilder(userInfo.getUser_fname());
-		if(!StringUtils.isEmpty(userInfo.getUser_mname())) {
-			prjManagerName.append(SPACE).append(userInfo.getUser_mname());
-		}
-		prjManagerName.append(SPACE).append(userInfo.getUser_lname());
-		return prjManagerName.toString();
+		return TSMUtil.getFullName(userInfo);
 	}
 	
 	@Override

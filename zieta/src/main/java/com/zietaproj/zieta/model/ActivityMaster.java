@@ -60,4 +60,6 @@ public class ActivityMaster implements Serializable{
 	
 	private boolean IS_DELETE;
 	
+	private short is_active;
+	
 }

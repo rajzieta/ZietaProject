@@ -59,13 +59,7 @@ public class ActivityServiceImpl implements ActivityService {
 		List<ActivityMasterDTO> activityMasterDTOs = new ArrayList<ActivityMasterDTO>();
 		ActivityMasterDTO activityMasterDTO = null;
 		for (ActivityMaster activityMaster : activityMasters) {
-			activityMasterDTO = new ActivityMasterDTO();
-			activityMasterDTO.setId(activityMaster.getId());
-			activityMasterDTO.setClient_id(activityMaster.getClientId());
-			activityMasterDTO.setActivity_code(activityMaster.getActivity_code());
-			activityMasterDTO.setActivity_desc(activityMaster.getActivity_desc());
-			activityMasterDTO.setCreated_by(activityMaster.getCreated_by());
-			activityMasterDTO.setModified_by(activityMaster.getModified_by());
+			activityMasterDTO = modelMapper.map(activityMaster, ActivityMasterDTO.class);
 			activityMasterDTO
 					.setClient_code(clientInfoRepository.findById(activityMaster.getClientId())
 							.get().getClient_code());

@@ -11,14 +11,21 @@ public class ProjectsByClientResponse {
 
 	Long projectId;
 	private Long clientId;
-	private String projectTypeName;
+
+	private String ProjectTypeName;
+	
+
 	private String clientCode;
 	private String project_code;
 	private String project_name;
 	private String projectManager;
 	private Long projectStatus;
 	private long projectType;
+	
 	String OrgNode;
 	short allowUnplannedActivity;
 	CustInfo custInfo;
+	
+	
+	
 }

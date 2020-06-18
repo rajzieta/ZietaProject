@@ -1,6 +1,7 @@
 package com.zietaproj.zieta.model;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -12,10 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -48,6 +47,23 @@ public class TaskActivity extends BaseEntity implements Serializable {
 
 	@NotNull
 	private Long activity_id;
+	
+	@Column(nullable = false, name = "START_DATE")
+	@Temporal(TemporalType.TIMESTAMP)
+	@LastModifiedDate
+	private Date startDate;
+	
+	@Column(nullable = false, name = "END_DATE")
+	@Temporal(TemporalType.TIMESTAMP)
+	@LastModifiedDate
+	private Date endDate;
+	
+	@Column(nullable=false, name= "PLANNED_HOURS")
+	private Time plannedHrs;
+	
+	@Column(nullable=false, name= "ACTUAL_HOURS")
+	private Time actualHrs;
+	
 
 	
 

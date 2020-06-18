@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zietaproj.zieta.dto.StatusMasterDTO;
+import com.zietaproj.zieta.model.ClientInfo;
 import com.zietaproj.zieta.model.StatusMaster;
+import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.StatusMasterRepository;
 import com.zietaproj.zieta.service.StatusMasterService;
 
@@ -19,6 +21,9 @@ public class StatusMasterServiceImpl implements StatusMasterService {
 	StatusMasterRepository statusMasterRepository;
 	
 	@Autowired
+	ClientInfoRepository clientInfoRepository;
+	
+	@Autowired
 	ModelMapper modelMapper;
 	
 	@Override
@@ -27,16 +32,8 @@ public class StatusMasterServiceImpl implements StatusMasterService {
 		List<StatusMasterDTO> statusMasterDTOs = new ArrayList<StatusMasterDTO>();
 		StatusMasterDTO statusMasterDTO = null;
 		for (StatusMaster statusMaster : statusMasters) {
-
-			statusMasterDTO = new StatusMasterDTO();
-			statusMasterDTO.setId(statusMaster.getId());
-			statusMasterDTO.setStatus(statusMaster.getStatus());
-			statusMasterDTO.setStatus_type(statusMaster.getStatus_type());
-			statusMasterDTO.setCreated_by(statusMaster.getCreated_by());
-			statusMasterDTO.setCreated_date(statusMaster.getCreated_date());
-			statusMasterDTO.setModified_by(statusMaster.getModified_by());
-			statusMasterDTO.setModified_date(statusMaster.getModified_date());
-	statusMasterDTO = modelMapper.map(statusMaster,StatusMasterDTO.class);
+			statusMasterDTO = modelMapper.map(statusMaster,StatusMasterDTO.class);
+			statusMasterDTO.setClientCode(clientInfoRepository.findById(statusMaster.getClientId()).get().getClient_code());
 			statusMasterDTOs.add(statusMasterDTO);
 		}
 		return statusMasterDTOs;

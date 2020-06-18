@@ -87,11 +87,13 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		for(ProjectInfo projectInfo: projectInfoList) {
 			projectDetailsByUserModel = new ProjectDetailsByUserModel();
 			projectDetailsByUserModel.setClientId(projectInfo.getClientId());
-			projectDetailsByUserModel.setProjectCode(projectInfo.getProject_code());
+			projectDetailsByUserModel.setClientCode(clientInfoRepository.findById(projectInfo.getClientId()).get().getClient_code());
+			
+			projectDetailsByUserModel.setProject_code(projectInfo.getProject_code());
 			projectDetailsByUserModel.setProjectTypeName(
 					projectMasterRepository.findById(projectInfo.getProject_type()).get().getType_name());
 			projectDetailsByUserModel.setProjectId(projectInfo.getId());
-			projectDetailsByUserModel.setProjectName(projectInfo.getProject_name());
+			projectDetailsByUserModel.setProject_name(projectInfo.getProject_name());
 			projectDetailsByUserModel.setProjectType(projectInfo.getProject_type());
 			projectDetailsByUserModel.setProjectStatus(projectInfo.getProject_status());
 			projectDetailsByUserModel.setOrgNode(orgInfoRepository.findById(projectInfo.getProject_orgnode())

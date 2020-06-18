@@ -14,7 +14,8 @@ import lombok.Setter;
 public class StatusMasterDTO {
 
 	private Long id;
-	private Long client_id;
+	private Long clientId;
+	private String clientCode;
     private String status;
     private String status_type;
     private String created_by;

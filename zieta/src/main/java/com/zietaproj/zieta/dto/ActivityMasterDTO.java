@@ -16,5 +16,5 @@ public class ActivityMasterDTO {
 	private String modified_by;
 	private boolean IS_DELETE;
 	private String client_code;
-	private String is_active;
+	
 }

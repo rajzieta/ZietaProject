@@ -9,15 +9,16 @@ import lombok.Setter;
 @Setter
 public class ProjectDetailsByUserModel {
 	
-	String projectCode;
+	String project_code;
 	long projectId;
 	String projectTypeName;
-	String projectName;
+	String project_name;
 	long projectType;
 	String OrgNode;
 	long projectStatus;
 	long clientId;
-
+	String clientCode;
+	
 	String projectManager;
 	short allowUnplannedActivity;
 	CustInfo custInfo;

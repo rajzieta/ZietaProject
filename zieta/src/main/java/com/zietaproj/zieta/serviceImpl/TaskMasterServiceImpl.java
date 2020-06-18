@@ -14,14 +14,18 @@ import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.TaskMaster;
 import com.zietaproj.zieta.model.TasksByUser;
+import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
+import com.zietaproj.zieta.repository.StatusMasterRepository;
 import com.zietaproj.zieta.repository.TaskInfoRepository;
 import com.zietaproj.zieta.repository.TaskMasterRepository;
 import com.zietaproj.zieta.repository.TasksByUserRepository;
+import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.response.TasksByClientProjectResponse;
 import com.zietaproj.zieta.response.TasksByUserModel;
 import com.zietaproj.zieta.response.TasktypesByClientResponse;
 import com.zietaproj.zieta.service.TaskMasterService;
+import com.zietaproj.zieta.util.TSMUtil;
 
 @Service
 public class TaskMasterServiceImpl implements TaskMasterService {
@@ -37,6 +41,12 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 
 	@Autowired
 	TaskInfoRepository taskInfoRepository;
+	
+	@Autowired
+	StatusMasterRepository statusRepository;
+	
+	@Autowired
+	UserInfoRepository userInfoRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -112,7 +122,12 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 			tasksByClientProjectResponse.setTaskDescription(taskInfo.getTask_name());
 			tasksByClientProjectResponse.setTasktypeDescription(taskmaster.getType_name());
 			tasksByClientProjectResponse.setProjectCode(projectInfo.getProject_code());
-			tasksByClientProjectResponse.setProjectDescription(projectInfo.getProject_name());		
+			tasksByClientProjectResponse.setProjectDescription(projectInfo.getProject_name());	
+			UserInfo userInfo = userInfoRepository.findById(taskInfo.getTask_manager()).get();
+			String userName = TSMUtil.getFullName(userInfo);
+			tasksByClientProjectResponse.setTaskManager(userName);
+			tasksByClientProjectResponse
+					.setTaskStatusDescription(statusRepository.findById(taskInfo.getTask_status()).get().getStatus_type());
 			tasksByClientProjectResponseList.add(tasksByClientProjectResponse);
 			
 		}

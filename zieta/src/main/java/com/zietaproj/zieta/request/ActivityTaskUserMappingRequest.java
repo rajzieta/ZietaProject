@@ -1,5 +1,8 @@
 package com.zietaproj.zieta.request;
 
+import java.sql.Time;
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -48,5 +51,9 @@ public class ActivityTaskUserMappingRequest {
 		private long clientId;
 		private String created_by;
 		private String modified_by;
+		private Date startDate;
+		private Date endDate;
+		private Time plannedHrs;
+		private Time actualHrs;
 	}
 }

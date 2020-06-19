@@ -40,7 +40,8 @@ public class ActivityMaster implements Serializable{
     @NotBlank
     private String activity_desc;
     
-    private boolean IS_ACTIVE;
+    @Column(name = "is_active")
+    private boolean isActive;
     
 	@NotBlank
 	private String created_by;

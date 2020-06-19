@@ -12,5 +12,5 @@ public class ActivitiesByClientResponse {
     private String activity_code;
     private String activity_desc;
     private String clientCode;
-	
+    private boolean isActive;
 }

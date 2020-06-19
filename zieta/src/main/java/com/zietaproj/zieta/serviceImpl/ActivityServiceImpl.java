@@ -63,7 +63,7 @@ public class ActivityServiceImpl implements ActivityService {
 			activityMasterDTO
 					.setClient_code(clientInfoRepository.findById(activityMaster.getClientId())
 							.get().getClient_code());
-			activityMasterDTO.setIS_ACTIVE(activityMaster.isIS_ACTIVE());
+			activityMasterDTO.setIS_ACTIVE(activityMaster.isActive());
 			activityMasterDTOs.add(activityMasterDTO);
 		}
 		return activityMasterDTOs;

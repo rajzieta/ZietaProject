@@ -10,6 +10,8 @@ public interface ProjectInfoRepository extends JpaRepository<ProjectInfo, Long> 
 	
 	List<ProjectInfo> findByClientId(long clientId);
 
+	List<ProjectInfo> findByProjectManager(long projectManager);
+
 	
 
 }

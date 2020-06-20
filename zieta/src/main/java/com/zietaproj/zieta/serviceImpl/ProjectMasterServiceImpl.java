@@ -75,13 +75,12 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	}
 
 	@Override
-	public List<ProjectDetailsByUserModel> getProjectsByUser(long userId) {
+	public List<ProjectDetailsByUserModel> getProjectsByUser(long projectManager) {
 		
 		List<ProjectDetailsByUserModel> projectDetailsByUserList = new ArrayList<>();
 		ProjectDetailsByUserModel projectDetailsByUserModel = null;
-		
-		List<ActivityUserMapping> activityUserMappingList = activitiyUserMappingRepository.findByUserId(userId);
-		List<Long> projectIdList = activityUserMappingList.stream().map(ActivityUserMapping::getProjectId).collect(Collectors.toList());
+		List<ProjectInfo> projectmanagerMappingList = projectInfoRepository.findByProjectManager(projectManager);
+		List<Long> projectIdList = projectmanagerMappingList.stream().map(ProjectInfo::getId).collect(Collectors.toList());
 		
 		List<ProjectInfo> projectInfoList = projectInfoRepository.findAllById(projectIdList);
 		for(ProjectInfo projectInfo: projectInfoList) {
@@ -115,7 +114,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	}
 
 	private String getProjectManagerName(ProjectInfo projectInfo) {
-		long projectManagerId = projectInfo.getProject_manager();
+		long projectManagerId = projectInfo.getProjectManager();
 		UserInfo userInfo = userInfoRepository.findById(projectManagerId).get();
 		return TSMUtil.getFullName(userInfo);
 	}

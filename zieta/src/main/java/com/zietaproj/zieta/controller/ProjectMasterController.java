@@ -56,7 +56,7 @@ public class ProjectMasterController {
 		projectmasterService.addProjectmaster(projectmaster);
 	}
 
-	@ApiOperation(value = "List projects based on the  userId", notes = "Table reference: activity_user_mapping,"
+	@ApiOperation(value = "List projects based on the  userId", notes = "Table reference: Project_Info,"
 			+ " org_info, user_info, cust_info, client_info")
 	@RequestMapping(value = "getAllProjectsByProjectManager", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<ProjectDetailsByUserModel>> getAllProjectsByProjectManager(@RequestParam(required = true) Long  userId) {
@@ -70,7 +70,7 @@ public class ProjectMasterController {
 	}
 	
 	@GetMapping("/getAllProjectsByClient")
-	@ApiOperation(value = "List Projects based on the clientId", notes = "Table reference: project_type_master,user_info,project_info,cust_info")
+	@ApiOperation(value = "List Projects based on the clientId", notes = "Table reference: project_type_master,user_info,project_info,org_info,cust_info")
 	public ResponseEntity<List<ProjectsByClientResponse>> getAllProjectsByClient(@RequestParam(required = true) Long clientId) {
 		try {
 			List<ProjectsByClientResponse> projectsbyclientList = projectmasterService.getProjectsByClient(clientId);

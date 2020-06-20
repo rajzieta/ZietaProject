@@ -55,7 +55,8 @@ public class ProjectInfo implements Serializable {
 	private Long project_orgnode;
 	
 	@NotBlank
-	private Long project_manager;
+	@Column(name = "project_manager")
+	private Long projectManager;
 	
 	@NotBlank
     private short allow_unplanned;

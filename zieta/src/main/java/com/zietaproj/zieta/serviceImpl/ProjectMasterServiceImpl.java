@@ -79,6 +79,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		
 		List<ProjectDetailsByUserModel> projectDetailsByUserList = new ArrayList<>();
 		ProjectDetailsByUserModel projectDetailsByUserModel = null;
+		
 		List<ProjectInfo> projectmanagerMappingList = projectInfoRepository.findByProjectManager(projectManager);
 		List<Long> projectIdList = projectmanagerMappingList.stream().map(ProjectInfo::getId).collect(Collectors.toList());
 		

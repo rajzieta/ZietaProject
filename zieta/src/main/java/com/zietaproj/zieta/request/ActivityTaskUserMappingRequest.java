@@ -29,7 +29,7 @@ public class ActivityTaskUserMappingRequest {
 
 		private long activityId;
 		private long taskId;
-		private long userId;
+		private Long userId;
 		private long projectId;
 		private long clientId;
 		private String created_by;
@@ -53,7 +53,7 @@ public class ActivityTaskUserMappingRequest {
 		private String modified_by;
 		private Date startDate;
 		private Date endDate;
-		private Time plannedHrs;
-		private Time actualHrs;
+		private String plannedHrs;
+		private String actualHrs;
 	}
 }

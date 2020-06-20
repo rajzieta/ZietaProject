@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zietaproj.zieta.dto.ActivityMasterDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
+import com.zietaproj.zieta.request.AcitivityRequest;
 import com.zietaproj.zieta.request.ActivityTaskUserMappingRequest;
+import com.zietaproj.zieta.request.ScreensMasterEditRequest;
 import com.zietaproj.zieta.response.ActivitiesByClientResponse;
 import com.zietaproj.zieta.response.ActivitiesByTaskResponse;
 import com.zietaproj.zieta.service.ActivitiesByTaskService;
@@ -85,6 +87,12 @@ public class ActivityMasterController {
 	@RequestMapping(value = "addActivitiesByClientProjectTask", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void addActivitiesByClientProjectTask(@Valid @RequestBody ActivityTaskUserMappingRequest activityTaskUserMappingRequest) {
 	 activityService.addActivitiesByClientProjectTask(activityTaskUserMappingRequest);
+	}
+	
+	@RequestMapping(value = "editActivitiesById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editActivitiesById(@Valid @RequestBody AcitivityRequest acitivityRequest) throws Exception {
+		activityService.editActivitiesById(acitivityRequest);
+		
 	}
 
 }

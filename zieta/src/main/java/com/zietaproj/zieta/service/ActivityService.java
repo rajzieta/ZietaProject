@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.zietaproj.zieta.dto.ActivityMasterDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
+import com.zietaproj.zieta.request.AcitivityRequest;
 import com.zietaproj.zieta.request.ActivityTaskUserMappingRequest;
 import com.zietaproj.zieta.response.ActivitiesByClientResponse;
 
@@ -18,4 +19,6 @@ public interface ActivityService {
 	public List<ActivitiesByClientResponse> getActivitiesByClient(Long clientId);
 	
 	public void  addActivitiesByClientProjectTask(ActivityTaskUserMappingRequest activityTaskUserMappingRequest);
+	
+	public void editActivitiesById(AcitivityRequest acitivityRequest) throws Exception;
 }

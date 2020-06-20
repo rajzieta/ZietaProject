@@ -39,8 +39,7 @@ public class ActivityUserMapping extends BaseEntity {
 	@Column(name = "ACTIVITY_ID")
 	private Long activityId;
 
-	@NotNull
-	@Column(name = "USER_ID")
+	@Column(name = "USER_ID", nullable=true)
 	private Long userId;
 
 }

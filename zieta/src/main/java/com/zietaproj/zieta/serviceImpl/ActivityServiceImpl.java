@@ -2,6 +2,7 @@ package com.zietaproj.zieta.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -22,6 +23,7 @@ import com.zietaproj.zieta.repository.ActivityMasterRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
 import com.zietaproj.zieta.repository.StatusMasterRepository;
+import com.zietaproj.zieta.request.AcitivityRequest;
 import com.zietaproj.zieta.request.ActivityTaskUserMappingRequest;
 import com.zietaproj.zieta.response.ActivitiesByClientResponse;
 import com.zietaproj.zieta.service.ActivityService;
@@ -63,7 +65,7 @@ public class ActivityServiceImpl implements ActivityService {
 			activityMasterDTO
 					.setClient_code(clientInfoRepository.findById(activityMaster.getClientId())
 							.get().getClient_code());
-			activityMasterDTO.setIS_ACTIVE(activityMaster.isIS_ACTIVE());
+			activityMasterDTO.setIS_ACTIVE(activityMaster.isActive());
 			activityMasterDTOs.add(activityMasterDTO);
 		}
 		return activityMasterDTOs;
@@ -112,6 +114,23 @@ public class ActivityServiceImpl implements ActivityService {
 			LOGGER.error("Exception occured during saving the ActivitiesByClientProjectTask",e );
 		}
 		
+		
+	}
+
+	@Override
+	public void editActivitiesById(AcitivityRequest acitivityRequest) throws Exception {
+		Optional<ActivityMaster> activityMasterEntity = activityMasterRepository.findById(acitivityRequest.getId());
+		if(activityMasterEntity.isPresent()) {
+			ActivityMaster activityMasterSave = activityMasterEntity.get();
+			activityMasterSave.setActive(acitivityRequest.isActive());
+			activityMasterSave.setActivityCode(acitivityRequest.getActivityCode());
+			activityMasterSave.setActivity_desc(acitivityRequest.getActivity_desc());
+			activityMasterSave.setModified_by(acitivityRequest.getModified_by());
+			activityMasterRepository.save(activityMasterSave);
+			
+		}else {
+			throw new Exception("Activity not found with the provided activity ID : "+acitivityRequest.getId());
+		}
 		
 	}
 }

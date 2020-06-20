@@ -14,6 +14,6 @@ public class ActivitiesByTaskResponse {
     private String activity_code;
     private String activity_desc;
     private String userName;
-    private long userId;
+    private Long userId;
 	 
 }

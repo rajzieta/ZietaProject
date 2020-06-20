@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.zietaproj.zieta.model.ActivityMaster;
-import com.zietaproj.zieta.model.RoleMaster;
 
 @Repository
 public interface ActivityMasterRepository extends JpaRepository<ActivityMaster, Long>{

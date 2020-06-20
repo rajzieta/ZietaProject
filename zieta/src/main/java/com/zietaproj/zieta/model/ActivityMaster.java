@@ -35,7 +35,8 @@ public class ActivityMaster implements Serializable{
 
     
     @NotBlank
-    private String activity_code;
+    @Column(name = "activity_code")
+    private String activityCode;
     
     @NotBlank
     private String activity_desc;
@@ -43,7 +44,6 @@ public class ActivityMaster implements Serializable{
     @Column(name = "is_active")
     private boolean isActive;
     
-	@NotBlank
 	private String created_by;
 
     @Column(nullable = false, updatable = false)
@@ -56,7 +56,6 @@ public class ActivityMaster implements Serializable{
     @LastModifiedDate
     private Date modified_date;
 	
-	@NotBlank
 	private String modified_by;
 	
 	private boolean IS_DELETE;

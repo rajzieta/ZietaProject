@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zietaproj.zieta.model.ActivityMaster;
+import com.zietaproj.zieta.model.ActivityUserMapping;
 import com.zietaproj.zieta.model.TaskActivity;
 import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.repository.ActivitiesTaskRepository;
@@ -45,16 +46,22 @@ public class ActivitiesByTaskServiceImpl implements ActivitiesByTaskService {
 			activitiesbytaskResponse.setTask_id(activitiesbytask.getTaskId());
 			activitiesbytaskResponse.setClient_id(activitiesbytask.getClientId());
 			activitiesbytaskResponse.setActivity_id(activitiesbytask.getActivity_id());
-			long userId = activitiyUserMappingRepository.findById(activitiesbytask.getActivity_id())
-					.get().getUserId();
-			activitiesbytaskResponse.setUserId(userId);
-			UserInfo userInfo = userInfoReposistory.findById(userId).get();
-			String teamMemberName = TSMUtil.getFullName(userInfo);
-			activitiesbytaskResponse.setUserName(teamMemberName);
+			
+			Long userId;
+			String teamMemberName;
+			Optional<ActivityUserMapping> activityUserMapping = activitiyUserMappingRepository.findById(activitiesbytask.getActivity_id());
+			if(activityUserMapping.isPresent()) {
+				activitiesbytaskResponse.setUserId(activityUserMapping.get().getUserId());
+				Optional<UserInfo> userInfo = userInfoReposistory.findById(activityUserMapping.get().getUserId());
+				if(userInfo.isPresent()) {
+				teamMemberName = TSMUtil.getFullName(userInfo.get());
+				activitiesbytaskResponse.setUserName(teamMemberName);
+				}
+			}
 			
 			Optional<ActivityMaster> activitymaster = activityMasterRepository.findById(activitiesbytask.getActivity_id());
 			if(activitymaster.isPresent()) {
-				activitiesbytaskResponse.setActivity_code(activitymaster.get().getActivity_code());
+				activitiesbytaskResponse.setActivity_code(activitymaster.get().getActivityCode());
 				activitiesbytaskResponse.setActivity_desc(activitymaster.get().getActivity_desc());
 			}
 			

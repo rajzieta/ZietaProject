@@ -127,7 +127,7 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 			String userName = TSMUtil.getFullName(userInfo);
 			tasksByClientProjectResponse.setTaskManager(userName);
 			tasksByClientProjectResponse
-					.setTaskStatusDescription(statusRepository.findById(taskInfo.getTask_status()).get().getStatus_type());
+					.setTaskStatusDescription(statusRepository.findById(taskInfo.getTask_status()).get().getStatus());
 			tasksByClientProjectResponseList.add(tasksByClientProjectResponse);
 			
 		}

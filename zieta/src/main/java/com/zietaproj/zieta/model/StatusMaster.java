@@ -47,9 +47,28 @@ public class StatusMaster extends BaseEntity implements Serializable{
 
 
 	    @NotBlank
-	    private String status_type;
+	    @Column(name="status_type")
+	    private String statusType;
 
 
+	    @Column(nullable = false, updatable = false)
+	    @Temporal(TemporalType.TIMESTAMP)
+	    @CreatedDate
+	    private Date created_date;
+
+	    @Column(nullable = false)
+	    @Temporal(TemporalType.TIMESTAMP)
+	    @LastModifiedDate
+	    private Date modified_date;
+		
+		//@NotBlank(message="Modified_by may not be blank")
+		private String modified_by;
+		
+		//@NotBlank(message="created_by may not be blank")
+		private String created_by;
+		
+		@Column(insertable = false, updatable = false)
+		private boolean IS_DELETE;
 
 	
 		

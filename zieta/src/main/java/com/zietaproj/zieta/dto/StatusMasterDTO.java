@@ -15,7 +15,7 @@ public class StatusMasterDTO {
 	private Long clientId;
 	private String clientCode;
     private String status;
-    private String status_type;
+    private String statusType;
     private String created_by;
     private Date   created_date;
     private String modified_by;

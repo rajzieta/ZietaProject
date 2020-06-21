@@ -2,19 +2,27 @@ package com.zietaproj.zieta.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zietaproj.zieta.dto.StatusMasterDTO;
-import com.zietaproj.zieta.model.ClientInfo;
+import com.zietaproj.zieta.model.ActivityMaster;
+import com.zietaproj.zieta.model.ScreensMaster;
 import com.zietaproj.zieta.model.StatusMaster;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.StatusMasterRepository;
+import com.zietaproj.zieta.request.AcitivityRequest;
+import com.zietaproj.zieta.request.StatusByClientTypeRequest;
+
+import com.zietaproj.zieta.response.StatusByClienttypeResponse;
 import com.zietaproj.zieta.service.StatusMasterService;
 
 @Service
+@Transactional
 public class StatusMasterServiceImpl implements StatusMasterService {
 	
 	@Autowired
@@ -42,12 +50,45 @@ public class StatusMasterServiceImpl implements StatusMasterService {
 	
 	  @Override 
 	  public void addStatusmaster(StatusMaster statusmaster) {
+		
 	  statusMasterRepository.save(statusmaster); 
 	  
 	  }
 	 
 	
 	
-	
+	  @Override
+		public List<StatusByClienttypeResponse> findByClientIdAndStatusType(Long clientId, String statusType) {
+			List<StatusMaster> statusList = statusMasterRepository.findByClientIdAndStatusType(clientId, statusType);
+			
+			List<StatusByClienttypeResponse> statusByClientStatustypeList = new ArrayList<>();
+			
+			for(StatusMaster statusmaster: statusList) {
+				StatusByClienttypeResponse statusbyclienttypeList = new StatusByClienttypeResponse();
+				
+				statusbyclienttypeList.setId(statusmaster.getId());
+				statusbyclienttypeList.setClientId(statusmaster.getClientId());
+				statusbyclienttypeList.setStatus(statusmaster.getStatus());
+				statusbyclienttypeList.setStatus_type(statusmaster.getStatusType());
+				statusbyclienttypeList.setCreated_by(statusmaster.getCreated_by());
+				statusbyclienttypeList.setCreated_date(statusmaster.getCreated_date());
+				statusbyclienttypeList.setModified_by(statusmaster.getModified_by());
+				statusbyclienttypeList.setModified_date(statusmaster.getModified_date());
+				statusbyclienttypeList.setIS_DELETE(statusmaster.isIS_DELETE());
+				
+				statusByClientStatustypeList.add(statusbyclienttypeList);
+			}
+			
+			return statusByClientStatustypeList;
 
+}
+
+	  @Override
+		public void editStatusByClientStatusType(StatusByClientTypeRequest statusbyclienttypeRequest) throws Exception {  
+		  StatusMaster statusmaster = modelMapper.map(statusbyclienttypeRequest, StatusMaster.class);
+			statusMasterRepository.save(statusmaster);	
+	  
+	  }
+	  
+	  
 }

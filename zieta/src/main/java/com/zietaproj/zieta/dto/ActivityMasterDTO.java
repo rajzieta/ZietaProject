@@ -9,7 +9,7 @@ public class ActivityMasterDTO {
 
 	private Long id;
 	private Long clientId;
-	private String activity_code;
+	private String activityCode;
 	private String activity_desc;
 	private boolean IS_ACTIVE;
 	private String created_by;

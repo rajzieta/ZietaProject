@@ -9,7 +9,7 @@ public class ActivitiesByClientResponse {
 
 	long id;
     Long clientId;
-    private String activity_code;
+    private String activityCode;
     private String activity_desc;
     private String clientCode;
     private boolean isActive;

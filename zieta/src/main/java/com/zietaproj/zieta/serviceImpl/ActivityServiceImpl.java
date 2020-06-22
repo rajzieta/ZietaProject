@@ -99,7 +99,6 @@ public class ActivityServiceImpl implements ActivityService {
 	@Transactional
 	public void addActivitiesByClientProjectTask(ActivityTaskUserMappingRequest activityTaskUserMappingRequest) {
 		
-		try {
 			ActivityTaskUserMappingRequest.ActivityUser activityUserReq = activityTaskUserMappingRequest.getActivityUser();
 			
 			ActivityTaskUserMappingRequest.TaskActivity taskActivityReq = activityTaskUserMappingRequest.getTaskActivity();
@@ -110,10 +109,6 @@ public class ActivityServiceImpl implements ActivityService {
 			
 			TaskActivity taskActivityObj = activitiesTaskRepository.save(taskActivityEntity);
 			ActivityUserMapping activityUserMappingObj = activitiyUserMappingRepository.save(activityUserMappingEntity);
-		} catch (Exception e) {
-			LOGGER.error("Exception occured during saving the ActivitiesByClientProjectTask",e );
-		}
-		
 		
 	}
 

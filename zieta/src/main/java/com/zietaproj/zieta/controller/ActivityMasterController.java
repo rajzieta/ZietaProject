@@ -23,6 +23,7 @@ import com.zietaproj.zieta.model.ActivityMaster;
 import com.zietaproj.zieta.request.AcitivityRequest;
 import com.zietaproj.zieta.request.ActivityTaskUserMappingRequest;
 import com.zietaproj.zieta.request.ScreensMasterEditRequest;
+import com.zietaproj.zieta.request.StatusByClientTypeRequest;
 import com.zietaproj.zieta.response.ActivitiesByClientResponse;
 import com.zietaproj.zieta.response.ActivitiesByTaskResponse;
 import com.zietaproj.zieta.service.ActivitiesByTaskService;
@@ -80,7 +81,7 @@ public class ActivityMasterController {
 			return new ResponseEntity<List<ActivitiesByClientResponse>>(activitiesbyclientList, HttpStatus.OK);
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<List<ActivitiesByClientResponse>>(HttpStatus.NOT_FOUND);
-		}
+		} 
 	}
 	
 	@ApiOperation(value = "Maps activities with task and then with user", notes = "Table reference: task_activity,activity_user_mapping")
@@ -92,6 +93,12 @@ public class ActivityMasterController {
 	@RequestMapping(value = "editActivitiesById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void editActivitiesById(@Valid @RequestBody AcitivityRequest acitivityRequest) throws Exception {
 		activityService.editActivitiesById(acitivityRequest);
+		
+	}
+	
+	@RequestMapping(value = "editActivitiesByClientProject", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editActivitiesByClientProject(@Valid @RequestBody AcitivityRequest acitivityRequest) throws Exception {
+		activityService.editActivitiesByClientProject(acitivityRequest);
 		
 	}
 

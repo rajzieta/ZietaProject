@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zietaproj.zieta.dto.TaskMasterDTO;
 import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.TaskMaster;
+import com.zietaproj.zieta.request.AcitivityRequest;
+import com.zietaproj.zieta.request.TaskTypesByClientRequest;
 import com.zietaproj.zieta.response.TasksByClientProjectResponse;
 import com.zietaproj.zieta.response.TasksByUserModel;
 import com.zietaproj.zieta.response.TasktypesByClientResponse;
@@ -95,6 +97,19 @@ public class TaskMasterController {
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<List<TasktypesByClientResponse>>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@RequestMapping(value = "editTaskTypesByClient", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editTaskTypesByClient(@Valid @RequestBody TaskTypesByClientRequest tasktypesbyclientRequest) throws Exception {
+		taskMasterService.editTaskTypesByClient(tasktypesbyclientRequest);
+		
+	}
+	
+	@RequestMapping(value = "addTaskTypesByClient", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Persists the tasktypes related to client", notes = "Table reference: task_type_master")
+	public void editTaskTypesByClient(@Valid @RequestBody TaskMaster taskmaster) throws Exception {
+		taskMasterService.addTaskTypesByClient(taskmaster);
+		
 	}
 	
 	@ApiOperation(value = "Persists the tasks related to client and its associated project", notes = "Table reference: task_info")

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.zietaproj.zieta.dto.ActivityMasterDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
 import com.zietaproj.zieta.model.ActivityUserMapping;
+import com.zietaproj.zieta.model.StatusMaster;
 import com.zietaproj.zieta.model.TaskActivity;
 import com.zietaproj.zieta.repository.ActivitiesTaskRepository;
 import com.zietaproj.zieta.repository.ActivitiyUserMappingRepository;
@@ -25,6 +26,7 @@ import com.zietaproj.zieta.repository.ProjectInfoRepository;
 import com.zietaproj.zieta.repository.StatusMasterRepository;
 import com.zietaproj.zieta.request.AcitivityRequest;
 import com.zietaproj.zieta.request.ActivityTaskUserMappingRequest;
+import com.zietaproj.zieta.request.StatusByClientTypeRequest;
 import com.zietaproj.zieta.response.ActivitiesByClientResponse;
 import com.zietaproj.zieta.service.ActivityService;
 
@@ -128,4 +130,13 @@ public class ActivityServiceImpl implements ActivityService {
 		}
 		
 	}
+	
+	
+	
+	@Override
+	public void editActivitiesByClientProject(AcitivityRequest activityRequest) {  
+	  ActivityMaster activitymaster = modelMapper.map(activityRequest, ActivityMaster.class);
+	  activityMasterRepository.save(activitymaster);	
+  
+  }
 }

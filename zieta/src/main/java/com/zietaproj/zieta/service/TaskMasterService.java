@@ -2,9 +2,12 @@ package com.zietaproj.zieta.service;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.zietaproj.zieta.dto.TaskMasterDTO;
 import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.TaskMaster;
+import com.zietaproj.zieta.request.TaskTypesByClientRequest;
 import com.zietaproj.zieta.response.TasksByClientProjectResponse;
 import com.zietaproj.zieta.response.TasksByUserModel;
 import com.zietaproj.zieta.response.TasktypesByClientResponse;
@@ -21,5 +24,10 @@ public interface TaskMasterService {
 	public List<TasktypesByClientResponse> getTasksByClient(Long clientId);
 	
 	public boolean saveTaskInfo(TaskInfo taskInfo);
+
+	public void editTaskTypesByClient(@Valid TaskTypesByClientRequest tasktypesbyclientRequest) throws Exception;
+
+	public void addTaskTypesByClient(@Valid TaskMaster taskmaster);
+
 	
 }

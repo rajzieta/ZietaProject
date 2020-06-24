@@ -1,7 +1,9 @@
 package com.zietaproj.zieta.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -10,7 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zietaproj.zieta.dto.TaskMasterDTO;
+import com.zietaproj.zieta.model.ActivityMaster;
 import com.zietaproj.zieta.model.ProjectInfo;
+import com.zietaproj.zieta.model.ScreensMaster;
+import com.zietaproj.zieta.model.StatusMaster;
 import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.TaskMaster;
 import com.zietaproj.zieta.model.TasksByUser;
@@ -21,6 +26,8 @@ import com.zietaproj.zieta.repository.TaskInfoRepository;
 import com.zietaproj.zieta.repository.TaskMasterRepository;
 import com.zietaproj.zieta.repository.TasksByUserRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
+import com.zietaproj.zieta.request.ScreensMasterEditRequest;
+import com.zietaproj.zieta.request.TaskTypesByClientRequest;
 import com.zietaproj.zieta.response.TasksByClientProjectResponse;
 import com.zietaproj.zieta.response.TasksByUserModel;
 import com.zietaproj.zieta.response.TasktypesByClientResponse;
@@ -161,4 +168,23 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 		}
 
 	}
+	
+	@Override
+	public void editTaskTypesByClient(TaskTypesByClientRequest tasktypesbyclientRequest) throws Exception
+	{
+		Optional<TaskMaster> taskMasterEntity = taskMasterRepository.findById(tasktypesbyclientRequest.getId());
+		if(taskMasterEntity.isPresent()) {
+		TaskMaster taskmaster = modelMapper.map(tasktypesbyclientRequest, TaskMaster.class);
+		taskMasterRepository.save(taskmaster);
+	}else {
+		throw new Exception("Task not found with the provided ID : "+tasktypesbyclientRequest.getId());
+	}
+	}
+	
+	@Override 
+	  public void addTaskTypesByClient(TaskMaster taskmaster) {
+		
+		taskMasterRepository.save(taskmaster); 
+	  
+	  }
 }

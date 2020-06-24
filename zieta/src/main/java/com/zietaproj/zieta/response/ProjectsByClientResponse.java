@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class ProjectsByClientResponse {
 
-	Long projectId;
+	Long id;
 	private Long clientId;
 
 	private String ProjectTypeName;

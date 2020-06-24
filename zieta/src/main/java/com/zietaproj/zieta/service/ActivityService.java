@@ -2,12 +2,11 @@ package com.zietaproj.zieta.service;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import com.zietaproj.zieta.dto.ActivityMasterDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
 import com.zietaproj.zieta.request.AcitivityRequest;
 import com.zietaproj.zieta.request.ActivityTaskUserMappingRequest;
+import com.zietaproj.zieta.response.ActivitiesByClientProjectTaskResponse;
 import com.zietaproj.zieta.response.ActivitiesByClientResponse;
 
 
@@ -24,5 +23,7 @@ public interface ActivityService {
 	
 	public void editActivitiesById(AcitivityRequest acitivityRequest) throws Exception;
 
-	public void editActivitiesByClientProject(@Valid AcitivityRequest acitivityRequest);
+	public void editActivitiesByClientProjectTask(ActivityTaskUserMappingRequest activityTaskUserMappingRequest);
+	
+	public List<ActivitiesByClientProjectTaskResponse> getActivitesByClientProjectTaskTest(long clientId,long projectId,long taskId);
 }

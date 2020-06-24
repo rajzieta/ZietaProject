@@ -23,6 +23,6 @@ public class TaskMasterDTO {
     private String created_by;
     private boolean IS_DELETE;
     private String client_code;
-    private String project_code;
+   
 	
 }

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zietaproj.zieta.dto.ProjectMasterDTO;
 import com.zietaproj.zieta.model.ProjectMaster;
+import com.zietaproj.zieta.request.EditProjStatusRequest;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
 import com.zietaproj.zieta.response.ProjectsByClientResponse;
 import com.zietaproj.zieta.response.RolesByClientResponse;
@@ -78,5 +79,10 @@ public class ProjectMasterController {
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<List<ProjectsByClientResponse>>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@RequestMapping(value = "editProjectStatus", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editProjectStatus(@Valid @RequestBody EditProjStatusRequest editprojStatusRequest) throws Exception {
+		projectmasterService.editProjectStatus(editprojStatusRequest);
 	}
 }

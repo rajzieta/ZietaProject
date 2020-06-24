@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import com.zietaproj.zieta.dto.TaskMasterDTO;
 import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.TaskMaster;
+import com.zietaproj.zieta.request.EditTasksByClientProjectRequest;
 import com.zietaproj.zieta.request.TaskTypesByClientRequest;
 import com.zietaproj.zieta.response.TasksByClientProjectResponse;
 import com.zietaproj.zieta.response.TasksByUserModel;
@@ -28,6 +29,8 @@ public interface TaskMasterService {
 	public void editTaskTypesByClient(@Valid TaskTypesByClientRequest tasktypesbyclientRequest) throws Exception;
 
 	public void addTaskTypesByClient(@Valid TaskMaster taskmaster);
+
+	public void editTaskInfo(@Valid EditTasksByClientProjectRequest editasksByClientProjectRequest) throws Exception;
 
 	
 }

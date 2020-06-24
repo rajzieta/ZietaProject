@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ import com.zietaproj.zieta.repository.TaskInfoRepository;
 import com.zietaproj.zieta.repository.TaskMasterRepository;
 import com.zietaproj.zieta.repository.TasksByUserRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
+import com.zietaproj.zieta.repository.ClientInfoRepository;
+import com.zietaproj.zieta.request.EditTasksByClientProjectRequest;
 import com.zietaproj.zieta.request.ScreensMasterEditRequest;
 import com.zietaproj.zieta.request.TaskTypesByClientRequest;
 import com.zietaproj.zieta.response.TasksByClientProjectResponse;
@@ -56,6 +59,9 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 	UserInfoRepository userInfoRepository;
 	
 	@Autowired
+	ClientInfoRepository clientInfoRepository;
+	
+	@Autowired
 	ModelMapper modelMapper;
 
 	@Override
@@ -70,6 +76,8 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 			taskMasterDTO.setClient_id(taskMaster.getClientId());
 			taskMasterDTO.setModified_by(taskMaster.getModified_by());
 			taskMasterDTO.setCreated_by(taskMaster.getCreated_by());
+			taskMasterDTO.setClient_code(clientInfoRepository.findById(taskMaster.getClientId()).get().getClient_code());
+	//		taskMasterDTO.setProject_code(taskInfoRepository.findById(taskMaster.getId()).get().getask_id().get().getProject_code();
 			taskMasterDTOs.add(taskMasterDTO);
 		}
 		return taskMasterDTOs;
@@ -167,6 +175,16 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 			return false;
 		}
 
+	}
+	
+	public void editTaskInfo(@Valid EditTasksByClientProjectRequest editasksByClientProjectRequest) throws Exception {
+		Optional<TaskInfo> taskInfoEntity = taskInfoRepository.findById(editasksByClientProjectRequest.getId());
+		if(taskInfoEntity.isPresent()) {
+			TaskInfo taskInfo = modelMapper.map(editasksByClientProjectRequest, TaskInfo.class);
+			taskInfoRepository.save(taskInfo);
+		}else {
+			throw new Exception("Task not found with the provided ID : "+editasksByClientProjectRequest.getId());
+		}
 	}
 	
 	@Override

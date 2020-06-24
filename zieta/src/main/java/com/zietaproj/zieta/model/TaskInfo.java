@@ -65,7 +65,7 @@ public class TaskInfo implements Serializable {
 	    private Long task_status;
 	    
 	    
-		@NotBlank
+		
 		private String created_by;
 
 	    @Column(nullable = false, updatable = false)
@@ -78,7 +78,7 @@ public class TaskInfo implements Serializable {
 	    @LastModifiedDate
 	    private Date modified_date;
 		
-		@NotBlank
+		
 		private String modified_by;
 		
 		private boolean IS_DELETE;

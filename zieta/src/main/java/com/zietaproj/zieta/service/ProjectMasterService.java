@@ -2,8 +2,11 @@ package com.zietaproj.zieta.service;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.zietaproj.zieta.dto.ProjectMasterDTO;
 import com.zietaproj.zieta.model.ProjectMaster;
+import com.zietaproj.zieta.request.EditProjStatusRequest;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
 import com.zietaproj.zieta.response.ProjectsByClientResponse;
 
@@ -16,4 +19,6 @@ public interface ProjectMasterService {
 	List<ProjectDetailsByUserModel> getProjectsByUser(long userId);
 
 	public List<ProjectsByClientResponse> getProjectsByClient(Long clientId);
+
+	public void editProjectStatus(@Valid EditProjStatusRequest editprojStatusRequest) throws Exception;
 }

@@ -21,6 +21,7 @@ public class ProjectsByClientResponse {
 	private String projectManager;
 	private Long projectStatus;
 	private long projectType;
+	private String projectStatusDescription;
 	
 	String OrgNode;
 	short allowUnplannedActivity;

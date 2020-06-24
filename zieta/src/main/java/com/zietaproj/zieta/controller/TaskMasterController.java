@@ -22,6 +22,7 @@ import com.zietaproj.zieta.dto.TaskMasterDTO;
 import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.TaskMaster;
 import com.zietaproj.zieta.request.AcitivityRequest;
+import com.zietaproj.zieta.request.EditTasksByClientProjectRequest;
 import com.zietaproj.zieta.request.TaskTypesByClientRequest;
 import com.zietaproj.zieta.response.TasksByClientProjectResponse;
 import com.zietaproj.zieta.response.TasksByUserModel;
@@ -43,8 +44,8 @@ public class TaskMasterController {
 	TaskMasterService taskMasterService;
 
 
-	@RequestMapping(value = "getAllTasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<TaskMasterDTO> getAllTasks() {
+	@RequestMapping(value = "getAllTaskTypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<TaskMasterDTO> getAllTaskTypes() {
 		List<TaskMasterDTO> taskMasters = null;
 		try {
 			taskMasters = taskMasterService.getAllTasks();
@@ -107,7 +108,7 @@ public class TaskMasterController {
 	
 	@RequestMapping(value = "addTaskTypesByClient", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Persists the tasktypes related to client", notes = "Table reference: task_type_master")
-	public void editTaskTypesByClient(@Valid @RequestBody TaskMaster taskmaster) throws Exception {
+	public void addTaskTypesByClient(@Valid @RequestBody TaskMaster taskmaster) throws Exception {
 		taskMasterService.addTaskTypesByClient(taskmaster);
 		
 	}
@@ -116,5 +117,11 @@ public class TaskMasterController {
 	@RequestMapping(value = "addTasksByClientProject", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void addTasksByClientProject(@Valid @RequestBody TaskInfo taskInfo) {
 		taskMasterService.saveTaskInfo(taskInfo);
+	}
+	
+	@ApiOperation(value = "Persists the tasks related to client and its associated project", notes = "Table reference: task_info")
+	@RequestMapping(value = "EditTasksByClientProject", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editTasksByClientProject(@Valid @RequestBody EditTasksByClientProjectRequest editasksByClientProjectRequest) throws Exception {
+		taskMasterService.editTaskInfo(editasksByClientProjectRequest);
 	}
 }

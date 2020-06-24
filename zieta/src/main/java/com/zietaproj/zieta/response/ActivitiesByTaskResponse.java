@@ -15,5 +15,10 @@ public class ActivitiesByTaskResponse {
     private String activity_desc;
     private String userName;
     private Long userId;
+	private String startDate;
+	private String endDate;
+	private float plannedHrs;
+	private float actualHrs;
+	
 	 
 }

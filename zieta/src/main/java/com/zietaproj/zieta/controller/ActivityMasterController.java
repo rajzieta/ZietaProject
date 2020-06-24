@@ -22,8 +22,7 @@ import com.zietaproj.zieta.dto.ActivityMasterDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
 import com.zietaproj.zieta.request.AcitivityRequest;
 import com.zietaproj.zieta.request.ActivityTaskUserMappingRequest;
-import com.zietaproj.zieta.request.ScreensMasterEditRequest;
-import com.zietaproj.zieta.request.StatusByClientTypeRequest;
+import com.zietaproj.zieta.response.ActivitiesByClientProjectTaskResponse;
 import com.zietaproj.zieta.response.ActivitiesByClientResponse;
 import com.zietaproj.zieta.response.ActivitiesByTaskResponse;
 import com.zietaproj.zieta.service.ActivitiesByTaskService;
@@ -74,6 +73,20 @@ public class ActivityMasterController {
 		}
 	}
 	
+	
+	
+	@ApiOperation(value = "TestList activities based on the  clientId, taskId and projectId", notes = "Table reference: task_activity,activity_master")
+	@GetMapping("/getActivitesByClientProjectTaskTest")
+	public ResponseEntity<List<ActivitiesByClientProjectTaskResponse>> getTestActivitesByClientProjectTask(@RequestParam(required = true) Long clientId,
+			@RequestParam(required = true) Long projectId, @RequestParam(required = true)  Long taskId) {
+		try {
+			List<ActivitiesByClientProjectTaskResponse> activitiesbytaskList = activityService.getActivitesByClientProjectTaskTest(clientId, projectId, taskId);
+			return new ResponseEntity<List<ActivitiesByClientProjectTaskResponse>>(activitiesbytaskList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<ActivitiesByClientProjectTaskResponse>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
 	@GetMapping("/getAllActivitiesByClient")
 	public ResponseEntity<List<ActivitiesByClientResponse>> getAllActivitiesByClient(@RequestParam(required=true) Long clientId) {
 		try {
@@ -96,9 +109,10 @@ public class ActivityMasterController {
 		
 	}
 	
-	@RequestMapping(value = "editActivitiesByClientProject", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void editActivitiesByClientProject(@Valid @RequestBody AcitivityRequest acitivityRequest) throws Exception {
-		activityService.editActivitiesByClientProject(acitivityRequest);
+	@ApiOperation(value = "Edits activities with task and then with user", notes = "Table reference: task_activity,activity_user_mapping")
+	@RequestMapping(value = "editActivitiesByClientProjectTask", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editActivitiesByClientProjectTask(@Valid @RequestBody ActivityTaskUserMappingRequest activityTaskUserMappingRequest) throws Exception {
+		activityService.editActivitiesByClientProjectTask(activityTaskUserMappingRequest);
 		
 	}
 

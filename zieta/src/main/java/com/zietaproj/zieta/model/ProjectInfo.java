@@ -48,25 +48,24 @@ public class ProjectInfo implements Serializable {
 	@NotBlank
 	private String project_name;
 
-	@NotBlank
+	@NotNull
 	private Long project_type;
 
-	@NotBlank
+	@NotNull
 	private Long project_orgnode;
 	
 	@Column(name = "project_manager")
 	private Long projectManager;
 	
-	@NotBlank
+	@NotNull
     private short allow_unplanned;
 	
 	@NotNull
 	private Long cust_id;
 
-	@NotBlank
+	@NotNull
 	private Long project_status;
 
-	@NotBlank
 	private String created_by;
 
 	@Column(nullable = false, updatable = false)
@@ -79,7 +78,6 @@ public class ProjectInfo implements Serializable {
 	@LastModifiedDate
 	private Date modified_date;
 
-	@NotBlank
 	private String modified_by;
 
 	private boolean IS_DELETE;

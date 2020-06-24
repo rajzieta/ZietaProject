@@ -46,6 +46,10 @@ public class ActivitiesByTaskServiceImpl implements ActivitiesByTaskService {
 			activitiesbytaskResponse.setTask_id(activitiesbytask.getTaskId());
 			activitiesbytaskResponse.setClient_id(activitiesbytask.getClientId());
 			activitiesbytaskResponse.setActivity_id(activitiesbytask.getActivity_id());
+			activitiesbytaskResponse.setEndDate(TSMUtil.getFormattedDateAsString(activitiesbytask.getEndDate()));
+			activitiesbytaskResponse.setStartDate(TSMUtil.getFormattedDateAsString(activitiesbytask.getStartDate()));
+			activitiesbytaskResponse.setPlannedHrs(activitiesbytask.getPlannedHrs());
+			activitiesbytaskResponse.setActualHrs(activitiesbytask.getActualHrs());
 			
 			Long userId;
 			String teamMemberName;

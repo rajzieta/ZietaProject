@@ -48,21 +48,21 @@ public class TaskActivity extends BaseEntity implements Serializable {
 	@NotNull
 	private Long activity_id;
 	
-	@Column(nullable = false, name = "START_DATE")
+	@Column(nullable = true, name = "START_DATE")
 	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	private Date startDate;
 	
-	@Column(nullable = false, name = "END_DATE")
+	@Column(nullable = true, name = "END_DATE")
 	@Temporal(TemporalType.TIMESTAMP)
 	@LastModifiedDate
 	private Date endDate;
 	
-	@Column(nullable=false, name= "PLANNED_HOURS")
-	private Time plannedHrs;
+	@Column(nullable=true, name= "PLANNED_HOURS", precision=10, scale=2)
+	private float plannedHrs;
 	
-	@Column(nullable=false, name= "ACTUAL_HOURS")
-	private Time actualHrs;
+	@Column(nullable=true, name= "ACTUAL_HOURS", precision=10, scale=2)
+	private float actualHrs;
 	
 
 	

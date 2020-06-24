@@ -19,6 +19,6 @@ public class EditProjStatusRequest {
    // private Long projectManager;
    // private short allow_unplanned;
 	
-	private String ProjectStatusDescription;
+	//private String ProjectStatusDescription;
 	
 }

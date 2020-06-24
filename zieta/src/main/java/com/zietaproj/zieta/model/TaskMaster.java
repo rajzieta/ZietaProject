@@ -52,10 +52,10 @@ public class TaskMaster implements Serializable {
     @LastModifiedDate
     private Date modified_date;
 	
-	@NotBlank(message="Modified_by may not be blank")
+	//@NotBlank(message="Modified_by may not be blank")
 	private String modified_by;
 	
-	@NotBlank(message="created_by may not be blank")
+	//@NotBlank(message="created_by may not be blank")
 	private String created_by;
 	
 	private boolean IS_DELETE;

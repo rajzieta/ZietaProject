@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -12,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zietaproj.zieta.dto.ActivityMasterDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
@@ -35,6 +35,7 @@ import com.zietaproj.zieta.util.TSMUtil;
 
 
 @Service
+@Transactional
 public class ActivityServiceImpl implements ActivityService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ActivityServiceImpl.class);
@@ -103,20 +104,30 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 
 	@Override
-	@Transactional
 	public void addActivitiesByClientProjectTask(ActivityTaskUserMappingRequest activityTaskUserMappingRequest) {
 		
-			ActivityTaskUserMappingRequest.ActivityUser activityUserReq = activityTaskUserMappingRequest.getActivityUser();
-			
-			ActivityTaskUserMappingRequest.TaskActivity taskActivityReq = activityTaskUserMappingRequest.getTaskActivity();
-			
-			modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-			ActivityUserMapping activityUserMappingEntity = modelMapper.map(activityUserReq, ActivityUserMapping.class);
-			TaskActivity taskActivityEntity = modelMapper.map(taskActivityReq, TaskActivity.class);
-			
-			TaskActivity taskActivityObj = activitiesTaskRepository.save(taskActivityEntity);
-			ActivityUserMapping activityUserMappingObj = activitiyUserMappingRepository.save(activityUserMappingEntity);
+			doUpSert(activityTaskUserMappingRequest);
 		
+	}
+
+	private void doUpSert(ActivityTaskUserMappingRequest activityTaskUserMappingRequest) {
+		ActivityTaskUserMappingRequest.ActivityUser activityUserReq = activityTaskUserMappingRequest.getActivityUser();
+		
+		ActivityTaskUserMappingRequest.TaskActivity taskActivityReq = activityTaskUserMappingRequest.getTaskActivity();
+		
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		ActivityUserMapping activityUserMappingEntity = modelMapper.map(activityUserReq, ActivityUserMapping.class);
+		activityUserMappingEntity.setId(activityUserReq.getActivityUserId());
+		activityUserMappingEntity.setCreated_by(activityUserReq.getCreatedBy());
+		activityUserMappingEntity.setModified_by(activityUserReq.getModifiedBy());
+		TaskActivity taskActivityEntity = modelMapper.map(taskActivityReq, TaskActivity.class);
+		taskActivityEntity.setId(taskActivityReq.getTaskActivityId());
+		taskActivityEntity.setActivity_id(taskActivityReq.getActivityId());
+		taskActivityEntity.setCreated_by(taskActivityReq.getCreatedBy());
+		taskActivityEntity.setModified_by(taskActivityReq.getModifiedBy());
+		
+		TaskActivity taskActivityObj = activitiesTaskRepository.save(taskActivityEntity);
+		ActivityUserMapping activityUserMappingObj = activitiyUserMappingRepository.save(activityUserMappingEntity);
 	}
 
 	@Override
@@ -139,27 +150,14 @@ public class ActivityServiceImpl implements ActivityService {
 	
 	
 	@Override
-	public void editActivitiesByClientProjectTask(ActivityTaskUserMappingRequest activityTaskUserMappingRequest) { 
+	public void editActivitiesByClientProjectTask(ActivityTaskUserMappingRequest activityTaskUserMappingRequest) {
 		
-		ActivityTaskUserMappingRequest.ActivityUser activityUserReq = activityTaskUserMappingRequest.getActivityUser();
-		
-		ActivityTaskUserMappingRequest.TaskActivity taskActivityReq = activityTaskUserMappingRequest.getTaskActivity();
-		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		ActivityUserMapping activityUserMappingEntity = modelMapper.map(activityUserReq, ActivityUserMapping.class);
-		TaskActivity taskActivityEntity = modelMapper.map(taskActivityReq, TaskActivity.class);
-		
-		TaskActivity taskActivityObj = activitiesTaskRepository.save(taskActivityEntity);
-		ActivityUserMapping activityUserMappingObj = activitiyUserMappingRepository.save(activityUserMappingEntity);
-		
-		//fetch the JPA entities
-//		TaskActivity taskActivityObj = activitiesTaskRepository.findById(taskActivityReq.getId()).get();
-//		ActivityUserMapping activityUserMappingObj = activitiyUserMappingRepository.findById(activityUserReq.getId()).get();
-		
-		
-  }
+			doUpSert(activityTaskUserMappingRequest);
+
+	}
 	
 	
-	public List<ActivitiesByClientProjectTaskResponse> getActivitesByClientProjectTaskTest(long clientId,long projectId,long taskId) {
+	public List<ActivitiesByClientProjectTaskResponse> getActivitesByClientProjectTask(long clientId,long projectId,long taskId) {
 
 		List<TaskActivity> activitiesbytaskList = activitiesTaskRepository.findByClientIdAndProjectIdAndTaskId(clientId ,projectId,taskId );
 		List<ActivitiesByClientProjectTaskResponse> activitiesByClientProjectTaskList = new ArrayList<ActivitiesByClientProjectTaskResponse>();
@@ -168,15 +166,15 @@ public class ActivityServiceImpl implements ActivityService {
 			ActivitiesByClientProjectTaskResponse activitiesByClientProjectTaskResponse = new ActivitiesByClientProjectTaskResponse();
 			ActivitiesByClientProjectTaskResponse.ActivityUser activityUser = activitiesByClientProjectTaskResponse.getActivityUser();
 			ActivitiesByClientProjectTaskResponse.TaskActivity taskActivity = activitiesByClientProjectTaskResponse.getTaskActivity();
-			ActivitiesByClientProjectTaskResponse.TaskActivityUserDetails taskActivityUserDetails = activitiesByClientProjectTaskResponse.getTaskActivityUserDetails();
+			ActivitiesByClientProjectTaskResponse.AdditionalDetails additionalDetails = activitiesByClientProjectTaskResponse.getAdditionalDetails();
 			// task
-			taskActivity.setActivity_id(activitiesbytask.getActivity_id());
+			taskActivity.setActivityId(activitiesbytask.getActivity_id());
 			taskActivity.setActualHrs(activitiesbytask.getActualHrs());
 			taskActivity.setClientId(activitiesbytask.getClientId());
 			taskActivity.setEndDate(TSMUtil.convertToLocalDateViaMilisecond(activitiesbytask.getEndDate()));
-			taskActivity.setId(activitiesbytask.getId());
-			taskActivity.setModified_by(activitiesbytask.getModified_by());
-			taskActivity.setCreated_by(activitiesbytask.getCreated_by());
+			taskActivity.setTaskActivityId(activitiesbytask.getId());
+			taskActivity.setModifiedBy(activitiesbytask.getModified_by());
+			taskActivity.setCreatedBy(activitiesbytask.getCreated_by());
 			taskActivity.setPlannedHrs(activitiesbytask.getPlannedHrs());
 			taskActivity.setProjectId(activitiesbytask.getProjectId());
 			taskActivity.setStartDate(TSMUtil.convertToLocalDateViaMilisecond(activitiesbytask.getStartDate()));
@@ -184,24 +182,24 @@ public class ActivityServiceImpl implements ActivityService {
 
 			String teamMemberName;
 			Optional<ActivityUserMapping> activityUserMapping = activitiyUserMappingRepository
-					.findById(activitiesbytask.getActivity_id());
+					.findByActivityId(activitiesbytask.getActivity_id());
 			if (activityUserMapping.isPresent()) {
 
 				// activity
 				activityUser.setActivityId(activityUserMapping.get().getActivityId());
 				activityUser.setClientId(activityUserMapping.get().getClientId());
-				activityUser.setId(activityUserMapping.get().getId());
+				activityUser.setActivityUserId(activityUserMapping.get().getId());
 				activityUser.setProjectId(activityUserMapping.get().getProjectId());
 				activityUser.setTaskId(activityUserMapping.get().getTaskId());
 				activityUser.setUserId(activityUserMapping.get().getUserId());
-				activityUser.setCreated_by(activityUserMapping.get().getCreated_by());
-				activityUser.setModified_by(activityUserMapping.get().getModified_by());
+				activityUser.setCreatedBy(activityUserMapping.get().getCreated_by());
+				activityUser.setModifiedBy(activityUserMapping.get().getModified_by());
 
 				Optional<UserInfo> userInfo = userInfoReposistory.findById(activityUserMapping.get().getUserId());
 				if (userInfo.isPresent()) {
 					teamMemberName = TSMUtil.getFullName(userInfo.get());
 					// otherdetails
-					taskActivityUserDetails.setUserName(teamMemberName);
+					additionalDetails.setUserName(teamMemberName);
 				}
 			}
 
@@ -209,13 +207,20 @@ public class ActivityServiceImpl implements ActivityService {
 					.findById(activitiesbytask.getActivity_id());
 			if (activitymaster.isPresent()) {
 				// otherdetails
-				taskActivityUserDetails.setActivityCode(activitymaster.get().getActivityCode());
-				taskActivityUserDetails.setActivityDesc(activitymaster.get().getActivity_desc());
+				additionalDetails.setActivityCode(activitymaster.get().getActivityCode());
+				additionalDetails.setActivityDesc(activitymaster.get().getActivity_desc());
 			}
 
 			activitiesByClientProjectTaskList.add(activitiesByClientProjectTaskResponse);
 		}
 
 		return activitiesByClientProjectTaskList;
+	}
+
+	@Override
+	public void deleteActivitesByClientProjectTask(long taskActivityId, long activityUserId) {
+		activitiesTaskRepository.deleteById(taskActivityId);
+		activitiyUserMappingRepository.deleteById(activityUserId);
+		
 	}
 }

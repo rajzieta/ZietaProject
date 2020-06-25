@@ -60,13 +60,14 @@ public class ActivityMasterController {
 	public void addActivitymaster(@Valid @RequestBody ActivityMaster activitymaster) {
 		activityService.addActivitymaster(activitymaster);
 	}
-
+	
+	@Deprecated
 	@ApiOperation(value = "List activities based on the  clientId, taskId and projectId", notes = "Table reference: task_activity,activity_master")
-	@GetMapping("/getActivitesByClientProjectTask")
-	public ResponseEntity<List<ActivitiesByTaskResponse>> getActivitesByClientProjectTask(@RequestParam(required = true) Long clientId,
+	@GetMapping("/getActivitesByClientProjectTaskOld")
+	public ResponseEntity<List<ActivitiesByTaskResponse>> getTestActivitesByClientProjectTask(@RequestParam(required = true) Long clientId,
 			@RequestParam(required = true) Long projectId, @RequestParam(required = true)  Long taskId) {
 		try {
-			List<ActivitiesByTaskResponse> activitiesbytaskList = activitiesbytaskservice.getActivitesByClientProjectTask(clientId, projectId, taskId);
+			List<ActivitiesByTaskResponse> activitiesbytaskList = activitiesbytaskservice.getActivitesByClientProjectTaskOld(clientId, projectId, taskId);
 			return new ResponseEntity<List<ActivitiesByTaskResponse>>(activitiesbytaskList, HttpStatus.OK);
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<List<ActivitiesByTaskResponse>>(HttpStatus.NOT_FOUND);
@@ -75,12 +76,12 @@ public class ActivityMasterController {
 	
 	
 	
-	@ApiOperation(value = "TestList activities based on the  clientId, taskId and projectId", notes = "Table reference: task_activity,activity_master")
-	@GetMapping("/getActivitesByClientProjectTaskTest")
-	public ResponseEntity<List<ActivitiesByClientProjectTaskResponse>> getTestActivitesByClientProjectTask(@RequestParam(required = true) Long clientId,
+	@ApiOperation(value = "List activities based on the  clientId, taskId and projectId", notes = "Table reference: task_activity,activity_master")
+	@GetMapping("/getActivitesByClientProjectTask")
+	public ResponseEntity<List<ActivitiesByClientProjectTaskResponse>> getActivitesByClientProjectTask(@RequestParam(required = true) Long clientId,
 			@RequestParam(required = true) Long projectId, @RequestParam(required = true)  Long taskId) {
 		try {
-			List<ActivitiesByClientProjectTaskResponse> activitiesbytaskList = activityService.getActivitesByClientProjectTaskTest(clientId, projectId, taskId);
+			List<ActivitiesByClientProjectTaskResponse> activitiesbytaskList = activityService.getActivitesByClientProjectTask(clientId, projectId, taskId);
 			return new ResponseEntity<List<ActivitiesByClientProjectTaskResponse>>(activitiesbytaskList, HttpStatus.OK);
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<List<ActivitiesByClientProjectTaskResponse>>(HttpStatus.NOT_FOUND);
@@ -114,6 +115,12 @@ public class ActivityMasterController {
 	public void editActivitiesByClientProjectTask(@Valid @RequestBody ActivityTaskUserMappingRequest activityTaskUserMappingRequest) throws Exception {
 		activityService.editActivitiesByClientProjectTask(activityTaskUserMappingRequest);
 		
+	}
+	
+	@ApiOperation(value = "Deletes activities with task and then with user", notes = "Table reference: task_activity,activity_user_mapping")
+	@RequestMapping(value = "deleteActivitiesByClientProjectTask", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteActivitesByClientProjectTask(@RequestParam(required=true) Long taskActivitiyId, @RequestParam(required=true) Long activityUserId) {
+		activityService.deleteActivitesByClientProjectTask(taskActivitiyId, activityUserId);
 	}
 
 }

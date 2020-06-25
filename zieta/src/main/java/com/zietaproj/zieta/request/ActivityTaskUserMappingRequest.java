@@ -29,14 +29,14 @@ public class ActivityTaskUserMappingRequest {
 	@Setter
 	public static class ActivityUser {
 		
-		private long id;
+		private long activityUserId;
 		private long activityId;
 		private long taskId;
 		private Long userId;
 		private long projectId;
 		private long clientId;
-		private String created_by;
-		private String modified_by;
+		private String createdBy;
+		private String modifiedBy;
 	}
 
 	/**
@@ -46,13 +46,13 @@ public class ActivityTaskUserMappingRequest {
 	@Getter
 	@Setter
 	public static class TaskActivity {
-		private long id;
-		private long activity_id;
+		private long taskActivityId;
+		private long activityId;
 		private long taskId;
 		private long projectId;
 		private long clientId;
-		private String created_by;
-		private String modified_by;
+		private String createdBy;
+		private String modifiedBy;
 		private Date startDate;
 		private Date endDate;
 		private float plannedHrs;

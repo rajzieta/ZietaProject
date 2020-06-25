@@ -36,7 +36,7 @@ public class ActivitiesByTaskServiceImpl implements ActivitiesByTaskService {
 	ActivitiyUserMappingRepository activitiyUserMappingRepository;
 	
 	@Override
-	public List<ActivitiesByTaskResponse> getActivitesByClientProjectTask(long clientId,long projectId,long taskId) {
+	public List<ActivitiesByTaskResponse> getActivitesByClientProjectTaskOld(long clientId,long projectId,long taskId) {
 
 		List<TaskActivity> activitiesbytaskList = activitiesbytaskRepo.findByClientIdAndProjectIdAndTaskId(clientId ,projectId,taskId );
 		List<ActivitiesByTaskResponse> activitiesbytaskResponseList = new ArrayList<ActivitiesByTaskResponse>();

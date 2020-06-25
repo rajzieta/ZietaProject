@@ -50,12 +50,10 @@ public class TaskActivity extends BaseEntity implements Serializable {
 	
 	@Column(nullable = true, name = "START_DATE")
 	@Temporal(TemporalType.TIMESTAMP)
-	@LastModifiedDate
 	private Date startDate;
 	
 	@Column(nullable = true, name = "END_DATE")
 	@Temporal(TemporalType.TIMESTAMP)
-	@LastModifiedDate
 	private Date endDate;
 	
 	@Column(nullable=true, name= "PLANNED_HOURS", precision=10, scale=2)

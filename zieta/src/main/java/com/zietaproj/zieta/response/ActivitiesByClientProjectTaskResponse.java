@@ -8,13 +8,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ActivitiesByClientProjectTaskResponse {
-	private TaskActivityUserDetails taskActivityUserDetails;
+	private AdditionalDetails additionalDetails;
 	private ActivityUser activityUser;
 	private TaskActivity taskActivity;			
 	
 
 	public ActivitiesByClientProjectTaskResponse() {
-		taskActivityUserDetails = new ActivitiesByClientProjectTaskResponse.TaskActivityUserDetails();
+		additionalDetails = new ActivitiesByClientProjectTaskResponse.AdditionalDetails();
 		activityUser = new ActivitiesByClientProjectTaskResponse.ActivityUser();
 		taskActivity = new ActivitiesByClientProjectTaskResponse.TaskActivity();
 	};
@@ -29,14 +29,14 @@ public class ActivitiesByClientProjectTaskResponse {
 	@Setter
 	public static class ActivityUser {
 		
-		private long id;
+		private long activityUserId;
 		private long activityId;
 		private long taskId;
 		private Long userId;
 		private long projectId;
 		private long clientId;
-		private String created_by;
-		private String modified_by;
+		private String createdBy;
+		private String modifiedBy;
 	}
 
 	/**
@@ -45,13 +45,13 @@ public class ActivitiesByClientProjectTaskResponse {
 	@Getter
 	@Setter
 	public static class TaskActivity {
-		private long id;
-		private long activity_id;
+		private long taskActivityId;
+		private long activityId;
 		private long taskId;
 		private long projectId;
 		private long clientId;
-		private String created_by;
-		private String modified_by;
+		private String createdBy;
+		private String modifiedBy;
 		private LocalDate startDate;
 		private LocalDate endDate;
 		private float plannedHrs;
@@ -61,7 +61,7 @@ public class ActivitiesByClientProjectTaskResponse {
 	
 	@Getter
 	@Setter
-	public static class TaskActivityUserDetails {
+	public static class AdditionalDetails {
 		private String userName;
 		private String activityCode;
 		private String activityDesc;

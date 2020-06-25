@@ -25,5 +25,7 @@ public interface ActivityService {
 
 	public void editActivitiesByClientProjectTask(ActivityTaskUserMappingRequest activityTaskUserMappingRequest);
 	
-	public List<ActivitiesByClientProjectTaskResponse> getActivitesByClientProjectTaskTest(long clientId,long projectId,long taskId);
+	public List<ActivitiesByClientProjectTaskResponse> getActivitesByClientProjectTask(long clientId,
+			long projectId,long taskId);
+	public void deleteActivitesByClientProjectTask(long taskActivityId, long activityUserId);
 }

@@ -70,9 +70,9 @@ public class ActivityServiceImpl implements ActivityService {
 		for (ActivityMaster activityMaster : activityMasters) {
 			activityMasterDTO = modelMapper.map(activityMaster, ActivityMasterDTO.class);
 			activityMasterDTO
-					.setClient_code(clientInfoRepository.findById(activityMaster.getClientId())
+					.setClientCode(clientInfoRepository.findById(activityMaster.getClientId())
 							.get().getClient_code());
-			activityMasterDTO.setIS_ACTIVE(activityMaster.isActive());
+			activityMasterDTO.setActive(activityMaster.isActive());
 			activityMasterDTOs.add(activityMasterDTO);
 		}
 		return activityMasterDTOs;
@@ -120,17 +120,17 @@ public class ActivityServiceImpl implements ActivityService {
 
 	@Override
 	public void editActivitiesById(AcitivityRequest acitivityRequest) throws Exception {
-		Optional<ActivityMaster> activityMasterEntity = activityMasterRepository.findById(acitivityRequest.getId());
+		Optional<ActivityMaster> activityMasterEntity = activityMasterRepository.findById(acitivityRequest.getActivityId());
 		if(activityMasterEntity.isPresent()) {
 			ActivityMaster activityMasterSave = activityMasterEntity.get();
 			activityMasterSave.setActive(acitivityRequest.isActive());
 			activityMasterSave.setActivityCode(acitivityRequest.getActivityCode());
-			activityMasterSave.setActivity_desc(acitivityRequest.getActivity_desc());
-			activityMasterSave.setModified_by(acitivityRequest.getModified_by());
+			activityMasterSave.setActivityDesc(acitivityRequest.getActivityDesc());
+			activityMasterSave.setModifiedBy(acitivityRequest.getModifiedBy());
 			activityMasterRepository.save(activityMasterSave);
 			
 		}else {
-			throw new Exception("Activity not found with the provided activity ID : "+acitivityRequest.getId());
+			throw new Exception("Activity not found with the provided activity ID : "+acitivityRequest.getActivityId());
 		}
 		
 	}
@@ -175,7 +175,7 @@ public class ActivityServiceImpl implements ActivityService {
 			if (activitymaster.isPresent()) {
 				// otherdetails
 				additionalDetails.setActivityCode(activitymaster.get().getActivityCode());
-				additionalDetails.setActivityDesc(activitymaster.get().getActivity_desc());
+				additionalDetails.setActivityDesc(activitymaster.get().getActivityDesc());
 			}
 
 			activitiesByClientProjectTaskList.add(activitiesByClientProjectTaskResponse);
@@ -185,9 +185,7 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 
 	@Override
-	public void deleteActivitesByClientProjectTask(long taskActivityId, long activityUserId) {
+	public void deleteActivitesByClientProjectTask(long taskActivityId) {
 		activitiesTaskRepository.deleteById(taskActivityId);
-		activitiyUserMappingRepository.deleteById(activityUserId);
-		
 	}
 }

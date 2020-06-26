@@ -7,14 +7,14 @@ import lombok.Setter;
 @Setter
 public class ActivityMasterDTO {
 
-	private Long id;
+	private Long activityId;
 	private Long clientId;
 	private String activityCode;
-	private String activity_desc;
-	private boolean IS_ACTIVE;
-	private String created_by;
-	private String modified_by;
-	private boolean IS_DELETE;
-	private String client_code;
+	private String activityDesc;
+	private boolean active;
+	private String createdBy;
+	private String modifiedBy;
+	private boolean isDelete;
+	private String clientCode;
 	
 }

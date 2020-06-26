@@ -63,7 +63,7 @@ public class ActivitiesByTaskServiceImpl implements ActivitiesByTaskService {
 			Optional<ActivityMaster> activitymaster = activityMasterRepository.findById(activitiesbytask.getActivityId());
 			if(activitymaster.isPresent()) {
 				activitiesbytaskResponse.setActivity_code(activitymaster.get().getActivityCode());
-				activitiesbytaskResponse.setActivity_desc(activitymaster.get().getActivity_desc());
+				activitiesbytaskResponse.setActivity_desc(activitymaster.get().getActivityDesc());
 			}
 			
 			activitiesbytaskResponseList.add(activitiesbytaskResponse);

@@ -70,11 +70,11 @@ public class StatusMasterServiceImpl implements StatusMasterService {
 				statusbyclienttypeList.setClientId(statusmaster.getClientId());
 				statusbyclienttypeList.setStatus(statusmaster.getStatus());
 				statusbyclienttypeList.setStatus_type(statusmaster.getStatusType());
-				statusbyclienttypeList.setCreated_by(statusmaster.getCreated_by());
-				statusbyclienttypeList.setCreated_date(statusmaster.getCreated_date());
-				statusbyclienttypeList.setModified_by(statusmaster.getModified_by());
-				statusbyclienttypeList.setModified_date(statusmaster.getModified_date());
-				statusbyclienttypeList.setIS_DELETE(statusmaster.isIS_DELETE());
+				statusbyclienttypeList.setCreated_by(statusmaster.getCreatedBy());
+				statusbyclienttypeList.setCreated_date(statusmaster.getCreatedDate());
+				statusbyclienttypeList.setModified_by(statusmaster.getModifiedBy());
+				statusbyclienttypeList.setModified_date(statusmaster.getModifiedDate());
+				statusbyclienttypeList.setIsDelete(statusmaster.getIsDelete());
 				
 				statusByClientStatustypeList.add(statusbyclienttypeList);
 			}

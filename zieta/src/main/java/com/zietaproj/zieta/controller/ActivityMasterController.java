@@ -98,7 +98,7 @@ public class ActivityMasterController {
 		} 
 	}
 	
-	@ApiOperation(value = "Maps activities with task and then with user", notes = "Table reference: task_activity,activity_user_mapping")
+	@ApiOperation(value = "Maps activities with task and then with user", notes = "Table reference: task_activity")
 	@RequestMapping(value = "addActivitiesByClientProjectTask", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void addActivitiesByClientProjectTask(@Valid @RequestBody ActivityTaskUserMappingRequest activityTaskUserMappingRequest) {
 	 activityService.addActivitiesByClientProjectTask(activityTaskUserMappingRequest);
@@ -110,17 +110,17 @@ public class ActivityMasterController {
 		
 	}
 	
-	@ApiOperation(value = "Edits activities with task and then with user", notes = "Table reference: task_activity,activity_user_mapping")
+	@ApiOperation(value = "Edits the entries from the task_activity table", notes = "Table reference: task_activity")
 	@RequestMapping(value = "editActivitiesByClientProjectTask", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void editActivitiesByClientProjectTask(@Valid @RequestBody ActivityTaskUserMappingRequest activityTaskUserMappingRequest) throws Exception {
 		activityService.editActivitiesByClientProjectTask(activityTaskUserMappingRequest);
 		
 	}
 	
-	@ApiOperation(value = "Deletes activities with task and then with user", notes = "Table reference: task_activity,activity_user_mapping")
+	@ApiOperation(value = "Deletes entries from task_activity based on taskActivityId", notes = "Table reference: task_activity")
 	@RequestMapping(value = "deleteActivitiesByClientProjectTask", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void deleteActivitesByClientProjectTask(@RequestParam(required=true) Long taskActivitiyId, @RequestParam(required=true) Long activityUserId) {
-		activityService.deleteActivitesByClientProjectTask(taskActivitiyId, activityUserId);
+	public void deleteActivitesByClientProjectTask(@RequestParam(required=true) Long taskActivitiyId) {
+		activityService.deleteActivitesByClientProjectTask(taskActivitiyId);
 	}
 
 }

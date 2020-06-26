@@ -27,5 +27,5 @@ public interface ActivityService {
 	
 	public List<ActivitiesByClientProjectTaskResponse> getActivitesByClientProjectTask(long clientId,
 			long projectId,long taskId);
-	public void deleteActivitesByClientProjectTask(long taskActivityId, long activityUserId);
+	public void deleteActivitesByClientProjectTask(long taskActivityId);
 }

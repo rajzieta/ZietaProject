@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zietaproj.zieta.dto.ProjectMasterDTO;
+import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.ProjectMaster;
 import com.zietaproj.zieta.request.EditProjStatusRequest;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
@@ -52,9 +53,9 @@ public class ProjectMasterController {
 		return projectList;
 	}
 
-	@RequestMapping(value = "addProjectmaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void addProjectmaster(@Valid @RequestBody ProjectMaster projectmaster) {
-		projectmasterService.addProjectmaster(projectmaster);
+	@RequestMapping(value = "addProjectMaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addProjectMaster(@Valid @RequestBody ProjectInfo projectinfo) {
+		projectmasterService.addProjectinfo(projectinfo);
 	}
 
 	@ApiOperation(value = "List projects based on the  userId", notes = "Table reference: Project_Info,"

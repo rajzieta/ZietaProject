@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.zietaproj.zieta.dto.ProjectMasterDTO;
+import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.ProjectMaster;
 import com.zietaproj.zieta.request.EditProjStatusRequest;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
@@ -14,7 +15,7 @@ public interface ProjectMasterService {
 
 	public List<ProjectsByClientResponse> getAllProjects();
 
-	public void addProjectmaster(ProjectMaster projectmaster);
+	public void addProjectinfo(ProjectInfo projectinfo);
 	
 	List<ProjectDetailsByUserModel> getProjectsByUser(long userId);
 

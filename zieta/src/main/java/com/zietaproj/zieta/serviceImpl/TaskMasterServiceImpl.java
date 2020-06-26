@@ -135,6 +135,7 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 			tasksByClientProjectResponse.setTask_parent(taskInfo.getTask_parent());
 			tasksByClientProjectResponse.setTask_status(taskInfo.getTask_status());
 			tasksByClientProjectResponse.setTaskDescription(taskInfo.getTask_name());
+			tasksByClientProjectResponse.setTaskManagerId(taskInfo.getTask_manager());
 			tasksByClientProjectResponse.setTasktypeDescription(taskmaster.getType_name());
 			tasksByClientProjectResponse.setProjectCode(projectInfo.getProject_code());
 			tasksByClientProjectResponse.setProjectDescription(projectInfo.getProject_name());	

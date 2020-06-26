@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,25 +46,21 @@ public class ActivitiesByTaskServiceImpl implements ActivitiesByTaskService {
 			activitiesbytaskResponse = new ActivitiesByTaskResponse();
 			activitiesbytaskResponse.setTask_id(activitiesbytask.getTaskId());
 			activitiesbytaskResponse.setClient_id(activitiesbytask.getClientId());
-			activitiesbytaskResponse.setActivity_id(activitiesbytask.getActivity_id());
+			activitiesbytaskResponse.setActivity_id(activitiesbytask.getActivityId());
 			activitiesbytaskResponse.setEndDate(TSMUtil.getFormattedDateAsString(activitiesbytask.getEndDate()));
 			activitiesbytaskResponse.setStartDate(TSMUtil.getFormattedDateAsString(activitiesbytask.getStartDate()));
 			activitiesbytaskResponse.setPlannedHrs(activitiesbytask.getPlannedHrs());
 			activitiesbytaskResponse.setActualHrs(activitiesbytask.getActualHrs());
 			
-			Long userId;
-			String teamMemberName;
-			Optional<ActivityUserMapping> activityUserMapping = activitiyUserMappingRepository.findById(activitiesbytask.getActivity_id());
-			if(activityUserMapping.isPresent()) {
-				activitiesbytaskResponse.setUserId(activityUserMapping.get().getUserId());
-				Optional<UserInfo> userInfo = userInfoReposistory.findById(activityUserMapping.get().getUserId());
+			String teamMemberName = StringUtils.EMPTY;
+				activitiesbytaskResponse.setUserId(activitiesbytask.getUserId());
+				Optional<UserInfo> userInfo = userInfoReposistory.findById(activitiesbytask.getUserId());
 				if(userInfo.isPresent()) {
 				teamMemberName = TSMUtil.getFullName(userInfo.get());
 				activitiesbytaskResponse.setUserName(teamMemberName);
 				}
-			}
 			
-			Optional<ActivityMaster> activitymaster = activityMasterRepository.findById(activitiesbytask.getActivity_id());
+			Optional<ActivityMaster> activitymaster = activityMasterRepository.findById(activitiesbytask.getActivityId());
 			if(activitymaster.isPresent()) {
 				activitiesbytaskResponse.setActivity_code(activitymaster.get().getActivityCode());
 				activitiesbytaskResponse.setActivity_desc(activitymaster.get().getActivity_desc());

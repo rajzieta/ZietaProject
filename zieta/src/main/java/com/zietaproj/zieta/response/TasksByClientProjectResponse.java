@@ -7,11 +7,11 @@ import lombok.Setter;
 @Getter
 public class TasksByClientProjectResponse {
 	
-	Long id;
-	Long project_id;
-	Long task_type;
-	Long task_parent;
-	Long task_status;
+	Long taskInfoId;
+	Long projectId;
+	Long taskType;
+	Long taskParent;
+	Long taskStatus;
 	String taskManager;
 	Long TaskManagerId;
 	String taskStatusDescription;

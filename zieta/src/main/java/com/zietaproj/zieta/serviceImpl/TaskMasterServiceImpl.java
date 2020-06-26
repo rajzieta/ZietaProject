@@ -70,6 +70,7 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 			taskMasterDTO.setId(taskMaster.getId());
 			taskMasterDTO.setTask_type(taskMaster.getType_name());
 			taskMasterDTO.setClient_id(taskMaster.getClientId());
+			taskMasterDTO.setIS_DELETE(taskMaster.isIS_DELETE());
 			taskMasterDTO.setModified_by(taskMaster.getModified_by());
 			taskMasterDTO.setCreated_by(taskMaster.getCreated_by());
 			taskMasterDTO.setClient_code(clientInfoRepository.findById(taskMaster.getClientId()).get().getClient_code());

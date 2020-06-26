@@ -80,9 +80,9 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	}
 	
 	@Override
-	public void addProjectmaster(ProjectMaster projectmaster)
+	public void addProjectinfo(ProjectInfo projectinfo)
 	{
-		projectMasterRepository.save(projectmaster);
+		projectInfoRepository.save(projectinfo);
 	}
 
 	@Override

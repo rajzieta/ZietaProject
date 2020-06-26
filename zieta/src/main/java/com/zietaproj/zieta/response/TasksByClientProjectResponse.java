@@ -13,6 +13,7 @@ public class TasksByClientProjectResponse {
 	Long task_parent;
 	Long task_status;
 	String taskManager;
+	Long TaskManagerId;
 	String taskStatusDescription;
 	String projectCode;
 	String taskCode;

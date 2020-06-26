@@ -106,7 +106,7 @@ public class TaskMasterController {
 		
 	}
 	
-	@RequestMapping(value = "addTaskTypesByClient", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "addTaskTypesByClient", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Persists the tasktypes related to client", notes = "Table reference: task_type_master")
 	public void addTaskTypesByClient(@Valid @RequestBody TaskMaster taskmaster) throws Exception {
 		taskMasterService.addTaskTypesByClient(taskmaster);
@@ -120,7 +120,7 @@ public class TaskMasterController {
 	}
 	
 	@ApiOperation(value = "Persists the tasks related to client and its associated project", notes = "Table reference: task_info")
-	@RequestMapping(value = "EditTasksByClientProject", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "EditTasksByClientProject", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void editTasksByClientProject(@Valid @RequestBody EditTasksByClientProjectRequest editasksByClientProjectRequest) throws Exception {
 		taskMasterService.editTaskInfo(editasksByClientProjectRequest);
 	}

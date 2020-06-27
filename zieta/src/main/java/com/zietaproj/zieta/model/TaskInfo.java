@@ -28,7 +28,7 @@ public class TaskInfo extends BaseEntity {
 	    private Long projectId;
 	    
 	    @Column(name = "task_name")
-	    private String taskName;
+	    private String taskDescription;
 	    
 	    @Column(name ="task_code")
 	    private String taskCode;

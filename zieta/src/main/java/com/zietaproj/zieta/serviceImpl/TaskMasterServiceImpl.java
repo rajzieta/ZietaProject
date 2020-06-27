@@ -98,7 +98,7 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 			long taskId = tasksByUser.getTask_id();
 			long userIdent = tasksByUser.getUserId();
 			TaskInfo taskInfo = taskInfoRepository.findById(taskId).get();
-			String taskName = taskInfo.getTaskName();
+			String taskName = taskInfo.getTaskDescription();
 			ProjectInfo projectInfo = projectInfoRepository.findById(projectId).get();
 			String projectName = projectInfo.getProject_name();
 			tasksByUserModel.setProjectId(projectId);
@@ -132,7 +132,7 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 			tasksByClientProjectResponse.setProjectDescription(projectInfo.getProject_name());	
 			UserInfo userInfo = userInfoRepository.findById(taskInfo.getTaskManager()).get();
 			String userName = TSMUtil.getFullName(userInfo);
-			tasksByClientProjectResponse.setTaskManager(userName);
+			tasksByClientProjectResponse.setTaskManagerName(userName);
 			tasksByClientProjectResponse
 					.setTaskStatusDescription(statusRepository.findById(taskInfo.getTaskStatus()).get().getStatus());
 			tasksByClientProjectResponseList.add(tasksByClientProjectResponse);

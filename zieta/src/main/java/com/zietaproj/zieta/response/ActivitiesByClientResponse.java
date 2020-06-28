@@ -7,10 +7,10 @@ import lombok.Setter;
 @Setter
 public class ActivitiesByClientResponse {
 
-	long id;
+	long activityId;
     Long clientId;
     private String activityCode;
-    private String activity_desc;
+    private String activityDesc;
     private String clientCode;
-    private boolean isActive;
+    private boolean active;
 }

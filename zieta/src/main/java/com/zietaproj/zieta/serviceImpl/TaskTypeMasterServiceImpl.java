@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,30 +15,31 @@ import org.springframework.stereotype.Service;
 
 import com.zietaproj.zieta.dto.TaskMasterDTO;
 import com.zietaproj.zieta.model.ProjectInfo;
+import com.zietaproj.zieta.model.StatusMaster;
 import com.zietaproj.zieta.model.TaskInfo;
-import com.zietaproj.zieta.model.TaskMaster;
+import com.zietaproj.zieta.model.TaskTypeMaster;
 import com.zietaproj.zieta.model.TasksByUser;
 import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
 import com.zietaproj.zieta.repository.StatusMasterRepository;
 import com.zietaproj.zieta.repository.TaskInfoRepository;
-import com.zietaproj.zieta.repository.TaskMasterRepository;
+import com.zietaproj.zieta.repository.TaskTypeMasterRepository;
 import com.zietaproj.zieta.repository.TasksByUserRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.request.EditTasksByClientProjectRequest;
 import com.zietaproj.zieta.request.TaskTypesByClientRequest;
 import com.zietaproj.zieta.response.TasksByClientProjectResponse;
 import com.zietaproj.zieta.response.TasksByUserModel;
-import com.zietaproj.zieta.response.TasktypesByClientResponse;
-import com.zietaproj.zieta.service.TaskMasterService;
+import com.zietaproj.zieta.response.TaskTypesByClientResponse;
+import com.zietaproj.zieta.service.TaskTypeMasterService;
 import com.zietaproj.zieta.util.TSMUtil;
 
 @Service
-public class TaskMasterServiceImpl implements TaskMasterService {
+public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 
 	@Autowired
-	TaskMasterRepository taskMasterRepository;
+	TaskTypeMasterRepository taskTypeMasterRepository;
 
 	@Autowired
 	TasksByUserRepository tasksByUserRepository;
@@ -62,27 +64,20 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 
 	@Override
 	public List<TaskMasterDTO> getAllTasks() {
-		List<TaskMaster> taskMasters = taskMasterRepository.findAll();
+		List<TaskTypeMaster> taskTypeMasters = taskTypeMasterRepository.findAll();
 		List<TaskMasterDTO> taskMasterDTOs = new ArrayList<TaskMasterDTO>();
 		TaskMasterDTO taskMasterDTO = null;
-		for (TaskMaster taskMaster : taskMasters) {
-			taskMasterDTO = new TaskMasterDTO();
-			taskMasterDTO.setId(taskMaster.getId());
-			taskMasterDTO.setTask_type(taskMaster.getType_name());
-			taskMasterDTO.setClient_id(taskMaster.getClientId());
-			taskMasterDTO.setIS_DELETE(taskMaster.isIS_DELETE());
-			taskMasterDTO.setModified_by(taskMaster.getModified_by());
-			taskMasterDTO.setCreated_by(taskMaster.getCreated_by());
-			taskMasterDTO.setClient_code(clientInfoRepository.findById(taskMaster.getClientId()).get().getClient_code());
-	//		taskMasterDTO.setProject_code(taskInfoRepository.findById(taskMaster.getId()).get().getask_id().get().getProject_code();
+		for (TaskTypeMaster taskTypeMaster : taskTypeMasters) {
+			taskMasterDTO = modelMapper.map(taskTypeMaster,TaskMasterDTO.class);
+			taskMasterDTO.setClientCode(clientInfoRepository.findById(taskTypeMaster.getClientId()).get().getClient_code());
 			taskMasterDTOs.add(taskMasterDTO);
 		}
 		return taskMasterDTOs;
 	}
 
 	@Override
-	public void addTaskmaster(TaskMaster taskmaster) {
-		taskMasterRepository.save(taskmaster);
+	public void addTaskmaster(TaskTypeMaster taskmaster) {
+		taskTypeMasterRepository.save(taskmaster);
 	}
 
 	@Override
@@ -102,12 +97,12 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 			ProjectInfo projectInfo = projectInfoRepository.findById(projectId).get();
 			String projectName = projectInfo.getProject_name();
 			tasksByUserModel.setProjectId(projectId);
-			tasksByUserModel.setProject_name(projectName);
-			tasksByUserModel.setTask_name(taskName);
+			tasksByUserModel.setProjectName(projectName);
+			tasksByUserModel.setTaskName(taskName);
 			tasksByUserModel.setTaskId(taskId);
 			tasksByUserModel.setUserId(userIdent);
-			tasksByUserModel.setProject_code(tasksByUser.getProject_code());
-			tasksByUserModel.setTask_code(tasksByUser.getTask_code());
+			tasksByUserModel.setProjectCode(tasksByUser.getProject_code());
+			tasksByUserModel.setTaskCode(tasksByUser.getTask_code());
 			tasksByUserModelList.add(tasksByUserModel);
 		}
 
@@ -122,19 +117,42 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 		List<TasksByClientProjectResponse> tasksByClientProjectResponseList = new ArrayList<>();
 		
 		for(TaskInfo taskInfo: taskInfoList) {
-			TasksByClientProjectResponse tasksByClientProjectResponse = new TasksByClientProjectResponse();
-			ProjectInfo projectInfo = projectInfoRepository.findById(taskInfo.getProjectId()).get();
-			TaskMaster taskmaster = taskMasterRepository.findById(taskInfo.getTaskType()).get();
 			modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-			tasksByClientProjectResponse = modelMapper.map(taskInfo, TasksByClientProjectResponse.class);
-			tasksByClientProjectResponse.setTasktypeDescription(taskmaster.getType_name());
-			tasksByClientProjectResponse.setProjectCode(projectInfo.getProject_code());
-			tasksByClientProjectResponse.setProjectDescription(projectInfo.getProject_name());	
-			UserInfo userInfo = userInfoRepository.findById(taskInfo.getTaskManager()).get();
-			String userName = TSMUtil.getFullName(userInfo);
-			tasksByClientProjectResponse.setTaskManagerName(userName);
-			tasksByClientProjectResponse
-					.setTaskStatusDescription(statusRepository.findById(taskInfo.getTaskStatus()).get().getStatus());
+			TasksByClientProjectResponse tasksByClientProjectResponse =  modelMapper.map(taskInfo, TasksByClientProjectResponse.class);
+			Optional<ProjectInfo> projectInfo = projectInfoRepository.findById(taskInfo.getProjectId());
+			if(projectInfo.isPresent()) {
+				tasksByClientProjectResponse.setProjectCode(projectInfo.get().getProject_code());
+				tasksByClientProjectResponse.setProjectDescription(projectInfo.get().getProject_name());	
+			}else {
+				tasksByClientProjectResponse.setProjectCode(StringUtils.EMPTY);
+				tasksByClientProjectResponse.setProjectDescription(StringUtils.EMPTY);
+			}
+			
+			tasksByClientProjectResponse.setTaskTypeDescription(StringUtils.EMPTY);
+			if(null != taskInfo.getTaskType()) {
+				Optional<TaskTypeMaster> taskTypeMaster = taskTypeMasterRepository.findById(taskInfo.getTaskType());
+				if(taskTypeMaster.isPresent()) {
+					tasksByClientProjectResponse.setTaskTypeDescription(taskTypeMaster.get().getTaskTypeDescription());
+				}
+			}
+			
+			tasksByClientProjectResponse.setTaskManagerName(StringUtils.EMPTY);
+			if(null != taskInfo.getTaskManager()) {
+				Optional <UserInfo> userInfo = userInfoRepository.findById(taskInfo.getTaskManager());
+				if(userInfo.isPresent()) {
+					String userName = TSMUtil.getFullName(userInfo.get());
+					tasksByClientProjectResponse.setTaskManagerName(userName);
+				}
+			}
+			
+			tasksByClientProjectResponse.setTaskStatusDescription(StringUtils.EMPTY);
+			if(null != taskInfo.getTaskStatus()) {
+				Optional <StatusMaster> statusMaster = statusRepository.findById(taskInfo.getTaskStatus());
+				if(statusMaster.isPresent()) {
+					tasksByClientProjectResponse.setTaskStatusDescription(statusMaster.get().getStatus());
+				}
+			}
+			
 			tasksByClientProjectResponseList.add(tasksByClientProjectResponse);
 			
 		}
@@ -142,13 +160,13 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 	}
 
 	
-	public List<TasktypesByClientResponse> getTasksByClient(Long clientId) {
-		List<TaskMaster> tasksByClientList = taskMasterRepository.findByClientId(clientId);
-		List<TasktypesByClientResponse> tasksByClientResponseList = new ArrayList<>();
-		TasktypesByClientResponse tasksByClientResponse = null;
-		for (TaskMaster tasksByClient : tasksByClientList) {
+	public List<TaskTypesByClientResponse> getTasksByClient(Long clientId) {
+		List<TaskTypeMaster> tasksByClientList = taskTypeMasterRepository.findByClientId(clientId);
+		List<TaskTypesByClientResponse> tasksByClientResponseList = new ArrayList<>();
+		TaskTypesByClientResponse tasksByClientResponse = null;
+		for (TaskTypeMaster tasksByClient : tasksByClientList) {
 			tasksByClientResponse = modelMapper.map(tasksByClient, 
-					TasktypesByClientResponse.class);
+					TaskTypesByClientResponse.class);
 		
 			tasksByClientResponseList.add(tasksByClientResponse);
 	}
@@ -182,19 +200,19 @@ public class TaskMasterServiceImpl implements TaskMasterService {
 	@Override
 	public void editTaskTypesByClient(TaskTypesByClientRequest tasktypesbyclientRequest) throws Exception
 	{
-		Optional<TaskMaster> taskMasterEntity = taskMasterRepository.findById(tasktypesbyclientRequest.getId());
+		Optional<TaskTypeMaster> taskMasterEntity = taskTypeMasterRepository.findById(tasktypesbyclientRequest.getTaskTypeId());
 		if(taskMasterEntity.isPresent()) {
-		TaskMaster taskmaster = modelMapper.map(tasktypesbyclientRequest, TaskMaster.class);
-		taskMasterRepository.save(taskmaster);
+		TaskTypeMaster taskmaster = modelMapper.map(tasktypesbyclientRequest, TaskTypeMaster.class);
+		taskTypeMasterRepository.save(taskmaster);
 	}else {
-		throw new Exception("Task not found with the provided ID : "+tasktypesbyclientRequest.getId());
+		throw new Exception("Task not found with the provided ID : "+tasktypesbyclientRequest.getTaskTypeId());
 	}
 	}
 	
 	@Override 
-	  public void addTaskTypesByClient(TaskMaster taskmaster) {
+	  public void addTaskTypesByClient(TaskTypeMaster taskmaster) {
 		
-		taskMasterRepository.save(taskmaster); 
+		taskTypeMasterRepository.save(taskmaster); 
 	  
 	  }
 }

@@ -18,7 +18,6 @@ import com.zietaproj.zieta.model.ActivityMaster;
 import com.zietaproj.zieta.model.TaskActivity;
 import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.repository.ActivitiesTaskRepository;
-import com.zietaproj.zieta.repository.ActivitiyUserMappingRepository;
 import com.zietaproj.zieta.repository.ActivityMasterRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
@@ -46,9 +45,6 @@ public class ActivityServiceImpl implements ActivityService {
 	
 	@Autowired
 	ClientInfoRepository  clientInfoRepository;
-	
-	@Autowired
-	ActivitiyUserMappingRepository activitiyUserMappingRepository;
 	
 	@Autowired
 	ActivitiesTaskRepository activitiesTaskRepository;

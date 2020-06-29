@@ -10,11 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zietaproj.zieta.model.ActivityMaster;
-import com.zietaproj.zieta.model.ActivityUserMapping;
 import com.zietaproj.zieta.model.TaskActivity;
 import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.repository.ActivitiesTaskRepository;
-import com.zietaproj.zieta.repository.ActivitiyUserMappingRepository;
 import com.zietaproj.zieta.repository.ActivityMasterRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.response.ActivitiesByTaskResponse;
@@ -32,9 +30,7 @@ public class ActivitiesByTaskServiceImpl implements ActivitiesByTaskService {
 	
 	@Autowired
 	UserInfoRepository userInfoReposistory;
-	
-	@Autowired 
-	ActivitiyUserMappingRepository activitiyUserMappingRepository;
+
 	
 	@Override
 	public List<ActivitiesByTaskResponse> getActivitesByClientProjectTaskOld(long clientId,long projectId,long taskId) {

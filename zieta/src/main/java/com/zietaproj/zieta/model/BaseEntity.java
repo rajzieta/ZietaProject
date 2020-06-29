@@ -29,7 +29,7 @@ public class BaseEntity {
 	
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
-    @Column(name = "CREATED_DATE")
+    @Column(name = "created_date", updatable = false)
 	private Date createdDate;
 	
 	@Column(name = "MODIFIED_DATE")

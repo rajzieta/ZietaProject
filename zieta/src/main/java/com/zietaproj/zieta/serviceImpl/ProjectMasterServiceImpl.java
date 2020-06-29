@@ -13,13 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.zietaproj.zieta.model.ActivityMaster;
-import com.zietaproj.zieta.model.ActivityUserMapping;
 import com.zietaproj.zieta.model.CustInfo;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.ProjectMaster;
 import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.UserInfo;
-import com.zietaproj.zieta.repository.ActivitiyUserMappingRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.CustInfoRepository;
 import com.zietaproj.zieta.repository.OrgInfoRepository;
@@ -56,9 +54,6 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	
 	@Autowired
 	UserInfoRepository userInfoRepository;
-	
-	@Autowired
-	ActivitiyUserMappingRepository activitiyUserMappingRepository;
 	
 	@Autowired
 	StatusMasterRepository statusMasterRepository;

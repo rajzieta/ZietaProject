@@ -9,9 +9,9 @@ public class TasksByUserModel {
 	long projectId;
 	long taskId;
 	long userId;
-	String project_name;
-	String task_name;
-	String project_code;
-	String task_code;
+	String projectName;
+	String taskName;
+	String projectCode;
+	String taskCode;
 
 }

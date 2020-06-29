@@ -8,9 +8,9 @@ import lombok.Setter;
 public class TaskTypesByClientRequest {
 
 	
-	Long id;
+	Long taskTypeId;
 	Long clientId;
-	private String type_name;
-	private boolean IS_DELETE;
+	private String taskTypeDescription;
+	private boolean isDelete;
 	
 }

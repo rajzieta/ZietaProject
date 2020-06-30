@@ -9,19 +9,19 @@ import lombok.Setter;
 @Setter
 public class CustomerInfoModel {
 	
-    private Long id;
+    private Long custInfoId;
     private Long clientId;
-    private String cust_name;
-    private String cust_address;
-    private String cust_details;
-    private String cust_code;
-	private String created_by;
-    private Date created_date;
-    private Date modified_date;
-	private String modified_by;
-	private boolean IS_DELETE;
+    private String custName;
+    private String custAddress;
+    private String custDetails;
+    private String custCode;
+	private String createdBy;
+    private Date createdDate;
+    private Date modifiedDate;
+	private String modifiedBy;
+	private boolean isDelete;
 	private  long orgNode;
-	private String client_code;
+	private String clientCode;
 
 	
 	

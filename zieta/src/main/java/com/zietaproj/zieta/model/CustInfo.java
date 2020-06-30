@@ -30,46 +30,32 @@ import lombok.Data;
 	@JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
 	        allowGetters = true)
 	@Data
-	public class CustInfo implements Serializable{
+	public class CustInfo extends BaseEntity implements Serializable{
 
 		@Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private Long id;
+		@Column(name = "id")
+	    private Long custInfoId;
 
-	    @NotBlank
+	   
 	    @Column(name = "client_id")
 	    private Long clientId;
 
-	    @NotBlank
-	    private String cust_name;
+	    @Column(name = "cust_name")
+	    private String custName;
 	    
-	    @NotBlank
-	    private String cust_address;
+	    @Column(name = "cust_address")
+	    private String custAddress;
 	    
-	    @NotBlank
-	    private String cust_details;
+	    @Column(name = "cust_details")
+	    private String custDetails;
 	    
-	    @NotNull
-	    private String cust_code;
+	    @Column(name = "cust_code")
+	    private String custCode;
 	    
-	    
-		@NotBlank
-		private String created_by;
+	   
 
-	    @Column(nullable = false, updatable = false)
-	    @Temporal(TemporalType.TIMESTAMP)
-	    @CreatedDate
-	    private Date created_date;
-
-	    @Column(nullable = false)
-	    @Temporal(TemporalType.TIMESTAMP)
-	    @LastModifiedDate
-	    private Date modified_date;
-		
-		@NotBlank
-		private String modified_by;
-		
-		private boolean IS_DELETE;
+	    
 
 		
 		

@@ -42,8 +42,8 @@ public class ProjectMasterController {
 	ProjectMasterService projectmasterService;
 
 	@RequestMapping(value = "getAllProjects", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<ProjectsByClientResponse> getAllProjects() {
-		List<ProjectsByClientResponse> projectList = null;
+	public List<ProjectDetailsByUserModel> getAllProjects() {
+		List<ProjectDetailsByUserModel> projectList = null;
 
 		try {
 			projectList = projectmasterService.getAllProjects();
@@ -73,12 +73,12 @@ public class ProjectMasterController {
 	
 	@GetMapping("/getAllProjectsByClient")
 	@ApiOperation(value = "List Projects based on the clientId", notes = "Table reference: project_type_master,user_info,project_info,org_info,cust_info")
-	public ResponseEntity<List<ProjectsByClientResponse>> getAllProjectsByClient(@RequestParam(required = true) Long clientId) {
+	public ResponseEntity<List<ProjectDetailsByUserModel>> getAllProjectsByClient(@RequestParam(required = true) Long clientId) {
 		try {
-			List<ProjectsByClientResponse> projectsbyclientList = projectmasterService.getProjectsByClient(clientId);
-			return new ResponseEntity<List<ProjectsByClientResponse>>(projectsbyclientList, HttpStatus.OK);
+			List<ProjectDetailsByUserModel> projectsbyclientList = projectmasterService.getProjectsByClient(clientId);
+			return new ResponseEntity<List<ProjectDetailsByUserModel>>(projectsbyclientList, HttpStatus.OK);
 		} catch (NoSuchElementException e) {
-			return new ResponseEntity<List<ProjectsByClientResponse>>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<List<ProjectDetailsByUserModel>>(HttpStatus.NOT_FOUND);
 		}
 	}
 	

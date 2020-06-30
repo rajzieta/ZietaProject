@@ -32,7 +32,7 @@ public class ClientInfoController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ClientInfoController.class);
 
 	@RequestMapping(value = "getAllClients", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<ClientInfoDTO> getAllInfo() {
+	public List<ClientInfoDTO> getAllClients() {
 		List<ClientInfoDTO> clientinfos = null;
 		try {
 			clientinfos = clientinfoService.getAllClients();

@@ -11,6 +11,7 @@ public class TaskTypesByClientRequest {
 	Long taskTypeId;
 	Long clientId;
 	private String taskTypeDescription;
-	private boolean isDelete;
+	private short isDelete;
+	private String modifiedBy;
 	
 }

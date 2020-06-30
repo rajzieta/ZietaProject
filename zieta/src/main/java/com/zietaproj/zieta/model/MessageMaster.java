@@ -36,17 +36,20 @@ public class MessageMaster implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@Column(name = "id")
+	private Long messageId;
 
-	@NotBlank
+	//@NotBlank
 	@Column(name = "msg_code")
 	private String msgCode;
 
-	@NotBlank
-	private String msg_type;
+	//@NotBlank
+	@Column(name = "msg_type")
+	private String msgType;
 
-	@NotNull
-	private String msg_desc;
+	//@NotNull
+	@Column(name = "msg_desc")
+	private String msgDesc;
 	
 
 }

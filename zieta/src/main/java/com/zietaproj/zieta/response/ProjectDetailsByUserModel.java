@@ -9,19 +9,28 @@ import lombok.Setter;
 @Setter
 public class ProjectDetailsByUserModel {
 	
-	String project_code;
-	long projectId;
-	String projectTypeName;
-	String project_name;
-	long projectType;
-	String OrgNode;
-	long projectStatus;
-	String projectStatusDescription;
+	//project info details starts
+	long projectInfoId;
 	long clientId;
-	String clientCode;
+	String projectCode;
+	String projectName;
+	long projectType;
+	long projectOrgnode;
+	long projectManager;
+	short allowUnplanned;
+	long custId;
+	long projectStatus;
+	String createdBy;
+	String modifiedBy;
+	//project info details ends
 	
-	String projectManager;
-	short allowUnplannedActivity;
+	//additional details starts
+	String projectTypeName;
+	String orgNodeName;
+	String projectManagerName;
+	String projectStatusDescription;
+	String clientCode;
 	CustInfo custInfo;
+	//additional details ends
 	
 }

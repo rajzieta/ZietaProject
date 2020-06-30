@@ -36,6 +36,7 @@ import com.zietaproj.zieta.service.TaskTypeMasterService;
 import com.zietaproj.zieta.util.TSMUtil;
 
 @Service
+@Transactional
 public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 
 	@Autowired
@@ -95,7 +96,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 			TaskInfo taskInfo = taskInfoRepository.findById(taskId).get();
 			String taskName = taskInfo.getTaskDescription();
 			ProjectInfo projectInfo = projectInfoRepository.findById(projectId).get();
-			String projectName = projectInfo.getProject_name();
+			String projectName = projectInfo.getProjectName();
 			tasksByUserModel.setProjectId(projectId);
 			tasksByUserModel.setProjectName(projectName);
 			tasksByUserModel.setTaskName(taskName);
@@ -121,8 +122,8 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 			TasksByClientProjectResponse tasksByClientProjectResponse =  modelMapper.map(taskInfo, TasksByClientProjectResponse.class);
 			Optional<ProjectInfo> projectInfo = projectInfoRepository.findById(taskInfo.getProjectId());
 			if(projectInfo.isPresent()) {
-				tasksByClientProjectResponse.setProjectCode(projectInfo.get().getProject_code());
-				tasksByClientProjectResponse.setProjectDescription(projectInfo.get().getProject_name());	
+				tasksByClientProjectResponse.setProjectCode(projectInfo.get().getProjectCode());
+				tasksByClientProjectResponse.setProjectDescription(projectInfo.get().getProjectName());	
 			}else {
 				tasksByClientProjectResponse.setProjectCode(StringUtils.EMPTY);
 				tasksByClientProjectResponse.setProjectDescription(StringUtils.EMPTY);

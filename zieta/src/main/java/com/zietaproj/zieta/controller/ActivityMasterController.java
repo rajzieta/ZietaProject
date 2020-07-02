@@ -24,6 +24,7 @@ import com.zietaproj.zieta.request.AcitivityRequest;
 import com.zietaproj.zieta.request.ActivityTaskUserMappingRequest;
 import com.zietaproj.zieta.response.ActivitiesByClientProjectTaskResponse;
 import com.zietaproj.zieta.response.ActivitiesByClientResponse;
+import com.zietaproj.zieta.response.ActivitiesByClientUserModel;
 import com.zietaproj.zieta.response.ActivitiesByTaskResponse;
 import com.zietaproj.zieta.service.ActivitiesByTaskService;
 import com.zietaproj.zieta.service.ActivityService;
@@ -119,8 +120,21 @@ public class ActivityMasterController {
 	
 	@ApiOperation(value = "Deletes entries from task_activity based on taskActivityId", notes = "Table reference: task_activity")
 	@RequestMapping(value = "deleteActivitiesByClientProjectTask", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void deleteActivitesByClientProjectTask(@RequestParam(required=true) Long taskActivitiyId) {
-		activityService.deleteActivitesByClientProjectTask(taskActivitiyId);
+	public void deleteActivitesByClientProjectTask(@RequestParam(required=true) Long taskActivitiyId, @RequestParam(required=true) String modifiedBy) throws Exception {
+		activityService.deleteActivitesByClientProjectTask(taskActivitiyId, modifiedBy);
+	}
+	
+	
+	@ApiOperation(value = "List activities based on the  clientId and userId", notes = "Table reference: task_activity,activity_master,project_info,task_info")
+	@GetMapping("/getActivitiesByClientUser")
+	public ResponseEntity<List<ActivitiesByClientUserModel>> getActivitiesByClientUser(@RequestParam(required=true) Long clientId, @RequestParam(required=true) Long userId){
+		
+		try {
+			List<ActivitiesByClientUserModel> activitiesByClientUserModelList = activityService.getActivitiesByClientUser(clientId, userId);
+			return new ResponseEntity<List<ActivitiesByClientUserModel>>(activitiesByClientUserModelList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<ActivitiesByClientUserModel>>(HttpStatus.NOT_FOUND);
+		} 
 	}
 
 }

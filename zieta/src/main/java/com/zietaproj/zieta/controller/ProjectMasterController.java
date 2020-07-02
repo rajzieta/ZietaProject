@@ -24,6 +24,7 @@ import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.ProjectMaster;
 import com.zietaproj.zieta.request.EditProjStatusRequest;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
+import com.zietaproj.zieta.response.ProjectTypeByClientResponse;
 import com.zietaproj.zieta.response.ProjectsByClientResponse;
 import com.zietaproj.zieta.response.RolesByClientResponse;
 import com.zietaproj.zieta.service.ProjectMasterService;
@@ -81,6 +82,18 @@ public class ProjectMasterController {
 			return new ResponseEntity<List<ProjectDetailsByUserModel>>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@GetMapping("/getProjectTypesByClient")
+	@ApiOperation(value = "List ProjectTypes based on the clientId", notes = "Table reference: project_type_master")
+	public ResponseEntity<List<ProjectTypeByClientResponse>> getProjectTypesByClient(@RequestParam(required = true) Long clientId) {
+		try {
+			List<ProjectTypeByClientResponse> projecttypesbyclientList = projectmasterService.getProjecttypessByClient(clientId);
+			return new ResponseEntity<List<ProjectTypeByClientResponse>>(projecttypesbyclientList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<ProjectTypeByClientResponse>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
 	
 	@RequestMapping(value = "editProjectStatus", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void editProjectStatus(@Valid @RequestBody EditProjStatusRequest editprojStatusRequest) throws Exception {

@@ -15,12 +15,11 @@ import org.springframework.stereotype.Service;
 
 
 import com.zietaproj.zieta.dto.TimeTypeDTO;
+import com.zietaproj.zieta.repository.TSInfoRepository;
 import com.zietaproj.zieta.repository.TimeTypeRepository;
 import com.zietaproj.zieta.response.TimeTypesByClientResponse;
 import com.zietaproj.zieta.service.TimeTypeService;
-
-
-
+import com.zietaproj.zieta.model.TSInfo;
 import com.zietaproj.zieta.model.TimeType;
 
 
@@ -30,6 +29,9 @@ public class TimeTypeServiceImpl implements TimeTypeService {
 
 	@Autowired
 	TimeTypeRepository timetypeRepository;
+	
+	@Autowired
+	TSInfoRepository tsinfoRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -71,5 +73,15 @@ public class TimeTypeServiceImpl implements TimeTypeService {
 		}
 
 		return timeTypesByClientResponseList;
+
 	}
+	
+	
+	public void addTimeEntry(@Valid TSInfo tsinfo) {
+			
+		tsinfoRepository.save(tsinfo);
+	}
+	
+	
+	
 }

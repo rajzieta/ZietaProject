@@ -9,6 +9,7 @@ import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.ProjectMaster;
 import com.zietaproj.zieta.request.EditProjStatusRequest;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
+import com.zietaproj.zieta.response.ProjectTypeByClientResponse;
 import com.zietaproj.zieta.response.ProjectsByClientResponse;
 
 public interface ProjectMasterService {
@@ -22,4 +23,6 @@ public interface ProjectMasterService {
 	List<ProjectDetailsByUserModel> getProjectsByClient(Long clientId);
 
 	public void editProjectStatus(@Valid EditProjStatusRequest editprojStatusRequest) throws Exception;
+
+	public List<ProjectTypeByClientResponse> getProjecttypessByClient(Long clientId);
 }

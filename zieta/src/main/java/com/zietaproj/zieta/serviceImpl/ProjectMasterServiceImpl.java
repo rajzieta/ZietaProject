@@ -12,11 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.zietaproj.zieta.dto.ProjectMasterDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
 import com.zietaproj.zieta.model.CustInfo;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.ProjectMaster;
 import com.zietaproj.zieta.model.TaskInfo;
+import com.zietaproj.zieta.model.TaskTypeMaster;
 import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.CustInfoRepository;
@@ -28,7 +30,9 @@ import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.request.EditProjStatusRequest;
 import com.zietaproj.zieta.request.EditTasksByClientProjectRequest;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
+import com.zietaproj.zieta.response.ProjectTypeByClientResponse;
 import com.zietaproj.zieta.response.ProjectsByClientResponse;
+import com.zietaproj.zieta.response.TaskTypesByClientResponse;
 import com.zietaproj.zieta.service.ProjectMasterService;
 import com.zietaproj.zieta.util.TSMUtil;
 
@@ -118,7 +122,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 			//setting additonal details starts
 			projectDetailsByUserModel.setClientCode(clientInfoRepository.findById(projectInfo.getClientId()).get().getClient_code());
 			projectDetailsByUserModel.setProjectTypeName(
-					projectMasterRepository.findById(projectInfo.getProjectType()).get().getType_name());
+					projectMasterRepository.findById(projectInfo.getProjectType()).get().getTypeName());
 			projectDetailsByUserModel.setOrgNodeName(orgInfoRepository.findById(projectInfo.getProjectOrgnode())
 					.get().getOrg_node_name());
 			String prjManagerName = getProjectManagerName(projectInfo);
@@ -132,6 +136,20 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	}
 
 	
+	
+	
+	public List<ProjectTypeByClientResponse> getProjecttypessByClient(Long clientId) {
+		
+		List<ProjectMaster> projecttypesByClientList = projectMasterRepository.findByClientId(clientId);
+		List<ProjectTypeByClientResponse> projecttypeslist = new ArrayList<>();
+		ProjectTypeByClientResponse projecttypesByClientResponse = null;
+		for (ProjectMaster projecttypesByClient : projecttypesByClientList) {
+			projecttypesByClientResponse = modelMapper.map(projecttypesByClient, 
+					ProjectTypeByClientResponse.class);
+			projecttypeslist.add(projecttypesByClientResponse);
+		}
+		return projecttypeslist;		
+	}
 	
 	@Override
 	public void editProjectStatus(@Valid EditProjStatusRequest editprojStatusRequest) throws Exception {

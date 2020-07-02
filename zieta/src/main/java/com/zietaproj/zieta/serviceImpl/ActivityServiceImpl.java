@@ -169,7 +169,8 @@ public class ActivityServiceImpl implements ActivityService {
 			activitiesByClientProjectTaskResponse.setTaskActivity(taskActivity);
 
 			String teamMemberName = StringUtils.EMPTY;
-			if (activitiesbytask!=null && activitiesbytask.getUserId() != 0) {
+
+			if (activitiesbytask.getUserId() !=null && activitiesbytask.getUserId() != 0) {
 				Optional<UserInfo> userInfo = userInfoReposistory.findById(activitiesbytask.getUserId());
 				if (userInfo.isPresent()) {
 					teamMemberName = TSMUtil.getFullName(userInfo.get());

@@ -15,25 +15,32 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.zietaproj.zieta.dto.ActivityMasterDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
+import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.TaskActivity;
+import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.repository.ActivitiesTaskRepository;
 import com.zietaproj.zieta.repository.ActivityMasterRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
 import com.zietaproj.zieta.repository.StatusMasterRepository;
+import com.zietaproj.zieta.repository.TaskInfoRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.request.AcitivityRequest;
 import com.zietaproj.zieta.request.ActivityTaskUserMappingRequest;
 import com.zietaproj.zieta.response.ActivitiesByClientProjectTaskResponse;
 import com.zietaproj.zieta.response.ActivitiesByClientResponse;
+import com.zietaproj.zieta.response.ActivitiesByClientUserModel;
 import com.zietaproj.zieta.service.ActivityService;
 import com.zietaproj.zieta.util.TSMUtil;
+
+import lombok.extern.slf4j.Slf4j;
 
 
 
 @Service
 @Transactional
+@Slf4j
 public class ActivityServiceImpl implements ActivityService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ActivityServiceImpl.class);
@@ -54,6 +61,9 @@ public class ActivityServiceImpl implements ActivityService {
 	
 	@Autowired
 	UserInfoRepository userInfoReposistory;
+	
+	@Autowired
+	TaskInfoRepository taskInfoRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -143,7 +153,8 @@ public class ActivityServiceImpl implements ActivityService {
 	
 	public List<ActivitiesByClientProjectTaskResponse> getActivitesByClientProjectTask(long clientId,long projectId,long taskId) {
 
-		List<TaskActivity> activitiesbytaskList = activitiesTaskRepository.findByClientIdAndProjectIdAndTaskId(clientId ,projectId,taskId );
+		short notDeleted = 0;
+		List<TaskActivity> activitiesbytaskList = activitiesTaskRepository.findByClientIdAndProjectIdAndTaskIdAndIsDelete(clientId ,projectId,taskId,notDeleted );
 		List<ActivitiesByClientProjectTaskResponse> activitiesByClientProjectTaskList = new ArrayList<ActivitiesByClientProjectTaskResponse>();
 		for (TaskActivity activitiesbytask : activitiesbytaskList) {
 
@@ -181,7 +192,47 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 
 	@Override
-	public void deleteActivitesByClientProjectTask(long taskActivityId) {
-		activitiesTaskRepository.deleteById(taskActivityId);
+	public void deleteActivitesByClientProjectTask(long taskActivityId, String modifiedBy) throws Exception {
+		Optional<TaskActivity> taskActivity = activitiesTaskRepository.findById(taskActivityId);
+		if (taskActivity.isPresent()) {
+			TaskActivity taskActivityEntitiy = taskActivity.get();
+			short delete = 1;
+			taskActivityEntitiy.setIsDelete(delete);
+			taskActivityEntitiy.setModifiedBy(modifiedBy);
+			activitiesTaskRepository.save(taskActivityEntitiy);
+
+		}else {
+			log.info("No task activity found with the provided ID{} in the DB",taskActivityId);
+			throw new Exception("No task activity found with the provided ID in the DB :"+taskActivityId);
+		}
+	}
+
+	
+	@Override
+	public List<ActivitiesByClientUserModel> getActivitiesByClientUser(Long clientId, Long userId) {
+		
+		short notDeleted = 0;
+		List<TaskActivity> taskActivityList = activitiesTaskRepository.findByClientIdAndUserIdAndIsDelete(clientId, userId, notDeleted);
+		
+		List<ActivitiesByClientUserModel> activitiesByClientUserModelList = new ArrayList<>();
+		
+		for (TaskActivity taskActivity : taskActivityList) {
+			ActivitiesByClientUserModel activitiesByClientUserModel = new ActivitiesByClientUserModel();
+			
+			ActivityMaster activityMaster = activityMasterRepository.findById(taskActivity.getActivityId()).get();
+			activitiesByClientUserModel.setActivityCode(activityMaster.getActivityCode());
+			activitiesByClientUserModel.setActivityDesc(activityMaster.getActivityDesc());
+			
+			ProjectInfo projectInfo  = projectInfoRepository.findById(taskActivity.getProjectId()).get();
+			activitiesByClientUserModel.setProjectCode(projectInfo.getProjectCode());
+			activitiesByClientUserModel.setProjectName(projectInfo.getProjectName());
+			
+			TaskInfo taskInfo = taskInfoRepository.findById(taskActivity.getTaskId()).get();
+			activitiesByClientUserModel.setTaskCode(taskInfo.getTaskCode());
+			activitiesByClientUserModel.setTaskDescription(taskInfo.getTaskDescription());
+			
+			activitiesByClientUserModelList.add(activitiesByClientUserModel);
+		}
+		return activitiesByClientUserModelList;
 	}
 }

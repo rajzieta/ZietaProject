@@ -8,6 +8,7 @@ import com.zietaproj.zieta.request.AcitivityRequest;
 import com.zietaproj.zieta.request.ActivityTaskUserMappingRequest;
 import com.zietaproj.zieta.response.ActivitiesByClientProjectTaskResponse;
 import com.zietaproj.zieta.response.ActivitiesByClientResponse;
+import com.zietaproj.zieta.response.ActivitiesByClientUserModel;
 
 
 public interface ActivityService {
@@ -27,5 +28,8 @@ public interface ActivityService {
 	
 	public List<ActivitiesByClientProjectTaskResponse> getActivitesByClientProjectTask(long clientId,
 			long projectId,long taskId);
-	public void deleteActivitesByClientProjectTask(long taskActivityId);
+	
+	public void deleteActivitesByClientProjectTask(long taskActivityId, String modifiedBy) throws Exception;
+	
+	public List<ActivitiesByClientUserModel> getActivitiesByClientUser(Long clientId, Long userId);
 }

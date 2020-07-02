@@ -189,12 +189,12 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 	}
 	
 	public void editTaskInfo(@Valid EditTasksByClientProjectRequest editasksByClientProjectRequest) throws Exception {
-		Optional<TaskInfo> taskInfoEntity = taskInfoRepository.findById(editasksByClientProjectRequest.getId());
+		Optional<TaskInfo> taskInfoEntity = taskInfoRepository.findById(editasksByClientProjectRequest.getTaskInfoId());
 		if(taskInfoEntity.isPresent()) {
 			TaskInfo taskInfo = modelMapper.map(editasksByClientProjectRequest, TaskInfo.class);
 			taskInfoRepository.save(taskInfo);
 		}else {
-			throw new Exception("Task not found with the provided ID : "+editasksByClientProjectRequest.getId());
+			throw new Exception("Task not found with the provided ID : "+editasksByClientProjectRequest.getTaskInfoId());
 		}
 	}
 	

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class EditTasksByClientProjectRequest {
 
-	private Long id;
+	private Long taskInfoId;
 	private Long clientId;
 	private Long projectId;
 	private String taskDescription;
@@ -15,6 +15,6 @@ public class EditTasksByClientProjectRequest {
 	private Long taskType;
 	private Long taskParent;
 	private Long taskManager;
-	private Long task_status;
+	private Long taskStatus;
 	private boolean isDelete;
 }

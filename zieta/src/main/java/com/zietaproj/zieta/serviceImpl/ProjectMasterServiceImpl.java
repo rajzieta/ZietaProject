@@ -63,10 +63,10 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	
 	
 	@Override
-	public List<ProjectsByClientResponse> getAllProjects() {
+	public List<ProjectDetailsByUserModel> getAllProjects() {
 
 		List<ProjectInfo> projectList = projectInfoRepository.findAll();
-		List<ProjectsByClientResponse> projectsByClientResponseList = new ArrayList<>();
+		List<ProjectDetailsByUserModel> projectsByClientResponseList = new ArrayList<>();
 
 		fillProjectDetails(projectList, projectsByClientResponseList);
 
@@ -81,45 +81,15 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	}
 
 	@Override
-	public List<ProjectDetailsByUserModel> getProjectsByUser(long projectManager) {
+	public List<ProjectDetailsByUserModel> getProjectsByUser(long projectManagerId) {
 		
 		List<ProjectDetailsByUserModel> projectDetailsByUserList = new ArrayList<>();
-		ProjectDetailsByUserModel projectDetailsByUserModel = null;
-		
-		List<ProjectInfo> projectmanagerMappingList = projectInfoRepository.findByProjectManager(projectManager);
-		List<Long> projectIdList = projectmanagerMappingList.stream().map(ProjectInfo::getId).collect(Collectors.toList());
-		
+		List<ProjectInfo> projectmanagerMappingList = projectInfoRepository.findByProjectManager(projectManagerId);
+		List<Long> projectIdList = projectmanagerMappingList.stream().map(ProjectInfo::getProjectInfoId).collect(Collectors.toList());
 		List<ProjectInfo> projectInfoList = projectInfoRepository.findAllById(projectIdList);
-		for(ProjectInfo projectInfo: projectInfoList) {
-			projectDetailsByUserModel = new ProjectDetailsByUserModel();
-			projectDetailsByUserModel.setClientId(projectInfo.getClientId());
-			projectDetailsByUserModel.setClientCode(clientInfoRepository.findById(projectInfo.getClientId()).get().getClient_code());
-			
-			projectDetailsByUserModel.setProject_code(projectInfo.getProject_code());
-			projectDetailsByUserModel.setProjectTypeName(
-					projectMasterRepository.findById(projectInfo.getProject_type()).get().getType_name());
-			projectDetailsByUserModel.setProjectId(projectInfo.getId());
-			projectDetailsByUserModel.setProject_name(projectInfo.getProject_name());
-			projectDetailsByUserModel.setProjectType(projectInfo.getProject_type());
-			projectDetailsByUserModel.setProjectStatus(projectInfo.getProject_status());
-			projectDetailsByUserModel.setOrgNode(orgInfoRepository.findById(projectInfo.getProject_orgnode())
-					.get().getOrg_node_name());
-			String prjManagerName = getProjectManagerName(projectInfo);
-			projectDetailsByUserModel.setProjectManager(prjManagerName);
-			projectDetailsByUserModel.setAllowUnplannedActivity(projectInfo.getAllow_unplanned());
-			projectDetailsByUserModel.setProjectStatusDescription(statusMasterRepository.findById(projectInfo.getProject_status()).get().getStatus());
-			
-			
-			CustInfo custoInfo = custInfoRepository.findById(projectInfo.getCust_id()).get();
-			projectDetailsByUserModel.setCustInfo(custoInfo);
-			
-			projectDetailsByUserList.add(projectDetailsByUserModel);
-		}
-		
+		fillProjectDetails(projectInfoList, projectDetailsByUserList);
 		
 		return projectDetailsByUserList;
-		
-		
 	}
 
 	private String getProjectManagerName(ProjectInfo projectInfo) {
@@ -129,36 +99,35 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	}
 	
 	@Override
-	public List<ProjectsByClientResponse> getProjectsByClient(Long clientId) {
+	public List<ProjectDetailsByUserModel> getProjectsByClient(Long clientId) {
 
 		List<ProjectInfo> projectList = projectInfoRepository.findByClientId(clientId);
-		List<ProjectsByClientResponse> projectsByClientResponseList = new ArrayList<>();
+		List<ProjectDetailsByUserModel> projectDetailsByUserList = new ArrayList<>();
 
-		fillProjectDetails(projectList, projectsByClientResponseList);
+		fillProjectDetails(projectList, projectDetailsByUserList);
 
-		return projectsByClientResponseList;
+		return projectDetailsByUserList;
 
 	}
 
-	private void fillProjectDetails(List<ProjectInfo> projectList,
-			List<ProjectsByClientResponse> projectsByClientResponseList) {
-		for (ProjectInfo projectInfo : projectList) {
-			ProjectsByClientResponse projectsByClientResponse = modelMapper.map(projectInfo,
-					ProjectsByClientResponse.class);
-			projectsByClientResponse.setClientCode(clientInfoRepository.findById(projectInfo.getClientId()).get().getClient_code());
-			projectsByClientResponse.setProjectManager(getProjectManagerName(projectInfo));
+	private void fillProjectDetails(List<ProjectInfo> projectInfoList,
+			List<ProjectDetailsByUserModel> projectDetailsByUserList) {
+		for(ProjectInfo projectInfo: projectInfoList) {
+			ProjectDetailsByUserModel projectDetailsByUserModel = modelMapper.map(projectInfo, ProjectDetailsByUserModel.class);
 			
-			projectsByClientResponse
-					.setProjectTypeName(projectMasterRepository.findById(projectInfo.getProject_type()).get().getType_name());
-			projectsByClientResponse.setProjectStatus(projectInfo.getProject_status());
-			projectsByClientResponse.setProjectType(projectInfo.getProject_type());
-			projectsByClientResponse.setOrgNode(orgInfoRepository.findById(projectInfo.getProject_orgnode())
+			//setting additonal details starts
+			projectDetailsByUserModel.setClientCode(clientInfoRepository.findById(projectInfo.getClientId()).get().getClient_code());
+			projectDetailsByUserModel.setProjectTypeName(
+					projectMasterRepository.findById(projectInfo.getProjectType()).get().getType_name());
+			projectDetailsByUserModel.setOrgNodeName(orgInfoRepository.findById(projectInfo.getProjectOrgnode())
 					.get().getOrg_node_name());
-			projectsByClientResponse.setAllowUnplannedActivity(projectInfo.getAllow_unplanned());
-			projectsByClientResponse.setProjectStatusDescription(statusMasterRepository.findById(projectInfo.getProject_status()).get().getStatus());
-			CustInfo custoInfo = custInfoRepository.findById(projectInfo.getCust_id()).get();
-			projectsByClientResponse.setCustInfo(custoInfo);
-			projectsByClientResponseList.add(projectsByClientResponse);
+			String prjManagerName = getProjectManagerName(projectInfo);
+			projectDetailsByUserModel.setProjectManagerName(prjManagerName);
+			projectDetailsByUserModel.setProjectStatusDescription(statusMasterRepository.findById(projectInfo.getProjectStatus()).get().getStatus());
+			CustInfo custoInfo = custInfoRepository.findById(projectInfo.getCustId()).get();
+			projectDetailsByUserModel.setCustInfo(custoInfo);
+			//setting additonal details ends
+			projectDetailsByUserList.add(projectDetailsByUserModel);
 		}
 	}
 
@@ -167,23 +136,13 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	@Override
 	public void editProjectStatus(@Valid EditProjStatusRequest editprojStatusRequest) throws Exception {
 		
-			//ProjectInfo projectInfo = modelMapper.map(editprojStatusRequest, ProjectInfo.class);
-		Optional<ProjectInfo> projinfoEntity = projectInfoRepository.findById(editprojStatusRequest.getId());
+		Optional<ProjectInfo> projinfoEntity = projectInfoRepository.findById(editprojStatusRequest.getProjectInfoId());
 		if(projinfoEntity.isPresent()) {
 			ProjectInfo projstatusSave = projinfoEntity.get();
-			//projstatusSave.setClientId(editprojStatusRequest.getClientId());
-			//projstatusSave.setProject_code(editprojStatusRequest.getProject_code());
-			//projstatusSave.setProject_name(editprojStatusRequest.getProject_name());
-			projstatusSave.setProject_status(editprojStatusRequest.getProject_status());
-		//	projstatusSave.setProjectStatusDescription(statusMasterRepository.findById(projstatusSave.getProject_status()).get().getStatus());
-			
-			//projstatusSave.setProject_type(editprojStatusRequest.getProject_type());
-			//projstatusSave.setProjectManager(editprojStatusRequest.getProjectManager());
-			//projstatusSave.setAllow_unplanned(editprojStatusRequest.getAllow_unplanned());
-			
-		projectInfoRepository.save(projstatusSave);
+			projstatusSave.setProjectStatus(editprojStatusRequest.getProjectStatus());
+			projectInfoRepository.save(projstatusSave);
 		}else {
-			throw new Exception("Status not found with the provided activity ID : "+editprojStatusRequest.getId());
+			throw new Exception("Status not found with the provided activity ID : "+editprojStatusRequest.getProjectInfoId());
 		}
 	}
 }

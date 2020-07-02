@@ -13,13 +13,13 @@ import com.zietaproj.zieta.response.ProjectsByClientResponse;
 
 public interface ProjectMasterService {
 
-	public List<ProjectsByClientResponse> getAllProjects();
+	public List<ProjectDetailsByUserModel> getAllProjects();
 
 	public void addProjectinfo(ProjectInfo projectinfo);
 	
 	List<ProjectDetailsByUserModel> getProjectsByUser(long userId);
 
-	public List<ProjectsByClientResponse> getProjectsByClient(Long clientId);
+	List<ProjectDetailsByUserModel> getProjectsByClient(Long clientId);
 
 	public void editProjectStatus(@Valid EditProjStatusRequest editprojStatusRequest) throws Exception;
 }

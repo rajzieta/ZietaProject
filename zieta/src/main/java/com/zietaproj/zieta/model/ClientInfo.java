@@ -38,21 +38,14 @@ public class ClientInfo implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank
 	private String client_code;
 
-	@NotBlank
 	private String client_name;
 
-	@NotNull
 	private Long client_status;
 	
-	
-	@NotBlank
 	private String client_comments;
 
-
-//	@NotBlank
 	private String created_by;
 
 	@Column(nullable = false, updatable = false)
@@ -65,7 +58,6 @@ public class ClientInfo implements Serializable {
 	@LastModifiedDate
 	private Date modified_date;
 
-//	@NotBlank
 	private String modified_by;
 
 	private boolean IS_DELETE;

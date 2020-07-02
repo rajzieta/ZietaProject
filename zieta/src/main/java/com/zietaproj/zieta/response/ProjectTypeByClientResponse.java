@@ -9,7 +9,7 @@ public class ProjectTypeByClientResponse {
 
 	private Long projectTypeId;
     private Long clientId;
-    private String projectType;
+    private String typeName;
     private String createdBy;
     private String modifiedBy;
     private boolean isDELETE;

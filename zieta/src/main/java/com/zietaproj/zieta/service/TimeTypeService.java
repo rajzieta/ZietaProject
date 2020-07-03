@@ -18,7 +18,4 @@ public interface TimeTypeService {
 	
 	public List<TimeTypesByClientResponse> getAllTimeTypesByClient(Long client_id);
 
-	public void addTimeEntry(@Valid TSInfo tsinfo);
-
-
 }

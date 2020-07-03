@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.util.StringUtils;
 
 import com.zietaproj.zieta.model.UserInfo;
@@ -49,10 +51,15 @@ public class TSMUtil {
 		return formattedDate;
 	}
 	
-	public static LocalDate convertToLocalDateViaMilisecond(Date dateToConvert) {
-	    return Instant.ofEpochMilli(dateToConvert.getTime())
+	public static LocalDate convertToLocalDateViaMilisecond( Date dateToConvert) {
+	    
+		if(dateToConvert != null) {
+		return Instant.ofEpochMilli(dateToConvert.getTime())
 	      .atZone(ZoneId.systemDefault())
 	      .toLocalDate();
+		}else {
+			return null;
+		}
 	}
 
 }

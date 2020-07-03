@@ -5,29 +5,20 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 
 
 @Entity
 @Table(name = "TS_INFO")
-@EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
-        allowGetters = true)
-
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class TSInfo extends BaseEntity implements Serializable {
 
 	@Id
@@ -35,25 +26,23 @@ public class TSInfo extends BaseEntity implements Serializable {
 	@Column(name="id")
     private Long tsInfoId;
 
-	//@NotNull
 	@Column(name="client_id")
     private Long clientId;
 
-    //@NotBlank
 	@Column(name="time_type")
     private String timeType;
     
 	@Column(name="project_id")
-    private Long projectInfoId;
+    private Long projectId;
     
 	@Column(name="activity_id")
     private Long activityId;
     
 	@Column(name="user_id")
-    private Long userInfoId;
+    private Long userId;
     
 	@Column(name="task_id")
-    private Long taskInfoId;
+    private Long taskId;
     
 	@Column(name="status_id")
     private Long statusId;
@@ -75,11 +64,6 @@ public class TSInfo extends BaseEntity implements Serializable {
     
 	@Column(name="TIME_DESC")
     private  String timeDesc;
-    
-    
-    
-    
-    
     
 	
 }

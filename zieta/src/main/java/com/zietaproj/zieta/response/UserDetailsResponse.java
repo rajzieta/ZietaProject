@@ -22,6 +22,8 @@ public class UserDetailsResponse implements Serializable {
 	private String infoMessage;
 	private short status;
 	private String firstName;
+	private String middleName;
+	private String lastName;
 	private String userEmailId;
 	private long userId;
 	private String clientCode;

@@ -105,6 +105,8 @@ public class UserInfoServiceImpl implements UserInfoService {
 		UserDetailsResponse userDetailsResponse = new UserDetailsResponse();
 		userDetailsResponse.setClientId(userInfo.getClientId());
 		userDetailsResponse.setFirstName(userInfo.getUser_fname());
+		userDetailsResponse.setMiddleName(userInfo.getUser_mname());
+		userDetailsResponse.setLastName(userInfo.getUser_lname());
 		userDetailsResponse.setUserEmailId(userInfo.getEmail());
 		userDetailsResponse.setStatus(userInfo.getIs_active());
 		userDetailsResponse.setUserId(userInfo.getId());

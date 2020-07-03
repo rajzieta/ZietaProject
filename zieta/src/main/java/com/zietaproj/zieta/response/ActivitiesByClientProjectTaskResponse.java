@@ -36,7 +36,7 @@ public class ActivitiesByClientProjectTaskResponse {
 		private LocalDate endDate;
 		private float plannedHrs;
 		private float actualHrs;
-		private long userId;
+		private Long userId;
 	}
 	
 	

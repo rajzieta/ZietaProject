@@ -229,13 +229,13 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 	
 	
 	@Override
-	public void deleteTaskTypeByClient(Long taskTypeId, Long clientId) throws Exception {
+	public void deleteTaskTypeByClient(Long taskTypeId) throws Exception {
 		Optional<TaskTypeMaster> tasktypemaster = taskTypeMasterRepository.findById(taskTypeId);
 		if (tasktypemaster.isPresent()) {
 			TaskTypeMaster tasktypeEntitiy = tasktypemaster.get();
 			short delete = 1;
 			tasktypeEntitiy.setIsDelete(delete);
-			tasktypeEntitiy.setClientId(clientId);
+			//tasktypeEntitiy.setClientId(clientId);
 			taskTypeMasterRepository.save(tasktypeEntitiy);
 
 		}else {

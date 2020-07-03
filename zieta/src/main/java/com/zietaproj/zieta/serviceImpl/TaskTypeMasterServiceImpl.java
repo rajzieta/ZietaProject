@@ -8,14 +8,18 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zietaproj.zieta.dto.TaskMasterDTO;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.StatusMaster;
+import com.zietaproj.zieta.model.TaskActivity;
 import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.TaskTypeMaster;
 import com.zietaproj.zieta.model.TasksByUser;
@@ -35,10 +39,15 @@ import com.zietaproj.zieta.response.TaskTypesByClientResponse;
 import com.zietaproj.zieta.service.TaskTypeMasterService;
 import com.zietaproj.zieta.util.TSMUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
 @Transactional
+@Slf4j
 public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(TaskTypeMasterServiceImpl.class);
+	
 	@Autowired
 	TaskTypeMasterRepository taskTypeMasterRepository;
 
@@ -216,4 +225,22 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 		taskTypeMasterRepository.save(taskmaster); 
 	  
 	  }
+	
+	
+	
+	@Override
+	public void deleteTaskTypeByClient(Long taskTypeId) throws Exception {
+		Optional<TaskTypeMaster> tasktypemaster = taskTypeMasterRepository.findById(taskTypeId);
+		if (tasktypemaster.isPresent()) {
+			TaskTypeMaster tasktypeEntitiy = tasktypemaster.get();
+			short delete = 1;
+			tasktypeEntitiy.setIsDelete(delete);
+			//tasktypeEntitiy.setClientId(clientId);
+			taskTypeMasterRepository.save(tasktypeEntitiy);
+
+		}else {
+			log.info("No task type found with the provided ID{} in the DB",taskTypeId);
+			throw new Exception("No task type found with the provided ID in the DB :"+taskTypeId);
+		}
+	}
 }

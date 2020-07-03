@@ -31,9 +31,6 @@ public class TimeTypeServiceImpl implements TimeTypeService {
 	TimeTypeRepository timetypeRepository;
 	
 	@Autowired
-	TSInfoRepository tsinfoRepository;
-	
-	@Autowired
 	ModelMapper modelMapper;
 	
 	@Override
@@ -75,13 +72,5 @@ public class TimeTypeServiceImpl implements TimeTypeService {
 		return timeTypesByClientResponseList;
 
 	}
-	
-	
-	public void addTimeEntry(@Valid TSInfo tsinfo) {
-			
-		tsinfoRepository.save(tsinfo);
-	}
-	
-	
 	
 }

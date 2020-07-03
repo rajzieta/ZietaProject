@@ -113,6 +113,12 @@ public class TaskController {
 		
 	}
 	
+	@ApiOperation(value = "Deletes entries from task_type_master based on tasktypeId", notes = "Table reference: task_type_master")
+	@RequestMapping(value = "deleteTaskTypeByClient", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteActivitesByClientProjectTask(@RequestParam(required=true) Long taskTypeId, @RequestParam(required=true) Long clientId) throws Exception {
+		taskTypeMasterService.deleteTaskTypeByClient(taskTypeId, clientId);
+	}
+	
 	@ApiOperation(value = "Persists the tasks related to client and its associated project", notes = "Table reference: task_info")
 	@RequestMapping(value = "addTasksByClientProject", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void addTasksByClientProject(@Valid @RequestBody TaskInfo taskInfo) {

@@ -10,7 +10,7 @@ import lombok.Setter;
 public class OrgNodesByClientResponse extends BaseEntity {
 
 	
-	long orgunitId;
+	long orgUnitId;
 	long clientId;
 	private String orgNodeName;
 	private long orgType;

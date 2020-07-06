@@ -32,7 +32,7 @@ public interface TaskTypeMasterService {
 
 	public void editTaskInfo(@Valid EditTasksByClientProjectRequest editasksByClientProjectRequest) throws Exception;
 
-	public void deleteTaskTypeByClient(Long taskTypeId) throws Exception;
+	public void deleteTaskTypeByClient(Long taskTypeId, String modifiedBy) throws Exception;
 
 	
 }

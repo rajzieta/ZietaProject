@@ -34,7 +34,7 @@ public class TimeSheetController {
 	
 	@PostMapping("/addTimeEntry")
 	@RequestMapping(value = "addTimeEntry", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void addTimeEntry(@Valid @RequestBody TSInfo tsinfo) {
+	public void addTimeEntry(@Valid @RequestBody List<TSInfo> tsinfo) {
 		timeSheetService.addTimeEntry(tsinfo);
 	}
 	

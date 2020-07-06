@@ -33,9 +33,9 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	}
 	
 	
-	public void addTimeEntry(@Valid TSInfo tsinfo) {
+	public void addTimeEntry(@Valid List<TSInfo> tsinfo) {
 		
-		tSInfoRepository.save(tsinfo);
+		tSInfoRepository.saveAll(tsinfo);
 	}
 	
 

@@ -31,41 +31,48 @@ import lombok.Data;
 @JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
         allowGetters = true)
 @Data
-public class OrgInfo implements Serializable {
+public class OrgInfo extends BaseEntity implements Serializable {
 
 	    @Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private Long id;
+	    @Column(name="id")
+	    private Long orgunitId;
 
-	    @NotNull
-	    private Long client_id;
+	   
+	    @Column(name="client_id")
+	    private Long clientId;
 	
-	    @NotBlank
-	    private String org_node_name;
+	  
+	    @Column(name="org_node_name")
+	    private String orgNodeName;
 	    
-	    @NotBlank
-	    private Long org_parent_id;
+	    @Column(name="org_type")
+	    private Long orgType;
+	   
+	    @Column(name="org_parent_id")
+	    private Long orgParentId;
 	    
-	    @NotBlank
-	    private Long org_status;
+	   
+	    @Column(name="org_status")
+	    private Long orgStatus;
 	    
-		@NotBlank
-		private String created_by;
-
-	    @Column(nullable = false, updatable = false)
-	    @Temporal(TemporalType.TIMESTAMP)
-	    @CreatedDate
-	    private Date created_date;
-
-	    @Column(nullable = false)
-	    @Temporal(TemporalType.TIMESTAMP)
-	    @LastModifiedDate
-	    private Date modified_date;
 		
-		@NotBlank
-		private String modified_by;
-		
-		private boolean IS_DELETE;
+//		private String created_by;
+//
+//	    @Column(nullable = false, updatable = false)
+//	    @Temporal(TemporalType.TIMESTAMP)
+//	    @CreatedDate
+//	    private Date created_date;
+//
+//	    @Column(nullable = false)
+//	    @Temporal(TemporalType.TIMESTAMP)
+//	    @LastModifiedDate
+//	    private Date modified_date;
+//		
+//		
+//		private String modified_by;
+//		
+//		private boolean IS_DELETE;
 
 		
 		

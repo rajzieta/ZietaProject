@@ -124,7 +124,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 			projectDetailsByUserModel.setProjectTypeName(
 					projectMasterRepository.findById(projectInfo.getProjectType()).get().getTypeName());
 			projectDetailsByUserModel.setOrgNodeName(orgInfoRepository.findById(projectInfo.getProjectOrgnode())
-					.get().getOrg_node_name());
+					.get().getOrgNodeName());
 			String prjManagerName = getProjectManagerName(projectInfo);
 			projectDetailsByUserModel.setProjectManagerName(prjManagerName);
 			projectDetailsByUserModel.setProjectStatusDescription(statusMasterRepository.findById(projectInfo.getProjectStatus()).get().getStatus());

@@ -57,22 +57,7 @@ public class OrgInfo extends BaseEntity implements Serializable {
 	    private Long orgStatus;
 	    
 		
-//		private String created_by;
-//
-//	    @Column(nullable = false, updatable = false)
-//	    @Temporal(TemporalType.TIMESTAMP)
-//	    @CreatedDate
-//	    private Date created_date;
-//
-//	    @Column(nullable = false)
-//	    @Temporal(TemporalType.TIMESTAMP)
-//	    @LastModifiedDate
-//	    private Date modified_date;
-//		
-//		
-//		private String modified_by;
-//		
-//		private boolean IS_DELETE;
+
 
 		
 		

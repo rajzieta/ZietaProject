@@ -36,7 +36,7 @@ public class OrgInfo extends BaseEntity implements Serializable {
 	    @Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    @Column(name="id")
-	    private Long orgunitId;
+	    private Long orgUnitId;
 
 	   
 	    @Column(name="client_id")

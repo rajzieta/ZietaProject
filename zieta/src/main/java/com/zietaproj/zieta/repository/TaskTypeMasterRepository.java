@@ -10,6 +10,6 @@ import com.zietaproj.zieta.model.TaskTypeMaster;
 @Repository
 public interface TaskTypeMasterRepository extends JpaRepository<TaskTypeMaster, Long> {
 	
-	List<TaskTypeMaster> findByClientId(Long clientId);
+	List<TaskTypeMaster> findByClientIdAndIsDelete(Long clientId, Short notDeleted);
 
 }

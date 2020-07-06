@@ -89,9 +89,9 @@ public class TaskController {
 		}
 	}
 
-	@GetMapping("/getTaskTypesByClient")
+	@GetMapping("/getAllTaskTypesByClient")
 	@ApiOperation(value = "List TaskTypes based on the clientId", notes = "Table reference: task_type_master")
-	public ResponseEntity<List<TaskTypesByClientResponse>> getTaskTypesByClient(@RequestParam(required = true) Long clientId) {
+	public ResponseEntity<List<TaskTypesByClientResponse>> getAllTaskTypesByClient(@RequestParam(required = true) Long clientId) {
 		try {
 			List<TaskTypesByClientResponse> tasksbyclientList = taskTypeMasterService.getTasksByClient(clientId);
 			return new ResponseEntity<List<TaskTypesByClientResponse>>(tasksbyclientList, HttpStatus.OK);

@@ -18,9 +18,6 @@ import lombok.Data;
 
 @Entity
 @Table(name = "orgunit_type_master")
-@EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
-        allowGetters = true)
 
 
 
@@ -30,7 +27,7 @@ public class OrgUnitTypeMaster extends BaseEntity implements Serializable  {
 	  @Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    @Column(name="id")
-	    private Long orgunitTypeId;
+	    private Long orgUnitTypeId;
 
 	
 	  

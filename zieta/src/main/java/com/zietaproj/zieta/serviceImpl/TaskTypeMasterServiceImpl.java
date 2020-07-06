@@ -171,7 +171,8 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 
 	
 	public List<TaskTypesByClientResponse> getTasksByClient(Long clientId) {
-		List<TaskTypeMaster> tasksByClientList = taskTypeMasterRepository.findByClientId(clientId);
+		short notDeleted = 0;
+		List<TaskTypeMaster> tasksByClientList = taskTypeMasterRepository.findByClientIdAndIsDelete(clientId, notDeleted);
 		List<TaskTypesByClientResponse> tasksByClientResponseList = new ArrayList<>();
 		TaskTypesByClientResponse tasksByClientResponse = null;
 		for (TaskTypeMaster tasksByClient : tasksByClientList) {

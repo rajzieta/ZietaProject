@@ -21,6 +21,8 @@ public interface TaskTypeMasterService {
 	List<TasksByUserModel> findByClientIdAndUserId(Long clientId, Long userId);
 	
 	List<TasksByClientProjectResponse> findByClientIdAndProjectId(Long clientId, Long projectId);
+	
+	List<TasksByClientProjectResponse> findByClientIdAndProjectIdAsHierarchy(Long clientId, Long projectId);
 
 	public List<TaskTypesByClientResponse> getTasksByClient(Long clientId);
 	

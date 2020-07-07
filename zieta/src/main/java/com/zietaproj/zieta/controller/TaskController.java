@@ -88,6 +88,20 @@ public class TaskController {
 			return new ResponseEntity<List<TasksByClientProjectResponse>>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@GetMapping("/getAllTasksByClientProjectInTreeForm")
+	@ApiOperation(value = "List tasks based on the  clientId and projectId", notes = "Table reference:"
+			+ " task_info, project_info, task_type_master")
+	public ResponseEntity<List<TasksByClientProjectResponse>> getAllTasksByClientProjectInTreeForm(@RequestParam(required = true) Long clientId,
+			@RequestParam(required = true) Long projectId) {
+		try {
+			List<TasksByClientProjectResponse> tasksByClientProjectResponseList = taskTypeMasterService.findByClientIdAndProjectIdAsHierarchy(clientId, projectId);
+			return new ResponseEntity<List<TasksByClientProjectResponse>>(tasksByClientProjectResponseList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<TasksByClientProjectResponse>>(HttpStatus.NOT_FOUND);
+		}
+	}
+
 
 	@GetMapping("/getAllTaskTypesByClient")
 	@ApiOperation(value = "List TaskTypes based on the clientId", notes = "Table reference: task_type_master")

@@ -30,7 +30,7 @@ public class TSInfo extends BaseEntity implements Serializable {
     private Long clientId;
 
 	@Column(name="time_type")
-    private String timeType;
+    private Long timeType;
     
 	@Column(name="project_id")
     private Long projectId;

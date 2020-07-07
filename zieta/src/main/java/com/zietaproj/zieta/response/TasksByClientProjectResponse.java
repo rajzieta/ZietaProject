@@ -1,10 +1,18 @@
 package com.zietaproj.zieta.response;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
+
+@JsonIgnoreProperties({ "parent" })
 public class TasksByClientProjectResponse {
 
 	Long taskInfoId;
@@ -20,5 +28,22 @@ public class TasksByClientProjectResponse {
 	String projectDescription;
 	String taskDescription;
 	String taskTypeDescription;
+	
+	@JsonIgnore
+	TasksByClientProjectResponse parent;
+	List<TasksByClientProjectResponse> children;
+	
+	public TasksByClientProjectResponse() {
+		super();
+		this.children = new ArrayList <>();
+	}
+	
+	
+	
+	public void addChild(TasksByClientProjectResponse child) {
+        if (!this.children.contains(child) && child != null)
+            this.children.add(child);
+    }
+ 
 
 }

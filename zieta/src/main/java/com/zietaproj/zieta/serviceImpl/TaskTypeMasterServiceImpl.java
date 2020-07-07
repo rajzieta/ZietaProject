@@ -8,7 +8,6 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 import com.zietaproj.zieta.dto.TaskMasterDTO;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.StatusMaster;
-import com.zietaproj.zieta.model.TaskActivity;
 import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.TaskTypeMaster;
 import com.zietaproj.zieta.model.TasksByUser;
@@ -33,9 +31,9 @@ import com.zietaproj.zieta.repository.TasksByUserRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.request.EditTasksByClientProjectRequest;
 import com.zietaproj.zieta.request.TaskTypesByClientRequest;
+import com.zietaproj.zieta.response.TaskTypesByClientResponse;
 import com.zietaproj.zieta.response.TasksByClientProjectResponse;
 import com.zietaproj.zieta.response.TasksByUserModel;
-import com.zietaproj.zieta.response.TaskTypesByClientResponse;
 import com.zietaproj.zieta.service.TaskTypeMasterService;
 import com.zietaproj.zieta.util.TSMUtil;
 
@@ -122,10 +120,17 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 
 	@Override
 	public List<TasksByClientProjectResponse> findByClientIdAndProjectId(Long clientId, Long projectId) {
-		List<TaskInfo> taskInfoList = taskInfoRepository.findByClientIdAndProjectId(clientId, projectId);
+		short isDeleteFlag = 0;
+		List<TaskInfo> taskInfoList = taskInfoRepository.findByClientIdAndProjectIdAndIsDelete(clientId, projectId,isDeleteFlag);
 		
 		List<TasksByClientProjectResponse> tasksByClientProjectResponseList = new ArrayList<>();
 		
+		constructTaskInfoData(taskInfoList, tasksByClientProjectResponseList);
+		return tasksByClientProjectResponseList;
+	}
+
+	private void constructTaskInfoData(List<TaskInfo> taskInfoList,
+			List<TasksByClientProjectResponse> tasksByClientProjectResponseList) {
 		for(TaskInfo taskInfo: taskInfoList) {
 			modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 			TasksByClientProjectResponse tasksByClientProjectResponse =  modelMapper.map(taskInfo, TasksByClientProjectResponse.class);
@@ -166,7 +171,6 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 			tasksByClientProjectResponseList.add(tasksByClientProjectResponse);
 			
 		}
-		return tasksByClientProjectResponseList;
 	}
 
 	
@@ -243,5 +247,19 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 			log.info("No task type found with the provided ID{} in the DB",taskTypeId);
 			throw new Exception("No task type found with the provided ID in the DB :"+taskTypeId);
 		}
+	}
+
+	@Override
+	public List<TasksByClientProjectResponse> findByClientIdAndProjectIdAsHierarchy(Long clientId, Long projectId) {
+
+		short isDeleteFlag = 0;
+		List<TaskInfo> taskInfoList = taskInfoRepository.findByClientIdAndProjectIdAndIsDelete(clientId, projectId,isDeleteFlag);
+
+		List<TasksByClientProjectResponse> tasksByClientProjectResponseList = new ArrayList<>();
+
+		constructTaskInfoData(taskInfoList, tasksByClientProjectResponseList);
+
+		List<TasksByClientProjectResponse> treeList = TSMUtil.createTree(tasksByClientProjectResponseList);
+		return treeList;
 	}
 }

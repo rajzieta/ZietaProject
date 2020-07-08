@@ -30,7 +30,7 @@ import lombok.Data;
 @JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
         allowGetters = true)
 @Data
-public class TasksByUser implements Serializable {
+public class TasksByUser extends BaseEntity implements Serializable {
 
 
 	@Id
@@ -58,23 +58,7 @@ public class TasksByUser implements Serializable {
     @NotBlank
 	private String task_code;
 	
-    @NotBlank
-	private String created_by;
-
-    @Column(nullable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
-    private Date created_date;
-
-    @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
-    private Date modified_date;
-	
-	@NotBlank
-	private String modified_by;
-	
-	private boolean IS_DELETE;
+    
 
 	
 	

@@ -25,7 +25,8 @@ public class ClientInfoServiceImpl implements ClientInfoService {
 	
 	@Override
 	public List<ClientInfoDTO> getAllClients() {
-		List<ClientInfo> clientinfos= clientinfoRepository.findAllWithDeleteFlag(Boolean.FALSE);
+		short notDeleted = 0;
+		List<ClientInfo> clientinfos= clientinfoRepository.findByIsDelete(notDeleted);
 		List<ClientInfoDTO> clientinfoDTOs = new ArrayList<ClientInfoDTO>();
 		ClientInfoDTO clientinfoDTO = null;
 		for (ClientInfo clientinfo : clientinfos) {

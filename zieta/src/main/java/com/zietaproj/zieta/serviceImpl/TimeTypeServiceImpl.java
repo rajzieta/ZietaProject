@@ -43,7 +43,7 @@ public class TimeTypeServiceImpl implements TimeTypeService {
 			timetypeDTO.setId(timetype.getId());
 			timetypeDTO.setTime_type(timetype.getTime_type());
 			timetypeDTO.setClient_id(timetype.getClientId());
-			timetypeDTO.setModified_by(timetype.getModified_by());
+			timetypeDTO.setModifiedBy(timetype.getModifiedBy());
 		timetypeDTOs.add(timetypeDTO);
 		}
 		return timetypeDTOs;

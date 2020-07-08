@@ -1,6 +1,8 @@
 package com.zietaproj.zieta.model;
 
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +16,7 @@ import lombok.Data;
 @Entity
 @Table(name = "task_info")
 @Data
-public class TaskInfo extends BaseEntity {
+public class TaskInfo extends BaseEntity implements Serializable {
 
 	    @Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -26,7 +26,7 @@ public class ClientInfoAddRequest {
 	private String client_comments;
 	
 	
-	private boolean IS_DELETE;
+	private boolean isDelete;
 
 
 

@@ -12,4 +12,6 @@ public interface TaskTypeMasterRepository extends JpaRepository<TaskTypeMaster, 
 	
 	List<TaskTypeMaster> findByClientIdAndIsDelete(Long clientId, Short notDeleted);
 
+	List<TaskTypeMaster> findByIsDelete(short notDeleted);
+
 }

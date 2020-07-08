@@ -32,7 +32,7 @@ import lombok.Data;
 @EntityListeners(AuditingEntityListener.class)
 
 @Data
-public class ClientInfo implements Serializable {
+public class ClientInfo extends BaseEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,21 +46,6 @@ public class ClientInfo implements Serializable {
 	
 	private String client_comments;
 
-	private String created_by;
-
-	@Column(nullable = false, updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	@CreatedDate
-	private Date created_date;
-
-	@Column(nullable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	@LastModifiedDate
-	private Date modified_date;
-
-	private String modified_by;
-
-	private boolean IS_DELETE;
-
+	
 
 }

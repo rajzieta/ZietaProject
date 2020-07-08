@@ -21,7 +21,7 @@ import lombok.Setter;
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
 	
-	@Column(name = "CREATED_BY")
+	@Column(name = "CREATED_BY", updatable = false)
 	private String createdBy;
 	
 	@Column(name = "MODIFIED_BY")

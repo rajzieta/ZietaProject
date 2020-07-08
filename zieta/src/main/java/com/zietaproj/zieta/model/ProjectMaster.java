@@ -46,27 +46,11 @@ public class ProjectMaster extends BaseEntity implements Serializable {
 	    private Long clientId;
 	
 
-	   // @NotBlank
+	  
 	    @Column(name="type_name")
 	    private String typeName;
 	    
-//		//@NotBlank
-//		private String created_by;
-//
-//	    @Column(nullable = false, updatable = false)
-//	    @Temporal(TemporalType.TIMESTAMP)
-//	    @CreatedDate
-//	    private Date created_date;
-//
-//	    @Column(nullable = false)
-//	    @Temporal(TemporalType.TIMESTAMP)
-//	    @LastModifiedDate
-//	    private Date modified_date;
-//		
-//		@NotBlank
-//		private String modified_by;
-//		
-//		private boolean IS_DELETE;
+
 
 	
 }

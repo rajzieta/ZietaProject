@@ -39,15 +39,15 @@ public class MessageMaster implements Serializable {
 	@Column(name = "id")
 	private Long messageId;
 
-	//@NotBlank
+	
 	@Column(name = "msg_code")
 	private String msgCode;
 
-	//@NotBlank
+	
 	@Column(name = "msg_type")
 	private String msgType;
 
-	//@NotNull
+	
 	@Column(name = "msg_desc")
 	private String msgDesc;
 	

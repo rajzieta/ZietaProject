@@ -221,14 +221,17 @@ public class ActivityServiceImpl implements ActivityService {
 			ActivitiesByClientUserModel activitiesByClientUserModel = new ActivitiesByClientUserModel();
 			
 			ActivityMaster activityMaster = activityMasterRepository.findById(taskActivity.getActivityId()).get();
+			activitiesByClientUserModel.setActivityId(taskActivity.getActivityId());
 			activitiesByClientUserModel.setActivityCode(activityMaster.getActivityCode());
 			activitiesByClientUserModel.setActivityDesc(activityMaster.getActivityDesc());
 			
 			ProjectInfo projectInfo  = projectInfoRepository.findById(taskActivity.getProjectId()).get();
+			activitiesByClientUserModel.setProjectId(taskActivity.getProjectId());
 			activitiesByClientUserModel.setProjectCode(projectInfo.getProjectCode());
 			activitiesByClientUserModel.setProjectName(projectInfo.getProjectName());
 			
 			TaskInfo taskInfo = taskInfoRepository.findById(taskActivity.getTaskId()).get();
+			activitiesByClientUserModel.setTaskId(taskActivity.getTaskId());
 			activitiesByClientUserModel.setTaskCode(taskInfo.getTaskCode());
 			activitiesByClientUserModel.setTaskDescription(taskInfo.getTaskDescription());
 			

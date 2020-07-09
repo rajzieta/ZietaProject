@@ -38,8 +38,8 @@ public class RoleMasterServiceImpl implements RoleMasterService{
 			roleMasterDTO.setId(roleMaster.getId());
 			roleMasterDTO.setClient_id(roleMaster.getClientId());
 			roleMasterDTO.setUser_role(roleMaster.getUser_role());
-			roleMasterDTO.setCreated_by(roleMaster.getCreated_by());
-			roleMasterDTO.setModified_by(roleMaster.getModified_by());
+			roleMasterDTO.setCreatedBy(roleMaster.getCreatedBy());
+			roleMasterDTO.setModifiedBy(roleMaster.getModifiedBy());
 			ClientInfo clientInfo = clientInfoRepo.findById(roleMaster.getClientId()).get();
 			roleMasterDTO.setClientCode(clientInfo.getClient_code());
 			roleMasterDTO.setClientName(clientInfo.getClient_name());

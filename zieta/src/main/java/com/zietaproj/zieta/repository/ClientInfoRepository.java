@@ -13,7 +13,7 @@ import com.zietaproj.zieta.model.ClientInfo;
 @Repository
 public interface ClientInfoRepository extends JpaRepository<ClientInfo, Long> {
 	
-	 @Query( "select o from ClientInfo o where o.IS_DELETE= :isDelete" )
-	  List<ClientInfo> findAllWithDeleteFlag(@Param("isDelete") boolean isDelete);
+	// @Query( "select o from ClientInfo o where o.IS_DELETE= :isDelete" )
+	  List<ClientInfo> findByIsDelete(Short notDeleted);
 
 }

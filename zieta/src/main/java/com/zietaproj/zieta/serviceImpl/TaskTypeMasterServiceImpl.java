@@ -72,7 +72,8 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 
 	@Override
 	public List<TaskMasterDTO> getAllTasks() {
-		List<TaskTypeMaster> taskTypeMasters = taskTypeMasterRepository.findAll();
+		short notDeleted = 0;
+		List<TaskTypeMaster> taskTypeMasters = taskTypeMasterRepository.findByIsDelete(notDeleted);
 		List<TaskMasterDTO> taskMasterDTOs = new ArrayList<TaskMasterDTO>();
 		TaskMasterDTO taskMasterDTO = null;
 		for (TaskTypeMaster taskTypeMaster : taskTypeMasters) {

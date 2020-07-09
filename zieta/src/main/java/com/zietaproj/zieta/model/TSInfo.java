@@ -37,6 +37,9 @@ public class TSInfo extends BaseEntity implements Serializable {
     
 	@Column(name="activity_id")
     private Long activityId;
+	
+	@Column(name="task_activity_id")
+    private Long taskActivityId;
     
 	@Column(name="user_id")
     private Long userId;

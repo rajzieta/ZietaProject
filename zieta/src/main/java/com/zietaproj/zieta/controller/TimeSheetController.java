@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zietaproj.zieta.model.TSInfo;
+import com.zietaproj.zieta.response.TSInfoModel;
 import com.zietaproj.zieta.service.TimeSheetService;
-import com.zietaproj.zieta.service.TimeTypeService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,11 +41,11 @@ public class TimeSheetController {
 	
 	@ApiOperation(value = "Lists TimeSheet entries based on the ts_date range provided, for the provided client and user",notes="Table reference: ts_info")
 	@RequestMapping(value = "getTimeEntriesByUserDates", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<TSInfo> getTimeEntriesByUserDates(@RequestParam(required = true) Long clientId, 
+	public List<TSInfoModel> getTimeEntriesByUserDates(@RequestParam(required = true) Long clientId, 
 			@RequestParam(required = true) Long userId, 
 			@RequestParam(required = true)  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
 			@RequestParam(required = true)  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
-		List<TSInfo> tsInfoList = null;
+		List<TSInfoModel> tsInfoList = null;
 		try {
 			tsInfoList = timeSheetService.getTimeEntriesByUserDates(clientId, userId, startDate, endDate);
 		} catch (Exception e) {

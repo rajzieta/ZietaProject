@@ -11,6 +11,6 @@ import com.zietaproj.zieta.model.TSInfo;
 @Repository
 public interface TSInfoRepository extends JpaRepository<TSInfo, Long>{
 	
-	public List<TSInfo> findByClientIdAndUserIdAndTsDateBetween(Long clientId, Long userId, Date startDate, Date endDate);
+	public List<TSInfo> findByClientIdAndUserIdAndTsDateBetweenOrderByTaskActivityIdAscTsInfoIdAsc(Long clientId, Long userId, Date startDate, Date endDate);
 
 }

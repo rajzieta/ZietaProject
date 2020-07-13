@@ -2,6 +2,8 @@ package com.zietaproj.zieta.dto;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+
 import com.zietaproj.zieta.model.BaseEntity;
 
 import lombok.Getter;
@@ -16,6 +18,7 @@ public class StatusMasterDTO extends BaseEntity {
 	private String clientCode;
     private String status;
     private String statusType;
+	private Boolean isDefault;
 //    private String created_by;
 //    private Date   created_date;
 //    private String modified_by;

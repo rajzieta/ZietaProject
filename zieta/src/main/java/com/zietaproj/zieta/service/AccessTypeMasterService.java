@@ -7,6 +7,8 @@ import org.springframework.data.repository.query.Param;
 
 import com.zietaproj.zieta.dto.AccessTypeMasterDTO;
 import com.zietaproj.zieta.model.AccessTypeMaster;
+import com.zietaproj.zieta.request.AccessTypeAddRequest;
+import com.zietaproj.zieta.response.AccesstypesByClientResponse;
 
 
 
@@ -14,9 +16,11 @@ public interface AccessTypeMasterService {
 
 	public List<AccessTypeMasterDTO> getAllAccesstypes();
 
-	public void addAccessTypemaster(AccessTypeMaster accesstypemaster);
+	public void addAccessTypemaster(AccessTypeAddRequest accesstypeparam);
 	
 	public List<String> findByClientIdANDAccessTypeId(Long clientId,
 			  List<Long> accessIdList);
+
+	public List<AccesstypesByClientResponse> getAccessTypesByClient(Long clientId);
 	
 }

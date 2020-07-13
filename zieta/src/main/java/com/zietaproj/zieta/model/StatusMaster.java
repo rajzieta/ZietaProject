@@ -26,11 +26,14 @@ public class StatusMaster extends BaseEntity implements Serializable {
 	@Column(name = "client_id")
 	private Long clientId;
 
-	@NotBlank
+	
 	private String status;
 
-	@NotBlank
+	//@NotBlank
 	@Column(name = "status_type")
 	private String statusType;
+	
+	@Column(name = "is_default")
+	private Boolean isDefault;
 
 }

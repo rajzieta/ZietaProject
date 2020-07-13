@@ -42,23 +42,28 @@ public class AccessTypeMaster {
     @Column(name = "ACCESS_TYPE")
     private String accessType;
     
-	@NotBlank
-	private String created_by;
+	
+	@Column(name = "created_by", updatable = false)
+	private String createdBy;
 
-    @Column(nullable = false, updatable = false)
+   // @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
-    private Date created_date;
+    @Column(name = "created_date", updatable = false)
+   	private Date createdDate;
 
-    @Column(nullable = false)
+    @Column(name = "modified_date")
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
-    private Date modified_date;
+    private Date modifiedDate;
 	
-	@NotBlank
-	private String modified_by;
+
+	@Column(name = "modified_by")
+	private String modifiedBy;
 	
-	private boolean IS_DELETE;
+	@Column(name = "IS_DELETE")
+	private boolean isDelete;
+
 
 	
 	

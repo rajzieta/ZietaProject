@@ -19,4 +19,5 @@ public class StatusByClienttypeResponse {
     private String modified_by;
     private Date modified_date;
     private short isDelete;
+    private Boolean isDefault;
 }

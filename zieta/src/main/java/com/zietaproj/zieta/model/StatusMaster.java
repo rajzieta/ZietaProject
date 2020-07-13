@@ -33,7 +33,7 @@ public class StatusMaster extends BaseEntity implements Serializable {
 	@Column(name = "status_type")
 	private String statusType;
 	
-	@Column(name = "is_default")
+	@Column(name = "IS_DEFAULT")
 	private Boolean isDefault;
 
 }

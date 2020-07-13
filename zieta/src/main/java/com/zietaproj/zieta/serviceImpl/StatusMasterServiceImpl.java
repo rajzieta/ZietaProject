@@ -75,6 +75,7 @@ public class StatusMasterServiceImpl implements StatusMasterService {
 				statusbyclienttypeList.setModified_by(statusmaster.getModifiedBy());
 				statusbyclienttypeList.setModified_date(statusmaster.getModifiedDate());
 				statusbyclienttypeList.setIsDelete(statusmaster.getIsDelete());
+				statusbyclienttypeList.setIsDefault(statusmaster.getIsDefault());
 				
 				statusByClientStatustypeList.add(statusbyclienttypeList);
 			}

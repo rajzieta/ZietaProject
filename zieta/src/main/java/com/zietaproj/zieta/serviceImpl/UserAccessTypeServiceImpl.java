@@ -1,24 +1,20 @@
 package com.zietaproj.zieta.serviceImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.zietaproj.zieta.dto.UserInfoDTO;
 import com.zietaproj.zieta.model.UserAccessType;
-import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.repository.UserAccessMappingRepository;
-import com.zietaproj.zieta.repository.UserInfoRepository;
-import com.zietaproj.zieta.response.LoginResponse;
-import com.zietaproj.zieta.response.UserDetailsResponse;
 import com.zietaproj.zieta.service.UserAccessTypeService;
-import com.zietaproj.zieta.service.UserInfoService;
+
+import lombok.extern.slf4j.Slf4j;
 
 
 
 @Service
+@Slf4j
 public class UserAccessTypeServiceImpl implements UserAccessTypeService {
 
 	@Autowired
@@ -33,6 +29,16 @@ public class UserAccessTypeServiceImpl implements UserAccessTypeService {
 	
 	public List<UserAccessType> findAll(){
 		return userAccessMappingRepository.findAll();
+	}
+
+
+	@Override
+	public void assignAccessTypeToUser(UserAccessType userAccessType) {
+		try {
+			userAccessMappingRepository.save(userAccessType);
+		} catch (Exception e) {
+			log.error("Exception occured during saving the entity: ",e);
+		}
 	}
 	
 	

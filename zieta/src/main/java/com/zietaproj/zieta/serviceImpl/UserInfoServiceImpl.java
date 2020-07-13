@@ -13,7 +13,7 @@ import com.zietaproj.zieta.dto.UserInfoDTO;
 import com.zietaproj.zieta.model.ScreensMaster;
 import com.zietaproj.zieta.model.UserAccessType;
 import com.zietaproj.zieta.model.UserInfo;
-import com.zietaproj.zieta.repository.AccessControlConfigRepository;
+import com.zietaproj.zieta.repository.AccessTypeScreenMappingRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.response.LoginResponse;
@@ -32,7 +32,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 	UserInfoRepository userInfoRepositoryRepository;
 	
 	@Autowired
-	AccessControlConfigRepository accessControlConfigRepository;
+	AccessTypeScreenMappingRepository accessControlConfigRepository;
 	
 	@Autowired
 	UserAccessTypeService userAccessTypeService;

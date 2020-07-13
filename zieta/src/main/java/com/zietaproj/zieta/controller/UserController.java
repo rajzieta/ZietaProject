@@ -57,7 +57,7 @@ public class UserController {
 	
 	@RequestMapping(value = "getUserData", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "provides user associated data, once login is SUCCESS",notes="Table reference: user_info,"
-			+ " user_accesstype_mapping, access_ctrl_config, screen_master, access_type_master")
+			+ " accesstype_user_mapping, access_ctrl_config, screen_master, access_type_master")
 	public UserDetailsResponse doAuthorize(@RequestParam(required = true) String userEmailId) {
 		UserDetailsResponse userDetails = userInfoService.getUserData(userEmailId);
 		

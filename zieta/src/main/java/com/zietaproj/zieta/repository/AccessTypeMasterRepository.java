@@ -17,4 +17,6 @@ public interface AccessTypeMasterRepository extends JpaRepository<AccessTypeMast
 	  List<String> findByClientIdANDAccessTypeId(@Param("clientId") Long clientId,
 			  @Param("accessIds") List<Long> accessIdList);
 
+	List<AccessTypeMaster> findByClientId(Long clientId);
+
 }

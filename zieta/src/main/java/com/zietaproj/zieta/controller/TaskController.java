@@ -61,13 +61,13 @@ public class TaskController {
 	}
 
 	
-	@GetMapping("/getAllTasksByClientUser")
+	@GetMapping("/getAllTasksByClientTaskManager")
 	@ApiOperation(value = "List tasks based on the  userId and clientId", notes = "Table reference: task_user_mapping,"
 			+ " task_info, project_info")
-	public ResponseEntity<List<TasksByUserModel>> getAllTasksByUser(@RequestParam(required = true) Long clientId,
-			@RequestParam(required = true) Long userId) {
+	public ResponseEntity<List<TasksByUserModel>> getAllTasksByClientTaskManager(@RequestParam(required = true) Long clientId,
+			@RequestParam(required = true) Long taskManagerId) {
 		try {
-			List<TasksByUserModel> tasksByUserModelList = taskTypeMasterService.findByClientIdAndUserId(clientId, userId);
+			List<TasksByUserModel> tasksByUserModelList = taskTypeMasterService.findByClientIdAndUserId(clientId, taskManagerId);
 			return new ResponseEntity<List<TasksByUserModel>>(tasksByUserModelList, HttpStatus.OK);
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<List<TasksByUserModel>>(HttpStatus.NOT_FOUND);

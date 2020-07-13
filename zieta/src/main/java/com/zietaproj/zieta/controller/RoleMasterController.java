@@ -38,8 +38,8 @@ public class RoleMasterController {
 	@Autowired
 	RoleMasterService rolemasterService;
 
-	@RequestMapping(value = "getAllRoles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<RoleMasterDTO> getAllRoles() {
+	@RequestMapping(value = "getAllUserRoles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<RoleMasterDTO> getAllUserRoles() {
 		List<RoleMasterDTO> roleMasterList = null;
 		try {
 			roleMasterList = rolemasterService.getAllRoles();
@@ -49,14 +49,14 @@ public class RoleMasterController {
 		return roleMasterList;
 	}
 
-	@RequestMapping(value = "addRolemaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void addRolemaster(@Valid @RequestBody RoleMaster rolemaster) {
+	@RequestMapping(value = "addUserRoleMaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addUserRoleMaster(@Valid @RequestBody RoleMaster rolemaster) {
 		rolemasterService.addRolemaster(rolemaster);
 	}
 	
-	@GetMapping("/getAllRolesByClient")
+	@GetMapping("/getAllUserRolesByClient")
 	@ApiOperation(value = "List Roles based on the clientId", notes = "Table reference: role_master")
-	public ResponseEntity<List<RolesByClientResponse>> getAllRolesByClient(@RequestParam(required = true) Long clientId) {
+	public ResponseEntity<List<RolesByClientResponse>> getAllUserRolesByClient(@RequestParam(required = true) Long clientId) {
 		try {
 			List<RolesByClientResponse> rolesbyclientList = rolemasterService.getRolesByClient(clientId);
 			return new ResponseEntity<List<RolesByClientResponse>>(rolesbyclientList, HttpStatus.OK);

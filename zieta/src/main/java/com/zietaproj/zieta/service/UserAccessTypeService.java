@@ -12,5 +12,6 @@ public interface UserAccessTypeService {
 
 	List<UserAccessType> findByClientIdAndUserId(long clientId, long userId);
 	List<UserAccessType> findAll();
+	void assignAccessTypeToUser(UserAccessType userAccessType);
 
 }

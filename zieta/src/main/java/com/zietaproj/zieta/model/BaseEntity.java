@@ -12,6 +12,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,11 +33,13 @@ public class BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     @Column(name = "created_date", updatable = false)
+    @JsonIgnore
 	private Date createdDate;
 	
 	@Column(name = "MODIFIED_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
+    @JsonIgnore
 	private Date modifiedDate;
 	
 	@Column(name = "IS_DELETE")

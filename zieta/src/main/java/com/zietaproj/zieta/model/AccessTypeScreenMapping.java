@@ -6,15 +6,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
-@Table(name = "accesstype_user_mapping")
+@Table(name = "accesstype_screen_mapping")
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class UserAccessType extends BaseEntity {
+public class AccessTypeScreenMapping extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,14 +24,10 @@ public class UserAccessType extends BaseEntity {
 	@Column(name = "CLIENT_ID")
 	private Long clientId;
 	
-	@Column( name = "USER_ID")
-	private Long userId;
+	@Column( name = "SCREEN_ID")
+	private Long screenId;
 	
 	@Column( name = "ACCESS_TYPE_ID")
 	private Long accessTypeId;
 	
-	
-	
-	
-
 }

@@ -11,5 +11,6 @@ public class StatusByClientTypeRequest {
 	private Long clientId;
 	 private String status;
 	    private String statusType;
+	    private Boolean isDefault;
 
 }

@@ -36,10 +36,10 @@ public class AccessTypeMasterServiceImpl implements AccessTypeMasterService {
 		for (AccessTypeMaster accesstypeMaster : accesstypeMasters) {
 			accessTypeMasterDTO = new AccessTypeMasterDTO();
 			accessTypeMasterDTO.setId(accesstypeMaster.getId());
-			accessTypeMasterDTO.setClient_id(accesstypeMaster.getClientId());
-			accessTypeMasterDTO.setAccess_type(accesstypeMaster.getAccessType());
-			accessTypeMasterDTO.setCreated_by(accesstypeMaster.getCreatedBy());
-			accessTypeMasterDTO.setModified_by(accesstypeMaster.getModifiedBy());
+			accessTypeMasterDTO.setClientId(accesstypeMaster.getClientId());
+			accessTypeMasterDTO.setAccessType(accesstypeMaster.getAccessType());
+			accessTypeMasterDTO.setCreatedBy(accesstypeMaster.getCreatedBy());
+			accessTypeMasterDTO.setModifiedBy(accesstypeMaster.getModifiedBy());
 			accessTypeMasterDTOs.add(accessTypeMasterDTO);
 		}
 		return accessTypeMasterDTOs;

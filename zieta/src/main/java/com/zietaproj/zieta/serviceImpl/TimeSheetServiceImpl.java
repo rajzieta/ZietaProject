@@ -3,19 +3,26 @@ package com.zietaproj.zieta.serviceImpl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import com.zietaproj.zieta.model.TSInfo;
+import com.zietaproj.zieta.model.TSTimeentries;
 import com.zietaproj.zieta.repository.ActivityMasterRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
 import com.zietaproj.zieta.repository.TSInfoRepository;
+import com.zietaproj.zieta.repository.TSTimeEntriesRepository;
 import com.zietaproj.zieta.repository.TaskInfoRepository;
+import com.zietaproj.zieta.request.TimeEntriesByTsIdRequest;
 import com.zietaproj.zieta.response.TSInfoModel;
+import com.zietaproj.zieta.response.TimeEntriesByTimesheetIDResponse;
 import com.zietaproj.zieta.service.TimeSheetService;
 
 @Service
@@ -34,7 +41,12 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	@Autowired
 	ProjectInfoRepository  projectInfoRepository;
 	
+	@Autowired
+	TSTimeEntriesRepository tstimeentriesRepository;
 	
+	
+	@Autowired
+	ModelMapper modelMapper;
 
 	/**
 	 *  This methods returns ts_info entries based on the date range of ts_date column 
@@ -78,6 +90,32 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	public void addTimeEntry(@Valid List<TSInfo> tsinfo) {
 		
 		tSInfoRepository.saveAll(tsinfo);
+	}
+	
+	
+	@Override
+	public List<TimeEntriesByTimesheetIDResponse> getTimeEntriesByTsID(Long tsId) {
+		List<TSTimeentries> timeentriesByTsidList = tstimeentriesRepository.findByTsId(tsId);
+		List<TimeEntriesByTimesheetIDResponse> timeentriesBytsIdResponseList = new ArrayList<>();
+		TimeEntriesByTimesheetIDResponse timeentriesByTsIdResponse = null;
+		for (TSTimeentries timeentriesByTsId : timeentriesByTsidList) {
+			timeentriesByTsIdResponse = modelMapper.map(timeentriesByTsId, 
+					TimeEntriesByTimesheetIDResponse.class);
+			timeentriesBytsIdResponseList.add(timeentriesByTsIdResponse);
+		}
+
+		return timeentriesBytsIdResponseList;
+		
+		
+	}
+	
+	@Override
+	@Transactional
+	public void addTimeEntriesByTsId(@Valid TimeEntriesByTsIdRequest timeentriesbytsidRequest) throws Exception {
+
+			TSTimeentries tstimeentries = modelMapper.map(timeentriesbytsidRequest, TSTimeentries.class);
+			tstimeentriesRepository.save(tstimeentries);
+
 	}
 	
 

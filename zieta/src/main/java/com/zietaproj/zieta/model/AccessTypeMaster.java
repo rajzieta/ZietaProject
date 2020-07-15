@@ -28,7 +28,7 @@ import lombok.Data;
 @JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
         allowGetters = true)
 @Data
-public class AccessTypeMaster {
+public class AccessTypeMaster extends BaseEntity {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,27 +43,7 @@ public class AccessTypeMaster {
     private String accessType;
     
 	
-	@Column(name = "created_by", updatable = false)
-	private String createdBy;
-
-   // @Column(nullable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
-    @Column(name = "created_date", updatable = false)
-   	private Date createdDate;
-
-    @Column(name = "modified_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
-    private Date modifiedDate;
 	
-
-	@Column(name = "modified_by")
-	private String modifiedBy;
-	
-	@Column(name = "IS_DELETE")
-	private boolean isDelete;
-
 
 	
 	

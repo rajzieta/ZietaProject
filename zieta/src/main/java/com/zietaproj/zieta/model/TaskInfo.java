@@ -46,5 +46,8 @@ public class TaskInfo extends BaseEntity implements Serializable {
 	    
 	    @Column(name = "task_status")
 	    private Long taskStatus;
+	    
+	    @Column(name = "sortkey")
+	    private Long sortKey;
 	
 }

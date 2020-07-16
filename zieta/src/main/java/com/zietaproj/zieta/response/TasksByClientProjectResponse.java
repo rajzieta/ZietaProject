@@ -18,6 +18,7 @@ public class TasksByClientProjectResponse {
 	Long taskInfoId;
 	Long projectId;
 	Long taskType;
+	Long sortKey;
 	Long taskParent;
 	Long taskStatus;
 	String taskManagerName;

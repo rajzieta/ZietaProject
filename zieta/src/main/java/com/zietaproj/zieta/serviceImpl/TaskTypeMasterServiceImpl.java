@@ -263,4 +263,20 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 		List<TasksByClientProjectResponse> treeList = TSMUtil.createTree(tasksByClientProjectResponseList);
 		return treeList;
 	}
+
+	@Override
+	public void updateTaskSortKeyByID(Long taskInfoId, Long sortKey) throws Exception {
+		Optional<TaskInfo> taskInfo = taskInfoRepository.findById(taskInfoId);
+		if (taskInfo.isPresent()) {
+
+			TaskInfo taskEntity = taskInfo.get();
+			taskEntity.setSortKey(sortKey);
+			taskInfoRepository.save(taskEntity);
+			log.info("TaskInfoId entry {} updated with the provided SortKey {}", taskInfoId, sortKey);
+
+		} else {
+			throw new Exception("No Record found in the TaskInfo table with the ID:  " + taskInfoId);
+		}
+
+	}
 }

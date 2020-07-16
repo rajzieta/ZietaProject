@@ -35,6 +35,8 @@ public interface TaskTypeMasterService {
 	public void editTaskInfo(@Valid EditTasksByClientProjectRequest editasksByClientProjectRequest) throws Exception;
 
 	public void deleteTaskTypeByClient(Long taskTypeId, String modifiedBy) throws Exception;
+	
+	public void  updateTaskSortKeyByID(Long taskInfoId, Long sortKey) throws Exception;
 
 	
 }

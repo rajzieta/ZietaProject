@@ -144,4 +144,11 @@ public class TaskController {
 	public void editTasksByClientProject(@Valid @RequestBody EditTasksByClientProjectRequest ediTasksByClientProjectRequest) throws Exception {
 		taskTypeMasterService.editTaskInfo(ediTasksByClientProjectRequest);
 	}
+	
+	@ApiOperation(value = "Updates the sortKey for the provided taskInfoId", notes = "Table reference: task_info")
+	@RequestMapping(value = "updateTaskSortKeyByID", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void updateTaskSortKeyByID(@RequestParam(required=true) Long taskInfoId, @RequestParam(required=true) Long sortKey) throws Exception {
+		taskTypeMasterService.updateTaskSortKeyByID(taskInfoId, sortKey);
+		
+	}
 }

@@ -2,22 +2,33 @@ package com.zietaproj.zieta.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zietaproj.zieta.dto.RoleMasterDTO;
+
 import com.zietaproj.zieta.model.ClientInfo;
 import com.zietaproj.zieta.model.RoleMaster;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.RoleMasterRepository;
+import com.zietaproj.zieta.request.RoleMasterEditRequest;
 import com.zietaproj.zieta.response.RolesByClientResponse;
 import com.zietaproj.zieta.service.RoleMasterService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class RoleMasterServiceImpl implements RoleMasterService{
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(RoleMasterServiceImpl.class);
 	@Autowired
 	RoleMasterRepository roleMasterRepository;
 	
@@ -36,8 +47,8 @@ public class RoleMasterServiceImpl implements RoleMasterService{
 		for (RoleMaster roleMaster : roleMasters) {
 			roleMasterDTO = new RoleMasterDTO();
 			roleMasterDTO.setId(roleMaster.getId());
-			roleMasterDTO.setClient_id(roleMaster.getClientId());
-			roleMasterDTO.setUser_role(roleMaster.getUser_role());
+			roleMasterDTO.setClientId(roleMaster.getClientId());
+			roleMasterDTO.setUserRole(roleMaster.getUserRole());
 			roleMasterDTO.setCreatedBy(roleMaster.getCreatedBy());
 			roleMasterDTO.setModifiedBy(roleMaster.getModifiedBy());
 			ClientInfo clientInfo = clientInfoRepo.findById(roleMaster.getClientId()).get();
@@ -69,7 +80,42 @@ public class RoleMasterServiceImpl implements RoleMasterService{
 		}
 
 		return rolesByClientResponseList;
-		
-	
 	}
+	
+	@Override
+	public void editUserRolesById(RoleMasterEditRequest rolemastereditRequest) throws Exception {
+		
+		Optional<RoleMaster> roleMasterEntity = roleMasterRepository.findById(rolemastereditRequest.getId());
+		if(roleMasterEntity.isPresent()) {
+			RoleMaster rolemaster = modelMapper.map(rolemastereditRequest, RoleMaster.class);
+				roleMasterRepository.save(rolemaster);
+			
+		}else {
+			throw new Exception("UserRole not found with the provided ID : "+rolemastereditRequest.getId());
+		}
+		
+		
+	}
+	
+	
+	public void deleteUserRolesById(Long id, String modifiedBy) throws Exception {
+		
+		Optional<RoleMaster> rolemaster = roleMasterRepository.findById(id);
+		if (rolemaster.isPresent()) {
+			RoleMaster rolemasterEntitiy = rolemaster.get();
+			short delete = 1;
+			rolemasterEntitiy.setIsDelete(delete);
+			rolemasterEntitiy.setModifiedBy(modifiedBy);
+			roleMasterRepository.save(rolemasterEntitiy);
+
+		}else {
+			log.info("No User Role found with the provided ID{} in the DB",id);
+			throw new Exception("No UserRole found with the provided ID in the DB :"+id);
+		}
+		
+		
+	}
+	
+	
+	
 }

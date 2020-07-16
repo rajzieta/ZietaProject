@@ -22,5 +22,9 @@ public interface AccessTypeMasterService {
 			  List<Long> accessIdList);
 
 	public List<AccesstypesByClientResponse> getAccessTypesByClient(Long clientId);
+
+	public void editAccessTypesById(@Valid AccessTypeAddRequest accesstypeeditRequest) throws Exception;
+
+	public void deleteAccessTypesById(Long id, String modifiedBy) throws Exception;
 	
 }

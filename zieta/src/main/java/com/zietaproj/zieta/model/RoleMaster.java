@@ -40,7 +40,8 @@ public class RoleMaster extends BaseEntity implements Serializable{
     private Long clientId;
     
     @NotBlank
-    private String user_role;
+    @Column(name = "user_role")
+    private String userRole;
     
 	
 	

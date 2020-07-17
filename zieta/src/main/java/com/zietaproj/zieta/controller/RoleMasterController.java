@@ -20,12 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zietaproj.zieta.dto.RoleMasterDTO;
 import com.zietaproj.zieta.model.RoleMaster;
+import com.zietaproj.zieta.request.AcitivityRequest;
+import com.zietaproj.zieta.request.RoleMasterEditRequest;
 import com.zietaproj.zieta.response.ActivitiesByTaskResponse;
 import com.zietaproj.zieta.response.RolesByClientResponse;
 import com.zietaproj.zieta.service.RoleMasterService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
+
 
 @RestController
 @RequestMapping("/api")
@@ -65,4 +69,19 @@ public class RoleMasterController {
 		}
 	}
 
+	@ApiOperation(value = "Updates the UserRoles for the provided Id", notes = "Table reference: role_master")
+	@RequestMapping(value = "editUserRolesById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editUserRolesById(@Valid @RequestBody RoleMasterEditRequest rolemastereditrequest) throws Exception {
+		rolemasterService.editUserRolesById(rolemastereditrequest);
+		// JsonView.with(rolemasterdto).onClass(RoleMasterDTO.class, match().exclude("clientCode"));
+		
+	}
+	
+	@ApiOperation(value = "Deletes entries from role_master based on Id", notes = "Table reference: role_master")
+	@RequestMapping(value = "deleteUserRolesById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteUserRolesById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		rolemasterService.deleteUserRolesById(id, modifiedBy);
+	}
+	
+	
 }

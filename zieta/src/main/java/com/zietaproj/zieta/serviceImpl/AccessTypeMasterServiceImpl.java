@@ -2,10 +2,14 @@ package com.zietaproj.zieta.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zietaproj.zieta.dto.AccessTypeMasterDTO;
 import com.zietaproj.zieta.dto.ActivityMasterDTO;
@@ -13,17 +17,27 @@ import com.zietaproj.zieta.model.AccessTypeMaster;
 import com.zietaproj.zieta.model.ActivityMaster;
 import com.zietaproj.zieta.model.ClientInfo;
 import com.zietaproj.zieta.model.RoleMaster;
+import com.zietaproj.zieta.model.TaskTypeMaster;
 import com.zietaproj.zieta.repository.AccessTypeMasterRepository;
 import com.zietaproj.zieta.repository.ActivityMasterRepository;
+import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.request.AccessTypeAddRequest;
 import com.zietaproj.zieta.response.AccesstypesByClientResponse;
 import com.zietaproj.zieta.response.RolesByClientResponse;
 import com.zietaproj.zieta.service.AccessTypeMasterService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Transactional
+@Slf4j
 public class AccessTypeMasterServiceImpl implements AccessTypeMasterService {
 	@Autowired
 	AccessTypeMasterRepository accesstypeMasterRepository;
+	
+	@Autowired
+	ClientInfoRepository clientInfoRepository;
+	
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -40,6 +54,8 @@ public class AccessTypeMasterServiceImpl implements AccessTypeMasterService {
 			accessTypeMasterDTO.setAccessType(accesstypeMaster.getAccessType());
 			accessTypeMasterDTO.setCreatedBy(accesstypeMaster.getCreatedBy());
 			accessTypeMasterDTO.setModifiedBy(accesstypeMaster.getModifiedBy());
+			accessTypeMasterDTO.setClientCode(clientInfoRepository.findById(accesstypeMaster.getClientId()).get().getClient_code());
+			
 			accessTypeMasterDTOs.add(accessTypeMasterDTO);
 		}
 		return accessTypeMasterDTOs;
@@ -73,4 +89,40 @@ public class AccessTypeMasterServiceImpl implements AccessTypeMasterService {
 		return accesstypesByClientResponseList;
 	}
 
+	@Override
+	public void editAccessTypesById(@Valid AccessTypeAddRequest accesstypeeditRequest) throws Exception {
+		Optional<AccessTypeMaster> accessMasterEntity = accesstypeMasterRepository.findById(accesstypeeditRequest.getId());
+		if(accessMasterEntity.isPresent()) {
+			AccessTypeMaster accessmaster = modelMapper.map(accesstypeeditRequest, AccessTypeMaster.class);
+			accesstypeMasterRepository.save(accessmaster);
+			
+		}else {
+			throw new Exception("UserAccess not found with the provided ID : "+accesstypeeditRequest.getId());
+		}
+		
+	}
+	
+	
+	public void deleteAccessTypesById(Long id, String modifiedBy) throws Exception {
+		
+
+		Optional<AccessTypeMaster> accessmaster = accesstypeMasterRepository.findById(id);
+		if (accessmaster.isPresent()) {
+			AccessTypeMaster accessmasterEntitiy = accessmaster.get();
+			short delete = 1;
+			accessmasterEntitiy.setIsDelete(delete);
+			accessmasterEntitiy.setModifiedBy(modifiedBy);
+			accesstypeMasterRepository.save(accessmasterEntitiy);
+
+		}else {
+			log.info("No Access Type found with the provided ID{} in the DB",id);
+			throw new Exception("No AccessType found with the provided ID in the DB :"+id);
+		}
+		
+		
+		
+	}
+	
+	
+	
 }

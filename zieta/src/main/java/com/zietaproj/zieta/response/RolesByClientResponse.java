@@ -9,7 +9,7 @@ public class RolesByClientResponse {
 
 	private Long id;
 
-	private String user_role;
+	private String userRole;
 	
 	private long clientId;
 	

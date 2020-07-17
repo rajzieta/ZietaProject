@@ -12,5 +12,6 @@ public class StatusByClientTypeRequest {
 	 private String status;
 	    private String statusType;
 	    private Boolean isDefault;
+	    private String modifiedBy;
 
 }

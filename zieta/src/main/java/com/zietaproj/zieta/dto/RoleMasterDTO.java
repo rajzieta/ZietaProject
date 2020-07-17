@@ -10,8 +10,8 @@ import lombok.Setter;
 public class RoleMasterDTO extends BaseEntity {
 
 	private Long id;
-    private Long client_id;
-    private String user_role;
+    private Long clientId;
+    private String userRole;
 //    private String created_by;
 //    private String modified_by;
 //    private boolean IS_DELETE;

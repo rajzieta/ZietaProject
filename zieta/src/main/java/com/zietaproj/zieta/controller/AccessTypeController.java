@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zietaproj.zieta.dto.AccessTypeMasterDTO;
+import com.zietaproj.zieta.dto.RoleMasterDTO;
 import com.zietaproj.zieta.model.AccessTypeMaster;
 import com.zietaproj.zieta.model.AccessTypeScreenMapping;
 import com.zietaproj.zieta.model.UserAccessType;
@@ -94,4 +95,22 @@ public class AccessTypeController {
 	public void assignAccessTypeToUser(@Valid @RequestBody UserAccessType userAccessType) {
 		userAccessTypeService.assignAccessTypeToUser(userAccessType);
 	}
+	
+	
+	@ApiOperation(value = "Updates the AccessType for the provided Id", notes = "Table reference: access_type_master")
+	@RequestMapping(value = "editAccessTypesById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editAccessTypesById(@Valid @RequestBody AccessTypeAddRequest accesstypeeditRequest) throws Exception {
+		accesstypemasterService.editAccessTypesById(accesstypeeditRequest);
+		
+	}
+	
+	
+	
+	@ApiOperation(value = "Deletes entries from access_type_master based on Id", notes = "Table reference: access_type_master")
+	@RequestMapping(value = "deleteAccessTypesById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteAccessTypesById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		accesstypemasterService.deleteAccessTypesById(id, modifiedBy);
+	}
+	
+	
 }

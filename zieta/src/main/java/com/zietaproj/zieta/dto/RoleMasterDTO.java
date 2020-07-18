@@ -16,7 +16,7 @@ public class RoleMasterDTO extends BaseEntity {
 //    private String modified_by;
 //    private boolean IS_DELETE;
     private String clientCode;
-    private String clientName;
+    private String clientDescription;
 }
 
 

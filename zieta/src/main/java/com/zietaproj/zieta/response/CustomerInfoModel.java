@@ -22,6 +22,8 @@ public class CustomerInfoModel {
 	private boolean isDelete;
 	private  long orgNode;
 	private String clientCode;
+	private String clientDescription;
+	
 
 	
 	

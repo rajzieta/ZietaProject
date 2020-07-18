@@ -30,7 +30,9 @@ public class ProjectDetailsByUserModel {
 	String projectManagerName;
 	String projectStatusDescription;
 	String clientCode;
+	String clientDescription;
 	CustInfo custInfo;
 	//additional details ends
+	
 	
 }

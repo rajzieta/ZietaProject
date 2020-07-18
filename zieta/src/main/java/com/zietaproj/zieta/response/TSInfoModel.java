@@ -14,5 +14,12 @@ public class TSInfoModel {
 	String activityCode;
 	
 	TSInfo tsInfo;
+	
+	String clientCode;
+
+	String clientDescription;
+	
+		
+	
 
 }

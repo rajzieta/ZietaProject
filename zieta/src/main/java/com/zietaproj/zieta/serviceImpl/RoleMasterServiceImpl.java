@@ -41,7 +41,8 @@ public class RoleMasterServiceImpl implements RoleMasterService{
 	
 	@Override
 	public List<RoleMasterDTO> getAllRoles() {
-		List<RoleMaster> roleMasters= roleMasterRepository.findAll();
+		short notDeleted=0;
+		List<RoleMaster> roleMasters= roleMasterRepository.findByIsDelete(notDeleted);
 		List<RoleMasterDTO> roleMasterDTOs = new ArrayList<RoleMasterDTO>();
 		RoleMasterDTO roleMasterDTO = null;
 		for (RoleMaster roleMaster : roleMasters) {
@@ -53,7 +54,7 @@ public class RoleMasterServiceImpl implements RoleMasterService{
 			roleMasterDTO.setModifiedBy(roleMaster.getModifiedBy());
 			ClientInfo clientInfo = clientInfoRepo.findById(roleMaster.getClientId()).get();
 			roleMasterDTO.setClientCode(clientInfo.getClient_code());
-			roleMasterDTO.setClientName(clientInfo.getClient_name());
+			roleMasterDTO.setClientDescription(clientInfo.getClient_name());
 			roleMasterDTOs.add(roleMasterDTO);
 		}
 		return roleMasterDTOs;
@@ -67,14 +68,16 @@ public class RoleMasterServiceImpl implements RoleMasterService{
 	
 	@Override
 	public List<RolesByClientResponse> getRolesByClient(Long clientId) {
-
-		List<RoleMaster> rolesByClientList = roleMasterRepository.findByClientId(clientId);
+		short notDeleted=0;
+		List<RoleMaster> rolesByClientList = roleMasterRepository.findByClientIdAndIsDelete(clientId, notDeleted);
 		List<RolesByClientResponse> rolesByClientResponseList = new ArrayList<>();
 		RolesByClientResponse rolesByClientResponse = null;
 		for (RoleMaster rolesByClient : rolesByClientList) {
 			rolesByClientResponse = modelMapper.map(rolesByClient, 
 					RolesByClientResponse.class);
 			rolesByClientResponse.setClientCode(clientInfoRepo.findById(clientId).get().getClient_code());
+			rolesByClientResponse.setClientDescription(clientInfoRepo.findById(clientId).get().getClient_name());
+
 			rolesByClientResponse.setClientId(clientId);
 			rolesByClientResponseList.add(rolesByClientResponse);
 		}

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.zietaproj.zieta.model.TSInfo;
 import com.zietaproj.zieta.model.TSTimeentries;
 import com.zietaproj.zieta.repository.ActivityMasterRepository;
+import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
 import com.zietaproj.zieta.repository.TSInfoRepository;
 import com.zietaproj.zieta.repository.TSTimeEntriesRepository;
@@ -44,6 +45,8 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	@Autowired
 	TSTimeEntriesRepository tstimeentriesRepository;
 	
+	@Autowired
+	ClientInfoRepository  clientInfoRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -54,9 +57,10 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	 */
 	@Override
 	public List<TSInfoModel> getTimeEntriesByUserDates(Long clientId, Long userId, Date startDate, Date endDate) {
+		short notDeleted=0;
 		List<TSInfoModel> tsInfoModelList = new ArrayList<TSInfoModel>();
 		List<TSInfo> tsInfoList = tSInfoRepository
-				.findByClientIdAndUserIdAndTsDateBetweenOrderByTaskActivityIdAscTsInfoIdAsc(clientId, userId, startDate,
+				.findByClientIdAndUserIdAndIsDeleteAndTsDateBetweenOrderByTaskActivityIdAscTsInfoIdAsc(clientId, userId, notDeleted, startDate,
 						endDate);
 		for (TSInfo tsInfo : tsInfoList) {
 			TSInfoModel taskInfoModel = new TSInfoModel();
@@ -79,6 +83,9 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 				taskInfoModel.setTaskCode(null);
 			}
 			
+			taskInfoModel.setClientCode(clientInfoRepository.findById(tsInfo.getClientId()).get().getClient_code());
+			taskInfoModel.setClientDescription(clientInfoRepository.findById(tsInfo.getClientId()).get().getClient_name());
+			
 			tsInfoModelList.add(taskInfoModel);
 			
 		}
@@ -95,7 +102,8 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	
 	@Override
 	public List<TimeEntriesByTimesheetIDResponse> getTimeEntriesByTsID(Long tsId) {
-		List<TSTimeentries> timeentriesByTsidList = tstimeentriesRepository.findByTsId(tsId);
+		short notDeleted=0;
+		List<TSTimeentries> timeentriesByTsidList = tstimeentriesRepository.findByTsIdAndIsDelete(tsId, notDeleted);
 		List<TimeEntriesByTimesheetIDResponse> timeentriesBytsIdResponseList = new ArrayList<>();
 		TimeEntriesByTimesheetIDResponse timeentriesByTsIdResponse = null;
 		for (TSTimeentries timeentriesByTsId : timeentriesByTsidList) {

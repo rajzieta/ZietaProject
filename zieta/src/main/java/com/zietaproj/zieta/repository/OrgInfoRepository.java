@@ -10,6 +10,8 @@ public interface OrgInfoRepository extends JpaRepository<OrgInfo, Long> {
 
 	List<OrgInfo> findByClientId(Long clientId);
 
+	List<OrgInfo> findByClientIdAndIsDelete(Long clientId, short notDeleted);
+
 	
 
 }

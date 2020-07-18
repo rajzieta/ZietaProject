@@ -23,4 +23,6 @@ public class TaskTypesByClientResponse {
 	Date createdDate;
 	Date modifiedDate;
 	boolean isDelete;
+	String clientCode;
+	String clientDescription;
 }

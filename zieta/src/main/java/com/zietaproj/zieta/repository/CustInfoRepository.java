@@ -12,6 +12,10 @@ import com.zietaproj.zieta.model.CustInfo;
 public interface CustInfoRepository extends JpaRepository<CustInfo, Long> {
 	
 	List<CustInfo>  findByClientId(Long clientId);
+
+	List<CustInfo> findByIsDelete(short notDeleted);
+
+	List<CustInfo> findByClientIdAndIsDelete(Long clientId, short notDeleted);
 	
 
 }

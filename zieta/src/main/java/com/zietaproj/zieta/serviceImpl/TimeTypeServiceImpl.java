@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 
 import com.zietaproj.zieta.dto.TimeTypeDTO;
+import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.TSInfoRepository;
 import com.zietaproj.zieta.repository.TimeTypeRepository;
 import com.zietaproj.zieta.response.TimeTypesByClientResponse;
@@ -30,12 +31,17 @@ public class TimeTypeServiceImpl implements TimeTypeService {
 	@Autowired
 	TimeTypeRepository timetypeRepository;
 	
+	
+	@Autowired
+	ClientInfoRepository clientInfoRepository;
+	
 	@Autowired
 	ModelMapper modelMapper;
 	
 	@Override
 	public List<TimeTypeDTO> getAllTimetypes() {
-		List<TimeType> timetypes = timetypeRepository.findAll();
+		short notDeleted=0;
+		List<TimeType> timetypes = timetypeRepository.findByIsDelete(notDeleted);
 		List<TimeTypeDTO> timetypeDTOs = new ArrayList<TimeTypeDTO>();
 		TimeTypeDTO timetypeDTO = null;
 		for (TimeType timetype : timetypes) {
@@ -43,6 +49,9 @@ public class TimeTypeServiceImpl implements TimeTypeService {
 			timetypeDTO.setId(timetype.getId());
 			timetypeDTO.setTime_type(timetype.getTime_type());
 			timetypeDTO.setClient_id(timetype.getClientId());
+			timetypeDTO.setClientCode(clientInfoRepository.findById(timetype.getClientId()).get().getClient_code());
+			timetypeDTO.setClientDescription(clientInfoRepository.findById(timetype.getClientId()).get().getClient_name());
+			
 			timetypeDTO.setModifiedBy(timetype.getModifiedBy());
 		timetypeDTOs.add(timetypeDTO);
 		}
@@ -59,13 +68,16 @@ public class TimeTypeServiceImpl implements TimeTypeService {
 	
 	@Override
 	public List<TimeTypesByClientResponse> getAllTimeTypesByClient(Long client_id) {
-
-		List<TimeType> timeTypesByClientList = timetypeRepository.findByClientId(client_id);
+		short notDeleted=0;
+		List<TimeType> timeTypesByClientList = timetypeRepository.findByClientIdAndIsDelete(client_id, notDeleted);
 		List<TimeTypesByClientResponse> timeTypesByClientResponseList = new ArrayList<>();
 		TimeTypesByClientResponse timeTypesByClientResponse = null;
 		for (TimeType timeTypesByClient : timeTypesByClientList) {
 			timeTypesByClientResponse = modelMapper.map(timeTypesByClient, 
 					TimeTypesByClientResponse.class);
+			timeTypesByClientResponse.setClientCode(clientInfoRepository.findById(timeTypesByClient.getClientId()).get().getClient_code());
+			timeTypesByClientResponse.setClientDescription(clientInfoRepository.findById(timeTypesByClient.getClientId()).get().getClient_name());
+			
 			timeTypesByClientResponseList.add(timeTypesByClientResponse);
 		}
 

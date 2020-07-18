@@ -63,6 +63,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 			userInfoDTO =  modelMapper.map(userInfo, UserInfoDTO.class);
 			userInfoDTO.setPassword("********");
 			userInfoDTO.setClientCode(clientInfoRepo.findById(userInfo.getClientId()).get().getClient_code());
+			userInfoDTO.setClientDescription(clientInfoRepo.findById(userInfo.getClientId()).get().getClient_name());
 			 userInfoDTOs.add(userInfoDTO);
 		}
 	}
@@ -93,6 +94,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 		 List<String> accessTypes = accessTypeMasterService.findByClientIdANDAccessTypeId(userInfo.getClientId(), accessIdList);
 		 UserDetailsResponse userDetails = fillUserData(userInfo);
 		 userDetails.setClientCode(clientInfoRepo.findById(userInfo.getClientId()).get().getClient_code());
+		 userDetails.setClientDescription(clientInfoRepo.findById(userInfo.getClientId()).get().getClient_name());
 		 userDetails.setScreensByClient(screensListByClientId);
 		 userDetails.setAccessTypesByClient(accessTypes);
 		

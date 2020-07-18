@@ -19,10 +19,6 @@ public class StatusMasterDTO extends BaseEntity {
     private String status;
     private String statusType;
 	private Boolean isDefault;
-//    private String created_by;
-//    private Date   created_date;
-//    private String modified_by;
-//    private Date modified_date;
-//    private boolean IS_DELETE;
+	private  String clientDescription;
 
 }

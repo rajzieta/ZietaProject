@@ -13,4 +13,8 @@ import com.zietaproj.zieta.model.RoleMaster;
 public interface RoleMasterRepository extends JpaRepository<RoleMaster, Long> {
 
 	List<RoleMaster> findByClientId(long client_id);
+
+	List<RoleMaster> findByIsDelete(short notDeleted);
+
+	List<RoleMaster> findByClientIdAndIsDelete(Long clientId, short notDeleted);
 }

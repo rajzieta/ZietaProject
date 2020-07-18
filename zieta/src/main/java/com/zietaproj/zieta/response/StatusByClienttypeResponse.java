@@ -20,4 +20,8 @@ public class StatusByClienttypeResponse {
     private Date modified_date;
     private short isDelete;
     private Boolean isDefault;
+	private String clientCode;
+	private String clientDescription;
+		
+	
 }

@@ -30,7 +30,7 @@ public class ActivitiesByClientProjectTaskResponse {
 		private long taskId;
 		private long projectId;
 		private long clientId;
-		private String createdBy;
+				private String createdBy;
 		private String modifiedBy;
 		private LocalDate startDate;
 		private LocalDate endDate;
@@ -46,5 +46,10 @@ public class ActivitiesByClientProjectTaskResponse {
 		private String userName;
 		private String activityCode;
 		private String activityDesc;
+		
+
 	}
+
+
+	
 }

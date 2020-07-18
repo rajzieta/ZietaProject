@@ -14,5 +14,7 @@ public interface TasksByUserRepository extends JpaRepository<TasksByUser, Long> 
 	List<TasksByUser> findByUserId(Long userId);
 	
 	List<TasksByUser> findByClientIdAndUserId(Long clientId, Long userId);
+
+	List<TasksByUser> findByClientIdAndUserIdAndIsDelete(Long clientId, Long userId, short notDeleted);
 	
 }

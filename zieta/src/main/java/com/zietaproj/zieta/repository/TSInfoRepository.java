@@ -13,4 +13,8 @@ public interface TSInfoRepository extends JpaRepository<TSInfo, Long>{
 	
 	public List<TSInfo> findByClientIdAndUserIdAndTsDateBetweenOrderByTaskActivityIdAscTsInfoIdAsc(Long clientId, Long userId, Date startDate, Date endDate);
 
+	
+	public List<TSInfo> findByClientIdAndUserIdAndIsDeleteAndTsDateBetweenOrderByTaskActivityIdAscTsInfoIdAsc(
+			Long clientId, Long userId, short notDeleted, Date startDate, Date endDate);
+
 }

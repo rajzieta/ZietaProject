@@ -13,10 +13,16 @@ import com.zietaproj.zieta.model.AccessTypeMaster;
 public interface AccessTypeMasterRepository extends JpaRepository<AccessTypeMaster, Long> {
 	
 	
-	 @Query( "select o.accessType from AccessTypeMaster o where o.clientId= :clientId AND o.id in :accessIds" )
+	 @Query( "select o.accessType from AccessTypeMaster o where o.clientId= :clientId AND o.id in :accessIds")
 	  List<String> findByClientIdANDAccessTypeId(@Param("clientId") Long clientId,
 			  @Param("accessIds") List<Long> accessIdList);
 
 	List<AccessTypeMaster> findByClientId(Long clientId);
+
+	List<AccessTypeMaster> findByIsDelete(short notDeleted);
+
+	List<AccessTypeMaster> findByClientIdAndIsDelete(Long clientId, short notDeleted);
+
+	//List<String> findByClientIdAndAccessTypeIdAndIsDelete(Long clientId, List<Long> accessIdList, short notDeleted);
 
 }

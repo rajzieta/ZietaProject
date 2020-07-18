@@ -34,8 +34,8 @@ public class ActivitiesByTaskServiceImpl implements ActivitiesByTaskService {
 	
 	@Override
 	public List<ActivitiesByTaskResponse> getActivitesByClientProjectTaskOld(long clientId,long projectId,long taskId) {
-
-		List<TaskActivity> activitiesbytaskList = activitiesbytaskRepo.findByClientIdAndProjectIdAndTaskId(clientId ,projectId,taskId );
+     //    short notDeleted=0;
+		List<TaskActivity> activitiesbytaskList = activitiesbytaskRepo.findByClientIdAndProjectIdAndTaskId(clientId ,projectId,taskId);
 		List<ActivitiesByTaskResponse> activitiesbytaskResponseList = new ArrayList<ActivitiesByTaskResponse>();
 		ActivitiesByTaskResponse activitiesbytaskResponse = null;
 		for(TaskActivity activitiesbytask : activitiesbytaskList) {

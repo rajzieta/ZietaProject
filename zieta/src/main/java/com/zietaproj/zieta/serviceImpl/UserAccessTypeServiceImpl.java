@@ -22,13 +22,15 @@ public class UserAccessTypeServiceImpl implements UserAccessTypeService {
 
 	@Override
 	public List<UserAccessType> findByClientIdAndUserId(long clientId, long userId) {
+		short notDeleted=0;
 		// TODO Auto-generated method stub
-		return userAccessMappingRepository.findByClientIdAndUserId(clientId, userId);
+		return userAccessMappingRepository.findByClientIdAndUserIdAndIsDelete(clientId, userId, notDeleted);
 	}
 	
 	
 	public List<UserAccessType> findAll(){
-		return userAccessMappingRepository.findAll();
+		short notDeleted=0;
+		return userAccessMappingRepository.findByIsDelete(notDeleted);
 	}
 
 

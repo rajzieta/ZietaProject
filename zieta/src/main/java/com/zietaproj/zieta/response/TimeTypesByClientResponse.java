@@ -10,4 +10,8 @@ public class TimeTypesByClientResponse {
 	private Long id;
 
 	private String time_type;
+
+	private String clientCode;
+
+	private String clientDescription;
 }

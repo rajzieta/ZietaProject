@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.zietaproj.zieta.dto.ActivityMasterDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
+import com.zietaproj.zieta.model.ClientInfo;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.TaskActivity;
 import com.zietaproj.zieta.model.TaskInfo;
@@ -70,7 +71,8 @@ public class ActivityServiceImpl implements ActivityService {
 	
 	@Override
 	public List<ActivityMasterDTO> getAllActivities() {
-		List<ActivityMaster> activityMasters= activityMasterRepository.findAll();
+		short notDeleted = 0;
+		List<ActivityMaster> activityMasters= activityMasterRepository.findByIsDelete(notDeleted);
 		List<ActivityMasterDTO> activityMasterDTOs = new ArrayList<ActivityMasterDTO>();
 		ActivityMasterDTO activityMasterDTO = null;
 		for (ActivityMaster activityMaster : activityMasters) {
@@ -78,6 +80,9 @@ public class ActivityServiceImpl implements ActivityService {
 			activityMasterDTO
 					.setClientCode(clientInfoRepository.findById(activityMaster.getClientId())
 							.get().getClient_code());
+			activityMasterDTO
+			.setClientDescription(clientInfoRepository.findById(activityMaster.getClientId())
+					.get().getClient_name());
 			activityMasterDTO.setActive(activityMaster.isActive());
 			activityMasterDTOs.add(activityMasterDTO);
 		}
@@ -92,14 +97,15 @@ public class ActivityServiceImpl implements ActivityService {
 
 	@Override
 	public List<ActivitiesByClientResponse> getActivitiesByClient(Long clientId) {
-
-		List<ActivityMaster> activitiesByClientList = activityMasterRepository.findByClientId(clientId);
+		short notDeleted = 0;
+		List<ActivityMaster> activitiesByClientList = activityMasterRepository.findByClientIdAndIsDelete(clientId, notDeleted);
 		List<ActivitiesByClientResponse> activitiesByClientResponseList = new ArrayList<>();
 		ActivitiesByClientResponse activitiesByClientResponse = null;
 		for (ActivityMaster activitiesByClient : activitiesByClientList) {
 			activitiesByClientResponse = modelMapper.map(activitiesByClient, 
 					ActivitiesByClientResponse.class);
 			activitiesByClientResponse.setClientCode(clientInfoRepository.findById(clientId).get().getClient_code());
+			activitiesByClientResponse.setClientDescription(clientInfoRepository.findById(clientId).get().getClient_name());
 			activitiesByClientResponseList.add(activitiesByClientResponse);
 		}
 
@@ -160,6 +166,8 @@ public class ActivityServiceImpl implements ActivityService {
 
 			ActivitiesByClientProjectTaskResponse activitiesByClientProjectTaskResponse = new ActivitiesByClientProjectTaskResponse();
 			ActivitiesByClientProjectTaskResponse.TaskActivity taskActivity = activitiesByClientProjectTaskResponse.getTaskActivity();
+	
+		
 			ActivitiesByClientProjectTaskResponse.AdditionalDetails additionalDetails = activitiesByClientProjectTaskResponse.getAdditionalDetails();
 			// task
 			modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -186,6 +194,10 @@ public class ActivityServiceImpl implements ActivityService {
 				additionalDetails.setActivityDesc(activitymaster.get().getActivityDesc());
 			}
 
+			
+			
+			
+			
 			activitiesByClientProjectTaskList.add(activitiesByClientProjectTaskResponse);
 		}
 
@@ -235,6 +247,9 @@ public class ActivityServiceImpl implements ActivityService {
 			activitiesByClientUserModel.setTaskCode(taskInfo.getTaskCode());
 			activitiesByClientUserModel.setTaskDescription(taskInfo.getTaskDescription());
 			
+			ClientInfo clientInfo = clientInfoRepository.findById(taskActivity.getClientId()).get();
+			activitiesByClientUserModel.setClientCode(clientInfo.getClient_code());
+			activitiesByClientUserModel.setClientDescription(clientInfo.getClient_name());
 			activitiesByClientUserModelList.add(activitiesByClientUserModel);
 		}
 		return activitiesByClientUserModelList;

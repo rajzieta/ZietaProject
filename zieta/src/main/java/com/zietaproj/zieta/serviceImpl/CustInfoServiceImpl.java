@@ -36,8 +36,8 @@ public class CustInfoServiceImpl implements CustInfoService {
 
 	@Override
 	public List<CustomerInformationModel> getAllCustomers() {
-		
-		List<CustInfo> custInfoList = custInfoRepository.findAll();
+		short notDeleted = 0;
+		List<CustInfo> custInfoList = custInfoRepository.findByIsDelete(notDeleted);
 		List<CustomerInformationModel>  customerInfoList = new ArrayList<>();
 		
 		for (CustInfo custInfo : custInfoList) {
@@ -45,7 +45,8 @@ public class CustInfoServiceImpl implements CustInfoService {
 					custInfo, CustomerInformationModel.class);
 			String clientCode = clientInfoRepo.findById(custInfo.getClientId()).get().getClient_code();
 			customerInformationModel.setClientCode(clientCode);
-			
+			String clientDesc = clientInfoRepo.findById(custInfo.getClientId()).get().getClient_name();
+			customerInformationModel.setClientDescription(clientDesc);
 			customerInfoList.add(customerInformationModel);
 			
 		}
@@ -60,12 +61,14 @@ public class CustInfoServiceImpl implements CustInfoService {
 
 	@Override
 	public List<CustInfo> getAllCustomersByClient(Long clientId) {
-		return custInfoRepository.findByClientId(clientId);
+		short notDeleted = 0;
+		return custInfoRepository.findByClientIdAndIsDelete(clientId, notDeleted);
 	}
 
 	@Override
 	public List<CustomerInfoModel> findByClientIdAndOrgNode(long clientId, long orgNode) {
-		List<CustOrgNodeMapping> custOrgNodeMappingList = custOrgNodeMappingRepository.findByClientIdAndOrgNode(clientId, orgNode);
+		short notDeleted = 0;
+		List<CustOrgNodeMapping> custOrgNodeMappingList = custOrgNodeMappingRepository.findByClientIdAndOrgNodeAndIsDelete(clientId, orgNode, notDeleted);
 		
 		List<CustomerInfoModel> custInfoList = new ArrayList<>();
 		for(CustOrgNodeMapping custOrg: custOrgNodeMappingList) {
@@ -74,6 +77,8 @@ public class CustInfoServiceImpl implements CustInfoService {
 			CustomerInfoModel custInfoModel = modelMapper.map(custInfo, CustomerInfoModel.class);
 			String clientCode = clientInfoRepo.findById(clientId).get().getClient_code();
 			custInfoModel.setClientCode(clientCode);
+			String clientDesc = clientInfoRepo.findById(clientId).get().getClient_name();
+			custInfoModel.setClientDescription(clientDesc);
 			custInfoModel.setOrgNode(orgNode);
 			
 			custInfoList.add(custInfoModel);

@@ -36,12 +36,15 @@ public class StatusMasterServiceImpl implements StatusMasterService {
 	
 	@Override
 	public List<StatusMasterDTO> getAllStatus() {
-		List<StatusMaster> statusMasters= statusMasterRepository.findAll();
+		short notDeleted=0;
+		List<StatusMaster> statusMasters= statusMasterRepository.findByIsDelete(notDeleted);
 		List<StatusMasterDTO> statusMasterDTOs = new ArrayList<StatusMasterDTO>();
 		StatusMasterDTO statusMasterDTO = null;
 		for (StatusMaster statusMaster : statusMasters) {
 			statusMasterDTO = modelMapper.map(statusMaster,StatusMasterDTO.class);
 			statusMasterDTO.setClientCode(clientInfoRepository.findById(statusMaster.getClientId()).get().getClient_code());
+			statusMasterDTO.setClientDescription(clientInfoRepository.findById(statusMaster.getClientId()).get().getClient_name());
+
 			statusMasterDTOs.add(statusMasterDTO);
 		}
 		return statusMasterDTOs;
@@ -59,7 +62,8 @@ public class StatusMasterServiceImpl implements StatusMasterService {
 	
 	  @Override
 		public List<StatusByClienttypeResponse> findByClientIdAndStatusType(Long clientId, String statusType) {
-			List<StatusMaster> statusList = statusMasterRepository.findByClientIdAndStatusType(clientId, statusType);
+		  short notDeleted=0;
+			List<StatusMaster> statusList = statusMasterRepository.findByClientIdAndStatusTypeAndIsDelete(clientId, statusType, notDeleted);
 			
 			List<StatusByClienttypeResponse> statusByClientStatustypeList = new ArrayList<>();
 			
@@ -76,6 +80,9 @@ public class StatusMasterServiceImpl implements StatusMasterService {
 				statusbyclienttypeList.setModified_date(statusmaster.getModifiedDate());
 				statusbyclienttypeList.setIsDelete(statusmaster.getIsDelete());
 				statusbyclienttypeList.setIsDefault(statusmaster.getIsDefault());
+				statusbyclienttypeList.setClientCode(clientInfoRepository.findById(statusmaster.getClientId()).get().getClient_code());
+				statusbyclienttypeList.setClientDescription(clientInfoRepository.findById(statusmaster.getClientId()).get().getClient_name());
+
 				
 				statusByClientStatustypeList.add(statusbyclienttypeList);
 			}

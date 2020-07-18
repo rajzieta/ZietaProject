@@ -13,6 +13,7 @@ public class TaskMasterDTO {
     private String createdBy;
     private boolean isDelete;
     private String clientCode;
+	private String clientDescription;
    
 	
 }

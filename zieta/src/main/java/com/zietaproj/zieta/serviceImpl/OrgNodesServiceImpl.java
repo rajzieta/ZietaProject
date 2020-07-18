@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.zietaproj.zieta.model.ActivityMaster;
 import com.zietaproj.zieta.model.OrgInfo;
 import com.zietaproj.zieta.model.OrgUnitTypeMaster;
+import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.OrgInfoRepository;
 import com.zietaproj.zieta.repository.OrgUnitTypeRepository;
 import com.zietaproj.zieta.response.ActivitiesByClientResponse;
@@ -32,17 +33,23 @@ public class OrgNodesServiceImpl implements OrgNodesService {
 	OrgUnitTypeRepository orgunitTypeRepository;
 	
 	@Autowired
+	ClientInfoRepository clientInfoRepository;
+	
+	@Autowired
 	ModelMapper modelMapper;
 	
 	public List<OrgNodesByClientResponse> getOrgNodesByClient(Long clientId) {
-
-		List<OrgInfo> orgnodesByClientList = orgInfoRepository.findByClientId(clientId);
+		short notDeleted = 0;
+		List<OrgInfo> orgnodesByClientList = orgInfoRepository.findByClientIdAndIsDelete(clientId, notDeleted);
 		List<OrgNodesByClientResponse> orgnodesByClientResponseList = new ArrayList<>();
 		OrgNodesByClientResponse orgnodesByClientResponse = null;
 		for (OrgInfo orgnodesByClient : orgnodesByClientList) {
 			orgnodesByClientResponse = modelMapper.map(orgnodesByClient, 
 					OrgNodesByClientResponse.class);
 			orgnodesByClientResponse.setOrgUnitTypeDescription(orgunitTypeRepository.findById(orgnodesByClient.getOrgType()).get().getTypeName());
+			orgnodesByClientResponse.setClientCode(clientInfoRepository.findById(orgnodesByClient.getClientId()).get().getClient_code());
+			orgnodesByClientResponse.setClientDescription(clientInfoRepository.findById(orgnodesByClient.getClientId()).get().getClient_name());
+			
 			orgnodesByClientResponseList.add(orgnodesByClientResponse);
 		}
 

@@ -35,6 +35,8 @@ public class CustomerInformationModel {
 	
 	private String clientCode;
 
+
+	private String clientDescription;
 	
 	
 

@@ -44,7 +44,8 @@ public class AccessTypeMasterServiceImpl implements AccessTypeMasterService {
 	
 	@Override
 	public List<AccessTypeMasterDTO> getAllAccesstypes() {
-		List<AccessTypeMaster> accesstypeMasters= accesstypeMasterRepository.findAll();
+		short notDeleted = 0;
+		List<AccessTypeMaster> accesstypeMasters= accesstypeMasterRepository.findByIsDelete(notDeleted);
 		List<AccessTypeMasterDTO> accessTypeMasterDTOs = new ArrayList<AccessTypeMasterDTO>();
 		AccessTypeMasterDTO accessTypeMasterDTO = null;
 		for (AccessTypeMaster accesstypeMaster : accesstypeMasters) {
@@ -55,6 +56,7 @@ public class AccessTypeMasterServiceImpl implements AccessTypeMasterService {
 			accessTypeMasterDTO.setCreatedBy(accesstypeMaster.getCreatedBy());
 			accessTypeMasterDTO.setModifiedBy(accesstypeMaster.getModifiedBy());
 			accessTypeMasterDTO.setClientCode(clientInfoRepository.findById(accesstypeMaster.getClientId()).get().getClient_code());
+			accessTypeMasterDTO.setClientDescription(clientInfoRepository.findById(accesstypeMaster.getClientId()).get().getClient_name());
 			
 			accessTypeMasterDTOs.add(accessTypeMasterDTO);
 		}
@@ -70,18 +72,21 @@ public class AccessTypeMasterServiceImpl implements AccessTypeMasterService {
 
 	@Override
 	public List<String> findByClientIdANDAccessTypeId(Long clientId, List<Long> accessIdList) {
+		//short notDeleted=0;
 		return accesstypeMasterRepository.findByClientIdANDAccessTypeId(clientId, accessIdList);
 	}
 	
 	public List<AccesstypesByClientResponse> getAccessTypesByClient(Long clientId) {
-	
-		List<AccessTypeMaster> accesstypesByClientList = accesstypeMasterRepository.findByClientId(clientId);
+		short notDeleted = 0;
+		List<AccessTypeMaster> accesstypesByClientList = accesstypeMasterRepository.findByClientIdAndIsDelete(clientId, notDeleted);
 		List<AccesstypesByClientResponse> accesstypesByClientResponseList = new ArrayList<>();
 		AccesstypesByClientResponse accessByClientResponse = null;
 		for (AccessTypeMaster accessByClient : accesstypesByClientList) {
 			accessByClientResponse = modelMapper.map(accessByClient, 
 					AccesstypesByClientResponse.class);
-		
+			accessByClientResponse.setClientCode(clientInfoRepository.findById(accessByClient.getClientId()).get().getClient_code());
+			accessByClientResponse.setClientDescription(clientInfoRepository.findById(accessByClient.getClientId()).get().getClient_name());
+			
 			accesstypesByClientResponseList.add(accessByClientResponse);
 			
 		}

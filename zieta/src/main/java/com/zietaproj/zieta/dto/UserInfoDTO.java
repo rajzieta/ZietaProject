@@ -25,8 +25,7 @@ public class UserInfoDTO {
 	private short is_delete;
 	private String password;
 	private String clientCode;
-
-
+	private String ClientDescription;
 	
 
 }

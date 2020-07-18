@@ -11,6 +11,8 @@ import com.zietaproj.zieta.model.CustOrgNodeMapping;
 public interface CustOrgNodeMappingRepository extends JpaRepository<CustOrgNodeMapping, Long>{
 	
 	
-	List<CustOrgNodeMapping> findByClientIdAndOrgNode(long clientId, long orgNode);
+	//List<CustOrgNodeMapping> findByClientIdAndOrgNode(long clientId, long orgNode);
+
+	List<CustOrgNodeMapping> findByClientIdAndOrgNodeAndIsDelete(long clientId, long orgNode, short notDeleted);
 
 }

@@ -18,5 +18,5 @@ public class ActivityMasterDTO extends BaseEntity {
 //	private String modifiedBy;
 //	private boolean isDelete;
 	private String clientCode;
-	
+	private String clientDescription;
 }

@@ -11,4 +11,8 @@ import com.zietaproj.zieta.model.ActivityMaster;
 public interface ActivityMasterRepository extends JpaRepository<ActivityMaster, Long>{
 
 	List<ActivityMaster> findByClientId(long client_id);
+
+	List<ActivityMaster> findByClientIdAndIsDelete(Long clientId, short notDeleted);
+
+	List<ActivityMaster> findByIsDelete(short notDeleted);
 }

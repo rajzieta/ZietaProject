@@ -22,6 +22,8 @@ public class TimeTypeDTO extends BaseEntity {
     private String time_type;
 //    private boolean IS_DELETE;
 //    private String modified_by;
+	private String clientCode;
+	private String clientDescription;
     
 	
 }

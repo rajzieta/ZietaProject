@@ -68,8 +68,8 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	
 	@Override
 	public List<ProjectDetailsByUserModel> getAllProjects() {
-
-		List<ProjectInfo> projectList = projectInfoRepository.findAll();
+		short notDeleted=0;
+		List<ProjectInfo> projectList = projectInfoRepository.findByIsDelete(notDeleted);
 		List<ProjectDetailsByUserModel> projectsByClientResponseList = new ArrayList<>();
 
 		fillProjectDetails(projectList, projectsByClientResponseList);
@@ -86,9 +86,9 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 
 	@Override
 	public List<ProjectDetailsByUserModel> getProjectsByUser(long projectManagerId) {
-		
+		short notDeleted=0;
 		List<ProjectDetailsByUserModel> projectDetailsByUserList = new ArrayList<>();
-		List<ProjectInfo> projectmanagerMappingList = projectInfoRepository.findByProjectManager(projectManagerId);
+		List<ProjectInfo> projectmanagerMappingList = projectInfoRepository.findByProjectManagerAndIsDelete(projectManagerId, notDeleted);
 		List<Long> projectIdList = projectmanagerMappingList.stream().map(ProjectInfo::getProjectInfoId).collect(Collectors.toList());
 		List<ProjectInfo> projectInfoList = projectInfoRepository.findAllById(projectIdList);
 		fillProjectDetails(projectInfoList, projectDetailsByUserList);
@@ -104,8 +104,8 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	
 	@Override
 	public List<ProjectDetailsByUserModel> getProjectsByClient(Long clientId) {
-
-		List<ProjectInfo> projectList = projectInfoRepository.findByClientId(clientId);
+		short notDeleted=0;
+		List<ProjectInfo> projectList = projectInfoRepository.findByClientIdAndIsDelete(clientId, notDeleted);
 		List<ProjectDetailsByUserModel> projectDetailsByUserList = new ArrayList<>();
 
 		fillProjectDetails(projectList, projectDetailsByUserList);
@@ -121,6 +121,8 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 			
 			//setting additonal details starts
 			projectDetailsByUserModel.setClientCode(clientInfoRepository.findById(projectInfo.getClientId()).get().getClient_code());
+			projectDetailsByUserModel.setClientDescription(clientInfoRepository.findById(projectInfo.getClientId()).get().getClient_name());
+			
 			projectDetailsByUserModel.setProjectTypeName(
 					projectMasterRepository.findById(projectInfo.getProjectType()).get().getTypeName());
 			projectDetailsByUserModel.setOrgNodeName(orgInfoRepository.findById(projectInfo.getProjectOrgnode())
@@ -139,13 +141,16 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	
 	
 	public List<ProjectTypeByClientResponse> getProjecttypessByClient(Long clientId) {
-		
-		List<ProjectMaster> projecttypesByClientList = projectMasterRepository.findByClientId(clientId);
+		short notDeleted=0;
+		List<ProjectMaster> projecttypesByClientList = projectMasterRepository.findByClientIdAndIsDelete(clientId, notDeleted);
 		List<ProjectTypeByClientResponse> projecttypeslist = new ArrayList<>();
 		ProjectTypeByClientResponse projecttypesByClientResponse = null;
 		for (ProjectMaster projecttypesByClient : projecttypesByClientList) {
 			projecttypesByClientResponse = modelMapper.map(projecttypesByClient, 
 					ProjectTypeByClientResponse.class);
+			projecttypesByClientResponse.setClientCode(clientInfoRepository.findById(projecttypesByClient.getClientId()).get().getClient_code());
+			projecttypesByClientResponse.setClientDescription(clientInfoRepository.findById(projecttypesByClient.getClientId()).get().getClient_name());
+			
 			projecttypeslist.add(projecttypesByClientResponse);
 		}
 		return projecttypeslist;		

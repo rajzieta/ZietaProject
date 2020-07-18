@@ -14,6 +14,8 @@ public class RolesByClientResponse {
 	private long clientId;
 	
 	private String clientCode;
+
+	private String clientDescription;
 	
 	
 }

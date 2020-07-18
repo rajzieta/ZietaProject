@@ -12,11 +12,14 @@ public class OrgNodesByClientResponse extends BaseEntity {
 	
 	long orgUnitId;
 	long clientId;
+	private String clientCode;
+	private String clientDescription;
 	private String orgNodeName;
 	private long orgType;
 	private long orgParentId;
 	private long orgStatus;
 	private String orgUnitTypeDescription;
+	
 	
 	
 }

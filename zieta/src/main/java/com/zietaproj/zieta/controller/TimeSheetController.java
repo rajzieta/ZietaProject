@@ -38,10 +38,15 @@ public class TimeSheetController {
 	@Autowired
 	TimeSheetService timeSheetService;
 	
-	@PostMapping("/addTimeEntry")
-	@RequestMapping(value = "addTimeEntry", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void addTimeEntry(@Valid @RequestBody List<TSInfo> tsinfo) {
-		timeSheetService.addTimeEntry(tsinfo);
+	@RequestMapping(value = "addTimeSheet", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<TSInfo>> addTimeSheet(@Valid @RequestBody List<TSInfo> tsinfo) {
+		try {
+			List<TSInfo> tsinfoEntites = timeSheetService.addTimeSheet(tsinfo);
+			
+			return new ResponseEntity<List<TSInfo>>(tsinfoEntites, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<List<TSInfo>>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	

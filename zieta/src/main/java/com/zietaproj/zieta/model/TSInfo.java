@@ -23,15 +23,11 @@ public class TSInfo extends BaseEntity implements Serializable {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
-    private Long tsInfoId;
+    private Long id;
 
 	@Column(name="client_id")
     private Long clientId;
 
-	@Column(name="time_type")
-    private Long timeType;
-    
 	@Column(name="project_id")
     private Long projectId;
     
@@ -55,18 +51,8 @@ public class TSInfo extends BaseEntity implements Serializable {
     
 	@Column(name="ts_date")
     private Date tsDate;
-    
-	@Column(name="TS_START_TIME")
-    private  float tsStartTime;
-    
-	@Column(name="TS_END_TIME")
-    private  float tsEndTime;
-    
+  
 	@Column(name="TS_TOTAL_TIME")
     private  float tsTotalTime;
-    
-	@Column(name="TIME_DESC")
-    private  String timeDesc;
-    
 	
 }

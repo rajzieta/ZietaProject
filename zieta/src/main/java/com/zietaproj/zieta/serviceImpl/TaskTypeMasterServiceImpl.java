@@ -2,7 +2,9 @@ package com.zietaproj.zieta.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -31,6 +33,7 @@ import com.zietaproj.zieta.repository.TasksByUserRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.request.EditTasksByClientProjectRequest;
 import com.zietaproj.zieta.request.TaskTypesByClientRequest;
+import com.zietaproj.zieta.request.UpdateTaskInfoRequest;
 import com.zietaproj.zieta.response.TaskTypesByClientResponse;
 import com.zietaproj.zieta.response.TasksByClientProjectResponse;
 import com.zietaproj.zieta.response.TasksByUserModel;
@@ -265,7 +268,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 	}
 
 	@Override
-	public void updateTaskSortKeyByID(Long taskInfoId, Long sortKey) throws Exception {
+	public void updateTaskSortKeyByID(Long taskInfoId, Long sortKey){
 		Optional<TaskInfo> taskInfo = taskInfoRepository.findById(taskInfoId);
 		if (taskInfo.isPresent()) {
 
@@ -275,7 +278,22 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 			log.info("TaskInfoId entry {} updated with the provided SortKey {}", taskInfoId, sortKey);
 
 		} else {
-			throw new Exception("No Record found in the TaskInfo table with the ID:  " + taskInfoId);
+			log.error("No Record found in the TaskInfo table with the ID:  " + taskInfoId);
+		}
+
+	}
+	
+	/**
+	 * This method updates the multiple sortKeys in one call.
+	 * @param taskInfoId
+	 * @param sortKey
+	 * @throws Exception
+	 */
+	@Override
+	public void updateTaskSortKeyByIDs(List<UpdateTaskInfoRequest> taskIdWithSortKeys){
+
+		for (UpdateTaskInfoRequest updateTaskInfoRequest : taskIdWithSortKeys) {
+			updateTaskSortKeyByID(updateTaskInfoRequest.getTaskInfoId(), updateTaskInfoRequest.getSortKey());
 		}
 
 	}

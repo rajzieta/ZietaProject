@@ -13,7 +13,8 @@ import java.util.Map;
 
 import org.springframework.util.StringUtils;
 
-import com.google.gson.Gson;
+import com.google.common.collect.Ordering;
+import com.google.common.primitives.Longs;
 import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.response.TasksByClientProjectResponse;
 
@@ -92,7 +93,6 @@ public class TSMUtil {
 	            }
 
 	        }
-
 	    
 	        //get the root
 	        for (TasksByClientProjectResponse node : mapTmp.values()) {
@@ -101,7 +101,38 @@ public class TSMUtil {
 	            }
 	        }
 	        
+	        sortTaskInfoDataBySortKey(treeTask);
+	    	
+	        
 	        return treeTask;
 	    } 
+	 
+	 
+	private static Ordering<TasksByClientProjectResponse> getSortOrder() {
+		Ordering<TasksByClientProjectResponse> orderingBySortKey = new Ordering<TasksByClientProjectResponse>() {
+			@Override
+			public int compare(TasksByClientProjectResponse p1, TasksByClientProjectResponse p2) {
+				if(p1.getSortKey() == null  && p2.getSortKey() == null) return 0;
+				if(p1.getSortKey() == null) return -1;
+				if(p2.getSortKey() == null) return 1;
+				return Longs.compare(p1.getSortKey(), p2.getSortKey());
+			}
+		};
+		return orderingBySortKey;
+	}
+	
+	
+	
+	private static void sortTaskInfoDataBySortKey(List<TasksByClientProjectResponse> treeTask) {
+		for (TasksByClientProjectResponse tasksByClientProjectResponse : treeTask) {
+
+			if (tasksByClientProjectResponse.getChildren() != null) {
+				List<TasksByClientProjectResponse> innerChild = tasksByClientProjectResponse.getChildren();
+				sortTaskInfoDataBySortKey(innerChild);
+				
+			}
+		}
+		treeTask.sort(getSortOrder());
+	}
 
 }

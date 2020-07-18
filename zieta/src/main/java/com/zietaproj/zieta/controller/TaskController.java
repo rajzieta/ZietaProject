@@ -1,5 +1,6 @@
 package com.zietaproj.zieta.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -21,12 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zietaproj.zieta.dto.TaskMasterDTO;
 import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.TaskTypeMaster;
-import com.zietaproj.zieta.request.AcitivityRequest;
 import com.zietaproj.zieta.request.EditTasksByClientProjectRequest;
 import com.zietaproj.zieta.request.TaskTypesByClientRequest;
+import com.zietaproj.zieta.request.UpdateTaskInfoRequest;
+import com.zietaproj.zieta.response.TaskTypesByClientResponse;
 import com.zietaproj.zieta.response.TasksByClientProjectResponse;
 import com.zietaproj.zieta.response.TasksByUserModel;
-import com.zietaproj.zieta.response.TaskTypesByClientResponse;
 import com.zietaproj.zieta.service.TaskTypeMasterService;
 
 import io.swagger.annotations.Api;
@@ -149,6 +150,13 @@ public class TaskController {
 	@RequestMapping(value = "updateTaskSortKeyByID", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void updateTaskSortKeyByID(@RequestParam(required=true) Long taskInfoId, @RequestParam(required=true) Long sortKey) throws Exception {
 		taskTypeMasterService.updateTaskSortKeyByID(taskInfoId, sortKey);
+		
+	}
+	
+	@ApiOperation(value = "Updates collection of sortKeys for the provided taskInfoIds", notes = "Table reference: task_info")
+	@RequestMapping(value = "updateTaskSortKeyByIDs", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void updateTaskSortKeyByIDs( @RequestBody List<UpdateTaskInfoRequest> taskIdWithSortKeys) throws Exception {
+		taskTypeMasterService.updateTaskSortKeyByIDs(taskIdWithSortKeys);
 		
 	}
 }

@@ -13,9 +13,5 @@ public interface TSTimeEntriesRepository extends JpaRepository<TSTimeEntries, Lo
 	List<TSTimeEntries> findByTsId(Long tsId);
 
 	List<TSTimeEntries> findByTsIdAndIsDelete(Long tsId, short notDeleted);
-
-	List<TSTimeentries> findByTsIdAndIsDelete(Long tsId, short notDeleted);
-
-	
 	
 }

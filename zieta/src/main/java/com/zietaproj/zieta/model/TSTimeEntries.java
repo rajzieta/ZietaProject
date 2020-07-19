@@ -16,12 +16,11 @@ import lombok.EqualsAndHashCode;
 @Table(name = "TS_TIMEENTRIES")
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class TSTimeentries extends BaseEntity implements Serializable {
+public class TSTimeEntries extends BaseEntity implements Serializable {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
-    private Long tsTimeentryId;
+    private Long id;
 
 	@Column(name="ts_id")
     private Long tsId;

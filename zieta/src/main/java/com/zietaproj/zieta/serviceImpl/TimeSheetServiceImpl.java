@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 
 import com.zietaproj.zieta.model.TSInfo;
-import com.zietaproj.zieta.model.TSTimeentries;
+import com.zietaproj.zieta.model.TSTimeEntries;
 import com.zietaproj.zieta.repository.ActivityMasterRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
@@ -59,9 +59,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	public List<TSInfoModel> getTimeEntriesByUserDates(Long clientId, Long userId, Date startDate, Date endDate) {
 		short notDeleted=0;
 		List<TSInfoModel> tsInfoModelList = new ArrayList<TSInfoModel>();
-		List<TSInfo> tsInfoList = tSInfoRepository
-				.findByClientIdAndUserIdAndIsDeleteAndTsDateBetweenOrderByTaskActivityIdAscTsInfoIdAsc(clientId, userId, notDeleted, startDate,
-						endDate);
+		List<TSInfo> tsInfoList = tSInfoRepository.findByClientIdAndUserIdAndIsDeleteAndTsDateBetweenOrderByTaskActivityIdAscTsInfoIdAsc(clientId, userId, notDeleted, startDate, endDate);
 		for (TSInfo tsInfo : tsInfoList) {
 			TSInfoModel taskInfoModel = new TSInfoModel();
 			taskInfoModel.setTsInfo(tsInfo);
@@ -94,19 +92,21 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	}
 	
 	
-	public void addTimeEntry(@Valid List<TSInfo> tsinfo) {
+	public List<TSInfo> addTimeSheet(@Valid List<TSInfo> tsinfo) {
 		
-		tSInfoRepository.saveAll(tsinfo);
+		 List<TSInfo> tsinfoEntites = tSInfoRepository.saveAll(tsinfo);
+		 
+		 return tsinfoEntites;
 	}
 	
 	
 	@Override
 	public List<TimeEntriesByTimesheetIDResponse> getTimeEntriesByTsID(Long tsId) {
 		short notDeleted=0;
-		List<TSTimeentries> timeentriesByTsidList = tstimeentriesRepository.findByTsIdAndIsDelete(tsId, notDeleted);
+		List<TSTimeEntries> timeentriesByTsidList = tstimeentriesRepository.findByTsIdAndIsDelete(tsId, notDeleted);
 		List<TimeEntriesByTimesheetIDResponse> timeentriesBytsIdResponseList = new ArrayList<>();
 		TimeEntriesByTimesheetIDResponse timeentriesByTsIdResponse = null;
-		for (TSTimeentries timeentriesByTsId : timeentriesByTsidList) {
+		for (TSTimeEntries timeentriesByTsId : timeentriesByTsidList) {
 			timeentriesByTsIdResponse = modelMapper.map(timeentriesByTsId, 
 					TimeEntriesByTimesheetIDResponse.class);
 			timeentriesBytsIdResponseList.add(timeentriesByTsIdResponse);
@@ -121,7 +121,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	@Transactional
 	public void addTimeEntriesByTsId(@Valid TimeEntriesByTsIdRequest timeentriesbytsidRequest) throws Exception {
 
-			TSTimeentries tstimeentries = modelMapper.map(timeentriesbytsidRequest, TSTimeentries.class);
+			TSTimeEntries tstimeentries = modelMapper.map(timeentriesbytsidRequest, TSTimeEntries.class);
 			tstimeentriesRepository.save(tstimeentries);
 
 	}

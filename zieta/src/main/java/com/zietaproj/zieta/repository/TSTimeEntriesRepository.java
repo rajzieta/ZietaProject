@@ -5,12 +5,14 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.zietaproj.zieta.model.TSTimeentries;
+import com.zietaproj.zieta.model.TSTimeEntries;
 
 @Repository
-public interface TSTimeEntriesRepository extends JpaRepository<TSTimeentries, Long> {
+public interface TSTimeEntriesRepository extends JpaRepository<TSTimeEntries, Long> {
 
-	List<TSTimeentries> findByTsId(Long tsId);
+	List<TSTimeEntries> findByTsId(Long tsId);
+
+	List<TSTimeEntries> findByTsIdAndIsDelete(Long tsId, short notDeleted);
 
 	List<TSTimeentries> findByTsIdAndIsDelete(Long tsId, short notDeleted);
 

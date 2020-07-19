@@ -14,7 +14,7 @@ public interface TimeSheetService {
 
 	public List<TSInfoModel> getTimeEntriesByUserDates(Long clientId, Long userId, Date startDate, Date endDate);
 	
-	public void addTimeEntry(@Valid List<TSInfo> tsinfo);
+	public List<TSInfo> addTimeSheet(@Valid List<TSInfo> tsinfo);
 
 	public List<TimeEntriesByTimesheetIDResponse> getTimeEntriesByTsID(Long tsId);
 

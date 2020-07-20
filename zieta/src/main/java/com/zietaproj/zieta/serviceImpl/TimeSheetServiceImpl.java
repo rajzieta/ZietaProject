@@ -121,7 +121,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	
 	@Override
 	@Transactional
-	public void addTimeEntriesByTsId(@Valid TimeEntriesByTsIdRequest timeentriesbytsidRequest) throws Exception {
+	public void addTimeEntriesByTsId(@Valid List<TimeEntriesByTsIdRequest> timeentriesbytsidRequest) throws Exception {
 
 			TSTimeEntries tstimeentries = modelMapper.map(timeentriesbytsidRequest, TSTimeEntries.class);
 			tstimeentriesRepository.save(tstimeentries);

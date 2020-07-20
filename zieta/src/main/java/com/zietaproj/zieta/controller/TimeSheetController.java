@@ -78,7 +78,7 @@ public class TimeSheetController {
 	
 	
 	@RequestMapping(value = "addTimeEntriesByTimesheetID", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void addTimeEntriesByTimesheetID(@Valid @RequestBody TimeEntriesByTsIdRequest timeentriesbytsidRequest) throws Exception {
+	public void addTimeEntriesByTimesheetID(@Valid @RequestBody List<TimeEntriesByTsIdRequest> timeentriesbytsidRequest) throws Exception {
 		timeSheetService.addTimeEntriesByTsId(timeentriesbytsidRequest);
 		
 	}

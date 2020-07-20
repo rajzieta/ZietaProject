@@ -9,7 +9,7 @@ import lombok.Setter;
 public class TimeEntriesByTimesheetIDResponse {
 
 	
-	private Long tsTimeentryId;
+	private Long id;
 	private Long tsId;
 
 	private Long timeType;

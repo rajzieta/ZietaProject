@@ -246,6 +246,7 @@ public class ActivityServiceImpl implements ActivityService {
 			activitiesByClientUserModel.setTaskId(taskActivity.getTaskId());
 			activitiesByClientUserModel.setTaskCode(taskInfo.getTaskCode());
 			activitiesByClientUserModel.setTaskDescription(taskInfo.getTaskDescription());
+			activitiesByClientUserModel.setTaskActivityId(taskActivity.getTaskActivityId());
 			
 			ClientInfo clientInfo = clientInfoRepository.findById(taskActivity.getClientId()).get();
 			activitiesByClientUserModel.setClientCode(clientInfo.getClient_code());

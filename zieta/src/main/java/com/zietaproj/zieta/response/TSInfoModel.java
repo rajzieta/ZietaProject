@@ -11,7 +11,9 @@ public class TSInfoModel {
 	
 	String projectCode;
 	String taskCode;
+	String taskDescription;
 	String activityCode;
+	String activityDescription;
 	
 	TSInfo tsInfo;
 	

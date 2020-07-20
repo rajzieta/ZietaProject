@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class TimeEntriesByTsIdRequest {
 
-	private Long tsTimeentryId;
+	private Long id;
 	private Long tsId;
 
 	private Long timeType;

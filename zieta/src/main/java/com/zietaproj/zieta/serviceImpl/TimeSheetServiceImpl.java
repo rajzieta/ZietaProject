@@ -133,7 +133,6 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 				TSTimeEntries tstimeentries = modelMapper.map(timeEntriesByTsIdRequest, TSTimeEntries.class);
 				tstimeentriesRepository.save(tstimeentries);
 			}
-			
 
 	}
 	

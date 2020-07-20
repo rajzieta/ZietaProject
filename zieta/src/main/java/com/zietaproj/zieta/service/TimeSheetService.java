@@ -18,5 +18,5 @@ public interface TimeSheetService {
 
 	public List<TimeEntriesByTimesheetIDResponse> getTimeEntriesByTsID(Long tsId);
 
-	public void addTimeEntriesByTsId(@Valid TimeEntriesByTsIdRequest timeentriesbytsidRequest) throws Exception;
+	public void addTimeEntriesByTsId(@Valid List<TimeEntriesByTsIdRequest> timeentriesbytsidRequest) throws Exception;
 }

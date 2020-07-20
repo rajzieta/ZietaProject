@@ -3,18 +3,19 @@ package com.zietaproj.zieta.serviceImpl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import com.zietaproj.zieta.model.ActivityMaster;
 import com.zietaproj.zieta.model.TSInfo;
 import com.zietaproj.zieta.model.TSTimeEntries;
+import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.repository.ActivityMasterRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
@@ -66,9 +67,12 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 			TSInfoModel taskInfoModel = new TSInfoModel();
 			taskInfoModel.setTsInfo(tsInfo);
 			if(tsInfo.getActivityId() != null && tsInfo.getActivityId() !=0) {
-				taskInfoModel.setActivityCode(activityMasterRepository.findById(tsInfo.getActivityId()).get().getActivityCode());
+				ActivityMaster activityEntity = activityMasterRepository.findById(tsInfo.getActivityId()).get();
+				taskInfoModel.setActivityCode(activityEntity.getActivityCode());
+				taskInfoModel.setActivityDescription(activityEntity.getActivityDesc());
 			}else {
 				taskInfoModel.setActivityCode(null);
+				taskInfoModel.setActivityDescription(StringUtils.EMPTY);
 			}
 			
 			if(tsInfo.getProjectId() !=null && tsInfo.getProjectId() !=0) {
@@ -78,9 +82,12 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 			}
 			
 			if(tsInfo.getTaskId() !=null && tsInfo.getTaskId() !=0) {
-				taskInfoModel.setTaskCode(taskInfoRepository.findById(tsInfo.getTaskId()).get().getTaskCode());
+				TaskInfo taskInfoEntity =taskInfoRepository.findById(tsInfo.getTaskId()).get();
+				taskInfoModel.setTaskCode(taskInfoEntity.getTaskCode());
+				taskInfoModel.setTaskDescription(taskInfoEntity.getTaskDescription());
 			}else {
 				taskInfoModel.setTaskCode(null);
+				taskInfoModel.setTaskDescription(StringUtils.EMPTY);
 			}
 			
 			taskInfoModel.setClientCode(clientInfoRepository.findById(tsInfo.getClientId()).get().getClient_code());
@@ -121,10 +128,12 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	
 	@Override
 	@Transactional
-	public void addTimeEntriesByTsId(@Valid List<TimeEntriesByTsIdRequest> timeentriesbytsidRequest) throws Exception {
-
-			TSTimeEntries tstimeentries = modelMapper.map(timeentriesbytsidRequest, TSTimeEntries.class);
-			tstimeentriesRepository.save(tstimeentries);
+	public void addTimeEntriesByTsId(@Valid List<TimeEntriesByTsIdRequest> timeentriesbytsidRequestList) throws Exception {
+			for (TimeEntriesByTsIdRequest timeEntriesByTsIdRequest : timeentriesbytsidRequestList) {
+				TSTimeEntries tstimeentries = modelMapper.map(timeEntriesByTsIdRequest, TSTimeEntries.class);
+				tstimeentriesRepository.save(tstimeentries);
+			}
+			
 
 	}
 	

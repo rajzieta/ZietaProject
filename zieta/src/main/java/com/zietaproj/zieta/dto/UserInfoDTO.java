@@ -26,6 +26,7 @@ public class UserInfoDTO {
 	private String password;
 	private String clientCode;
 	private String clientDescription;
+
 	
 
 }

@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ActivitiesByClientUserModel {
+	private Long taskActivityId;
 	
 	private Long activityId;
 	private String activityDesc;

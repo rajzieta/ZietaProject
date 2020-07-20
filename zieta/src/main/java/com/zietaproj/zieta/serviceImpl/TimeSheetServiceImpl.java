@@ -3,6 +3,7 @@ package com.zietaproj.zieta.serviceImpl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -23,6 +24,7 @@ import com.zietaproj.zieta.repository.TSInfoRepository;
 import com.zietaproj.zieta.repository.TSTimeEntriesRepository;
 import com.zietaproj.zieta.repository.TaskInfoRepository;
 import com.zietaproj.zieta.request.TimeEntriesByTsIdRequest;
+import com.zietaproj.zieta.request.UpdateTimesheetByIdRequest;
 import com.zietaproj.zieta.response.TSInfoModel;
 import com.zietaproj.zieta.response.TimeEntriesByTimesheetIDResponse;
 import com.zietaproj.zieta.service.TimeSheetService;
@@ -134,5 +136,17 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 
 	}
 	
-
+	@Override
+	@Transactional
+	public void updateTimeSheetById(@Valid UpdateTimesheetByIdRequest updatetimesheetRequest) throws Exception {
+		Optional<TSInfo> TsInfoEntity = tSInfoRepository.findById(updatetimesheetRequest.getId());
+		if(TsInfoEntity.isPresent()) {
+			TSInfo tsInfoSave = TsInfoEntity.get();
+			TSInfo tsinfo = modelMapper.map(updatetimesheetRequest, TSInfo.class);
+			tSInfoRepository.save(tsinfo);
+	}
+		else {
+			throw new Exception("Timesheet not found with the provided ID : "+updatetimesheetRequest.getId());
+		}
+	}
 }

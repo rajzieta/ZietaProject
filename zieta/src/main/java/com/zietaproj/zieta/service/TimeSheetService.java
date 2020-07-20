@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import com.zietaproj.zieta.model.TSInfo;
 import com.zietaproj.zieta.request.TimeEntriesByTsIdRequest;
+import com.zietaproj.zieta.request.UpdateTimesheetByIdRequest;
 import com.zietaproj.zieta.response.TSInfoModel;
 import com.zietaproj.zieta.response.TimeEntriesByTimesheetIDResponse;
 
@@ -19,4 +20,6 @@ public interface TimeSheetService {
 	public List<TimeEntriesByTimesheetIDResponse> getTimeEntriesByTsID(Long tsId);
 
 	public void addTimeEntriesByTsId(@Valid List<TimeEntriesByTsIdRequest> timeentriesbytsidRequest) throws Exception;
+
+	public void updateTimeSheetById(@Valid UpdateTimesheetByIdRequest updatetimesheetRequest) throws Exception;
 }

@@ -16,5 +16,7 @@ public class EditTasksByClientProjectRequest {
 	private Long taskParent;
 	private Long taskManager;
 	private Long taskStatus;
+	private Long sortKey;
 	private boolean isDelete;
+	private String modifiedBy;
 }

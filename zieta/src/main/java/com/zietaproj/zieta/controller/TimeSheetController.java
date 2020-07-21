@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zietaproj.zieta.model.TSInfo;
 import com.zietaproj.zieta.request.TimeEntriesByTsIdRequest;
+import com.zietaproj.zieta.request.UpdateTaskInfoRequest;
 import com.zietaproj.zieta.request.UpdateTimesheetByIdRequest;
 import com.zietaproj.zieta.response.TSInfoModel;
 import com.zietaproj.zieta.response.TimeEntriesByTimesheetIDResponse;
@@ -88,6 +89,13 @@ public class TimeSheetController {
 	@RequestMapping(value = "updateTimeSheetByID", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void updateTimeSheetByID(@Valid @RequestBody UpdateTimesheetByIdRequest updatetimesheetRequest) throws Exception {
 		timeSheetService.updateTimeSheetById(updatetimesheetRequest);
+		
+	}
+	
+	@ApiOperation(value = "Updates Timesheet for the provided Ids", notes = "Table reference: ts_info")
+	@RequestMapping(value = "updateTimesheetByIDs", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void updateTimeSheetByIDs( @RequestBody List<UpdateTimesheetByIdRequest> updatetimesheetRequest) throws Exception {
+		timeSheetService.updateTimeSheetByIds(updatetimesheetRequest);
 		
 	}
 	

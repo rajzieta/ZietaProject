@@ -99,5 +99,22 @@ public class TimeSheetController {
 		
 	}
 	
+	
+
+	public void updateTimeEntriesByID(@Valid @RequestBody TimeEntriesByTsIdRequest timeentriesByTsIdRequest) throws Exception {
+		timeSheetService.updateTimeEntriesByID(timeentriesByTsIdRequest);
+		
+	}
+	
+	@ApiOperation(value = "Updates TimeEntries for the provided Ids", notes = "Table reference: ts_timeentries")
+	@RequestMapping(value = "updateTimeEntriesByIDs", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void updateTimeEntriesByIDs( @RequestBody List<TimeEntriesByTsIdRequest> timeentriesByTsIdRequest) throws Exception {
+		timeSheetService.updateTimeEntriesByIds(timeentriesByTsIdRequest);
+		
+	}
+	
+	
+	
+	
 }
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.zietaproj.zieta.dto.WorkflowDTO;
 import com.zietaproj.zieta.model.TSInfo;
 import com.zietaproj.zieta.request.TimeEntriesByTsIdRequest;
 import com.zietaproj.zieta.request.UpdateTimesheetByIdRequest;
@@ -24,4 +25,10 @@ public interface TimeSheetService {
 	public void updateTimeSheetById(@Valid UpdateTimesheetByIdRequest updatetimesheetRequest) throws Exception;
 
 public void updateTimeSheetByIds(@Valid List<UpdateTimesheetByIdRequest> updatetimesheetRequest) throws Exception;
+
+public List<WorkflowDTO> getAllWorkflowDetails();
+
+public void updateTimeEntriesByID(@Valid TimeEntriesByTsIdRequest timeentriesByTsIdRequest) throws Exception;
+
+public void updateTimeEntriesByIds(List<TimeEntriesByTsIdRequest> timeentriesByTsIdRequest) throws Exception;
 }

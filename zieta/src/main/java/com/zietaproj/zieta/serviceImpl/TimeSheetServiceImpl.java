@@ -13,9 +13,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+import com.zietaproj.zieta.dto.WorkflowDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
 import com.zietaproj.zieta.model.TSInfo;
 import com.zietaproj.zieta.model.TSTimeEntries;
+import com.zietaproj.zieta.model.TSWorkflow;
 import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.repository.ActivityMasterRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
@@ -23,6 +26,7 @@ import com.zietaproj.zieta.repository.ProjectInfoRepository;
 import com.zietaproj.zieta.repository.TSInfoRepository;
 import com.zietaproj.zieta.repository.TSTimeEntriesRepository;
 import com.zietaproj.zieta.repository.TaskInfoRepository;
+import com.zietaproj.zieta.repository.WorkflowRepository;
 import com.zietaproj.zieta.request.TimeEntriesByTsIdRequest;
 import com.zietaproj.zieta.request.UpdateTaskInfoRequest;
 import com.zietaproj.zieta.request.UpdateTimesheetByIdRequest;
@@ -51,6 +55,9 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	
 	@Autowired
 	ClientInfoRepository  clientInfoRepository;
+	
+	@Autowired
+	WorkflowRepository workflowRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -162,5 +169,55 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 			updateTimeSheetById(updateRequest);
 		}
 	}
+	
+	
+	
+	public List<WorkflowDTO> getAllWorkflowDetails() {
+		
+		List<TSWorkflow> workflows = workflowRepository.findAll();
+		List<WorkflowDTO> workflowDTOs = new ArrayList<WorkflowDTO>();
+		WorkflowDTO workflowDTO = null;
+		for (TSWorkflow workflow : workflows) {
+			workflowDTO = modelMapper.map(workflow, WorkflowDTO.class);
+			
+			workflowDTOs.add(workflowDTO);
+		}
+		return workflowDTOs;
+		
+		
+	}
+	
+	
+	@Override
+	public void updateTimeEntriesByID(@Valid TimeEntriesByTsIdRequest timeentriesByTsIdRequest) throws Exception {
+		//for (UpdateTimesheetByIdRequest updateRequest : updatetimesheetRequest) {
+		Optional<TSTimeEntries> TsTimeEntity = tstimeentriesRepository.findById(timeentriesByTsIdRequest.getId());
+		if(TsTimeEntity.isPresent()) {
+			TSTimeEntries tsTimeSave = TsTimeEntity.get();
+			TSTimeEntries tstimeentry= modelMapper.map(timeentriesByTsIdRequest, TSTimeEntries.class);
+			
+			tstimeentriesRepository.save(tstimeentry);
+		}
+	
+		else {
+			throw new Exception("Timeentry not found with the provided ID : "+timeentriesByTsIdRequest.getId());
+		}
+	}
+	
+	
+	@Override
+	@Transactional
+	public void updateTimeEntriesByIds(@Valid List<TimeEntriesByTsIdRequest> timeentriesByTsIdRequest) throws Exception {
+		
+		for (TimeEntriesByTsIdRequest updateRequest : timeentriesByTsIdRequest) {
+			updateTimeEntriesByID(updateRequest);
+		}
+	}
+	
+	
+	
+	
+	
+	
 	
 }

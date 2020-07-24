@@ -13,11 +13,11 @@ public class StatusByClienttypeResponse {
 	private Long id;
 	private Long clientId;
     private String status;
-    private String status_type;
-    private String created_by;
-    private Date   created_date;
-    private String modified_by;
-    private Date modified_date;
+    private String statusType;
+    private String createdBy;
+    private Date   createdDate;
+    private String modifiedBy;
+    private Date modifiedDate;
     private short isDelete;
     private Boolean isDefault;
 	private String clientCode;

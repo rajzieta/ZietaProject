@@ -53,8 +53,8 @@ public class RoleMasterServiceImpl implements RoleMasterService{
 			roleMasterDTO.setCreatedBy(roleMaster.getCreatedBy());
 			roleMasterDTO.setModifiedBy(roleMaster.getModifiedBy());
 			ClientInfo clientInfo = clientInfoRepo.findById(roleMaster.getClientId()).get();
-			roleMasterDTO.setClientCode(clientInfo.getClient_code());
-			roleMasterDTO.setClientDescription(clientInfo.getClient_name());
+			roleMasterDTO.setClientCode(clientInfo.getClientCode());
+			roleMasterDTO.setClientDescription(clientInfo.getClientName());
 			roleMasterDTOs.add(roleMasterDTO);
 		}
 		return roleMasterDTOs;
@@ -75,8 +75,8 @@ public class RoleMasterServiceImpl implements RoleMasterService{
 		for (RoleMaster rolesByClient : rolesByClientList) {
 			rolesByClientResponse = modelMapper.map(rolesByClient, 
 					RolesByClientResponse.class);
-			rolesByClientResponse.setClientCode(clientInfoRepo.findById(clientId).get().getClient_code());
-			rolesByClientResponse.setClientDescription(clientInfoRepo.findById(clientId).get().getClient_name());
+			rolesByClientResponse.setClientCode(clientInfoRepo.findById(clientId).get().getClientCode());
+			rolesByClientResponse.setClientDescription(clientInfoRepo.findById(clientId).get().getClientName());
 
 			rolesByClientResponse.setClientId(clientId);
 			rolesByClientResponseList.add(rolesByClientResponse);

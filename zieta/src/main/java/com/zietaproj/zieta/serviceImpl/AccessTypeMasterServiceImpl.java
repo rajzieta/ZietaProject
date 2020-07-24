@@ -55,8 +55,8 @@ public class AccessTypeMasterServiceImpl implements AccessTypeMasterService {
 			accessTypeMasterDTO.setAccessType(accesstypeMaster.getAccessType());
 			accessTypeMasterDTO.setCreatedBy(accesstypeMaster.getCreatedBy());
 			accessTypeMasterDTO.setModifiedBy(accesstypeMaster.getModifiedBy());
-			accessTypeMasterDTO.setClientCode(clientInfoRepository.findById(accesstypeMaster.getClientId()).get().getClient_code());
-			accessTypeMasterDTO.setClientDescription(clientInfoRepository.findById(accesstypeMaster.getClientId()).get().getClient_name());
+			accessTypeMasterDTO.setClientCode(clientInfoRepository.findById(accesstypeMaster.getClientId()).get().getClientCode());
+			accessTypeMasterDTO.setClientDescription(clientInfoRepository.findById(accesstypeMaster.getClientId()).get().getClientName());
 			
 			accessTypeMasterDTOs.add(accessTypeMasterDTO);
 		}
@@ -84,8 +84,8 @@ public class AccessTypeMasterServiceImpl implements AccessTypeMasterService {
 		for (AccessTypeMaster accessByClient : accesstypesByClientList) {
 			accessByClientResponse = modelMapper.map(accessByClient, 
 					AccesstypesByClientResponse.class);
-			accessByClientResponse.setClientCode(clientInfoRepository.findById(accessByClient.getClientId()).get().getClient_code());
-			accessByClientResponse.setClientDescription(clientInfoRepository.findById(accessByClient.getClientId()).get().getClient_name());
+			accessByClientResponse.setClientCode(clientInfoRepository.findById(accessByClient.getClientId()).get().getClientCode());
+			accessByClientResponse.setClientDescription(clientInfoRepository.findById(accessByClient.getClientId()).get().getClientName());
 			
 			accesstypesByClientResponseList.add(accessByClientResponse);
 			

@@ -16,8 +16,8 @@ public class ProjectsByClientResponse {
 	
 
 	private String clientCode;
-	private String project_code;
-	private String project_name;
+	private String projectCode;
+	private String projectName;
 	private String projectManager;
 	private Long projectStatus;
 	private long projectType;

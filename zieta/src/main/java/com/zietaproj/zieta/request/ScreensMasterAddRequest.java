@@ -9,17 +9,17 @@ import lombok.Setter;
 public class ScreensMasterAddRequest {
 
 	@NotBlank
-	private String screen_code;
+	private String screenCode;
 
 	@NotBlank
-	private String screen_category;
+	private String screenCategory;
 
 	@NotBlank
-	private String screen_title;
+	private String screenTitle;
 	
 	
 	@NotBlank
-	private String screen_desc;
+	private String screenDesc;
 
 
 	

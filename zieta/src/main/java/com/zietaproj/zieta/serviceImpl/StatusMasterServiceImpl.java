@@ -42,8 +42,8 @@ public class StatusMasterServiceImpl implements StatusMasterService {
 		StatusMasterDTO statusMasterDTO = null;
 		for (StatusMaster statusMaster : statusMasters) {
 			statusMasterDTO = modelMapper.map(statusMaster,StatusMasterDTO.class);
-			statusMasterDTO.setClientCode(clientInfoRepository.findById(statusMaster.getClientId()).get().getClient_code());
-			statusMasterDTO.setClientDescription(clientInfoRepository.findById(statusMaster.getClientId()).get().getClient_name());
+			statusMasterDTO.setClientCode(clientInfoRepository.findById(statusMaster.getClientId()).get().getClientCode());
+			statusMasterDTO.setClientDescription(clientInfoRepository.findById(statusMaster.getClientId()).get().getClientName());
 
 			statusMasterDTOs.add(statusMasterDTO);
 		}
@@ -73,15 +73,15 @@ public class StatusMasterServiceImpl implements StatusMasterService {
 				statusbyclienttypeList.setId(statusmaster.getId());
 				statusbyclienttypeList.setClientId(statusmaster.getClientId());
 				statusbyclienttypeList.setStatus(statusmaster.getStatus());
-				statusbyclienttypeList.setStatus_type(statusmaster.getStatusType());
-				statusbyclienttypeList.setCreated_by(statusmaster.getCreatedBy());
-				statusbyclienttypeList.setCreated_date(statusmaster.getCreatedDate());
-				statusbyclienttypeList.setModified_by(statusmaster.getModifiedBy());
-				statusbyclienttypeList.setModified_date(statusmaster.getModifiedDate());
+				statusbyclienttypeList.setStatusType(statusmaster.getStatusType());
+				statusbyclienttypeList.setCreatedBy(statusmaster.getCreatedBy());
+				statusbyclienttypeList.setCreatedDate(statusmaster.getCreatedDate());
+				statusbyclienttypeList.setModifiedBy(statusmaster.getModifiedBy());
+				statusbyclienttypeList.setModifiedDate(statusmaster.getModifiedDate());
 				statusbyclienttypeList.setIsDelete(statusmaster.getIsDelete());
 				statusbyclienttypeList.setIsDefault(statusmaster.getIsDefault());
-				statusbyclienttypeList.setClientCode(clientInfoRepository.findById(statusmaster.getClientId()).get().getClient_code());
-				statusbyclienttypeList.setClientDescription(clientInfoRepository.findById(statusmaster.getClientId()).get().getClient_name());
+				statusbyclienttypeList.setClientCode(clientInfoRepository.findById(statusmaster.getClientId()).get().getClientCode());
+				statusbyclienttypeList.setClientDescription(clientInfoRepository.findById(statusmaster.getClientId()).get().getClientName());
 
 				
 				statusByClientStatustypeList.add(statusbyclienttypeList);

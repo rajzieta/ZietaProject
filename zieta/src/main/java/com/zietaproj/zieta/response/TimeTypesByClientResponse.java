@@ -9,7 +9,7 @@ public class TimeTypesByClientResponse {
 
 	private Long id;
 
-	private String time_type;
+	private String timeType;
 
 	private String clientCode;
 

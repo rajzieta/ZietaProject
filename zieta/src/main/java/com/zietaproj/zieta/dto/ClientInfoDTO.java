@@ -12,14 +12,14 @@ import lombok.Setter;
 public class ClientInfoDTO extends BaseEntity {
 
 	private Long id;
-    private String client_code;
-    private String client_name;
-    private Long client_status;
+    private String clientCode;
+    private String clientName;
+    private Long clientStatus;
 //    private Date createdDate;
 //    private String created_by;
 //    private String modified_by;
 //    private Date modified_date;
   //  private boolean IS_DELETE;
-    private String client_comments;
+    private String clientComments;
     
 }

@@ -98,8 +98,8 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 				taskInfoModel.setTaskDescription(StringUtils.EMPTY);
 			}
 			
-			taskInfoModel.setClientCode(clientInfoRepository.findById(tsInfo.getClientId()).get().getClient_code());
-			taskInfoModel.setClientDescription(clientInfoRepository.findById(tsInfo.getClientId()).get().getClient_name());
+			taskInfoModel.setClientCode(clientInfoRepository.findById(tsInfo.getClientId()).get().getClientCode());
+			taskInfoModel.setClientDescription(clientInfoRepository.findById(tsInfo.getClientId()).get().getClientName());
 			
 			tsInfoModelList.add(taskInfoModel);
 			

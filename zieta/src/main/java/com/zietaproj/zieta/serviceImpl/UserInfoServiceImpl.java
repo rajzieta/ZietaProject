@@ -62,8 +62,8 @@ public class UserInfoServiceImpl implements UserInfoService {
 		for (UserInfo userInfo : userInfoList) {
 			userInfoDTO =  modelMapper.map(userInfo, UserInfoDTO.class);
 			userInfoDTO.setPassword("********");
-			userInfoDTO.setClientCode(clientInfoRepo.findById(userInfo.getClientId()).get().getClient_code());
-			userInfoDTO.setClientDescription(clientInfoRepo.findById(userInfo.getClientId()).get().getClient_name());
+			userInfoDTO.setClientCode(clientInfoRepo.findById(userInfo.getClientId()).get().getClientCode());
+			userInfoDTO.setClientDescription(clientInfoRepo.findById(userInfo.getClientId()).get().getClientName());
 			 userInfoDTOs.add(userInfoDTO);
 		}
 	}
@@ -93,8 +93,8 @@ public class UserInfoServiceImpl implements UserInfoService {
 		 List<ScreensMaster> screensListByClientId = screensMasterService.getScreensByIds(accessControlConfigList);
 		 List<String> accessTypes = accessTypeMasterService.findByClientIdANDAccessTypeId(userInfo.getClientId(), accessIdList);
 		 UserDetailsResponse userDetails = fillUserData(userInfo);
-		 userDetails.setClientCode(clientInfoRepo.findById(userInfo.getClientId()).get().getClient_code());
-		 userDetails.setClientDescription(clientInfoRepo.findById(userInfo.getClientId()).get().getClient_name());
+		 userDetails.setClientCode(clientInfoRepo.findById(userInfo.getClientId()).get().getClientCode());
+		 userDetails.setClientDescription(clientInfoRepo.findById(userInfo.getClientId()).get().getClientName());
 		 userDetails.setScreensByClient(screensListByClientId);
 		 userDetails.setAccessTypesByClient(accessTypes);
 		
@@ -106,11 +106,11 @@ public class UserInfoServiceImpl implements UserInfoService {
 		
 		UserDetailsResponse userDetailsResponse = new UserDetailsResponse();
 		userDetailsResponse.setClientId(userInfo.getClientId());
-		userDetailsResponse.setFirstName(userInfo.getUser_fname());
-		userDetailsResponse.setMiddleName(userInfo.getUser_mname());
-		userDetailsResponse.setLastName(userInfo.getUser_lname());
+		userDetailsResponse.setFirstName(userInfo.getUserFname());
+		userDetailsResponse.setMiddleName(userInfo.getUserMname());
+		userDetailsResponse.setLastName(userInfo.getUserLname());
 		userDetailsResponse.setUserEmailId(userInfo.getEmail());
-		userDetailsResponse.setStatus(userInfo.getIs_active());
+		userDetailsResponse.setStatus(userInfo.getIsActive());
 		userDetailsResponse.setUserId(userInfo.getId());
 		userDetailsResponse.setInfoMessage("User details after successful login");
 		
@@ -124,7 +124,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 		UserInfoDTO dbUserInfo = findByEmail(email);
 		if (dbUserInfo != null) {
 			if (password.equals(dbUserInfo.getPassword())) {
-				loginResponse.setActive(dbUserInfo.getIs_active() !=0);
+				loginResponse.setActive(dbUserInfo.getIsActive() !=0);
 				loginResponse.setInfoMessage("Valid credentials are provided !!");
 				loginResponse.setLoginValid(true);
 				

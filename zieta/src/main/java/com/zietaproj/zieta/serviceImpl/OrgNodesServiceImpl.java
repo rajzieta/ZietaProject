@@ -47,8 +47,8 @@ public class OrgNodesServiceImpl implements OrgNodesService {
 			orgnodesByClientResponse = modelMapper.map(orgnodesByClient, 
 					OrgNodesByClientResponse.class);
 			orgnodesByClientResponse.setOrgUnitTypeDescription(orgunitTypeRepository.findById(orgnodesByClient.getOrgType()).get().getTypeName());
-			orgnodesByClientResponse.setClientCode(clientInfoRepository.findById(orgnodesByClient.getClientId()).get().getClient_code());
-			orgnodesByClientResponse.setClientDescription(clientInfoRepository.findById(orgnodesByClient.getClientId()).get().getClient_name());
+			orgnodesByClientResponse.setClientCode(clientInfoRepository.findById(orgnodesByClient.getClientId()).get().getClientCode());
+			orgnodesByClientResponse.setClientDescription(clientInfoRepository.findById(orgnodesByClient.getClientId()).get().getClientName());
 			
 			orgnodesByClientResponseList.add(orgnodesByClientResponse);
 		}

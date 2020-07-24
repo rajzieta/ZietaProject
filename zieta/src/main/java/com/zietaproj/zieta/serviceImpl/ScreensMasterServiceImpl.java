@@ -39,10 +39,10 @@ public class ScreensMasterServiceImpl implements ScreensMasterService {
 		for (ScreensMaster screensMaster : screensMasters) {
 			screensMasterDTO = new ScreensMasterDTO();
 			screensMasterDTO.setId(screensMaster.getId());
-			screensMasterDTO.setScreen_code(screensMaster.getScreen_code());
-			screensMasterDTO.setScreen_category(screensMaster.getScreen_category());
-			screensMasterDTO.setScreen_desc(screensMaster.getScreen_desc());
-			screensMasterDTO.setScreen_title(screensMaster.getScreen_title());
+			screensMasterDTO.setScreenCode(screensMaster.getScreenCode());
+			screensMasterDTO.setScreenCategory(screensMaster.getScreenCategory());
+			screensMasterDTO.setScreenDesc(screensMaster.getScreenDesc());
+			screensMasterDTO.setScreenTitle(screensMaster.getScreenTitle());
 			screensMasterDTOs.add(screensMasterDTO);
 		}
 		return screensMasterDTOs;

@@ -79,10 +79,10 @@ public class ActivityServiceImpl implements ActivityService {
 			activityMasterDTO = modelMapper.map(activityMaster, ActivityMasterDTO.class);
 			activityMasterDTO
 					.setClientCode(clientInfoRepository.findById(activityMaster.getClientId())
-							.get().getClient_code());
+							.get().getClientCode());
 			activityMasterDTO
 			.setClientDescription(clientInfoRepository.findById(activityMaster.getClientId())
-					.get().getClient_name());
+					.get().getClientName());
 			activityMasterDTO.setActive(activityMaster.isActive());
 			activityMasterDTOs.add(activityMasterDTO);
 		}
@@ -104,8 +104,8 @@ public class ActivityServiceImpl implements ActivityService {
 		for (ActivityMaster activitiesByClient : activitiesByClientList) {
 			activitiesByClientResponse = modelMapper.map(activitiesByClient, 
 					ActivitiesByClientResponse.class);
-			activitiesByClientResponse.setClientCode(clientInfoRepository.findById(clientId).get().getClient_code());
-			activitiesByClientResponse.setClientDescription(clientInfoRepository.findById(clientId).get().getClient_name());
+			activitiesByClientResponse.setClientCode(clientInfoRepository.findById(clientId).get().getClientCode());
+			activitiesByClientResponse.setClientDescription(clientInfoRepository.findById(clientId).get().getClientName());
 			activitiesByClientResponseList.add(activitiesByClientResponse);
 		}
 
@@ -249,8 +249,8 @@ public class ActivityServiceImpl implements ActivityService {
 			activitiesByClientUserModel.setTaskActivityId(taskActivity.getTaskActivityId());
 			
 			ClientInfo clientInfo = clientInfoRepository.findById(taskActivity.getClientId()).get();
-			activitiesByClientUserModel.setClientCode(clientInfo.getClient_code());
-			activitiesByClientUserModel.setClientDescription(clientInfo.getClient_name());
+			activitiesByClientUserModel.setClientCode(clientInfo.getClientCode());
+			activitiesByClientUserModel.setClientDescription(clientInfo.getClientName());
 			activitiesByClientUserModelList.add(activitiesByClientUserModel);
 		}
 		return activitiesByClientUserModelList;

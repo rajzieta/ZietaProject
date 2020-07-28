@@ -34,26 +34,24 @@ public class UserInfo extends BaseEntity {
 	private Long id;
 	
 	@Column(name = "client_id")
-	@NotNull
 	private Long clientId;
 	
-	@NotBlank
+
 	@Column(name = "user_fname")
 	private String userFname;
 	
 	@Column(name = "user_mname")
 	private String userMname;
 	
-	@NotBlank
+	
 	@Column(name = "user_lname")
 	private String userLname;
 	
 	@Column(name = "EMAIL_ID")
-	@NotBlank
 	private String email;
 	
 
-	@NotBlank
+	
 	@Column(name = "phone_no")
 	private String phoneNo;
 	

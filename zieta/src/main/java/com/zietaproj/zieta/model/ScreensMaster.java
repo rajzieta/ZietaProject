@@ -29,16 +29,16 @@ public class ScreensMaster implements Serializable {
 
 	    @NotBlank
 	    @Column(name="screen_code")
-	    private String screen_code;
+	    private String screenCode;
 
-	   
-	    private String screen_category;
+	    @Column(name="screen_category")
+	    private String screenCategory;
 
+	    @Column(name="screen_desc")
+	    private String screenDesc;
 	    
-	    private String screen_desc;
-	    
-	    
-	    private String screen_title;
+	    @Column(name="screen_title")
+	    private String screenTitle;
 
 		
 	    

@@ -8,11 +8,11 @@ import lombok.Setter;
 @Setter
 public class ActivitiesByTaskResponse {
 
-	Long task_id;
-    private Long client_id;
-    private Long activity_id;
-    private String activity_code;
-    private String activity_desc;
+	Long taskId;
+    private Long clientId;
+    private Long activityId;
+    private String activityCode;
+    private String activityDesc;
     private String userName;
     private Long userId;
 	private String startDate;

@@ -24,11 +24,11 @@ public class TSMUtil {
 	
 	public static String getFullName(UserInfo userInfo) {
 
-		StringBuilder userName = new StringBuilder(userInfo.getUser_fname());
-		if (!StringUtils.isEmpty(userInfo.getUser_mname())) {
-			userName.append(SPACE).append(userInfo.getUser_mname());
+		StringBuilder userName = new StringBuilder(userInfo.getUserFname());
+		if (!StringUtils.isEmpty(userInfo.getUserMname())) {
+			userName.append(SPACE).append(userInfo.getUserMname());
 		}
-		userName.append(SPACE).append(userInfo.getUser_lname());
+		userName.append(SPACE).append(userInfo.getUserLname());
 		return userName.toString();
 	}
 	

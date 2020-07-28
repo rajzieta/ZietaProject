@@ -47,10 +47,10 @@ public class TimeTypeServiceImpl implements TimeTypeService {
 		for (TimeType timetype : timetypes) {
 			timetypeDTO = new TimeTypeDTO();
 			timetypeDTO.setId(timetype.getId());
-			timetypeDTO.setTime_type(timetype.getTime_type());
-			timetypeDTO.setClient_id(timetype.getClientId());
-			timetypeDTO.setClientCode(clientInfoRepository.findById(timetype.getClientId()).get().getClient_code());
-			timetypeDTO.setClientDescription(clientInfoRepository.findById(timetype.getClientId()).get().getClient_name());
+			timetypeDTO.setTimeType(timetype.getTimeType());
+			timetypeDTO.setClientId(timetype.getClientId());
+			timetypeDTO.setClientCode(clientInfoRepository.findById(timetype.getClientId()).get().getClientCode());
+			timetypeDTO.setClientDescription(clientInfoRepository.findById(timetype.getClientId()).get().getClientName());
 			
 			timetypeDTO.setModifiedBy(timetype.getModifiedBy());
 		timetypeDTOs.add(timetypeDTO);
@@ -75,8 +75,8 @@ public class TimeTypeServiceImpl implements TimeTypeService {
 		for (TimeType timeTypesByClient : timeTypesByClientList) {
 			timeTypesByClientResponse = modelMapper.map(timeTypesByClient, 
 					TimeTypesByClientResponse.class);
-			timeTypesByClientResponse.setClientCode(clientInfoRepository.findById(timeTypesByClient.getClientId()).get().getClient_code());
-			timeTypesByClientResponse.setClientDescription(clientInfoRepository.findById(timeTypesByClient.getClientId()).get().getClient_name());
+			timeTypesByClientResponse.setClientCode(clientInfoRepository.findById(timeTypesByClient.getClientId()).get().getClientCode());
+			timeTypesByClientResponse.setClientDescription(clientInfoRepository.findById(timeTypesByClient.getClientId()).get().getClientName());
 			
 			timeTypesByClientResponseList.add(timeTypesByClientResponse);
 		}

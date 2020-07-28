@@ -43,9 +43,9 @@ public class CustInfoServiceImpl implements CustInfoService {
 		for (CustInfo custInfo : custInfoList) {
 			CustomerInformationModel customerInformationModel = modelMapper.map(
 					custInfo, CustomerInformationModel.class);
-			String clientCode = clientInfoRepo.findById(custInfo.getClientId()).get().getClient_code();
+			String clientCode = clientInfoRepo.findById(custInfo.getClientId()).get().getClientCode();
 			customerInformationModel.setClientCode(clientCode);
-			String clientDesc = clientInfoRepo.findById(custInfo.getClientId()).get().getClient_name();
+			String clientDesc = clientInfoRepo.findById(custInfo.getClientId()).get().getClientName();
 			customerInformationModel.setClientDescription(clientDesc);
 			customerInfoList.add(customerInformationModel);
 			
@@ -75,9 +75,9 @@ public class CustInfoServiceImpl implements CustInfoService {
 			
 			CustInfo custInfo = custInfoRepository.findById(custOrg.getCustId()).get();
 			CustomerInfoModel custInfoModel = modelMapper.map(custInfo, CustomerInfoModel.class);
-			String clientCode = clientInfoRepo.findById(clientId).get().getClient_code();
+			String clientCode = clientInfoRepo.findById(clientId).get().getClientCode();
 			custInfoModel.setClientCode(clientCode);
-			String clientDesc = clientInfoRepo.findById(clientId).get().getClient_name();
+			String clientDesc = clientInfoRepo.findById(clientId).get().getClientName();
 			custInfoModel.setClientDescription(clientDesc);
 			custInfoModel.setOrgNode(orgNode);
 			

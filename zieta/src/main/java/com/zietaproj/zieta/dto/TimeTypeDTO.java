@@ -18,10 +18,8 @@ import lombok.Data;
 public class TimeTypeDTO extends BaseEntity {
 
 	private Long id;
-    private Long client_id;
-    private String time_type;
-//    private boolean IS_DELETE;
-//    private String modified_by;
+    private Long clientId;
+    private String timeType;
 	private String clientCode;
 	private String clientDescription;
     

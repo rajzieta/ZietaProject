@@ -81,8 +81,8 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 		TaskMasterDTO taskMasterDTO = null;
 		for (TaskTypeMaster taskTypeMaster : taskTypeMasters) {
 			taskMasterDTO = modelMapper.map(taskTypeMaster,TaskMasterDTO.class);
-			taskMasterDTO.setClientCode(clientInfoRepository.findById(taskTypeMaster.getClientId()).get().getClient_code());
-			taskMasterDTO.setClientDescription(clientInfoRepository.findById(taskTypeMaster.getClientId()).get().getClient_name());
+			taskMasterDTO.setClientCode(clientInfoRepository.findById(taskTypeMaster.getClientId()).get().getClientCode());
+			taskMasterDTO.setClientDescription(clientInfoRepository.findById(taskTypeMaster.getClientId()).get().getClientName());
 			
 			taskMasterDTOs.add(taskMasterDTO);
 		}
@@ -117,8 +117,8 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 			tasksByUserModel.setUserId(userIdent);
 			tasksByUserModel.setProjectCode(tasksByUser.getProject_code());
 			tasksByUserModel.setTaskCode(tasksByUser.getTask_code());
-			tasksByUserModel.setClientCode(clientInfoRepository.findById(tasksByUser.getClientId()).get().getClient_code());
-			tasksByUserModel.setClientDescription(clientInfoRepository.findById(tasksByUser.getClientId()).get().getClient_name());
+			tasksByUserModel.setClientCode(clientInfoRepository.findById(tasksByUser.getClientId()).get().getClientCode());
+			tasksByUserModel.setClientDescription(clientInfoRepository.findById(tasksByUser.getClientId()).get().getClientName());
 			
 			tasksByUserModelList.add(tasksByUserModel);
 		}
@@ -191,9 +191,9 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 		for (TaskTypeMaster tasksByClient : tasksByClientList) {
 			tasksByClientResponse = modelMapper.map(tasksByClient, 
 					TaskTypesByClientResponse.class);
-			tasksByClientResponse.setClientCode(clientInfoRepository.findById(tasksByClient.getClientId()).get().getClient_code());
+			tasksByClientResponse.setClientCode(clientInfoRepository.findById(tasksByClient.getClientId()).get().getClientCode());
 			
-			tasksByClientResponse.setClientDescription(clientInfoRepository.findById(tasksByClient.getClientId()).get().getClient_name());
+			tasksByClientResponse.setClientDescription(clientInfoRepository.findById(tasksByClient.getClientId()).get().getClientName());
 			
 			tasksByClientResponseList.add(tasksByClientResponse);
 	}

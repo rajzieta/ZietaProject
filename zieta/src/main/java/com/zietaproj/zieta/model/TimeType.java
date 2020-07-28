@@ -39,7 +39,8 @@ public class TimeType extends BaseEntity implements Serializable{
     private Long clientId;
 
     @NotBlank
-    private String time_type;
+    @Column(name="time_type")
+    private String timeType;
 
    
 

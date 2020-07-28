@@ -120,8 +120,8 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 			ProjectDetailsByUserModel projectDetailsByUserModel = modelMapper.map(projectInfo, ProjectDetailsByUserModel.class);
 			
 			//setting additonal details starts
-			projectDetailsByUserModel.setClientCode(clientInfoRepository.findById(projectInfo.getClientId()).get().getClient_code());
-			projectDetailsByUserModel.setClientDescription(clientInfoRepository.findById(projectInfo.getClientId()).get().getClient_name());
+			projectDetailsByUserModel.setClientCode(clientInfoRepository.findById(projectInfo.getClientId()).get().getClientCode());
+			projectDetailsByUserModel.setClientDescription(clientInfoRepository.findById(projectInfo.getClientId()).get().getClientName());
 			
 			projectDetailsByUserModel.setProjectTypeName(
 					projectMasterRepository.findById(projectInfo.getProjectType()).get().getTypeName());
@@ -148,8 +148,8 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		for (ProjectMaster projecttypesByClient : projecttypesByClientList) {
 			projecttypesByClientResponse = modelMapper.map(projecttypesByClient, 
 					ProjectTypeByClientResponse.class);
-			projecttypesByClientResponse.setClientCode(clientInfoRepository.findById(projecttypesByClient.getClientId()).get().getClient_code());
-			projecttypesByClientResponse.setClientDescription(clientInfoRepository.findById(projecttypesByClient.getClientId()).get().getClient_name());
+			projecttypesByClientResponse.setClientCode(clientInfoRepository.findById(projecttypesByClient.getClientId()).get().getClientCode());
+			projecttypesByClientResponse.setClientDescription(clientInfoRepository.findById(projecttypesByClient.getClientId()).get().getClientName());
 			
 			projecttypeslist.add(projecttypesByClientResponse);
 		}

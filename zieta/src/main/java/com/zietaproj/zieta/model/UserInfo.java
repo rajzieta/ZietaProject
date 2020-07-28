@@ -27,49 +27,52 @@ import lombok.Data;
 @JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
         allowGetters = true)
 @Data
-public class UserInfo {
+public class UserInfo extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(name = "client_id")
-	@NotNull
 	private Long clientId;
 	
-	@NotBlank
-	private String user_fname;
+
+	@Column(name = "user_fname")
+	private String userFname;
 	
-	private String user_mname;
+	@Column(name = "user_mname")
+	private String userMname;
 	
-	@NotBlank
-	private String user_lname;
+	
+	@Column(name = "user_lname")
+	private String userLname;
 	
 	@Column(name = "EMAIL_ID")
-	@NotBlank
 	private String email;
 	
 
-	@NotBlank
-	private String phone_no;
 	
-	private short is_active;
+	@Column(name = "phone_no")
+	private String phoneNo;
 	
-	private String created_by;
+	@Column(name = "is_active")
+	private short isActive;
 	
-	@Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
-	private Date created_date;
-	
-	private String modified_by;
-	
-	@Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
-	private Date modified_date;
-	
-	private short is_delete;
+//	private String created_by;
+//	
+//	@Column(nullable = false)
+//    @Temporal(TemporalType.TIMESTAMP)
+//    @LastModifiedDate
+//	private Date created_date;
+//	
+//	private String modified_by;
+//	
+//	@Column(nullable = false)
+//    @Temporal(TemporalType.TIMESTAMP)
+//    @LastModifiedDate
+//	private Date modified_date;
+//	
+//	private short is_delete;
 	
 	@NotBlank
 	private String password;

@@ -40,9 +40,9 @@ public class ActivitiesByTaskServiceImpl implements ActivitiesByTaskService {
 		ActivitiesByTaskResponse activitiesbytaskResponse = null;
 		for(TaskActivity activitiesbytask : activitiesbytaskList) {
 			activitiesbytaskResponse = new ActivitiesByTaskResponse();
-			activitiesbytaskResponse.setTask_id(activitiesbytask.getTaskId());
-			activitiesbytaskResponse.setClient_id(activitiesbytask.getClientId());
-			activitiesbytaskResponse.setActivity_id(activitiesbytask.getActivityId());
+			activitiesbytaskResponse.setTaskId(activitiesbytask.getTaskId());
+			activitiesbytaskResponse.setClientId(activitiesbytask.getClientId());
+			activitiesbytaskResponse.setActivityId(activitiesbytask.getActivityId());
 			activitiesbytaskResponse.setEndDate(TSMUtil.getFormattedDateAsString(activitiesbytask.getEndDate()));
 			activitiesbytaskResponse.setStartDate(TSMUtil.getFormattedDateAsString(activitiesbytask.getStartDate()));
 			activitiesbytaskResponse.setPlannedHrs(activitiesbytask.getPlannedHrs());
@@ -58,8 +58,8 @@ public class ActivitiesByTaskServiceImpl implements ActivitiesByTaskService {
 			
 			Optional<ActivityMaster> activitymaster = activityMasterRepository.findById(activitiesbytask.getActivityId());
 			if(activitymaster.isPresent()) {
-				activitiesbytaskResponse.setActivity_code(activitymaster.get().getActivityCode());
-				activitiesbytaskResponse.setActivity_desc(activitymaster.get().getActivityDesc());
+				activitiesbytaskResponse.setActivityCode(activitymaster.get().getActivityCode());
+				activitiesbytaskResponse.setActivityDesc(activitymaster.get().getActivityDesc());
 			}
 			
 			activitiesbytaskResponseList.add(activitiesbytaskResponse);

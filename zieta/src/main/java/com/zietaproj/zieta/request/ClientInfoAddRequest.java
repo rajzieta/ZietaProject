@@ -13,17 +13,17 @@ public class ClientInfoAddRequest {
 	
 
 	@NotBlank
-	private String client_code;
+	private String clientCode;
 
 	@NotBlank
-	private String client_name;
+	private String clientName;
 
 	@NotNull
-	private Long client_status;
+	private Long clientStatus;
 	
 	
 	@NotBlank
-	private String client_comments;
+	private String clientComments;
 	
 	
 	private boolean isDelete;

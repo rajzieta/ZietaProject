@@ -38,13 +38,17 @@ public class ClientInfo extends BaseEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String client_code;
+	@Column(name="client_code")
+	private String clientCode;
 
-	private String client_name;
+	@Column(name="client_name")
+	private String clientName;
 
-	private Long client_status;
+	@Column(name="client_status")
+	private Long clientStatus;
 	
-	private String client_comments;
+	@Column(name="client_comments")
+	private String clientComments;
 
 	
 

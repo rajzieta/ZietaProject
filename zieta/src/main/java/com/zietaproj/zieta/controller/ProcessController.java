@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zietaproj.zieta.dto.ProcessMasterDTO;
 import com.zietaproj.zieta.dto.ProcessStepsDTO;
+import com.zietaproj.zieta.model.ProcessMaster;
 import com.zietaproj.zieta.model.ProcessSteps;
 import com.zietaproj.zieta.service.ProcessService;
 
@@ -30,6 +32,42 @@ public class ProcessController {
 	ProcessService processService;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessController.class);
+	
+	@RequestMapping(value = "getAllProcess", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<ProcessMasterDTO> getAllProcess() {
+		List<ProcessMasterDTO> processMasters = null;
+		try {
+			processMasters = processService.getAllProcess();
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in TaskMasterController#getAllTasks",e);
+		}
+		return processMasters;
+	}
+	
+	
+	@ApiOperation(value = "creates entries in the process_master table", notes = "Table reference: process_master")
+	@RequestMapping(value = "addProcess", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addProcess(@Valid @RequestBody ProcessMaster processmaster) {
+		processService.addProcess(processmaster);
+	}
+
+	@ApiOperation(value = "Updates the Processes for the provided Id", notes = "Table reference: process_master")
+	@RequestMapping(value = "editProcessById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editProcessById(@Valid @RequestBody ProcessMasterDTO processmastersDto) throws Exception {
+		processService.editProcessById(processmastersDto);
+		
+		
+	}
+	
+	@ApiOperation(value = "Deletes entries from process_master based on Id", notes = "Table reference: process_master")
+	@RequestMapping(value = "deleteProcessById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteProcessById(@RequestParam(required=true) Long id) throws Exception {
+		processService.deleteProcessById(id);
+	}
+	
+	
+	////Basic Operation API's for Process Steps
+	
 	
 	@RequestMapping(value = "getAllProcessSteps", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<ProcessStepsDTO> getAllProcessSteps() {

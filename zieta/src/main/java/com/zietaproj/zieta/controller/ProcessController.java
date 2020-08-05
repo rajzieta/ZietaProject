@@ -39,7 +39,7 @@ public class ProcessController {
 		try {
 			processMasters = processService.getAllProcess();
 		} catch (Exception e) {
-			LOGGER.error("Error Occured in TaskMasterController#getAllTasks",e);
+			LOGGER.error("Error Occured in ProcessController#getAllProcess",e);
 		}
 		return processMasters;
 	}
@@ -75,7 +75,7 @@ public class ProcessController {
 		try {
 			processSteps = processService.getAllProcessSteps();
 		} catch (Exception e) {
-			LOGGER.error("Error Occured in TaskMasterController#getAllTasks",e);
+			LOGGER.error("Error Occured in ProcessController#getAllProcessSteps",e);
 		}
 		return processSteps;
 	}

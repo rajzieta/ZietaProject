@@ -122,7 +122,7 @@ public List<ProcessMasterDTO> getAllProcess() {
 			processStepDTO.setClientDescription(clientInfoRepository.findById(processstep.getClientId()).get().getClientName());
 			processStepDTO.setProjectDescription(projectInfoRepository.findById(processstep.getProjectId()).get().getProjectName());
 			processStepDTO.setTaskDescription(taskInfoRepository.findById(processstep.getProjectTaskId()).get().getTaskDescription());
-		//	processStepDTO.setProcessDescription(processMasterRepository.findById(processstep.getTemplateId()).get().getProcessName());
+			processStepDTO.setProcessDescription(processMasterRepository.findById(processstep.getTemplateId()).get().getProcessName());
 
 
 			processstepsDTOs.add(processStepDTO);

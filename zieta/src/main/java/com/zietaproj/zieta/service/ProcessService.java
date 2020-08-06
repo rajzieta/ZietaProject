@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.zietaproj.zieta.dto.ProcessConfigDTO;
 import com.zietaproj.zieta.dto.ProcessMasterDTO;
 import com.zietaproj.zieta.dto.ProcessStepsDTO;
 import com.zietaproj.zieta.model.ProcessMaster;
@@ -26,6 +27,8 @@ public interface ProcessService {
 	public void editProcessById(@Valid ProcessMasterDTO processmastersDto) throws Exception;
 
 	public void deleteProcessById(Long id) throws Exception;
+
+	public List<ProcessConfigDTO> getAllProcessConfig();
 
 	
 	

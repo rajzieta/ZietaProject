@@ -13,7 +13,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
-@Table(name = "PROCESS_MASTER")
+@Table(name = "TEMPLATE_MASTER")
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class ProcessMaster implements Serializable {
@@ -27,5 +27,8 @@ public class ProcessMaster implements Serializable {
     
     @Column(name = "process_type")
     private String processType;
+    
+    @Column(name = "additional_approver")
+    private boolean additionalApprover;
     
 }

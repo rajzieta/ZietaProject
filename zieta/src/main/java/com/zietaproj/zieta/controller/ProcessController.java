@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zietaproj.zieta.dto.ProcessConfigDTO;
 import com.zietaproj.zieta.dto.ProcessMasterDTO;
 import com.zietaproj.zieta.dto.ProcessStepsDTO;
 import com.zietaproj.zieta.model.ProcessMaster;
@@ -99,6 +100,20 @@ public class ProcessController {
 	@RequestMapping(value = "deleteProcessStepsById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void deleteProcessStepsById(@RequestParam(required=true) Long id) throws Exception {
 		processService.deleteProcessStepsById(id);
+	}
+	
+	
+	//////API Operation for ProcessConfig
+	
+	@RequestMapping(value = "getAllProcessConfig", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<ProcessConfigDTO> getAllProcessConfig() {
+		List<ProcessConfigDTO> processConfig = null;
+		try {
+			processConfig = processService.getAllProcessConfig();
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in ProcessController#getAllProcessConfig",e);
+		}
+		return processConfig;
 	}
 	
 	

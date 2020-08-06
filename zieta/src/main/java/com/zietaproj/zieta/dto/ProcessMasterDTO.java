@@ -10,4 +10,5 @@ public class ProcessMasterDTO {
 	private Long id;
 	private String processName;
 	private String processType;
+	private Boolean additionalApprover;
 }

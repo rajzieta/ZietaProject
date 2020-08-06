@@ -17,6 +17,8 @@ public class ProjectDetailsByUserModel {
 	long projectType;
 	long projectOrgnode;
 	long projectManager;
+	long processId;
+	long directApprover;
 	short allowUnplanned;
 	long custId;
 	long projectStatus;

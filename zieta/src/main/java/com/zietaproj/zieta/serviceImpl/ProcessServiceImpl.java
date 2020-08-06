@@ -13,12 +13,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.zietaproj.zieta.dto.ProcessConfigDTO;
 import com.zietaproj.zieta.dto.ProcessMasterDTO;
 import com.zietaproj.zieta.dto.ProcessStepsDTO;
+import com.zietaproj.zieta.model.ProcessConfig;
 import com.zietaproj.zieta.model.ProcessMaster;
 import com.zietaproj.zieta.model.ProcessSteps;
+import com.zietaproj.zieta.repository.ClientInfoRepository;
+import com.zietaproj.zieta.repository.ProcessConfigRepository;
 import com.zietaproj.zieta.repository.ProcessMasterRepository;
 import com.zietaproj.zieta.repository.ProcessStepsRepository;
+import com.zietaproj.zieta.repository.ProjectInfoRepository;
+import com.zietaproj.zieta.repository.TaskInfoRepository;
 import com.zietaproj.zieta.service.ProcessService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +39,18 @@ public class ProcessServiceImpl implements ProcessService {
 	
 	@Autowired
 	ProcessStepsRepository processStepsRepository;
+	
+	@Autowired
+	ProcessConfigRepository processConfigRepository;
+	
+	@Autowired
+	ProjectInfoRepository projectInfoRepository;
+	
+	@Autowired
+	ClientInfoRepository clientInfoRepository;
+	
+	@Autowired
+	TaskInfoRepository taskInfoRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -101,6 +119,12 @@ public List<ProcessMasterDTO> getAllProcess() {
 		ProcessStepsDTO processStepDTO = null;
 		for (ProcessSteps processstep : processsteps) {
 			processStepDTO = modelMapper.map(processstep,ProcessStepsDTO.class);
+			processStepDTO.setClientDescription(clientInfoRepository.findById(processstep.getClientId()).get().getClientName());
+			processStepDTO.setProjectDescription(projectInfoRepository.findById(processstep.getProjectId()).get().getProjectName());
+			processStepDTO.setTaskDescription(taskInfoRepository.findById(processstep.getProjectTaskId()).get().getTaskDescription());
+		//	processStepDTO.setProcessDescription(processMasterRepository.findById(processstep.getTemplateId()).get().getProcessName());
+
+
 			processstepsDTOs.add(processStepDTO);
 	}
 	
@@ -137,7 +161,20 @@ public List<ProcessMasterDTO> getAllProcess() {
 			throw new Exception("No ProcessStep found with the provided ID in the DB :"+id);
 		}
 		
-		
 	}
 	
+	//Implementation for ProcessConfig API
+	
+public List<ProcessConfigDTO> getAllProcessConfig() {
+		
+		List<ProcessConfig> processconfigs = processConfigRepository.findAll();
+		List<ProcessConfigDTO> processconfigDTOs = new ArrayList<ProcessConfigDTO>();
+		ProcessConfigDTO processConfigDTO = null;
+		for (ProcessConfig processconfig : processconfigs) {
+			processConfigDTO = modelMapper.map(processconfig,ProcessConfigDTO.class);
+			processconfigDTOs.add(processConfigDTO);
+	}
+	
+		return processconfigDTOs;
+}
 }

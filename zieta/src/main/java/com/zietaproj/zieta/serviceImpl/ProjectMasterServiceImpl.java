@@ -17,6 +17,7 @@ import com.zietaproj.zieta.model.ActivityMaster;
 import com.zietaproj.zieta.model.CustInfo;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.ProjectMaster;
+import com.zietaproj.zieta.model.RoleMaster;
 import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.TaskTypeMaster;
 import com.zietaproj.zieta.model.UserInfo;
@@ -29,6 +30,7 @@ import com.zietaproj.zieta.repository.ProjectMasterRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.request.EditProjStatusRequest;
 import com.zietaproj.zieta.request.EditTasksByClientProjectRequest;
+import com.zietaproj.zieta.request.ProjectMasterEditRequest;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
 import com.zietaproj.zieta.response.ProjectTypeByClientResponse;
 import com.zietaproj.zieta.response.ProjectsByClientResponse;
@@ -168,6 +170,48 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 			throw new Exception("Status not found with the provided activity ID : "+editprojStatusRequest.getProjectInfoId());
 		}
 	}
+	
+	@Override
+	public void editProjectsById(@Valid ProjectMasterEditRequest projectmasterEditRequest) throws Exception {
+	
+		Optional<ProjectMaster> projectMasterEntity = projectMasterRepository.findById(projectmasterEditRequest.getProjectTypeId());
+		if(projectMasterEntity.isPresent()) {
+			ProjectMaster projectmaster = modelMapper.map(projectmasterEditRequest, ProjectMaster.class);
+			projectMasterRepository.save(projectmaster);
+			
+		}else {
+			throw new Exception("Project Details not found with the provided ID : "+projectmasterEditRequest.getProjectTypeId());
+		}
+		
+		
+	}
+	
+	public void deleteProjectsById(Long id, String modifiedBy) throws Exception {
+		
+		Optional<ProjectMaster> projectmaster = projectMasterRepository.findById(id);
+		if (projectmaster.isPresent()) {
+			ProjectMaster projectmasterEntitiy = projectmaster.get();
+			short delete = 1;
+			projectmasterEntitiy.setIsDelete(delete);
+			projectmasterEntitiy.setModifiedBy(modifiedBy);
+			projectMasterRepository.save(projectmasterEntitiy);
+
+		}else {
+		//	log.info("No ProjectDetails found with the provided ID{} in the DB",id);
+			throw new Exception("No ProjectDetails found with the provided ID in the DB :"+id);
+		}
+		
+		
+		
+	}
+
+	
+	
+	
+	
+	
+	
+	
 }
 
 	

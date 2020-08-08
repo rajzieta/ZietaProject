@@ -23,6 +23,8 @@ import com.zietaproj.zieta.dto.ProjectMasterDTO;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.ProjectMaster;
 import com.zietaproj.zieta.request.EditProjStatusRequest;
+import com.zietaproj.zieta.request.ProjectMasterEditRequest;
+import com.zietaproj.zieta.request.RoleMasterEditRequest;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
 import com.zietaproj.zieta.response.ProjectTypeByClientResponse;
 import com.zietaproj.zieta.response.ProjectsByClientResponse;
@@ -93,6 +95,21 @@ public class ProjectMasterController {
 			return new ResponseEntity<List<ProjectTypeByClientResponse>>(HttpStatus.NOT_FOUND);
 		}
 	}
+
+	@ApiOperation(value = "Updates the Project master for the provided Id", notes = "Table reference: project_master")
+	@RequestMapping(value = "editProjectMasterById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editProjectMasterById(@Valid @RequestBody ProjectMasterEditRequest projectmasterEditRequest) throws Exception {
+		projectmasterService.editProjectsById(projectmasterEditRequest);
+		
+	}
+	
+	@ApiOperation(value = "Deletes entries from project_master based on Id", notes = "Table reference: project_master")
+	@RequestMapping(value = "deleteProjectMasterById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteProjectMasterById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		projectmasterService.deleteProjectsById(id, modifiedBy);
+	}
+	
+	
 	
 	
 	@RequestMapping(value = "editProjectStatus", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)

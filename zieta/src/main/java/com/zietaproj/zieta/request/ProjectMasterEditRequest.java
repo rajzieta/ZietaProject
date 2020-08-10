@@ -7,9 +7,18 @@ import lombok.Setter;
 @Setter
 public class ProjectMasterEditRequest {
 	
-	private Long projectTypeId;
+	private Long projectInfoId;
     private Long clientId;
-    private String typeName;
+    private String projectCode;
+    private String projectName;
+    private long projectType;
+    private long projectOrgNode;
+    private Long projectManager;
+    private Long templateId;
+    private Long directApprover;
+    private short allowUnplanned;
+    private Long custId;
+    private Long projectStatus;
     private String modifiedBy;
     private String createdBy;
     private short isDelete;

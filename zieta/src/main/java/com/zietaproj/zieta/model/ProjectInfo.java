@@ -43,8 +43,8 @@ public class ProjectInfo extends BaseEntity implements Serializable {
 	@Column(name = "project_manager")
 	private Long projectManager;
 	
-	@Column(name = "process_id")
-	private Long processId;
+	@Column(name = "template_id")
+	private Long templateId;
 	
 	@Column(name = "direct_approver")
 	private Long directApprover;

@@ -15,12 +15,17 @@ import org.springframework.util.StringUtils;
 
 import com.google.common.collect.Ordering;
 import com.google.common.primitives.Longs;
+import com.zietaproj.zieta.common.ApproverType;
+import com.zietaproj.zieta.model.ProcessConfig;
+import com.zietaproj.zieta.model.ProjectInfo;
+import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.response.TasksByClientProjectResponse;
 
 public class TSMUtil {
 	
 	private final static String SPACE = " ";
+	private final static String SEPERATOR = "|";
 	
 	public static String getFullName(UserInfo userInfo) {
 
@@ -133,6 +138,28 @@ public class TSMUtil {
 			}
 		}
 		treeTask.sort(getSortOrder());
+	}
+	
+	
+	public static String getApproverId(TaskInfo taskInfo, ProjectInfo projectInfo, ProcessConfig processConfig) {
+		
+		if (null != processConfig.getApproverType()) {
+
+			if (processConfig.getApproverType().equals(ApproverType.TASKMANAGER.getApproverType())) {
+				return taskInfo.getTaskManager().toString();
+
+			} else if (processConfig.getApproverType().equals(ApproverType.PROJECTMANAGER.getApproverType())) {
+				return projectInfo.getProjectManager().toString();
+			} else if (processConfig.getApproverType().equals(ApproverType.DIRECTAPPROVER.getApproverType())) {
+				return projectInfo.getDirectApprover().toString();
+			} else if (processConfig.getApproverType().equals(ApproverType.TMORPM.getApproverType())) {
+
+				return taskInfo.getTaskManager().toString().concat(SEPERATOR)
+						.concat(projectInfo.getProjectManager().toString());
+			}
+		}
+		
+		return null;
 	}
 
 }

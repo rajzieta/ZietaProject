@@ -174,13 +174,13 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	@Override
 	public void editProjectsById(@Valid ProjectMasterEditRequest projectmasterEditRequest) throws Exception {
 	
-		Optional<ProjectMaster> projectMasterEntity = projectMasterRepository.findById(projectmasterEditRequest.getProjectTypeId());
-		if(projectMasterEntity.isPresent()) {
-			ProjectMaster projectmaster = modelMapper.map(projectmasterEditRequest, ProjectMaster.class);
-			projectMasterRepository.save(projectmaster);
+		Optional<ProjectInfo> projectInfoEntity = projectInfoRepository.findById(projectmasterEditRequest.getProjectInfoId());
+		if(projectInfoEntity.isPresent()) {
+			ProjectInfo projectinfo = modelMapper.map(projectmasterEditRequest, ProjectInfo.class);
+			projectInfoRepository.save(projectinfo);
 			
 		}else {
-			throw new Exception("Project Details not found with the provided ID : "+projectmasterEditRequest.getProjectTypeId());
+			throw new Exception("Project Details not found with the provided ID : "+projectmasterEditRequest.getProjectInfoId());
 		}
 		
 		
@@ -188,13 +188,13 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	
 	public void deleteProjectsById(Long id, String modifiedBy) throws Exception {
 		
-		Optional<ProjectMaster> projectmaster = projectMasterRepository.findById(id);
-		if (projectmaster.isPresent()) {
-			ProjectMaster projectmasterEntitiy = projectmaster.get();
+		Optional<ProjectInfo> projectinfo = projectInfoRepository.findById(id);
+		if (projectinfo.isPresent()) {
+			ProjectInfo projectinfoEntitiy = projectinfo.get();
 			short delete = 1;
-			projectmasterEntitiy.setIsDelete(delete);
-			projectmasterEntitiy.setModifiedBy(modifiedBy);
-			projectMasterRepository.save(projectmasterEntitiy);
+			projectinfoEntitiy.setIsDelete(delete);
+			projectinfoEntitiy.setModifiedBy(modifiedBy);
+			projectInfoRepository.save(projectinfoEntitiy);
 
 		}else {
 		//	log.info("No ProjectDetails found with the provided ID{} in the DB",id);

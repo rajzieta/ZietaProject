@@ -96,14 +96,14 @@ public class ProjectMasterController {
 		}
 	}
 
-	@ApiOperation(value = "Updates the Project master for the provided Id", notes = "Table reference: project_master")
-	@RequestMapping(value = "editProjectMasterById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void editProjectMasterById(@Valid @RequestBody ProjectMasterEditRequest projectmasterEditRequest) throws Exception {
+	@ApiOperation(value = "Updates the Projects for the provided Id", notes = "Table reference: project_info")
+	@RequestMapping(value = "editProjectMaster", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editProjectMaster(@Valid @RequestBody ProjectMasterEditRequest projectmasterEditRequest) throws Exception {
 		projectmasterService.editProjectsById(projectmasterEditRequest);
 		
 	}
 	
-	@ApiOperation(value = "Deletes entries from project_master based on Id", notes = "Table reference: project_master")
+	@ApiOperation(value = "Deletes entries from project_info based on Id", notes = "Table reference: project_info")
 	@RequestMapping(value = "deleteProjectMasterById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void deleteProjectMasterById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
 		projectmasterService.deleteProjectsById(id, modifiedBy);

@@ -2,9 +2,7 @@ package com.zietaproj.zieta.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -12,12 +10,12 @@ import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zietaproj.zieta.dto.TaskMasterDTO;
+import com.zietaproj.zieta.model.ProcessConfig;
+import com.zietaproj.zieta.model.ProcessSteps;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.StatusMaster;
 import com.zietaproj.zieta.model.TaskInfo;
@@ -25,6 +23,8 @@ import com.zietaproj.zieta.model.TaskTypeMaster;
 import com.zietaproj.zieta.model.TasksByUser;
 import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
+import com.zietaproj.zieta.repository.ProcessConfigRepository;
+import com.zietaproj.zieta.repository.ProcessStepsRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
 import com.zietaproj.zieta.repository.StatusMasterRepository;
 import com.zietaproj.zieta.repository.TaskInfoRepository;
@@ -47,7 +47,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(TaskTypeMasterServiceImpl.class);
 	
 	@Autowired
 	TaskTypeMasterRepository taskTypeMasterRepository;
@@ -69,6 +68,12 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 	
 	@Autowired
 	ClientInfoRepository clientInfoRepository;
+	
+	@Autowired
+	ProcessConfigRepository processConfigRepository;
+	
+	@Autowired
+	ProcessStepsRepository processStepsRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -205,10 +210,32 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 	public boolean saveTaskInfo(TaskInfo taskInfo) {
 		try {
 			TaskInfo taskInfoDB = taskInfoRepository.save(taskInfo);
-			System.out.println("Task ID: "+taskInfoDB.getTaskInfoId());
+			ProjectInfo projectInfo = projectInfoRepository.findById(taskInfo.getProjectId()).get();
+			
+			List<ProcessConfig> processConfigList = processConfigRepository.findByTemplateId(projectInfo.getTemplateId());
+			
+			//construct process-steps entries based on the template-id used by project
+			
+			List<ProcessSteps> processStepsList = new ArrayList<ProcessSteps>();
+			ProcessSteps processSteps = null;
+			for (ProcessConfig processConfig : processConfigList) {
+				processSteps = new  ProcessSteps();
+				processSteps.setClientId(taskInfo.getClientId());
+				processSteps.setProjectId(taskInfo.getProjectId());
+				processSteps.setTemplateId(taskInfo.getProjectId());
+				processSteps.setTemplateId(projectInfo.getTemplateId());
+				processSteps.setProjectTaskId(taskInfoDB.getTaskInfoId());
+				processSteps.setStepId(processConfig.getStepId());
+				String approverId = TSMUtil.getApproverId(taskInfoDB, projectInfo, processConfig);
+				processSteps.setApproverId(approverId);
+				processStepsList.add(processSteps);
+			}
+			
+			processStepsRepository.saveAll(processStepsList);
+			
 			return true;
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error("Exception occured during the save task information",ex);
 			return false;
 		}
 

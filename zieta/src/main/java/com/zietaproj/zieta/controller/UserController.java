@@ -2,6 +2,8 @@ package com.zietaproj.zieta.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zietaproj.zieta.dto.ProcessStepsDTO;
 import com.zietaproj.zieta.dto.UserInfoDTO;
+import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.request.LoginRequest;
+import com.zietaproj.zieta.request.UserInfoEditRequest;
 import com.zietaproj.zieta.response.LoginResponse;
 import com.zietaproj.zieta.response.UserDetailsResponse;
 import com.zietaproj.zieta.service.UserAccessTypeService;
@@ -79,4 +84,24 @@ public class UserController {
 	}
 
 
+
+	@ApiOperation(value = "creates entries in the user_info table", notes = "Table reference: user_info")
+	@RequestMapping(value = "addUsersInfo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addUsersInfo(@Valid @RequestBody UserInfo userinfo) {
+		userInfoService.addUsersInfo(userinfo);
+	}
+
+	
+	
+	@ApiOperation(value = "Updates the Users Information for the provided Id", notes = "Table reference: user_info")
+	@RequestMapping(value = "editUsersById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editUsersById(@Valid @RequestBody UserInfoEditRequest userinfoeditRequest) throws Exception {
+		userInfoService.editUsersById(userinfoeditRequest);
+		
+		
+	}
+	
+	
+	
+	
 }

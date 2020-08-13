@@ -3,25 +3,37 @@ package com.zietaproj.zieta.serviceImpl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.zietaproj.zieta.dto.ProcessStepsDTO;
 import com.zietaproj.zieta.dto.UserInfoDTO;
+import com.zietaproj.zieta.model.ProcessSteps;
 import com.zietaproj.zieta.model.ScreensMaster;
 import com.zietaproj.zieta.model.UserAccessType;
 import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.repository.AccessTypeScreenMappingRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
+import com.zietaproj.zieta.request.UserInfoEditRequest;
 import com.zietaproj.zieta.response.LoginResponse;
 import com.zietaproj.zieta.response.UserDetailsResponse;
 import com.zietaproj.zieta.service.AccessTypeMasterService;
 import com.zietaproj.zieta.service.ScreensMasterService;
 import com.zietaproj.zieta.service.UserAccessTypeService;
 import com.zietaproj.zieta.service.UserInfoService;
+
+import io.swagger.annotations.ApiOperation;
 
 
 
@@ -42,6 +54,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 	
 	@Autowired
 	AccessTypeMasterService accessTypeMasterService;
+	
+	@Autowired
+	UserInfoService userInfoService;
 	
 	@Autowired
 	ClientInfoRepository clientInfoRepo;
@@ -152,6 +167,24 @@ public class UserInfoServiceImpl implements UserInfoService {
 	}
 
 	
+	
+	@Override
+	public void addUsersInfo(UserInfo userinfo) {
+		userInfoRepositoryRepository.save(userinfo);
+	}
 
+
+	public void editUsersById(@Valid UserInfoEditRequest userinfoeditRequest) throws Exception {
+		
+		Optional<UserInfo> userinfoEntity = userInfoRepositoryRepository.findById(userinfoeditRequest.getId());
+		if(userinfoEntity.isPresent()) {
+			UserInfo userinfo = modelMapper.map(userinfoeditRequest, UserInfo.class);
+			userInfoRepositoryRepository.save(userinfo);
+			
+		}else {
+			throw new Exception("User not found with the provided ID : "+userinfoeditRequest.getId());
+		}
+		
+	}
 	
 }

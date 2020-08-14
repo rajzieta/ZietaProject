@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -13,29 +14,36 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import com.zietaproj.zieta.common.ActionType;
+import com.zietaproj.zieta.common.StateType;
 import com.zietaproj.zieta.dto.WorkflowDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
+import com.zietaproj.zieta.model.ProcessSteps;
 import com.zietaproj.zieta.model.TSInfo;
 import com.zietaproj.zieta.model.TSTimeEntries;
 import com.zietaproj.zieta.model.TSWorkflow;
 import com.zietaproj.zieta.model.TaskInfo;
+import com.zietaproj.zieta.model.WorkflowRequest;
 import com.zietaproj.zieta.repository.ActivityMasterRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
+import com.zietaproj.zieta.repository.ProcessStepsRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
 import com.zietaproj.zieta.repository.TSInfoRepository;
 import com.zietaproj.zieta.repository.TSTimeEntriesRepository;
 import com.zietaproj.zieta.repository.TaskInfoRepository;
 import com.zietaproj.zieta.repository.WorkflowRepository;
+import com.zietaproj.zieta.repository.WorkflowRequestRepository;
 import com.zietaproj.zieta.request.TimeEntriesByTsIdRequest;
-import com.zietaproj.zieta.request.UpdateTaskInfoRequest;
 import com.zietaproj.zieta.request.UpdateTimesheetByIdRequest;
 import com.zietaproj.zieta.response.TSInfoModel;
 import com.zietaproj.zieta.response.TimeEntriesByTimesheetIDResponse;
 import com.zietaproj.zieta.service.TimeSheetService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
 @Transactional
+@Slf4j
 public class TimeSheetServiceImpl implements TimeSheetService {
 	
 	@Autowired
@@ -58,6 +66,12 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	
 	@Autowired
 	WorkflowRepository workflowRepository;
+	
+	@Autowired
+	WorkflowRequestRepository workflowRequestRepository;
+	
+	@Autowired
+	ProcessStepsRepository processStepsRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -109,13 +123,107 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	}
 	
 	
-	public List<TSInfo> addTimeSheet(@Valid List<TSInfo> tsinfo) {
+	public List<TSInfo> addTimeSheet(@Valid List<TSInfo> tsInfoList) {
 		
-		 List<TSInfo> tsinfoEntites = tSInfoRepository.saveAll(tsinfo);
+		 List<TSInfo> tsinfoEntites = tSInfoRepository.saveAll(tsInfoList);
+		 
+//		 submitTimeSheet(tsinfoEntites);
 		 
 		 return tsinfoEntites;
 	}
 	
+	
+	public boolean submitTimeSheet(@Valid List<TSInfo> tsInfoList) {
+		// call to save workflow_request
+		try {
+			List<WorkflowRequest> workflowRequestList = new ArrayList<WorkflowRequest>();
+			WorkflowRequest workflowRequest = null;
+			for (TSInfo tsInfo : tsInfoList) {
+				
+				//get the approverid from the process_step based on the clientId, projectId and taskId
+				List<ProcessSteps> processStepsList = processStepsRepository.findByClientIdAndProjectIdAndProjectTaskId(
+						tsInfo.getClientId(),tsInfo.getProjectId(), tsInfo.getTaskId());
+				List<ProcessSteps> processStepFiltered = processStepsList.stream().filter(
+						step -> step.getStepId().equals(StateType.INITIAL.getStateType())).collect(Collectors.toList());
+				String approverIds[] = processStepFiltered.get(0).getApproverId().split("\\|");
+				
+				for (String approverId : approverIds) {
+					
+					workflowRequest = new WorkflowRequest();
+					workflowRequest.setActionType(ActionType.INITIAL.getActionType());  
+					workflowRequest.setApproverId(Long.valueOf(approverId));
+					workflowRequest.setClientId(tsInfo.getClientId());
+					workflowRequest.setComments("Submitted for Approval");
+					workflowRequest.setActionDate(new Date());
+					workflowRequest.setCurrentStep(1L);
+					workflowRequest.setProjectId(tsInfo.getProjectId());
+					workflowRequest.setProjectTaskId(tsInfo.getTaskId());
+					workflowRequest.setRequestorId(tsInfo.getUserId());
+					workflowRequest.setRequestDate(new Date());
+					workflowRequest.setStateType(StateType.START.getStateType()); 
+					workflowRequest
+							.setTemplateId(projectInfoRepository.findById(tsInfo.getProjectId()).get().getTemplateId());
+					workflowRequest.setTsId(tsInfo.getId());
+					workflowRequestList.add(workflowRequest);
+					
+				}
+				
+			}
+			
+			workflowRequestRepository.saveAll(workflowRequestList);
+		} catch (Exception e) {
+			log.error("Exception occured while populating workflow request", e);
+			return false;
+		}
+		return true;
+	}
+	
+	
+	
+	public void processWorkFlow(Long workFlowRequestId, short actionType) {
+		
+		WorkflowRequest workFlowRequest = workflowRequestRepository.findById(workFlowRequestId).get();
+		
+		List<ProcessSteps> processStepsList = processStepsRepository.findByClientIdAndProjectIdAndProjectTaskId(
+				workFlowRequest.getClientId(),workFlowRequest.getProjectId(), workFlowRequest.getProjectTaskId());
+		int workFlowDepth = processStepsList.size();
+		if(actionType == ActionType.APPROVE.getActionType()) {
+			//promote the approval to next level
+			long currentStep = workFlowRequest.getCurrentStep();
+			if( currentStep <= workFlowDepth) {
+				if(currentStep != workFlowDepth) {
+					long nextStep = currentStep + 1;
+					List<ProcessSteps> processStepFiltered = processStepsList.stream().filter(step -> step.getStepId().equals(nextStep)).collect(Collectors.toList());
+					workFlowRequest.setCurrentStep(nextStep);
+					workFlowRequest.setComments("Promoting to next level approval");
+					workFlowRequest.setApproverId(Long.valueOf(processStepFiltered.get(0).getApproverId()));
+					workFlowRequest.setStateType(StateType.INPROCESS.getStateType());
+					workFlowRequest.setActionDate(new Date());
+				}else {
+					workFlowRequest.setComments("Final Approval Done");
+					workFlowRequest.setStateType(StateType.COMPLETE.getStateType());
+					workFlowRequest.setActionType(ActionType.APPROVE.getActionType());
+					workFlowRequest.setActionDate(new Date());
+					workFlowRequest.setApproverId(null);
+				}
+				
+				
+			}
+		}else if(actionType == ActionType.REJECT.getActionType()) {
+			workFlowRequest.setComments("Request Rejected");
+			workFlowRequest.setStateType(StateType.REJECT.getStateType());
+			workFlowRequest.setActionType(ActionType.REJECT.getActionType());
+			workFlowRequest.setActionDate(new Date());
+			workFlowRequest.setApproverId(0L);
+		}else if(actionType == ActionType.REVISE.getActionType()) {
+			workFlowRequest.setComments("Request sent for revise");
+			workFlowRequest.setActionDate(new Date());
+			workFlowRequest.setStateType(StateType.START.getStateType());
+			workFlowRequest.setActionType(ActionType.REVISE.getActionType());
+			workFlowRequest.setApproverId(0L);
+		}
+		
+	}
 	
 	@Override
 	public List<TimeEntriesByTimesheetIDResponse> getTimeEntriesByTsID(Long tsId) {

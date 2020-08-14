@@ -15,11 +15,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
-@Table(name = "PROCESS_STEPS")
+@Table(name = "wf_process_steps")
 @Data
 @EqualsAndHashCode(callSuper=false)
-@JsonIgnoreProperties(value = {"createdDate", "modifiedDate"}, 
-allowGetters = true)
 public class ProcessSteps implements Serializable {
 
 	@Id

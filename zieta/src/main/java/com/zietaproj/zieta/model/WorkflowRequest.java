@@ -4,28 +4,18 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 
-import org.springframework.data.annotation.CreatedDate;
-//import org.springframework.data.annotation.CurrentDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
 
 @Entity
-@Table(name = "WORKFLOW_REQUEST")
-@EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
-        allowGetters = true)
-
-
+@Table(name = "wf_request")
+@Data
 public class WorkflowRequest {
 
 
@@ -33,7 +23,6 @@ public class WorkflowRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     @Column(name="client_id")
     private Long clientId;
 
@@ -47,15 +36,15 @@ public class WorkflowRequest {
     private Long projectTaskId;
   
     @Column(name="ts_id")
-    private String tsId;
+    private Long tsId;
     
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="request_date")
     private Date requestDate;
     
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="current_date")
-    private Date currentDate;
+    @Column(name="action_date")
+    private Date actionDate;
     
     
     @Column(name="current_step")
@@ -64,6 +53,9 @@ public class WorkflowRequest {
     
     @Column(name="approver_id")
     private Long approverId;
+    
+    @Column(name="requestor_id")
+    private Long requestorId;
     
     @Column(name="state_type")
     private Long stateType;

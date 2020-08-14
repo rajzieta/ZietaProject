@@ -13,7 +13,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
-@Table(name = "PROCESS_CONFIG")
+@Table(name = "wf_process_config")
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class ProcessConfig implements Serializable {

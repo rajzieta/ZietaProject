@@ -15,7 +15,7 @@ import com.zietaproj.zieta.response.TimeEntriesByTimesheetIDResponse;
 public interface TimeSheetService {
 
 	public List<TSInfoModel> getTimeEntriesByUserDates(Long clientId, Long userId, Date startDate, Date endDate);
-	
+
 	public List<TSInfo> addTimeSheet(@Valid List<TSInfo> tsinfo);
 
 	public List<TimeEntriesByTimesheetIDResponse> getTimeEntriesByTsID(Long tsId);
@@ -24,11 +24,15 @@ public interface TimeSheetService {
 
 	public void updateTimeSheetById(@Valid UpdateTimesheetByIdRequest updatetimesheetRequest) throws Exception;
 
-public void updateTimeSheetByIds(@Valid List<UpdateTimesheetByIdRequest> updatetimesheetRequest) throws Exception;
+	public void updateTimeSheetByIds(@Valid List<UpdateTimesheetByIdRequest> updatetimesheetRequest) throws Exception;
 
-public List<WorkflowDTO> getAllWorkflowDetails();
+	public List<WorkflowDTO> getAllWorkflowDetails();
 
-public void updateTimeEntriesByID(@Valid TimeEntriesByTsIdRequest timeentriesByTsIdRequest) throws Exception;
+	public void updateTimeEntriesByID(@Valid TimeEntriesByTsIdRequest timeentriesByTsIdRequest) throws Exception;
 
-public void updateTimeEntriesByIds(List<TimeEntriesByTsIdRequest> timeentriesByTsIdRequest) throws Exception;
+	public void updateTimeEntriesByIds(List<TimeEntriesByTsIdRequest> timeentriesByTsIdRequest) throws Exception;
+
+	public void processWorkFlow(Long id, short actionType);
+	
+	public boolean submitTimeSheet(@Valid List<TSInfo> tsInfoList);
 }

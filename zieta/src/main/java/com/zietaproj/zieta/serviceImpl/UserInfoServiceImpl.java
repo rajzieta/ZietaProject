@@ -11,6 +11,8 @@ import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +27,7 @@ import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.repository.AccessTypeScreenMappingRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
+import com.zietaproj.zieta.request.PasswordEditRequest;
 import com.zietaproj.zieta.request.UserInfoEditRequest;
 import com.zietaproj.zieta.response.LoginResponse;
 import com.zietaproj.zieta.response.UserDetailsResponse;
@@ -63,6 +66,12 @@ public class UserInfoServiceImpl implements UserInfoService {
 	
 	@Autowired
 	ModelMapper modelMapper;
+	
+//	@Autowired
+//    private PasswordEncoder passwordEncoder;
+//	
+//	@Autowired
+//    private BCrypt bcrypt;
 	
 	@Override
 	public List<UserInfoDTO> getAllUserInfoDetails() {
@@ -186,5 +195,39 @@ public class UserInfoServiceImpl implements UserInfoService {
 		}
 		
 	}
+	
+	@Override
+	public void EditPasswordByEmailId(@Valid PasswordEditRequest passwordeditRequest) throws Exception {
+		
+		Optional<UserInfo> userinfoEntit = userInfoRepositoryRepository.findById(passwordeditRequest.getId());
+		UserInfo useremail = userInfoRepositoryRepository.findByEmail(passwordeditRequest.getEmail());
+		if(useremail!= null && userinfoEntit.isPresent()) {
+			
+			UserInfo userPassSave = userinfoEntit.get();
+		 if ((passwordeditRequest.getOldPassword()).equals(userPassSave.getPassword())) {
+			
+			userPassSave.setPassword(passwordeditRequest.getNewPassword());
+			userPassSave.setPassword(passwordeditRequest.getConfirmPassword());
+			if(passwordeditRequest.getNewPassword().equals(passwordeditRequest.getConfirmPassword())) {
+			userInfoRepositoryRepository.save(userPassSave);
+			}
+			
+			else {
+				throw new Exception("New Password and confirm password doesn't match: ");
+				
+			}
+		}
+		else {
+			throw new Exception("Old Password doesnt match with the current password : ");
+			
+		}
+		}
+		else {
+			throw new Exception("User doesnt exist : ");
+			
+		}
+	}
+	
+	
 	
 }

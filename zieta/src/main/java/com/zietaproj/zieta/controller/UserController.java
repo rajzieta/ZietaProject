@@ -19,6 +19,7 @@ import com.zietaproj.zieta.dto.ProcessStepsDTO;
 import com.zietaproj.zieta.dto.UserInfoDTO;
 import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.request.LoginRequest;
+import com.zietaproj.zieta.request.PasswordEditRequest;
 import com.zietaproj.zieta.request.UserInfoEditRequest;
 import com.zietaproj.zieta.response.LoginResponse;
 import com.zietaproj.zieta.response.UserDetailsResponse;
@@ -100,6 +101,18 @@ public class UserController {
 		
 		
 	}
+	
+	
+	///change password
+	
+	@ApiOperation(value = "Change the password for the provided emailId", notes = "Table reference: user_info")
+	@RequestMapping(value = "EditPasswordByEmailId", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void EditPasswordByEmailId(@Valid @RequestBody PasswordEditRequest passwordeditRequest) throws Exception {
+		userInfoService.EditPasswordByEmailId(passwordeditRequest);
+		
+	}
+	
+	
 	
 	
 	

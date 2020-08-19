@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import com.zietaproj.zieta.dto.UserInfoDTO;
 import com.zietaproj.zieta.model.UserInfo;
+import com.zietaproj.zieta.request.PasswordEditRequest;
 import com.zietaproj.zieta.request.UserInfoEditRequest;
 import com.zietaproj.zieta.response.LoginResponse;
 import com.zietaproj.zieta.response.UserDetailsResponse;
@@ -25,4 +26,6 @@ public interface UserInfoService {
 	public void addUsersInfo(@Valid UserInfo userinfo);
 
 	public void editUsersById(@Valid UserInfoEditRequest userinfoeditRequest) throws Exception;
+
+	public void EditPasswordByEmailId(@Valid PasswordEditRequest passwordeditRequest) throws Exception;
 }

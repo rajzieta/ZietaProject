@@ -136,12 +136,25 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	
 	@Transactional
 	public List<TSInfo> addTimeSheet(@Valid List<TSInfo> tsInfoList) {
+
 		
-		 List<TSInfo> tsinfoEntites = tSInfoRepository.saveAll(tsInfoList);
-		 
-//		 submitTimeSheet(tsinfoEntites);
-		 
-		 return tsinfoEntites;
+		boolean statusTypesLoad = Boolean.FALSE;
+		Map<String, Long> statusTypes = null;
+		for (TSInfo tsInfo : tsInfoList) {
+
+			if (!statusTypesLoad) {
+				statusTypes = getStatus(tsInfo);
+				// loaded once, no need to retrieve in all iterations;
+				statusTypesLoad = Boolean.TRUE;
+
+			}
+			tsInfo.setStatusId(statusTypes.get(Status.DRAFT.getStatus()));
+		}
+		
+		List<TSInfo> tsinfoEntites = tSInfoRepository.saveAll(tsInfoList);
+		// submitTimeSheet(tsinfoEntites);
+
+		return tsinfoEntites;
 	}
 	
 	
@@ -159,7 +172,8 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 				List<ProcessSteps> processStepsList = processStepsRepository.findByClientIdAndProjectIdAndProjectTaskId(
 						tsInfo.getClientId(),tsInfo.getProjectId(), tsInfo.getTaskId());
 				List<ProcessSteps> processStepFiltered = processStepsList.stream().filter(
-						step -> step.getStepId().equals(StateType.INITIAL.getStateType())).collect(Collectors.toList());
+						step -> step.getStepId().equals(StateType.INITIAL.getStateTypeId())).collect(Collectors.toList());
+			 
 				String approverIds[] = null;
 				if(processStepFiltered.get(0).getApproverId() != null && !processStepFiltered.get(0).getApproverId().isEmpty()){
 					
@@ -173,31 +187,13 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 					
 				}
 				
+			
+				
 				if(approverIds == null) {
 
 					// we are in the condition where there are NO approvals
-					workflowRequest = new WorkflowRequest();
 					tsInfo.setStatusId(statusTypes.get(Status.APPROVED.getStatus()));
 					tSInfoRepository.save(tsInfo);
-					workflowRequest.setComments("No Approval required");
-					workflowRequest.setApproverId(null);
-					workflowRequest.setActionType(ActionType.APPROVE.getActionType());
-					workflowRequest.setStateType(StateType.COMPLETE.getStateType()); 
-					
-					workflowRequest.setClientId(tsInfo.getClientId());
-					workflowRequest.setActionDate(new Date());
-					workflowRequest.setCurrentStep(1L);
-					workflowRequest.setProjectId(tsInfo.getProjectId());
-					workflowRequest.setProjectTaskId(tsInfo.getTaskId());
-					workflowRequest.setRequestorId(tsInfo.getUserId());
-					workflowRequest.setRequestDate(new Date());
-					workflowRequest
-							.setTemplateId(projectInfoRepository.findById(tsInfo.getProjectId()).get().getTemplateId());
-					workflowRequest.setTsId(tsInfo.getId());
-					workflowRequestList.add(workflowRequest);
-					
-				
-					
 				}else {
 					for (String approverId : approverIds) {
 						
@@ -207,7 +203,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 						workflowRequest.setActionType(ActionType.INITIAL.getActionType());
 						workflowRequest.setApproverId(Long.valueOf(approverId));
 						workflowRequest.setComments("Submitted for Approval");
-						workflowRequest.setStateType(StateType.START.getStateType());
+						workflowRequest.setStateType(StateType.START.getStateTypeId());
 
 						workflowRequest.setClientId(tsInfo.getClientId());
 						workflowRequest.setActionDate(new Date());
@@ -268,7 +264,8 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 					//Promoting to next level approval
 					workFlowRequest.setComments(comments);
 					workFlowRequest.setApproverId(Long.valueOf(processStepFiltered.get(0).getApproverId()));
-					workFlowRequest.setStateType(StateType.INPROCESS.getStateType());
+					workFlowRequest.setStateType(StateType.INPROCESS.getStateTypeId());
+
 					// approved from the current step point of view
 					workFlowRequest.setActionType(ActionType.APPROVE.getActionType());
 					workFlowRequest.setActionDate(new Date());
@@ -277,7 +274,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 					workFlowRequest.setComments(comments);
 					tsInfo.setStatusId(statusTypes.get(Status.APPROVED.getStatus()));
 					tSInfoRepository.save(tsInfo);
-					workFlowRequest.setStateType(StateType.COMPLETE.getStateType());
+					workFlowRequest.setStateType(StateType.COMPLETE.getStateTypeId());
 					workFlowRequest.setActionType(ActionType.APPROVE.getActionType());
 					workFlowRequest.setActionDate(new Date());
 				}
@@ -287,7 +284,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		}else if(actionType == ActionType.REJECT.getActionType()) {
 			//Request Rejected
 			workFlowRequest.setComments(comments);
-			workFlowRequest.setStateType(StateType.REJECT.getStateType());
+			workFlowRequest.setStateType(StateType.REJECT.getStateTypeId());
 			workFlowRequest.setActionType(ActionType.REJECT.getActionType());
 			tsInfo.setStatusId(statusTypes.get(Status.REJECTED.getStatus()));
 			tSInfoRepository.saveAndFlush(tsInfo);
@@ -296,7 +293,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 			//Request sent for revise
 			workFlowRequest.setComments(comments);
 			workFlowRequest.setActionDate(new Date());
-			workFlowRequest.setStateType(StateType.INITIAL.getStateType());
+			workFlowRequest.setStateType(StateType.INITIAL.getStateTypeId());
 			workFlowRequest.setActionType(ActionType.REVISE.getActionType());
 			tsInfo.setStatusId((statusTypes.get(Status.DRAFT.getStatus())));
 			tSInfoRepository.save(tsInfo);

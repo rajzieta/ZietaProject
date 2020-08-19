@@ -52,7 +52,10 @@ public class TSInfo extends BaseEntity implements Serializable {
 	@Column(name="ts_date")
     private Date tsDate;
   
-	@Column(name="TS_TOTAL_TIME")
-    private  float tsTotalTime;
+	@Column(name="ts_total_submitted_time")
+    private  Float tsTotalSubmittedTime;
+	
+	@Column(name="ts_total_approved_time")
+    private  Float tsTotalApprovedTime;
 	
 }

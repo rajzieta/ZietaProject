@@ -114,7 +114,7 @@ public class TimeSheetController {
 	}
 	
 	
-	@RequestMapping(value = "testProcessWorkFlow", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "processWorkFlow", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void processWorkFlow(@RequestParam(required=true) Long requestId, 
 			@RequestParam(required=true) short actionType,  @RequestParam(required=true) String comments) throws Exception {
 		timeSheetService.processWorkFlow(requestId, actionType, comments);

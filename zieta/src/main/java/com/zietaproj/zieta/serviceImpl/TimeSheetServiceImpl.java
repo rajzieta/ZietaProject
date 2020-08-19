@@ -95,7 +95,8 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	public List<TSInfoModel> getTimeEntriesByUserDates(Long clientId, Long userId, Date startDate, Date endDate) {
 		short notDeleted=0;
 		List<TSInfoModel> tsInfoModelList = new ArrayList<TSInfoModel>();
-		List<TSInfo> tsInfoList = tSInfoRepository.findByClientIdAndUserIdAndIsDeleteAndTsDateBetweenOrderByTaskActivityIdAscIdAsc(clientId, userId, notDeleted, startDate, endDate);
+		List<TSInfo> tsInfoList = tSInfoRepository.findByClientIdAndUserIdAndIsDeleteAndTsDateBetweenOrderByTaskActivityIdAscIdAsc(clientId, 
+				userId, notDeleted, startDate, endDate);
 		for (TSInfo tsInfo : tsInfoList) {
 			TSInfoModel taskInfoModel = new TSInfoModel();
 			taskInfoModel.setTsInfo(tsInfo);
@@ -152,7 +153,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		}
 		
 		List<TSInfo> tsinfoEntites = tSInfoRepository.saveAll(tsInfoList);
-		// submitTimeSheet(tsinfoEntites);
+//		submitTimeSheet(tsinfoEntites);
 
 		return tsinfoEntites;
 	}
@@ -187,34 +188,23 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 					
 				}
 				
-			
-				
 				if(approverIds == null) {
 
-					// we are in the condition where there are NO approvals
+					// we are in the condition where there are NO approvals required
 					tsInfo.setStatusId(statusTypes.get(Status.APPROVED.getStatus()));
 					tSInfoRepository.save(tsInfo);
 				}else {
-					for (String approverId : approverIds) {
+					List<WorkflowRequest> exsitignList = workflowRequestRepository.findByTsId(tsInfo.getId());
+					for (int i=0 ; i < approverIds.length; i++) {
 						
+						// check does the WF exists or not, if exisits means it came for revise.
+						// dont create the new WF request, instead change the 
 						workflowRequest = new WorkflowRequest();
-
-						tsInfo.setStatusId(statusTypes.get(Status.SUBMITTED.getStatus()));
-						workflowRequest.setActionType(ActionType.INITIAL.getActionType());
-						workflowRequest.setApproverId(Long.valueOf(approverId));
-						workflowRequest.setComments("Submitted for Approval");
-						workflowRequest.setStateType(StateType.START.getStateTypeId());
-
-						workflowRequest.setClientId(tsInfo.getClientId());
-						workflowRequest.setActionDate(new Date());
-						workflowRequest.setCurrentStep(1L);
-						workflowRequest.setProjectId(tsInfo.getProjectId());
-						workflowRequest.setProjectTaskId(tsInfo.getTaskId());
-						workflowRequest.setRequestorId(tsInfo.getUserId());
-						workflowRequest.setRequestDate(new Date());
-						workflowRequest
-								.setTemplateId(projectInfoRepository.findById(tsInfo.getProjectId()).get().getTemplateId());
-						workflowRequest.setTsId(tsInfo.getId());
+						if(exsitignList !=null && exsitignList.size() > 0) {
+							workflowRequest = exsitignList.get(i);
+						}
+						
+						buildWFRForSubmission(statusTypes, workflowRequest, tsInfo, approverIds[i]);
 						workflowRequestList.add(workflowRequest);
 						
 					}
@@ -229,6 +219,28 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 			return false;
 		}
 		return true;
+	}
+
+
+	private void buildWFRForSubmission(Map<String, Long> statusTypes, WorkflowRequest workflowRequest, TSInfo tsInfo,
+			String approverId) {
+		tsInfo.setStatusId(statusTypes.get(Status.SUBMITTED.getStatus()));
+		workflowRequest.setActionType(ActionType.INITIAL.getActionType());
+		workflowRequest.setApproverId(Long.valueOf(approverId));
+		workflowRequest.setComments("Submitted for Approval");
+		workflowRequest.setStateType(StateType.START.getStateTypeId());
+
+		workflowRequest.setClientId(tsInfo.getClientId());
+		// there will be no action date while submiting the WF request
+//						workflowRequest.setActionDate(new Date());
+		workflowRequest.setCurrentStep(1L);
+		workflowRequest.setProjectId(tsInfo.getProjectId());
+		workflowRequest.setProjectTaskId(tsInfo.getTaskId());
+		workflowRequest.setRequestorId(tsInfo.getUserId());
+		workflowRequest.setRequestDate(new Date());
+		workflowRequest
+				.setTemplateId(projectInfoRepository.findById(tsInfo.getProjectId()).get().getTemplateId());
+		workflowRequest.setTsId(tsInfo.getId());
 	}
 
 
@@ -252,16 +264,35 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		int workFlowDepth = processStepsList.size();
 		
 		TSInfo tsInfo = tSInfoRepository.findById(workFlowRequest.getTsId()).get();
+		
+		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByTsId(workFlowRequest.getTsId());
 		Map<String, Long> statusTypes =  getStatus(tsInfo);
-		if(actionType == ActionType.APPROVE.getActionType()) {
-			//promote the approval to next level
+		
+		for (int i = 0; workFlowRequestList != null && i < workFlowRequestList.size(); i++) {
+
+			workFlowInAction(actionType, comments, workFlowRequestList.get(i), processStepsList, workFlowDepth, tsInfo,
+					statusTypes);
+			if (actionType == ActionType.APPROVE.getActionType() && workFlowRequestList.get(i).getId() != workFlowRequestId) {
+				
+				workflowRequestRepository.deleteById(workFlowRequestList.get(i).getId());
+			}
+		}
+		
+	}
+
+
+	private void workFlowInAction(short actionType, String comments, WorkflowRequest workFlowRequest,
+			List<ProcessSteps> processStepsList, int workFlowDepth, TSInfo tsInfo, Map<String, Long> statusTypes) {
+		if (actionType == ActionType.APPROVE.getActionType()) {
+			// promote the approval to next level
 			long currentStep = workFlowRequest.getCurrentStep();
-			if( currentStep <= workFlowDepth) {
-				if(currentStep != workFlowDepth) {
+			if (currentStep <= workFlowDepth) {
+				if (currentStep != workFlowDepth) {
 					long nextStep = currentStep + 1;
-					List<ProcessSteps> processStepFiltered = processStepsList.stream().filter(step -> step.getStepId().equals(nextStep)).collect(Collectors.toList());
+					List<ProcessSteps> processStepFiltered = processStepsList.stream()
+							.filter(step -> step.getStepId().equals(nextStep)).collect(Collectors.toList());
 					workFlowRequest.setCurrentStep(nextStep);
-					//Promoting to next level approval
+					// Promoting to next level approval
 					workFlowRequest.setComments(comments);
 					workFlowRequest.setApproverId(Long.valueOf(processStepFiltered.get(0).getApproverId()));
 					workFlowRequest.setStateType(StateType.INPROCESS.getStateTypeId());
@@ -269,8 +300,8 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 					// approved from the current step point of view
 					workFlowRequest.setActionType(ActionType.APPROVE.getActionType());
 					workFlowRequest.setActionDate(new Date());
-				}else {
-					//Final Approval Done
+				} else {
+					// Final Approval Done
 					workFlowRequest.setComments(comments);
 					tsInfo.setStatusId(statusTypes.get(Status.APPROVED.getStatus()));
 					tSInfoRepository.save(tsInfo);
@@ -278,28 +309,27 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 					workFlowRequest.setActionType(ActionType.APPROVE.getActionType());
 					workFlowRequest.setActionDate(new Date());
 				}
-				
-				
+
 			}
-		}else if(actionType == ActionType.REJECT.getActionType()) {
-			//Request Rejected
+		} else if (actionType == ActionType.REJECT.getActionType()) {
+			// Request Rejected
 			workFlowRequest.setComments(comments);
 			workFlowRequest.setStateType(StateType.REJECT.getStateTypeId());
 			workFlowRequest.setActionType(ActionType.REJECT.getActionType());
 			tsInfo.setStatusId(statusTypes.get(Status.REJECTED.getStatus()));
 			tSInfoRepository.saveAndFlush(tsInfo);
 			workFlowRequest.setActionDate(new Date());
-		}else if(actionType == ActionType.REVISE.getActionType()) {
-			//Request sent for revise
+		} else if (actionType == ActionType.REVISE.getActionType()) {
+			// Request sent for revise
 			workFlowRequest.setComments(comments);
 			workFlowRequest.setActionDate(new Date());
 			workFlowRequest.setStateType(StateType.INITIAL.getStateTypeId());
 			workFlowRequest.setActionType(ActionType.REVISE.getActionType());
 			tsInfo.setStatusId((statusTypes.get(Status.DRAFT.getStatus())));
 			tSInfoRepository.save(tsInfo);
-			//Do we need to create the new Request or if its with the same request , need to start with Initial Step ?
+			// Do we need to create the new Request or if its with the same request , need
+			// to start with Initial Step ?
 		}
-		
 	}
 	
 	@Override

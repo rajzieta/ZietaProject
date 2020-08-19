@@ -15,5 +15,9 @@ public interface WorkflowRequestRepository extends JpaRepository<WorkflowRequest
 
 	public List<WorkflowRequest> findByRequestorId(long requestorId);
 	
+	public WorkflowRequest findByTsIdAndApproverId(long tsId, long approverId);
+	
+	public List<WorkflowRequest> findByTsId(long tsId);
+	
 
 }

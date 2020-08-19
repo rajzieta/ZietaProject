@@ -16,4 +16,6 @@ public interface WorkFlowRequestService {
 
 	public List<WorkFlowRequestorData> findByRequestorId(long requestorId);
 
+	public WorkflowRequest findByTsIdAndApproverId(long tsId, long approverId);
+
 }

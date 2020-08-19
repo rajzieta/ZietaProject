@@ -73,4 +73,10 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 		return workFlowRequestorDataList;
 	}
 
+
+	@Override
+	public WorkflowRequest findByTsIdAndApproverId(long tsId, long approverId) {
+		return workflowRequestRepository.findByTsIdAndApproverId(tsId, approverId);
+	}
+
 }

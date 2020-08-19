@@ -5,19 +5,21 @@ import lombok.Getter;
 @Getter
 public enum StateType {
 	
-	INITIAL(1),
+	INITIAL(1, "NULL"),
 
-	START( 2),
+	START( 2, "Start"),
 
-	INPROCESS(3),
+	INPROCESS(3, "In Process"),
 	
-	COMPLETE(4),
+	COMPLETE(4,"Complete"),
 	
-	REJECT(5);
+	REJECT(5, "Reject");
 	
-	long stateType;
+	long stateTypeId;
+	String stateName;
 	
-	StateType(long stateType){
-		this.stateType = stateType;
+	StateType(long stateTypeId, String stateName){
+		this.stateTypeId = stateTypeId;
+		this.stateName = stateName;
 	}
 }

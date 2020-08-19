@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zietaproj.zieta.dto.WorkflowDTO;
 import com.zietaproj.zieta.model.WorkflowRequest;
+
+import com.zietaproj.zieta.response.WorkFlowRequestorData;
+
 import com.zietaproj.zieta.service.TimeSheetService;
 import com.zietaproj.zieta.service.WorkFlowRequestService;
 
@@ -48,7 +51,23 @@ public class TSWorkFlowController {
 		try {
 			workFlowRequestList = workFlowRequestService.findByApproverId(approverId);
 		} catch (Exception e) {
-			log.error("Error Occured in TSWorkFlowController#getAllWorkFlowRequests", e);
+
+			log.error("Error Occured in TSWorkFlowController#getWorkFlowRequestsByApprover", e);
+		}
+		return workFlowRequestList;
+
+	}
+	
+
+	@RequestMapping(value = "getWorkFlowRequestsByRequestor", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<WorkFlowRequestorData> getWorkFlowRequestsByRequestor(@RequestParam(required = true) Long requestorId) {
+		List<WorkFlowRequestorData> workFlowRequestList = null;
+		try {
+			workFlowRequestList = workFlowRequestService.findByRequestorId(requestorId);
+		} catch (Exception e) {
+			log.error("Error Occured in TSWorkFlowController#getWorkFlowRequestsByRequestor", e);
+
+
 		}
 		return workFlowRequestList;
 

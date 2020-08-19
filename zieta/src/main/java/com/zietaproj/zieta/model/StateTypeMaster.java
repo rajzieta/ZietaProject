@@ -19,11 +19,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
-@Table(name = "STATE_TYPE_MASTER")
-@EntityListeners(AuditingEntityListener.class)
+@Table(name = "wf_state_type_master")
 @EqualsAndHashCode(callSuper=false)
-//@JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
-  //      allowGetters = true)
 @Data
 public class StateTypeMaster implements Serializable {
 

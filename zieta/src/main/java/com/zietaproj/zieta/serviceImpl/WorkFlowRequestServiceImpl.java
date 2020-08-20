@@ -8,12 +8,17 @@ import org.springframework.stereotype.Service;
 
 import com.zietaproj.zieta.common.StateType;
 import com.zietaproj.zieta.model.TSInfo;
+import com.zietaproj.zieta.model.TSTimeEntries;
 import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.model.WorkflowRequest;
+import com.zietaproj.zieta.repository.ClientInfoRepository;
+import com.zietaproj.zieta.repository.ProjectInfoRepository;
 import com.zietaproj.zieta.repository.StateTypeMasterRepository;
 import com.zietaproj.zieta.repository.TSInfoRepository;
+import com.zietaproj.zieta.repository.TSTimeEntriesRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.repository.WorkflowRequestRepository;
+import com.zietaproj.zieta.response.WFRDetailsForApprover;
 import com.zietaproj.zieta.response.WorkFlowRequestorData;
 import com.zietaproj.zieta.service.WorkFlowRequestService;
 import com.zietaproj.zieta.util.TSMUtil;
@@ -33,12 +38,48 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	UserInfoRepository userInfoRepository;
 	
 	@Autowired
+	ProjectInfoRepository projectInfoRepository;
+	
+	@Autowired
+	TSTimeEntriesRepository tSTimeEntriesRepository;
+	
+	
+	@Autowired
 	StateTypeMasterRepository stateTypeMasterRepository;
-
+	
+	
+	@Autowired
+	ClientInfoRepository clientInfoRepository;
 
 	@Override
-	public List<WorkflowRequest> findByApproverId(long approverId) {
-		return workflowRequestRepository.findByApproverId(approverId);
+	public List<WFRDetailsForApprover> findByApproverId(long approverId) {
+		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverId(approverId);
+		List<WFRDetailsForApprover> wFRDetailsForApproverList = new ArrayList<WFRDetailsForApprover>();
+		WFRDetailsForApprover wFRDetailsForApprover = null;
+		for (WorkflowRequest workflowRequest : workFlowRequestList) {
+
+			wFRDetailsForApprover = new WFRDetailsForApprover();
+			wFRDetailsForApprover.setWorkflowRequest(workflowRequest);
+
+			TSInfo tsInfo = tsInfoRepository.findById(workflowRequest.getTsId()).get();
+			wFRDetailsForApprover.setTsinfo(tsInfo);
+
+			List<TSTimeEntries> tsTimeEntriesList = tSTimeEntriesRepository.findByTsId(tsInfo.getId());
+
+			wFRDetailsForApprover.setTimeEntriesList(tsTimeEntriesList);
+
+			wFRDetailsForApprover
+					.setProjectName(projectInfoRepository.findById(tsInfo.getProjectId()).get().getProjectName());
+			wFRDetailsForApprover
+					.setRequestorName(TSMUtil.getFullName(userInfoRepository.findById(tsInfo.getUserId()).get()));
+			wFRDetailsForApprover
+					.setClientName(clientInfoRepository.findById(workflowRequest.getClientId()).get().getClientName());
+
+			wFRDetailsForApproverList.add(wFRDetailsForApprover);
+
+		}
+
+		return wFRDetailsForApproverList;
 	}
 
 

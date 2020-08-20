@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zietaproj.zieta.dto.WorkflowDTO;
-import com.zietaproj.zieta.model.WorkflowRequest;
-
+import com.zietaproj.zieta.response.WFRDetailsForApprover;
 import com.zietaproj.zieta.response.WorkFlowRequestorData;
-
 import com.zietaproj.zieta.service.TimeSheetService;
 import com.zietaproj.zieta.service.WorkFlowRequestService;
 
@@ -46,8 +44,8 @@ public class TSWorkFlowController {
 	}
 	
 	@RequestMapping(value = "getWorkFlowRequestsByApprover", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<WorkflowRequest> getAllWorkFlowRequests(@RequestParam(required = true) Long approverId) {
-		List<WorkflowRequest> workFlowRequestList = null;
+	public List<WFRDetailsForApprover> getAllWorkFlowRequests(@RequestParam(required = true) Long approverId) {
+		List<WFRDetailsForApprover> workFlowRequestList = null;
 		try {
 			workFlowRequestList = workFlowRequestService.findByApproverId(approverId);
 		} catch (Exception e) {

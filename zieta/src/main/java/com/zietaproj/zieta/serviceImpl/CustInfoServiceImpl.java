@@ -2,11 +2,17 @@ package com.zietaproj.zieta.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.zietaproj.zieta.dto.CustInfoDTO;
 import com.zietaproj.zieta.model.CustInfo;
 import com.zietaproj.zieta.model.CustOrgNodeMapping;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
@@ -16,9 +22,13 @@ import com.zietaproj.zieta.response.CustomerInfoModel;
 import com.zietaproj.zieta.response.CustomerInformationModel;
 import com.zietaproj.zieta.service.CustInfoService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class CustInfoServiceImpl implements CustInfoService {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(CustInfoServiceImpl.class);
 	
 	@Autowired
 	CustInfoRepository custInfoRepository;
@@ -55,7 +65,7 @@ public class CustInfoServiceImpl implements CustInfoService {
 
 	@Override
 	public void addCustInfo(CustInfo custInfo) {
-		// TODO Auto-generated method stub
+		custInfoRepository.save(custInfo);
 		
 	}
 
@@ -88,7 +98,41 @@ public class CustInfoServiceImpl implements CustInfoService {
 	}
 
 	
+	public void editCustInfoById(CustInfoDTO custinfoDTO) throws Exception {
+		
+		Optional<CustInfo> custinfoEntity = custInfoRepository.findById(custinfoDTO.getCustInfoId());
+		if(custinfoEntity.isPresent()) {
+			CustInfo custinfo = modelMapper.map(custinfoDTO, CustInfo.class);
+			custInfoRepository.save(custinfo);
+			
+		}else {
+			throw new Exception("Customer Information not found with the provided ID : "+custinfoDTO.getCustInfoId());
+		}
+		
+		
+	}
 	
+	
+	public void deleteCustInfoById(Long id, String modifiedBy) throws Exception {
+		
+		Optional<CustInfo> custinfo = custInfoRepository.findById(id);
+		if (custinfo.isPresent()) {
+			CustInfo custinfoEntity = custinfo.get();
+			short delete = 1;
+			custinfoEntity.setIsDelete(delete);
+			custinfoEntity.setModifiedBy(modifiedBy);
+			custInfoRepository.save(custinfoEntity);
+
+		}else {
+			log.info("No Customer Information found with the provided ID{} in the DB",id);
+			throw new Exception("No CustomerInformation found with the provided ID in the DB :"+id);
+		}
+		
+		
+	}
+	
+	
+		
 	
 	
 	

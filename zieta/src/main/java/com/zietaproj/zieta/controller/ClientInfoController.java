@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zietaproj.zieta.dto.ClientInfoDTO;
@@ -20,6 +21,7 @@ import com.zietaproj.zieta.request.ClientInfoEditRequest;
 import com.zietaproj.zieta.service.ClientInfoService;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api")
@@ -55,5 +57,13 @@ public class ClientInfoController {
 		clientinfoService.addClientInfo(clientinfo);
 
 	}
+	
+	
+	@ApiOperation(value = "Deletes entries from client_info based on Id", notes = "Table reference: client_info")
+	@RequestMapping(value = "deleteClientInfoById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteClientInfoById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		clientinfoService.deleteClientInfoById(id, modifiedBy);
+	}
+	
 
 }

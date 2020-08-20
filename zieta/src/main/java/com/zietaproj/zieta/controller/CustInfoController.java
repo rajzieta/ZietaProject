@@ -3,18 +3,24 @@ package com.zietaproj.zieta.controller;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zietaproj.zieta.dto.CustInfoDTO;
 import com.zietaproj.zieta.model.CustInfo;
+import com.zietaproj.zieta.model.RoleMaster;
+import com.zietaproj.zieta.request.RoleMasterEditRequest;
 import com.zietaproj.zieta.response.CustomerInfoModel;
 import com.zietaproj.zieta.response.CustomerInformationModel;
 import com.zietaproj.zieta.service.CustInfoService;
@@ -68,6 +74,29 @@ public class CustInfoController {
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<List<CustomerInfoModel>>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	////Add, Edit and Delete API's for CustInfo
+	
+	
+	@RequestMapping(value = "addCustInfo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addCustInfo(@Valid @RequestBody CustInfo custinfo) {
+		custInfoService.addCustInfo(custinfo);
+	}
+	
+	
+	@ApiOperation(value = "Updates the UserRoles for the provided Id", notes = "Table reference: cust_info")
+	@RequestMapping(value = "editCustInfoById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editCustInfoById(@Valid @RequestBody CustInfoDTO custinfoDTO) throws Exception {
+		custInfoService.editCustInfoById(custinfoDTO);
+		
+		
+	}
+	
+	@ApiOperation(value = "Deletes entries from cust_info based on Id", notes = "Table reference: cust_info")
+	@RequestMapping(value = "deleteCustInfoById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteCustInfoById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		custInfoService.deleteCustInfoById(id, modifiedBy);
 	}
 	
 	

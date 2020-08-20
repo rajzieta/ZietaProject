@@ -11,4 +11,6 @@ public interface ClientInfoService {
 	public List<ClientInfoDTO> getAllClients();
 
 	public void addClientInfo(ClientInfoAddRequest clientinfo);
+
+	public void deleteClientInfoById(Long id, String modifiedBy) throws Exception;
 }

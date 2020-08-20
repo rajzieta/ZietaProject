@@ -2,8 +2,11 @@ package com.zietaproj.zieta.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +16,14 @@ import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.request.ClientInfoAddRequest;
 import com.zietaproj.zieta.service.ClientInfoService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class ClientInfoServiceImpl implements ClientInfoService {
 
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClientInfoServiceImpl.class);
 	
 	@Autowired
 	ClientInfoRepository clientinfoRepository;
@@ -44,5 +52,19 @@ public class ClientInfoServiceImpl implements ClientInfoService {
 		clientinfoRepository.save(clientInfo);
 	}
 	
-	
+	public void deleteClientInfoById(Long id, String modifiedBy) throws Exception {
+		
+		Optional<ClientInfo> clientinfo = clientinfoRepository.findById(id);
+		if (clientinfo.isPresent()) {
+			ClientInfo clientinfoEntity = clientinfo.get();
+			short delete = 1;
+			clientinfoEntity.setIsDelete(delete);
+			clientinfoEntity.setModifiedBy(modifiedBy);
+			clientinfoRepository.save(clientinfoEntity);
+
+		}else {
+			log.info("No ClientInformation found with the provided ID{} in the DB",id);
+			throw new Exception("No ClientInformation found with the provided ID in the DB :"+id);
+		}
+	}
 }

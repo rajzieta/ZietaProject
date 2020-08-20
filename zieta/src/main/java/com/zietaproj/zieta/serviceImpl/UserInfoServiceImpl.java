@@ -35,6 +35,7 @@ import com.zietaproj.zieta.service.AccessTypeMasterService;
 import com.zietaproj.zieta.service.ScreensMasterService;
 import com.zietaproj.zieta.service.UserAccessTypeService;
 import com.zietaproj.zieta.service.UserInfoService;
+import com.zietaproj.zieta.util.PasswordUtil;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -201,15 +202,23 @@ public class UserInfoServiceImpl implements UserInfoService {
 		
 		Optional<UserInfo> userinfoEntit = userInfoRepositoryRepository.findById(passwordeditRequest.getId());
 		UserInfo useremail = userInfoRepositoryRepository.findByEmail(passwordeditRequest.getEmail());
+		String salt = PasswordUtil.getSalt();
 		if(useremail!= null && userinfoEntit.isPresent()) {
 			
 			UserInfo userPassSave = userinfoEntit.get();
-		 if ((passwordeditRequest.getOldPassword()).equals(userPassSave.getPassword())) {
+		 //if (PasswordUtil.verifyUserPassword((passwordeditRequest.getOldPassword()), (userPassSave.getPassword()), (salt))) {
+		//if ((PasswordUtil.getSecurePassword(passwordeditRequest.getOldPassword())).equals(userPassSave.getPassword())) {
 			
+			if ((passwordeditRequest.getOldPassword()).equals(userPassSave.getPassword())) {
 			userPassSave.setPassword(passwordeditRequest.getNewPassword());
 			userPassSave.setPassword(passwordeditRequest.getConfirmPassword());
 			if(passwordeditRequest.getNewPassword().equals(passwordeditRequest.getConfirmPassword())) {
-			userInfoRepositoryRepository.save(userPassSave);
+			
+				//	String salt = PasswordUtil.getSalt();
+				//userPassSave.setPassword(PasswordUtil.getSecurePassword(userPassSave.getPassword()));
+				//userPassSave.setPassword(userPassSave);
+			
+				userInfoRepositoryRepository.save(userPassSave);
 			}
 			
 			else {

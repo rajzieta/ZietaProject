@@ -22,9 +22,10 @@ public class UpdateTimesheetByIdRequest {
 	    private Long statusId;
 	    private boolean plannedActivity;
 	    private Date tsDate;
-	    private  float tsTotalTime;
 	    private String createdBy;
 	    private String modifiedBy;
 	    private short isDelete;
+	    private  Float tsTotalSubmittedTime;
+	    private  Float tsTotalApprovedTime;
 	    
 }

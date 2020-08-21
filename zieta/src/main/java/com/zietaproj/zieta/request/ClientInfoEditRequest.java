@@ -7,9 +7,15 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ClientInfoEditRequest extends ClientInfoAddRequest {
+public class ClientInfoEditRequest {
 	
 	@NotNull
 	private Long id;
-
+	
+	private String clientCode;
+	private String clientName;
+	private Long clientStatus;
+	private String clientComments;
+	private String modifiedBy;
+	private boolean isDelete;
 }

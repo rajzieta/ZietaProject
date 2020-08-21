@@ -53,8 +53,8 @@ public class ClientInfoController {
 	}
 
 	@RequestMapping(value = "updateClientInfo", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void updateClientinfo(@Valid @RequestBody ClientInfoEditRequest clientinfo) {
-		clientinfoService.addClientInfo(clientinfo);
+	public void updateClientinfo(@Valid @RequestBody ClientInfoEditRequest clientinfoedit) throws Exception {
+		clientinfoService.editClientInfo(clientinfoedit);
 
 	}
 	

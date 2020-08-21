@@ -16,6 +16,7 @@ public class UserInfoEditRequest {
 		private String userMname;
 		private String userLname;
 		private String email;
+		private String empId;
 		private String phoneNo;
 		private short isActive;
 		private String createdBy;

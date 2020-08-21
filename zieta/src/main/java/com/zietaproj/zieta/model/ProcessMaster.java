@@ -13,7 +13,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
-@Table(name = "TEMPLATE_MASTER")
+@Table(name = "WF_TEMPLATE_MASTER")
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class ProcessMaster implements Serializable {

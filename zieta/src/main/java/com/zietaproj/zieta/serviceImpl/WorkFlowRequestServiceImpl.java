@@ -108,6 +108,10 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			workFlowRequestorData.setSubmittedDate(workflowRequest.getRequestDate().toString());
 			workFlowRequestorData
 					.setStatus(stateTypeMasterRepository.findById(workflowRequest.getStateType()).get().getStateName());
+			
+			List<TSTimeEntries> tsTElist = tSTimeEntriesRepository.findByTsId(tsInfo.getId());
+			workFlowRequestorData.setTsInfo(tsInfo);
+			workFlowRequestorData.setTsTimeEntries(tsTElist);
 
 			workFlowRequestorDataList.add(workFlowRequestorData);
 		}

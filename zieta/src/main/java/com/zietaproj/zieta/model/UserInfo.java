@@ -50,7 +50,8 @@ public class UserInfo extends BaseEntity {
 	@Column(name = "EMAIL_ID")
 	private String email;
 	
-
+	@Column(name = "EMP_ID")
+	private String empId;
 	
 	@Column(name = "phone_no")
 	private String phoneNo;

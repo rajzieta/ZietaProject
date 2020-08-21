@@ -135,6 +135,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 		userDetailsResponse.setMiddleName(userInfo.getUserMname());
 		userDetailsResponse.setLastName(userInfo.getUserLname());
 		userDetailsResponse.setUserEmailId(userInfo.getEmail());
+		userDetailsResponse.setEmpId(userInfo.getEmpId());
 		userDetailsResponse.setStatus(userInfo.getIsActive());
 		userDetailsResponse.setUserId(userInfo.getId());
 		userDetailsResponse.setInfoMessage("User details after successful login");
@@ -202,7 +203,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 		
 		Optional<UserInfo> userinfoEntit = userInfoRepositoryRepository.findById(passwordeditRequest.getId());
 		UserInfo useremail = userInfoRepositoryRepository.findByEmail(passwordeditRequest.getEmail());
-		String salt = PasswordUtil.getSalt();
+		//String salt = PasswordUtil.getSalt();
 		if(useremail!= null && userinfoEntit.isPresent()) {
 			
 			UserInfo userPassSave = userinfoEntit.get();

@@ -16,7 +16,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
-@Table(name = "ACTION_TYPE_MASTER")
+@Table(name = "WF_ACTION_TYPE_MASTER")
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(callSuper=false)
 //@JsonIgnoreProperties(value = {"created_date", "modified_date"}, 

@@ -12,20 +12,13 @@ public class ClientInfoAddRequest {
 	
 	
 
-	@NotBlank
+
 	private String clientCode;
-
-	@NotBlank
 	private String clientName;
-
-	@NotNull
 	private Long clientStatus;
-	
-	
-	@NotBlank
 	private String clientComments;
-	
-	
+	private String createdBy;
+	private String modifiedBy;
 	private boolean isDelete;
 
 

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,7 @@ import com.zietaproj.zieta.dto.ClientInfoDTO;
 import com.zietaproj.zieta.model.ClientInfo;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.request.ClientInfoAddRequest;
+import com.zietaproj.zieta.request.ClientInfoEditRequest;
 import com.zietaproj.zieta.service.ClientInfoService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +54,22 @@ public class ClientInfoServiceImpl implements ClientInfoService {
 	
 		clientinfoRepository.save(clientInfo);
 	}
+	
+	public void editClientInfo(@Valid ClientInfoEditRequest clientinfoedit) throws Exception {
+		
+		Optional<ClientInfo> clientInfoEntity = clientinfoRepository.findById(clientinfoedit.getId());
+		if(clientInfoEntity.isPresent()) {
+			ClientInfo clientinfo = modelMapper.map(clientinfoedit, ClientInfo.class);
+			clientinfoRepository.save(clientinfo);
+			
+		}else {
+			throw new Exception("ClientInformation not found with the provided ID : "+clientinfoedit.getId());
+		}
+		
+	}
+	
+	
+	
 	
 	public void deleteClientInfoById(Long id, String modifiedBy) throws Exception {
 		

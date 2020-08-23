@@ -114,14 +114,6 @@ public class TimeSheetController {
 	}
 	
 	
-	@RequestMapping(value = "processWorkFlow", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void processWorkFlow(@RequestParam(required=true) Long requestId, 
-			@RequestParam(required=true) short actionType,  @RequestParam(required=true) String comments) throws Exception {
-		timeSheetService.processWorkFlow(requestId, actionType, comments);
-		
-	}
-	
-	
 	@RequestMapping(value = "submitTimeSheet", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void submitTimeSheet(@Valid @RequestBody List<TSInfo> tsInfoList) throws Exception {
 		timeSheetService.submitTimeSheet(tsInfoList);

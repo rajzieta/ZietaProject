@@ -72,4 +72,12 @@ public class TSWorkFlowController {
 	}
 	
 	
+	@RequestMapping(value = "processWorkFlow", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void processWorkFlow(@RequestParam(required=true) Long requestId, 
+			@RequestParam(required=true) short actionType,  @RequestParam(required=true) String comments) throws Exception {
+		workFlowRequestService.processWorkFlow(requestId, actionType, comments);
+		
+	}
+	
+	
 }

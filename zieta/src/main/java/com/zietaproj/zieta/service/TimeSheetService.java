@@ -32,7 +32,5 @@ public interface TimeSheetService {
 
 	public void updateTimeEntriesByIds(List<TimeEntriesByTsIdRequest> timeentriesByTsIdRequest) throws Exception;
 
-	public void processWorkFlow(Long id, short actionType, String comments);
-	
 	public boolean submitTimeSheet(@Valid List<TSInfo> tsInfoList);
 }

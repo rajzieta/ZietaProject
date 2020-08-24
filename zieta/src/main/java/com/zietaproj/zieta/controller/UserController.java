@@ -103,6 +103,12 @@ public class UserController {
 	}
 	
 	
+	@ApiOperation(value = "Deletes entries from user_info based on Id", notes = "Table reference: user_info")
+	@RequestMapping(value = "deleteUsersById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteUsersById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		userInfoService.deleteUsersById(id, modifiedBy);
+	}
+	
 	///change password
 	
 	@ApiOperation(value = "Change the password for the provided emailId", notes = "Table reference: user_info")

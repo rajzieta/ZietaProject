@@ -38,7 +38,7 @@ public class ProjectInfo extends BaseEntity implements Serializable {
 	private Long projectType;
 
 	@Column (name = "project_orgnode")
-	private Long projectOrgnode;
+	private Long projectOrgNode;
 	
 	@Column(name = "project_manager")
 	private Long projectManager;

@@ -15,7 +15,7 @@ public class ProjectDetailsByUserModel {
 	String projectCode;
 	String projectName;
 	long projectType;
-	long projectOrgnode;
+	long projectOrgNode;
 	long projectManager;
 	long templateId;
 	long directApprover;

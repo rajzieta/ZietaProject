@@ -255,4 +255,27 @@ public class ActivityServiceImpl implements ActivityService {
 		}
 		return activitiesByClientUserModelList;
 	}
+	
+	
+	public void deleteActivityById(Long id, String modifiedBy) throws Exception {
+		
+		
+		Optional<ActivityMaster> activitymaster = activityMasterRepository.findById(id);
+		if (activitymaster.isPresent()) {
+			ActivityMaster activitymasterEntitiy = activitymaster.get();
+			short delete = 1;
+			activitymasterEntitiy.setIsDelete(delete);
+			activitymasterEntitiy.setModifiedBy(modifiedBy);
+			activityMasterRepository.save(activitymasterEntitiy);
+
+		}else {
+			log.info("No Activity found with the provided ID{} in the DB",id);
+			throw new Exception("No Activity found with the provided ID in the DB :"+id);
+		}
+		
+		
+	}
+	
+	
+	
 }

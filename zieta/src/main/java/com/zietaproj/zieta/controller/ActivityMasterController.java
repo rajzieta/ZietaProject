@@ -137,4 +137,14 @@ public class ActivityMasterController {
 		} 
 	}
 
+	
+	
+	@ApiOperation(value = "Deletes entries from activity_master based on ActivityId", notes = "Table reference: activity_master")
+	@RequestMapping(value = "deleteActivityById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteActivityById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		activityService.deleteActivityById(id, modifiedBy);
+	}
+	
+	
+	
 }

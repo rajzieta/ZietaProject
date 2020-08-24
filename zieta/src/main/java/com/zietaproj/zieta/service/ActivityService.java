@@ -32,4 +32,6 @@ public interface ActivityService {
 	public void deleteActivitesByClientProjectTask(long taskActivityId, String modifiedBy) throws Exception;
 	
 	public List<ActivitiesByClientUserModel> getActivitiesByClientUser(Long clientId, Long userId);
+
+	public void deleteActivityById(Long id, String modifiedBy) throws Exception;
 }

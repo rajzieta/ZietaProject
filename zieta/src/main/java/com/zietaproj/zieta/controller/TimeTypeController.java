@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zietaproj.zieta.dto.TimeTypeDTO;
 import com.zietaproj.zieta.model.TimeType;
+import com.zietaproj.zieta.model.UserInfo;
+import com.zietaproj.zieta.request.TimeTypeEditRequest;
+import com.zietaproj.zieta.request.UserInfoEditRequest;
 import com.zietaproj.zieta.response.TimeTypesByClientResponse;
 import com.zietaproj.zieta.service.TimeTypeService;
 
@@ -55,6 +58,28 @@ public class TimeTypeController {
 		timetypeService.addTimetypemaster(timetype);
 	}
 
+	
+
+	
+	
+	@ApiOperation(value = "Updates the timetypes Information for the provided Id", notes = "Table reference: time_type")
+	@RequestMapping(value = "editTimeTypesById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editTimeTypesById(@Valid @RequestBody TimeTypeEditRequest timetypeEditRequest) throws Exception {
+		timetypeService.editTimeTypesById(timetypeEditRequest);
+		
+		
+	}
+	
+	
+	@ApiOperation(value = "Deletes entries from time_type based on Id", notes = "Table reference: time_type")
+	@RequestMapping(value = "deleteTimeTypesById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteTimeTypesById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		timetypeService.deleteTimeTypesById(id, modifiedBy);
+	}
+	
+	
+	
+	
 	@GetMapping("/getAllTimeTypesByClient")
 	@ApiOperation(value = "List time types based on the clientId", notes = "Table reference: time_type_master")
 	public ResponseEntity<List<TimeTypesByClientResponse>> getAllTimeTypesByClient(

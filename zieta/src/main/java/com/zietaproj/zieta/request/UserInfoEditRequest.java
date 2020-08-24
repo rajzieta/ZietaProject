@@ -24,5 +24,5 @@ public class UserInfoEditRequest {
 		private String modifiedBy;
 		private Date modifiedDate;
 		private short isDelete;
-		private String password;
+		//private String password;
 }

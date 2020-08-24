@@ -28,4 +28,6 @@ public interface UserInfoService {
 	public void editUsersById(@Valid UserInfoEditRequest userinfoeditRequest) throws Exception;
 
 	public void EditPasswordByEmailId(@Valid PasswordEditRequest passwordeditRequest) throws Exception;
+
+	public void deleteUsersById(Long id, String modifiedBy) throws Exception;
 }

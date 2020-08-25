@@ -80,7 +80,8 @@ public class UserInfoServiceImpl implements UserInfoService {
 	
 	@Override
 	public List<UserInfoDTO> getAllUserInfoDetails() {
-		List<UserInfo> userInfoList= userInfoRepositoryRepository.findAll();
+		short notDeleted = 0;
+		List<UserInfo> userInfoList= userInfoRepositoryRepository.findByIsDelete(notDeleted);
 		List<UserInfoDTO> userInfoDTOs = new ArrayList<UserInfoDTO>();
 		mapUserInfoModelToDTO(userInfoList, userInfoDTOs);
 		return userInfoDTOs;
@@ -175,7 +176,8 @@ public class UserInfoServiceImpl implements UserInfoService {
 
 	@Override
 	public List<UserInfoDTO> findByClientId(Long client_id) {
-		List<UserInfo> userInfoList = userInfoRepositoryRepository.findByClientId(client_id);
+		short notDeleted = 0;
+		List<UserInfo> userInfoList = userInfoRepositoryRepository.findByClientIdAndIsDelete(client_id, notDeleted);
 		List<UserInfoDTO> userInfoDTOs = new ArrayList<UserInfoDTO>();
 		mapUserInfoModelToDTO(userInfoList, userInfoDTOs);
 		return userInfoDTOs;

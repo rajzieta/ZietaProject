@@ -12,7 +12,8 @@ public class StatusByClienttypeResponse {
 	
 	private Long id;
 	private Long clientId;
-    private String status;
+    private String statusCode;
+    private String statusDesc;
     private String statusType;
     private String createdBy;
     private Date   createdDate;

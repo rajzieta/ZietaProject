@@ -178,7 +178,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 			if(null != taskInfo.getTaskStatus()) {
 				Optional <StatusMaster> statusMaster = statusRepository.findById(taskInfo.getTaskStatus());
 				if(statusMaster.isPresent()) {
-					tasksByClientProjectResponse.setTaskStatusDescription(statusMaster.get().getStatus());
+					tasksByClientProjectResponse.setTaskStatusDescription(statusMaster.get().getStatusCode());
 				}
 			}
 			

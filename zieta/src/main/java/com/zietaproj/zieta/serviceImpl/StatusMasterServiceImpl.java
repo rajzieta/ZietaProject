@@ -72,7 +72,8 @@ public class StatusMasterServiceImpl implements StatusMasterService {
 				
 				statusbyclienttypeList.setId(statusmaster.getId());
 				statusbyclienttypeList.setClientId(statusmaster.getClientId());
-				statusbyclienttypeList.setStatus(statusmaster.getStatus());
+				statusbyclienttypeList.setStatusCode(statusmaster.getStatusCode());
+				statusbyclienttypeList.setStatusDesc(statusmaster.getStatusDesc());
 				statusbyclienttypeList.setStatusType(statusmaster.getStatusType());
 				statusbyclienttypeList.setCreatedBy(statusmaster.getCreatedBy());
 				statusbyclienttypeList.setCreatedDate(statusmaster.getCreatedDate());

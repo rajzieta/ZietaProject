@@ -249,7 +249,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		short notDeleted = 0;
 		List<StatusMaster>  statusMasterList = statusMasterRepository.findByClientIdAndStatusTypeAndIsDelete(
 				tsInfo.getClientId(), TIMESHEET, notDeleted);
-		statusTypes = statusMasterList.stream().collect(Collectors.toMap(StatusMaster::getStatus, StatusMaster::getId));
+		statusTypes = statusMasterList.stream().collect(Collectors.toMap(StatusMaster::getStatusCode, StatusMaster::getId));
 		return statusTypes;
 	}
 	

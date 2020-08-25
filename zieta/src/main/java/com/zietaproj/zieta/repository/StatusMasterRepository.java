@@ -17,8 +17,7 @@ public interface StatusMasterRepository extends JpaRepository<StatusMaster, Long
 	List<StatusMaster> findByIsDelete(short notDeleted);
 
 	List<StatusMaster> findByClientIdAndStatusTypeAndIsDelete(Long clientId, String statusType, short notDeleted);
-
 	
-	
+	StatusMaster findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(Long clientId, String statusType, String statusCode, short notDeleted);
 
 }

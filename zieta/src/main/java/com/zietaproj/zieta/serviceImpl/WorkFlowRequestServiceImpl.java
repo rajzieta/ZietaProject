@@ -69,6 +69,8 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	StatusMasterRepository statusMasterRepository;
 	
 	private final static String TIMESHEET = "TimeSheet";
+	private final static String TIMEENTRY_REJECTED = "Rejected";
+	private final static String TIMEENTRY = "TimeEntry";
 	
 
 	@Override
@@ -114,18 +116,18 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			UserInfo userInfo = userInfoRepository.findById(tsInfo.getUserId()).get();
 			String requestorName = TSMUtil.getFullName(userInfo);
 			workFlowRequestorData.setRequestorName(requestorName);
-			workFlowRequestorData.setTotalSubmittedTime(String.valueOf(tsInfo.getTsTotalSubmittedTime()));
-			workFlowRequestorData.setTotalApprovedTime(String.valueOf(tsInfo.getTsTotalApprovedTime()));
+			workFlowRequestorData.setTotalSubmittedTime(tsInfo.getTsTotalSubmittedTime());
+			workFlowRequestorData.setTotalApprovedTime(tsInfo.getTsTotalApprovedTime());
 			if (workflowRequest.getStateType() == StateType.COMPLETE.getStateTypeId()) {
 
-				workFlowRequestorData.setApprovedDate(String.valueOf(workflowRequest.getActionDate()));
+				workFlowRequestorData.setApprovedDate(workflowRequest.getActionDate());
 			}
 
 			if (workflowRequest.getStateType() == StateType.REJECT.getStateTypeId()) {
 
-				workFlowRequestorData.setRejectedDate(String.valueOf(workflowRequest.getActionDate()));
+				workFlowRequestorData.setRejectedDate(workflowRequest.getActionDate());
 			}
-			workFlowRequestorData.setSubmittedDate(workflowRequest.getRequestDate().toString());
+			workFlowRequestorData.setSubmittedDate(workflowRequest.getRequestDate());
 			workFlowRequestorData
 					.setStatus(stateTypeMasterRepository.findById(workflowRequest.getStateType()).get().getStateName());
 			
@@ -159,17 +161,16 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 		
 		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByTsId(workFlowRequest.getTsId());
 		Map<String, Long> statusTypes =  getStatus(tsInfo);
-		
 		for (int i = 0; workFlowRequestList != null && i < workFlowRequestList.size(); i++) {
-
-			workFlowInAction(actionType, comments, workFlowRequestList.get(i), processStepsList, workFlowDepth, tsInfo,
-					statusTypes);
-			if (actionType == ActionType.APPROVE.getActionType() && workFlowRequestList.get(i).getId() != workFlowRequestId) {
-				
+			
+			if(workFlowRequestList.get(i).getId() == workFlowRequestId) {
+				workFlowInAction(actionType, comments, workFlowRequestList.get(i), processStepsList, workFlowDepth, tsInfo,
+						statusTypes);
+			}else {
 				workflowRequestRepository.deleteById(workFlowRequestList.get(i).getId());
 			}
+			
 		}
-		
 	}
 	
 	
@@ -209,7 +210,11 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			workFlowRequest.setStateType(StateType.REJECT.getStateTypeId());
 			workFlowRequest.setActionType(ActionType.REJECT.getActionType());
 			tsInfo.setStatusId(statusTypes.get(Status.REJECTED.getStatus()));
-			tsInfoRepository.saveAndFlush(tsInfo);
+			float totalRejectTime = getTotalRejectedTime(tsInfo);
+			//reduce the total rejected timeentries time from the total submitted time
+			float totalApprovedTime = tsInfo.getTsTotalSubmittedTime() - totalRejectTime;
+			tsInfo.setTsTotalApprovedTime(totalApprovedTime);
+			tsInfoRepository.save(tsInfo);
 			workFlowRequest.setActionDate(new Date());
 		} else if (actionType == ActionType.REVISE.getActionType()) {
 			// Request sent for revise
@@ -219,11 +224,23 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			workFlowRequest.setActionType(ActionType.REVISE.getActionType());
 			tsInfo.setStatusId((statusTypes.get(Status.DRAFT.getStatus())));
 			tsInfoRepository.save(tsInfo);
-			// Do we need to create the new Request or if its with the same request , need
-			// to start with Initial Step ?
 		}
 	}
 	
+	
+	private float getTotalRejectedTime(TSInfo tsInfo) {
+		
+		 long timeEntryRejectStatusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(
+				 tsInfo.getClientId(),TIMEENTRY, TIMEENTRY_REJECTED, (short)0).getId();
+		 List<TSTimeEntries> rejectedTimeEntriesList = tSTimeEntriesRepository.findByTsIdAndStatusIdAndIsDelete(
+				 tsInfo.getId(), timeEntryRejectStatusId, (short)0);
+		 float totalRejectTime = 0.0f;
+		 for (TSTimeEntries tsTimeEntries : rejectedTimeEntriesList) {
+			 
+			 totalRejectTime += tsTimeEntries.getTsDuration();
+		}
+		return totalRejectTime;
+	}
 	
 	
 	private Map<String, Long> getStatus(TSInfo tsInfo) {

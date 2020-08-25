@@ -1,5 +1,6 @@
 package com.zietaproj.zieta.response;
 
+import java.util.Date;
 import java.util.List;
 
 import com.zietaproj.zieta.model.TSInfo;
@@ -13,11 +14,11 @@ import lombok.Setter;
 public class WorkFlowRequestorData {
 	
 	String requestorName;
-	String totalApprovedTime;
-	String totalSubmittedTime;
-	String submittedDate;
-	String approvedDate;
-	String rejectedDate;
+	float totalApprovedTime;
+	float totalSubmittedTime;
+	Date submittedDate;
+	Date approvedDate;
+	Date rejectedDate;
 	String status;
 	List<TSTimeEntries> tsTimeEntries;
 	TSInfo tsInfo;

@@ -19,7 +19,7 @@ public interface AccessTypeMasterService {
 	public void addAccessTypemaster(AccessTypeAddRequest accesstypeparam);
 	
 	public List<String> findByClientIdANDAccessTypeId(Long clientId,
-			  List<Long> accessIdList);
+			  Long accessTypeId);
 
 	public List<AccesstypesByClientResponse> getAccessTypesByClient(Long clientId);
 

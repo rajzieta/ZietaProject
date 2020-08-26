@@ -53,6 +53,9 @@ public class UserInfo extends BaseEntity {
 	@Column(name = "EMP_ID")
 	private String empId;
 	
+	@Column(name = "ACCESS_TYPE_ID")
+	private Long accessTypeId;
+	
 	@Column(name = "phone_no")
 	private String phoneNo;
 	
@@ -75,7 +78,9 @@ public class UserInfo extends BaseEntity {
 //	
 //	private short is_delete;
 	
-	@NotBlank
+	//@NotBlank
+	
+	@Column(nullable = false)
 	private String password;
 
 }

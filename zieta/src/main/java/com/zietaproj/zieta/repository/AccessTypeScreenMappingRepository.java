@@ -12,8 +12,10 @@ import com.zietaproj.zieta.model.AccessTypeScreenMapping;
 @Repository
 public interface AccessTypeScreenMappingRepository extends JpaRepository<AccessTypeScreenMapping, Long> {
 	
-	  @Query( "select o.screenId from AccessTypeScreenMapping o where o.clientId= :clientId AND o.accessTypeId in :accessIds" )
+	  @Query( "select o.screenId from AccessTypeScreenMapping o where o.clientId= :clientId AND o.accessTypeId= :accessTypeId")
 	  List<Long> findByClientIdANDAccessTypeId(@Param("clientId") Long clientId,
-			  @Param("accessIds") List<Long> accessIdList);
+			  @Param("accessTypeId") Long accessTypeId);
+	  
+	  
 
 }

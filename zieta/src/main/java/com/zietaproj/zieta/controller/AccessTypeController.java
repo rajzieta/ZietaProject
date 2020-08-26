@@ -21,13 +21,13 @@ import com.zietaproj.zieta.dto.AccessTypeMasterDTO;
 import com.zietaproj.zieta.dto.RoleMasterDTO;
 import com.zietaproj.zieta.model.AccessTypeMaster;
 import com.zietaproj.zieta.model.AccessTypeScreenMapping;
-import com.zietaproj.zieta.model.UserAccessType;
+//import com.zietaproj.zieta.model.UserAccessType;
 import com.zietaproj.zieta.request.AccessTypeAddRequest;
 import com.zietaproj.zieta.response.AccesstypesByClientResponse;
 import com.zietaproj.zieta.response.RolesByClientResponse;
 import com.zietaproj.zieta.service.AccessTypeMasterService;
 import com.zietaproj.zieta.service.AccessTypeScreenMappingService;
-import com.zietaproj.zieta.service.UserAccessTypeService;
+//import com.zietaproj.zieta.service.UserAccessTypeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -45,8 +45,7 @@ public class AccessTypeController {
 	@Autowired
 	AccessTypeScreenMappingService accessTypeScreenMappingService;
 	
-	@Autowired
-	UserAccessTypeService userAccessTypeService;
+	
 	
 
 	@RequestMapping(value = "getAllAccesstypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -90,11 +89,11 @@ public class AccessTypeController {
 	}
 	
 	
-	@ApiOperation(value = "Adds the entries into the accesstype_user_mapping table", notes = "Table reference: accesstype_user_mapping")
-	@RequestMapping(value = "assignAccessTypeToUser", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void assignAccessTypeToUser(@Valid @RequestBody UserAccessType userAccessType) {
-		userAccessTypeService.assignAccessTypeToUser(userAccessType);
-	}
+//	@ApiOperation(value = "Adds the entries into the accesstype_user_mapping table", notes = "Table reference: accesstype_user_mapping")
+//	@RequestMapping(value = "assignAccessTypeToUser", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+//	public void assignAccessTypeToUser(@Valid @RequestBody UserAccessType userAccessType) {
+//		userAccessTypeService.assignAccessTypeToUser(userAccessType);
+//	}
 	
 	
 	@ApiOperation(value = "Updates the AccessType for the provided Id", notes = "Table reference: access_type_master")

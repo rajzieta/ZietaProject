@@ -23,7 +23,7 @@ import com.zietaproj.zieta.request.PasswordEditRequest;
 import com.zietaproj.zieta.request.UserInfoEditRequest;
 import com.zietaproj.zieta.response.LoginResponse;
 import com.zietaproj.zieta.response.UserDetailsResponse;
-import com.zietaproj.zieta.service.UserAccessTypeService;
+//import com.zietaproj.zieta.service.UserAccessTypeService;
 import com.zietaproj.zieta.service.UserInfoService;
 
 import io.swagger.annotations.Api;
@@ -37,8 +37,6 @@ public class UserController {
 	@Autowired
 	UserInfoService userInfoService;
 	
-	@Autowired
-	UserAccessTypeService userAccessTypeService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 

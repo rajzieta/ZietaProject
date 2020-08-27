@@ -2,14 +2,18 @@ package com.zietaproj.zieta.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zietaproj.zieta.dto.WorkflowDTO;
+import com.zietaproj.zieta.request.WorkflowRequestProcessModel;
 import com.zietaproj.zieta.response.WFRDetailsForApprover;
 import com.zietaproj.zieta.response.WorkFlowRequestorData;
 import com.zietaproj.zieta.service.TimeSheetService;
@@ -73,9 +77,8 @@ public class TSWorkFlowController {
 	
 	
 	@RequestMapping(value = "processWorkFlow", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void processWorkFlow(@RequestParam(required=true) Long requestId, 
-			@RequestParam(required=true) short actionType,  @RequestParam(required=true) String comments) throws Exception {
-		workFlowRequestService.processWorkFlow(requestId, actionType, comments);
+	public void processWorkFlow(@Valid @RequestBody WorkflowRequestProcessModel workflowRequestProcessModel) throws Exception {
+		workFlowRequestService.processWorkFlow(workflowRequestProcessModel);
 		
 	}
 	

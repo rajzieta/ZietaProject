@@ -9,13 +9,11 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.zietaproj.zieta.common.ActionType;
-import com.zietaproj.zieta.common.StateType;
-import com.zietaproj.zieta.common.Status;
+import com.zietaproj.zieta.common.TMSConstants;
 import com.zietaproj.zieta.model.ProcessSteps;
-import com.zietaproj.zieta.model.StatusMaster;
 import com.zietaproj.zieta.model.TSInfo;
 import com.zietaproj.zieta.model.TSTimeEntries;
 import com.zietaproj.zieta.model.UserInfo;
@@ -27,9 +25,12 @@ import com.zietaproj.zieta.repository.StateTypeMasterRepository;
 import com.zietaproj.zieta.repository.StatusMasterRepository;
 import com.zietaproj.zieta.repository.TSInfoRepository;
 import com.zietaproj.zieta.repository.TSTimeEntriesRepository;
+import com.zietaproj.zieta.repository.TimeTypeRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.repository.WorkflowRequestRepository;
+import com.zietaproj.zieta.request.WorkflowRequestProcessModel;
 import com.zietaproj.zieta.response.WFRDetailsForApprover;
+import com.zietaproj.zieta.response.WFTSTimeEntries;
 import com.zietaproj.zieta.response.WorkFlowRequestorData;
 import com.zietaproj.zieta.service.WorkFlowRequestService;
 import com.zietaproj.zieta.util.TSMUtil;
@@ -68,9 +69,26 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	@Autowired
 	StatusMasterRepository statusMasterRepository;
 	
-	private final static String TIMESHEET = "TimeSheet";
-	private final static String TIMEENTRY_REJECTED = "Rejected";
-	private final static String TIMEENTRY = "TimeEntry";
+	
+	@Autowired
+	TimeTypeRepository timeTypeRepository;
+
+	@Autowired
+	@Qualifier("stateByName")
+	Map<String, Long> stateByName;
+	
+	@Autowired
+	@Qualifier("actionTypeByName")
+	Map<String, Long> actionTypeByName;
+
+	
+	@Autowired
+	@Qualifier("stateById")
+	Map<Long, String> stateById;
+	
+	@Autowired
+	@Qualifier("actionTypeById")
+	Map<Long, String> actionTypeById;
 	
 
 	@Override
@@ -87,8 +105,8 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			wFRDetailsForApprover.setTsinfo(tsInfo);
 
 			List<TSTimeEntries> tsTimeEntriesList = tSTimeEntriesRepository.findByTsId(tsInfo.getId());
-
-			wFRDetailsForApprover.setTimeEntriesList(tsTimeEntriesList);
+			List<WFTSTimeEntries> wfTSTimeEntrieslist = buildWfTsTimeEtnries(tsTimeEntriesList);
+			wFRDetailsForApprover.setTimeEntriesList(wfTSTimeEntrieslist);
 
 			wFRDetailsForApprover
 					.setProjectName(projectInfoRepository.findById(tsInfo.getProjectId()).get().getProjectName());
@@ -96,12 +114,27 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 					.setRequestorName(TSMUtil.getFullName(userInfoRepository.findById(tsInfo.getUserId()).get()));
 			wFRDetailsForApprover
 					.setClientName(clientInfoRepository.findById(workflowRequest.getClientId()).get().getClientName());
+			wFRDetailsForApprover.setWfActionType(actionTypeById.get(workflowRequest.getActionType()));
+			wFRDetailsForApprover.setWfStateType(stateById.get(workflowRequest.getStateType()));
 
 			wFRDetailsForApproverList.add(wFRDetailsForApprover);
 
 		}
 
 		return wFRDetailsForApproverList;
+	}
+	
+	private List<WFTSTimeEntries> buildWfTsTimeEtnries(List<TSTimeEntries> tsTimeEntriesList) {
+
+		List<WFTSTimeEntries> wFTSTimeEntriesList = new ArrayList<WFTSTimeEntries>();
+		WFTSTimeEntries wFTSTimeEntries = null;
+		for (TSTimeEntries tsTimeEntry : tsTimeEntriesList) {
+			wFTSTimeEntries = new WFTSTimeEntries();
+			wFTSTimeEntries.setTsTimeEntries(tsTimeEntry);
+			wFTSTimeEntries.setTimeType(timeTypeRepository.findById(tsTimeEntry.getTimeType()).get().getTimeType());
+			wFTSTimeEntriesList.add(wFTSTimeEntries);
+		}
+		return wFTSTimeEntriesList;
 	}
 
 
@@ -118,12 +151,12 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			workFlowRequestorData.setRequestorName(requestorName);
 			workFlowRequestorData.setTotalSubmittedTime(tsInfo.getTsTotalSubmittedTime());
 			workFlowRequestorData.setTotalApprovedTime(tsInfo.getTsTotalApprovedTime());
-			if (workflowRequest.getStateType() == StateType.COMPLETE.getStateTypeId()) {
+			if (workflowRequest.getStateType() == stateByName.get(TMSConstants.STATE_COMPLETE)) {
 
 				workFlowRequestorData.setApprovedDate(workflowRequest.getActionDate());
 			}
 
-			if (workflowRequest.getStateType() == StateType.REJECT.getStateTypeId()) {
+			if (workflowRequest.getStateType() == stateByName.get(TMSConstants.STATE_REJECT)) {
 
 				workFlowRequestorData.setRejectedDate(workflowRequest.getActionDate());
 			}
@@ -149,9 +182,10 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	
 	
 	@Transactional
-	public void processWorkFlow(Long workFlowRequestId, short actionType, String comments) {
+	public void processWorkFlow(WorkflowRequestProcessModel workflowRequestProcessModel) {
 		
-		WorkflowRequest workFlowRequest = workflowRequestRepository.findById(workFlowRequestId).get();
+		WorkflowRequest workFlowRequest = workflowRequestRepository.findById(
+				workflowRequestProcessModel.getWorkFlowRequestId()).get();
 		
 		List<ProcessSteps> processStepsList = processStepsRepository.findByClientIdAndProjectIdAndProjectTaskId(
 				workFlowRequest.getClientId(),workFlowRequest.getProjectId(), workFlowRequest.getProjectTaskId());
@@ -160,12 +194,10 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 		TSInfo tsInfo = tsInfoRepository.findById(workFlowRequest.getTsId()).get();
 		
 		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByTsId(workFlowRequest.getTsId());
-		Map<String, Long> statusTypes =  getStatus(tsInfo);
 		for (int i = 0; workFlowRequestList != null && i < workFlowRequestList.size(); i++) {
 			
-			if(workFlowRequestList.get(i).getId() == workFlowRequestId) {
-				workFlowInAction(actionType, comments, workFlowRequestList.get(i), processStepsList, workFlowDepth, tsInfo,
-						statusTypes);
+			if(workFlowRequestList.get(i).getId() == workflowRequestProcessModel.getWorkFlowRequestId()) {
+				workFlowInAction(workflowRequestProcessModel, workFlowRequestList.get(i), processStepsList, workFlowDepth, tsInfo);
 			}else {
 				workflowRequestRepository.deleteById(workFlowRequestList.get(i).getId());
 			}
@@ -174,9 +206,9 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	}
 	
 	
-	private void workFlowInAction(short actionType, String comments, WorkflowRequest workFlowRequest,
-			List<ProcessSteps> processStepsList, int workFlowDepth, TSInfo tsInfo, Map<String, Long> statusTypes) {
-		if (actionType == ActionType.APPROVE.getActionType()) {
+	private void workFlowInAction(WorkflowRequestProcessModel workflowRequestProcessModel, WorkflowRequest workFlowRequest,
+			List<ProcessSteps> processStepsList, int workFlowDepth, TSInfo tsInfo) {
+		if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_APPROVE)) {
 			// promote the approval to next level
 			long currentStep = workFlowRequest.getCurrentStep();
 			if (currentStep <= workFlowDepth) {
@@ -186,43 +218,59 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 							.filter(step -> step.getStepId().equals(nextStep)).collect(Collectors.toList());
 					workFlowRequest.setCurrentStep(nextStep);
 					// Promoting to next level approval
-					workFlowRequest.setComments(comments);
+					workFlowRequest.setComments(workflowRequestProcessModel.getComments());
 					workFlowRequest.setApproverId(Long.valueOf(processStepFiltered.get(0).getApproverId()));
-					workFlowRequest.setStateType(StateType.INPROCESS.getStateTypeId());
+					workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_INPROCESS));
 
 					// approved from the current step point of view
-					workFlowRequest.setActionType(ActionType.APPROVE.getActionType());
+					workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
 					workFlowRequest.setActionDate(new Date());
+					float totalRejectTime = getTotalRejectedTime(tsInfo);
+					// reduce the total rejected timeentries time from the total submitted time
+					float totalApprovedTime = tsInfo.getTsTotalSubmittedTime() - totalRejectTime;
+					tsInfo.setTsTotalApprovedTime(totalApprovedTime);
 				} else {
 					// Final Approval Done
-					workFlowRequest.setComments(comments);
-					tsInfo.setStatusId(statusTypes.get(Status.APPROVED.getStatus()));
+					workFlowRequest.setComments(workflowRequestProcessModel.getComments());
+					long statusId = statusMasterRepository
+							.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(tsInfo.getClientId(),
+									TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_APPROVED, (short) 0)
+							.getId();
+					tsInfo.setStatusId(statusId);
+					float totalRejectTime = getTotalRejectedTime(tsInfo);
+					// reduce the total rejected timeentries time from the total submitted time
+					float totalApprovedTime = tsInfo.getTsTotalSubmittedTime() - totalRejectTime;
+					tsInfo.setTsTotalApprovedTime(totalApprovedTime);
 					tsInfoRepository.save(tsInfo);
-					workFlowRequest.setStateType(StateType.COMPLETE.getStateTypeId());
-					workFlowRequest.setActionType(ActionType.APPROVE.getActionType());
+					workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_COMPLETE));
+					workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
 					workFlowRequest.setActionDate(new Date());
 				}
 
 			}
-		} else if (actionType == ActionType.REJECT.getActionType()) {
+		} else if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_REJECT)) {
 			// Request Rejected
-			workFlowRequest.setComments(comments);
-			workFlowRequest.setStateType(StateType.REJECT.getStateTypeId());
-			workFlowRequest.setActionType(ActionType.REJECT.getActionType());
-			tsInfo.setStatusId(statusTypes.get(Status.REJECTED.getStatus()));
+			workFlowRequest.setComments(workflowRequestProcessModel.getComments());
+			workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_REJECT));
+			workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_REJECT));
+			long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(
+					tsInfo.getClientId(), TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_REJECTED, (short) 0).getId();
+			tsInfo.setStatusId(statusId);
 			float totalRejectTime = getTotalRejectedTime(tsInfo);
-			//reduce the total rejected timeentries time from the total submitted time
+			// reduce the total rejected timeentries time from the total submitted time
 			float totalApprovedTime = tsInfo.getTsTotalSubmittedTime() - totalRejectTime;
 			tsInfo.setTsTotalApprovedTime(totalApprovedTime);
 			tsInfoRepository.save(tsInfo);
 			workFlowRequest.setActionDate(new Date());
-		} else if (actionType == ActionType.REVISE.getActionType()) {
+		} else if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_REVISE)) {
 			// Request sent for revise
-			workFlowRequest.setComments(comments);
+			workFlowRequest.setComments(workflowRequestProcessModel.getComments());
 			workFlowRequest.setActionDate(new Date());
-			workFlowRequest.setStateType(StateType.INITIAL.getStateTypeId());
-			workFlowRequest.setActionType(ActionType.REVISE.getActionType());
-			tsInfo.setStatusId((statusTypes.get(Status.DRAFT.getStatus())));
+			workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_NULL));
+			workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_REVISE));
+			Long statuId = statusMasterRepository.findByClientIdAndStatusTypeAndIsDefaultAndIsDelete(
+					tsInfo.getClientId(), TMSConstants.TIMESHEET, Boolean.TRUE, (short) 0).getId();
+			tsInfo.setStatusId(statuId);
 			tsInfoRepository.save(tsInfo);
 		}
 	}
@@ -231,7 +279,7 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	private float getTotalRejectedTime(TSInfo tsInfo) {
 		
 		 long timeEntryRejectStatusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(
-				 tsInfo.getClientId(),TIMEENTRY, TIMEENTRY_REJECTED, (short)0).getId();
+				 tsInfo.getClientId(),TMSConstants.TIMEENTRY, TMSConstants.TIMEENTRY_REJECTED, (short)0).getId();
 		 List<TSTimeEntries> rejectedTimeEntriesList = tSTimeEntriesRepository.findByTsIdAndStatusIdAndIsDelete(
 				 tsInfo.getId(), timeEntryRejectStatusId, (short)0);
 		 float totalRejectTime = 0.0f;
@@ -241,16 +289,5 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 		}
 		return totalRejectTime;
 	}
-	
-	
-	private Map<String, Long> getStatus(TSInfo tsInfo) {
-		Map<String, Long> statusTypes;
-		short notDeleted = 0;
-		List<StatusMaster>  statusMasterList = statusMasterRepository.findByClientIdAndStatusTypeAndIsDelete(
-				tsInfo.getClientId(), TIMESHEET, notDeleted);
-		statusTypes = statusMasterList.stream().collect(Collectors.toMap(StatusMaster::getStatusCode, StatusMaster::getId));
-		return statusTypes;
-	}
-	
 
 }

@@ -17,11 +17,11 @@ public class WFRDetailsForApprover {
 	
 	TSInfo tsinfo;
 	
-	List<TSTimeEntries> timeEntriesList;
+	List<WFTSTimeEntries> timeEntriesList;
 	
 	String projectName;
 	String clientName;
 	String requestorName;
-	
-
+	String wfActionType;
+	String wfStateType;
 }

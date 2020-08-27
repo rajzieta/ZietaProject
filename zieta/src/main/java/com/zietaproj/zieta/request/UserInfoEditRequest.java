@@ -17,10 +17,9 @@ public class UserInfoEditRequest {
 		private String userLname;
 		private String email;
 		private String empId;
+		private Long accessTypeId;
 		private String phoneNo;
 		private short isActive;
-		private String createdBy;
-		private Date createdDate;
 		private String modifiedBy;
 		private Date modifiedDate;
 		private short isDelete;

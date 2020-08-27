@@ -71,9 +71,9 @@ public class AccessTypeMasterServiceImpl implements AccessTypeMasterService {
 	}
 
 	@Override
-	public List<String> findByClientIdANDAccessTypeId(Long clientId, List<Long> accessIdList) {
+	public List<String> findByClientIdANDAccessTypeId(Long clientId, Long id) {
 		//short notDeleted=0;
-		return accesstypeMasterRepository.findByClientIdANDAccessTypeId(clientId, accessIdList);
+		return accesstypeMasterRepository.findByClientIdANDAccessTypeId(clientId, id);
 	}
 	
 	public List<AccesstypesByClientResponse> getAccessTypesByClient(Long clientId) {

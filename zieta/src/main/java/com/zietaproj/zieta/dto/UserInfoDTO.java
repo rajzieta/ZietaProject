@@ -30,6 +30,7 @@ public class UserInfoDTO {
 	//additional values
 	private String clientCode;
 	private String clientDescription;
+	private String accessType;
 
 	
 

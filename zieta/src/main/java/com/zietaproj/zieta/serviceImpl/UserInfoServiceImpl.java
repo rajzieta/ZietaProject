@@ -23,6 +23,7 @@ import com.zietaproj.zieta.dto.UserInfoDTO;
 import com.zietaproj.zieta.model.ScreensMaster;
 //import com.zietaproj.zieta.model.UserAccessType;
 import com.zietaproj.zieta.model.UserInfo;
+import com.zietaproj.zieta.repository.AccessTypeMasterRepository;
 import com.zietaproj.zieta.repository.AccessTypeScreenMappingRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
@@ -60,6 +61,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 	AccessTypeMasterService accessTypeMasterService;
 	
 	@Autowired
+	AccessTypeMasterRepository accessTypeMasterRepo;
+	
+	@Autowired
 	UserInfoService userInfoService;
 	
 	@Autowired
@@ -90,6 +94,8 @@ public class UserInfoServiceImpl implements UserInfoService {
 			userInfoDTO.setPassword("Welcome1");
 			userInfoDTO.setClientCode(clientInfoRepo.findById(userInfo.getClientId()).get().getClientCode());
 			userInfoDTO.setClientDescription(clientInfoRepo.findById(userInfo.getClientId()).get().getClientName());
+			userInfoDTO.setAccessType(accessTypeMasterRepo.findById(userInfo.getAccessTypeId()).get().getAccessType());
+			
 			 userInfoDTOs.add(userInfoDTO);
 		}
 	}
@@ -192,8 +198,20 @@ public class UserInfoServiceImpl implements UserInfoService {
 		
 		Optional<UserInfo> userinfoEntity = userInfoRepositoryRepository.findById(userinfoeditRequest.getId());
 		if(userinfoEntity.isPresent()) {
-			UserInfo userinfo = modelMapper.map(userinfoeditRequest, UserInfo.class);
-			userInfoRepositoryRepository.save(userinfo);
+			UserInfo userinfosave = userinfoEntity.get();
+			userinfosave.setClientId(userinfoeditRequest.getClientId());
+			userinfosave.setUserFname(userinfoeditRequest.getUserFname());
+			userinfosave.setUserMname(userinfoeditRequest.getUserMname());
+			userinfosave.setUserLname(userinfoeditRequest.getUserLname());
+			userinfosave.setEmail(userinfoeditRequest.getEmail());
+			userinfosave.setEmpId(userinfoeditRequest.getEmpId());
+			userinfosave.setAccessTypeId(userinfoeditRequest.getAccessTypeId());
+			userinfosave.setPhoneNo(userinfoeditRequest.getPhoneNo());
+			userinfosave.setIsActive(userinfoeditRequest.getIsActive());
+			userinfosave.setModifiedBy(userinfoeditRequest.getModifiedBy());
+			userinfosave.setModifiedDate(userinfoeditRequest.getModifiedDate());
+			userinfosave.setIsDelete(userinfoeditRequest.getIsDelete());
+			userInfoRepositoryRepository.save(userinfosave);
 			
 		}else {
 			throw new Exception("User not found with the provided ID : "+userinfoeditRequest.getId());

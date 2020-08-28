@@ -13,11 +13,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.zietaproj.zieta.common.TMSConstants;
+import com.zietaproj.zieta.model.ActivityMaster;
 import com.zietaproj.zieta.model.ProcessSteps;
 import com.zietaproj.zieta.model.TSInfo;
 import com.zietaproj.zieta.model.TSTimeEntries;
+import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.model.WorkflowRequest;
+import com.zietaproj.zieta.model.WorkflowRequestHistory;
+import com.zietaproj.zieta.repository.ActivityMasterRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.ProcessStepsRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
@@ -25,12 +29,15 @@ import com.zietaproj.zieta.repository.StateTypeMasterRepository;
 import com.zietaproj.zieta.repository.StatusMasterRepository;
 import com.zietaproj.zieta.repository.TSInfoRepository;
 import com.zietaproj.zieta.repository.TSTimeEntriesRepository;
+import com.zietaproj.zieta.repository.TaskInfoRepository;
 import com.zietaproj.zieta.repository.TimeTypeRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
+import com.zietaproj.zieta.repository.WorkflowRequestHistoryRepository;
 import com.zietaproj.zieta.repository.WorkflowRequestRepository;
 import com.zietaproj.zieta.request.WorkflowRequestProcessModel;
 import com.zietaproj.zieta.response.WFRDetailsForApprover;
 import com.zietaproj.zieta.response.WFTSTimeEntries;
+import com.zietaproj.zieta.response.WorkFlowHistoryModel;
 import com.zietaproj.zieta.response.WorkFlowRequestorData;
 import com.zietaproj.zieta.service.WorkFlowRequestService;
 import com.zietaproj.zieta.util.TSMUtil;
@@ -41,6 +48,9 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
 	@Autowired
 	WorkflowRequestRepository workflowRequestRepository;
+	
+	@Autowired
+	WorkflowRequestHistoryRepository workflowRequestHistoryRepository;
 
 	
 	@Autowired
@@ -72,6 +82,12 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	
 	@Autowired
 	TimeTypeRepository timeTypeRepository;
+	
+	@Autowired
+	TaskInfoRepository taskInfoRepository;
+	
+	@Autowired
+	ActivityMasterRepository activityMasterRepository;
 
 	@Autowired
 	@Qualifier("stateByName")
@@ -116,6 +132,12 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 					.setClientName(clientInfoRepository.findById(workflowRequest.getClientId()).get().getClientName());
 			wFRDetailsForApprover.setWfActionType(actionTypeById.get(workflowRequest.getActionType()));
 			wFRDetailsForApprover.setWfStateType(stateById.get(workflowRequest.getStateType()));
+			
+			TaskInfo taskInfoMaster = taskInfoRepository.findById(tsInfo.getTaskId()).get();
+			wFRDetailsForApprover.setTaskName(taskInfoMaster.getTaskDescription());
+			
+			ActivityMaster activityMaster = activityMasterRepository.findById(tsInfo.getActivityId()).get();
+			wFRDetailsForApprover.setActivityName(activityMaster.getActivityDesc());
 
 			wFRDetailsForApproverList.add(wFRDetailsForApprover);
 
@@ -288,6 +310,32 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			 totalRejectTime += tsTimeEntries.getTsDuration();
 		}
 		return totalRejectTime;
+	}
+
+	@Override
+	public List<WorkFlowHistoryModel> workFlowHistoryModelList(Long tsId) {
+		List<WorkflowRequestHistory> workflowRequestHistoryList = workflowRequestHistoryRepository
+				.findByTsIdOrderByActionDateDesc(tsId);
+		List<WorkFlowHistoryModel> workFlowHistoryModelList = new ArrayList<WorkFlowHistoryModel>();
+		WorkFlowHistoryModel workFlowHistoryModel = null;
+		for (WorkflowRequestHistory workflowRequestHistory : workflowRequestHistoryList) {
+			TSInfo tsInfo = tsInfoRepository.findById(tsId).get();
+			workFlowHistoryModel = new WorkFlowHistoryModel();
+			UserInfo userInfo = userInfoRepository.findById(workflowRequestHistory.getRequestorId()).get();
+			String requestorName = TSMUtil.getFullName(userInfo);
+			workFlowHistoryModel.setRequestorName(requestorName);
+			userInfo = userInfoRepository.findById(workflowRequestHistory.getApproverId()).get();
+			String approverName = TSMUtil.getFullName(userInfo);
+			workFlowHistoryModel.setApproverName(approverName);
+			String activityName = activityMasterRepository.findById(tsInfo.getActivityId()).get().getActivityDesc();
+			String taskName = taskInfoRepository.findById(tsInfo.getTaskId()).get().getTaskDescription();
+			workFlowHistoryModel.setActivityName(activityName);
+			workFlowHistoryModel.setTaskName(taskName);
+			workFlowHistoryModel.setWorkflowRequestHistory(workflowRequestHistory);
+
+			workFlowHistoryModelList.add(workFlowHistoryModel);
+		}
+		return workFlowHistoryModelList;
 	}
 
 }

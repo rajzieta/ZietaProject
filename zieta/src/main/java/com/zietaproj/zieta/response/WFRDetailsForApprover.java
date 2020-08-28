@@ -24,4 +24,6 @@ public class WFRDetailsForApprover {
 	String requestorName;
 	String wfActionType;
 	String wfStateType;
+	String taskName;
+	String activityName;
 }

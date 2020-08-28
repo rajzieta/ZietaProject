@@ -16,13 +16,13 @@ public class TMSConstants {
 	public final static String TIMEENTRY_REJECTED = "Rejected";
 	
 	
-	public final static String ACTION_NULL = "NULL";
+	public final static String ACTION_NULL = "Open";
 	public final static String ACTION_APPROVE = "Approve";
 	public final static String ACTION_REJECT = "Reject";
 	public final static String ACTION_REVISE = "Revise";
 	
 	
-	public final static String STATE_NULL = "NULL";
+	public final static String STATE_NULL = "Open";
 	public final static String STATE_START = "Start";
 	public final static String STATE_INPROCESS = "In Process";
 	public final static String STATE_COMPLETE = "Complete";

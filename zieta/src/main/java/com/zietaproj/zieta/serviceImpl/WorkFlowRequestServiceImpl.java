@@ -319,6 +319,7 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 		List<WorkFlowHistoryModel> workFlowHistoryModelList = new ArrayList<WorkFlowHistoryModel>();
 		WorkFlowHistoryModel workFlowHistoryModel = null;
 		for (WorkflowRequestHistory workflowRequestHistory : workflowRequestHistoryList) {
+			workFlowHistoryModel = new WorkFlowHistoryModel();
 			TSInfo tsInfo = tsInfoRepository.findById(tsId).get();
 			workFlowHistoryModel = new WorkFlowHistoryModel();
 			UserInfo userInfo = userInfoRepository.findById(workflowRequestHistory.getRequestorId()).get();

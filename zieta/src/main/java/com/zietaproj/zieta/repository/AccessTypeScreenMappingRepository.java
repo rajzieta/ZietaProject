@@ -15,6 +15,8 @@ public interface AccessTypeScreenMappingRepository extends JpaRepository<AccessT
 	  @Query( "select o.screenId from AccessTypeScreenMapping o where o.clientId= :clientId AND o.accessTypeId= :accessTypeId")
 	  List<Long> findByClientIdANDAccessTypeId(@Param("clientId") Long clientId,
 			  @Param("accessTypeId") Long accessTypeId);
+
+	List<AccessTypeScreenMapping> findByIsDelete(short notDeleted);
 	  
 	  
 

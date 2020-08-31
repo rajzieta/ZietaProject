@@ -13,11 +13,13 @@ import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.zietaproj.zieta.common.ActionType;
 import com.zietaproj.zieta.common.StateType;
 import com.zietaproj.zieta.common.Status;
+import com.zietaproj.zieta.common.TMSConstants;
 import com.zietaproj.zieta.dto.WorkflowDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
 import com.zietaproj.zieta.model.ProcessSteps;
@@ -83,10 +85,16 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	@Autowired
 	ModelMapper modelMapper;
 	
+	@Autowired
+	@Qualifier("stateByName")
+	Map<String, Long> stateByName;
+	
+	@Autowired
+	@Qualifier("actionTypeByName")
+	Map<String, Long> actionTypeByName;
 	
 	
-	private final static String TIMESHEET = "TimeSheet";
-
+	
 	/**
 	 *  This methods returns ts_info entries based on the date range of ts_date column 
 	 *  and filters based on the userid and clientid
@@ -140,20 +148,18 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 
 		
 		boolean statusTypesLoad = Boolean.FALSE;
-		Map<String, Long> statusTypes = null;
 		for (TSInfo tsInfo : tsInfoList) {
-
-			if (!statusTypesLoad) {
-				statusTypes = getStatus(tsInfo);
-				// loaded once, no need to retrieve in all iterations;
-				statusTypesLoad = Boolean.TRUE;
-
-			}
-			tsInfo.setStatusId(statusTypes.get(Status.DRAFT.getStatus()));
+			
+			//Setting the statusId which is marked as default in the DB for the corresponding the statustype, doing
+			// as per change request.
+			Long statuId = statusMasterRepository.findByClientIdAndStatusTypeAndIsDefaultAndIsDelete(tsInfo.getClientId(),
+					TMSConstants.TIMESHEET, Boolean.TRUE, (short)0).getId();
+			tsInfo.setStatusId(statuId);
 		}
 		
 		List<TSInfo> tsinfoEntites = tSInfoRepository.saveAll(tsInfoList);
-		submitTimeSheet(tsinfoEntites);
+//		enable for testing
+//		submitTimeSheet(tsinfoEntites); 
 
 		return tsinfoEntites;
 	}
@@ -164,7 +170,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		// call to save workflow_request
 		try {
 			List<WorkflowRequest> workflowRequestList = new ArrayList<WorkflowRequest>();
-			Map<String, Long> statusTypes = null;
+//			Map<String, Long> statusTypes = null;
 			boolean statusTypesLoad = Boolean.FALSE;
 			WorkflowRequest workflowRequest = null;
 			for (TSInfo tsInfo : tsInfoList) {
@@ -173,7 +179,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 				List<ProcessSteps> processStepsList = processStepsRepository.findByClientIdAndProjectIdAndProjectTaskId(
 						tsInfo.getClientId(),tsInfo.getProjectId(), tsInfo.getTaskId());
 				List<ProcessSteps> processStepFiltered = processStepsList.stream().filter(
-						step -> step.getStepId().equals(StateType.INITIAL.getStateTypeId())).collect(Collectors.toList());
+						step -> step.getStepId().equals(stateByName.get(TMSConstants.STATE_NULL))).collect(Collectors.toList());
 			 
 				String approverIds[] = null;
 				if(processStepFiltered.get(0).getApproverId() != null && !processStepFiltered.get(0).getApproverId().isEmpty()){
@@ -181,30 +187,26 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 					approverIds = processStepFiltered.get(0).getApproverId().split("\\|");
 				}
 				
-				if(!statusTypesLoad) {
-					statusTypes = getStatus(tsInfo);
-					//loaded once, no need to retrieve in all iterations;
-					statusTypesLoad  = Boolean.TRUE; 
-					
-				}
-				
 				if(approverIds == null) {
 
-					// we are in the condition where there are NO approvals required
-					tsInfo.setStatusId(statusTypes.get(Status.APPROVED.getStatus()));
+					// we are in the condition where there are NO approvals required for this task.
+					long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(tsInfo.getClientId(), 
+							TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_APPROVED, (short)0).getId();
+					tsInfo.setStatusId(statusId);
 					tSInfoRepository.save(tsInfo);
+					continue;
 				}else {
 					List<WorkflowRequest> exsitignList = workflowRequestRepository.findByTsId(tsInfo.getId());
 					for (int i=0 ; i < approverIds.length; i++) {
 						
-						// check does the WF exists or not, if exisits means it came for revise.
-						// dont create the new WF request, instead change the 
+						// check does the WF exists or not, if exists means it came for revise.
+						// don't create the new WF request, instead update the exisiting WF object.
 						workflowRequest = new WorkflowRequest();
 						if(exsitignList !=null && exsitignList.size() > 0) {
 							workflowRequest = exsitignList.get(i);
 						}
 						
-						buildWFRForSubmission(statusTypes, workflowRequest, tsInfo, approverIds[i]);
+						buildWFRForSubmission(workflowRequest, tsInfo, approverIds[i]);
 						workflowRequestList.add(workflowRequest);
 						
 					}
@@ -222,17 +224,19 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	}
 
 
-	private void buildWFRForSubmission(Map<String, Long> statusTypes, WorkflowRequest workflowRequest, TSInfo tsInfo,
+	private void buildWFRForSubmission( WorkflowRequest workflowRequest, TSInfo tsInfo,
 			String approverId) {
-		tsInfo.setStatusId(statusTypes.get(Status.SUBMITTED.getStatus()));
-		workflowRequest.setActionType(ActionType.INITIAL.getActionType());
+		Long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(tsInfo.getClientId(), 
+				TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_SUBMITTED, (short)0).getId();
+		tsInfo.setStatusId(statusId);
+		workflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_NULL));
 		workflowRequest.setApproverId(Long.valueOf(approverId));
 		workflowRequest.setComments("Submitted for Approval");
-		workflowRequest.setStateType(StateType.START.getStateTypeId());
+		workflowRequest.setStateType(stateByName.get(TMSConstants.STATE_START));
 
 		workflowRequest.setClientId(tsInfo.getClientId());
-		// there will be no action date while submiting the WF request
-//						workflowRequest.setActionDate(new Date());
+		// there will be no action date while submitting the WF request
+		//workflowRequest.setActionDate(new Date());
 		workflowRequest.setCurrentStep(1L);
 		workflowRequest.setProjectId(tsInfo.getProjectId());
 		workflowRequest.setProjectTaskId(tsInfo.getTaskId());
@@ -241,16 +245,6 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		workflowRequest
 				.setTemplateId(projectInfoRepository.findById(tsInfo.getProjectId()).get().getTemplateId());
 		workflowRequest.setTsId(tsInfo.getId());
-	}
-
-
-	private Map<String, Long> getStatus(TSInfo tsInfo) {
-		Map<String, Long> statusTypes;
-		short notDeleted = 0;
-		List<StatusMaster>  statusMasterList = statusMasterRepository.findByClientIdAndStatusTypeAndIsDelete(
-				tsInfo.getClientId(), TIMESHEET, notDeleted);
-		statusTypes = statusMasterList.stream().collect(Collectors.toMap(StatusMaster::getStatusCode, StatusMaster::getId));
-		return statusTypes;
 	}
 	
 	
@@ -276,6 +270,10 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	public void addTimeEntriesByTsId(@Valid List<TimeEntriesByTsIdRequest> timeentriesbytsidRequestList) throws Exception {
 			for (TimeEntriesByTsIdRequest timeEntriesByTsIdRequest : timeentriesbytsidRequestList) {
 				TSTimeEntries tstimeentries = modelMapper.map(timeEntriesByTsIdRequest, TSTimeEntries.class);
+				TSInfo tsInfo = tSInfoRepository.findById(tstimeentries.getTsId()).get();
+				Long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndIsDefaultAndIsDelete(tsInfo.getClientId(), 
+						TMSConstants.TIMEENTRY, Boolean.TRUE, (short)0).getId();
+				tstimeentries.setStatusId(statusId);
 				tstimeentriesRepository.save(tstimeentries);
 			}
 
@@ -286,7 +284,6 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		//for (UpdateTimesheetByIdRequest updateRequest : updatetimesheetRequest) {
 		Optional<TSInfo> TsInfoEntity = tSInfoRepository.findById(updatetimesheetRequest.getId());
 		if(TsInfoEntity.isPresent()) {
-			TSInfo tsInfoSave = TsInfoEntity.get();
 			TSInfo tsinfo = modelMapper.map(updatetimesheetRequest, TSInfo.class);
 			
 			tSInfoRepository.save(tsinfo);

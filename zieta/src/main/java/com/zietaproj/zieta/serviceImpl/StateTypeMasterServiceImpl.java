@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import com.zietaproj.zieta.dto.StateTypeDTO;
 import com.zietaproj.zieta.model.StateTypeMaster;
 import com.zietaproj.zieta.repository.StateTypeMasterRepository;
@@ -80,6 +79,11 @@ public List<StateTypeDTO> getAllStateTypes() {
 		}
 		
 		
+	}
+	@Override
+	public StateTypeMaster getStateByName(String stateName) {
+		// TODO Auto-generated method stub
+		return statetypeMasterRepository.findByStateName(stateName);
 	}
 	
 	

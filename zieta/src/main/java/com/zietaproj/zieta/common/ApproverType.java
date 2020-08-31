@@ -11,7 +11,7 @@ public enum ApproverType {
 
 	DIRECTAPPROVER("Direct Approver"),
 	
-	TMORPM("TM or PM");
+	TMORPM("Task Manager or Project Manager");
 	
 	String approverType;
 	

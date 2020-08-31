@@ -17,10 +17,7 @@ import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "WF_ACTION_TYPE_MASTER")
-@EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(callSuper=false)
-//@JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
-  //      allowGetters = true)
 @Data
 public class ActionTypeMaster implements Serializable {
 

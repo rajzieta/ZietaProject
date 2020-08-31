@@ -44,6 +44,18 @@ private static final Logger LOGGER = LoggerFactory.getLogger(StateTypeMasterCont
 	}
 	
 	
+	@RequestMapping(value = "getStateByName", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public StateTypeMaster getStateByName(@RequestParam(required = true) String stateName) {
+		StateTypeMaster stateTypeMaster = null;
+		try {
+			stateTypeMaster = stateTypeService.getStateByName(stateName);
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in StateTypeMasterController#getStateByName",e);
+		}
+		return stateTypeMaster;
+	}
+	
+	
 	@ApiOperation(value = "creates entries in the state_type_master table", notes = "Table reference: state_type_master")
 	@RequestMapping(value = "addStateTypes", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void addStateTypes(@Valid @RequestBody StateTypeMaster stateTypemaster) {

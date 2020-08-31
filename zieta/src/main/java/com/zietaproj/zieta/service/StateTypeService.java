@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.zietaproj.zieta.dto.StateTypeDTO;
 import com.zietaproj.zieta.model.StateTypeMaster;
 
@@ -17,6 +19,6 @@ public interface StateTypeService {
 
 	public void deleteStateTypesById(Long id) throws Exception;
 
-	
+	public StateTypeMaster getStateByName(String stateName);
 	
 }

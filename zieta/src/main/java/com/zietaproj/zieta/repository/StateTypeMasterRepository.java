@@ -8,5 +8,5 @@ import com.zietaproj.zieta.model.StateTypeMaster;
 @Repository
 public interface StateTypeMasterRepository extends JpaRepository<StateTypeMaster, Long> {
 
-	
+	public StateTypeMaster findByStateName(String stateName);
 }

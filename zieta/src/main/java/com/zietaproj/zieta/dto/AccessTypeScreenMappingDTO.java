@@ -16,4 +16,10 @@ public class AccessTypeScreenMappingDTO extends BaseEntity {
 	private Long clientId;
 	private Long screenId;
 	private Long accessTypeId;
+	
+	//additional
+	
+	private String ClientDescription;
+	private String AccessTypeDescription;
+	private String ScreenDescription;
 }

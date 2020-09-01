@@ -1,11 +1,14 @@
 package com.zietaproj.zieta.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,6 +51,17 @@ public class ScreensMasterController {
 			LOGGER.error("Error Occured in ScreensMasterController#getAllScreens",e);
 		}
 		return screensMasters;
+	}
+	
+	
+	@GetMapping("/getAllScreensByScreenCategory")
+	public ResponseEntity<List<ScreensMasterDTO>> getAllScreensByScreenCategory(@RequestParam(required=true) String screenCategory) {
+		try {
+			List<ScreensMasterDTO> screensbyCategoryList = screensmasterService.getAllScreensByCategory(screenCategory);
+			return new ResponseEntity<List<ScreensMasterDTO>>(screensbyCategoryList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<ScreensMasterDTO>>(HttpStatus.NOT_FOUND);
+		} 
 	}
 
 	@RequestMapping(value = "addScreensmaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

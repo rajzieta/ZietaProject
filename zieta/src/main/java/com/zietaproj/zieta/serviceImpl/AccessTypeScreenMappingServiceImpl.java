@@ -14,7 +14,10 @@ import com.zietaproj.zieta.dto.OrgInfoDTO;
 import com.zietaproj.zieta.model.AccessTypeScreenMapping;
 import com.zietaproj.zieta.model.ClientInfo;
 import com.zietaproj.zieta.model.OrgInfo;
+import com.zietaproj.zieta.repository.AccessTypeMasterRepository;
 import com.zietaproj.zieta.repository.AccessTypeScreenMappingRepository;
+import com.zietaproj.zieta.repository.ClientInfoRepository;
+import com.zietaproj.zieta.repository.ScreensMasterRepository;
 import com.zietaproj.zieta.service.AccessTypeScreenMappingService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +30,18 @@ public class AccessTypeScreenMappingServiceImpl implements AccessTypeScreenMappi
 	
 	@Autowired
 	AccessTypeScreenMappingRepository accessTypeScreenMappingRepository;
+	
+	@Autowired
+	AccessTypeMasterRepository accessTypeRepository;
+	
+	@Autowired
+	ScreensMasterRepository screensmasterRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
+	
+	@Autowired
+	ClientInfoRepository  clientInfoRepository;
 	
 	
 	@Override
@@ -51,6 +63,12 @@ public class AccessTypeScreenMappingServiceImpl implements AccessTypeScreenMappi
 		AccessTypeScreenMappingDTO accessScreenmappingDTO = null;
 		for (AccessTypeScreenMapping accessscreens : accessTypeScreenMappinginfos) {
 			accessScreenmappingDTO = modelMapper.map(accessscreens, AccessTypeScreenMappingDTO.class);
+			accessScreenmappingDTO.setClientDescription(clientInfoRepository.findById(accessscreens.getClientId())
+					.get().getClientName());
+			accessScreenmappingDTO.setAccessTypeDescription(accessTypeRepository.findById(accessscreens.getAccessTypeId())
+					.get().getAccessType());
+			accessScreenmappingDTO.setScreenDescription(screensmasterRepository.findById(accessscreens.getScreenId())
+					.get().getScreenDesc());
 			accessScreenmappingDTOs.add(accessScreenmappingDTO);
 		}
 		return accessScreenmappingDTOs;

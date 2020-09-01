@@ -11,12 +11,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.zietaproj.zieta.dto.ScreensMasterDTO;
-import com.zietaproj.zieta.dto.TaskMasterDTO;
-import com.zietaproj.zieta.model.ProjectMaster;
 import com.zietaproj.zieta.model.ScreensMaster;
-import com.zietaproj.zieta.model.TaskTypeMaster;
+
 import com.zietaproj.zieta.repository.ScreensMasterRepository;
-import com.zietaproj.zieta.repository.TaskTypeMasterRepository;
 import com.zietaproj.zieta.request.ScreensMasterAddRequest;
 import com.zietaproj.zieta.request.ScreensMasterEditRequest;
 import com.zietaproj.zieta.service.ScreensMasterService;
@@ -46,6 +43,24 @@ public class ScreensMasterServiceImpl implements ScreensMasterService {
 			screensMasterDTOs.add(screensMasterDTO);
 		}
 		return screensMasterDTOs;
+	}
+	
+	
+	
+	@Override
+	public List<ScreensMasterDTO> getAllScreensByCategory(String screenCategory) {
+		List<ScreensMaster> screensByCategoryList = screensMasterRepository.findByScreenCategory(screenCategory);
+		List<ScreensMasterDTO> screensByCategoryResponseList = new ArrayList<>();
+		ScreensMasterDTO screensByCategoryResponse = null;
+		for (ScreensMaster screensByCategory : screensByCategoryList) {
+			screensByCategoryResponse = modelMapper.map(screensByCategory, 
+					ScreensMasterDTO.class);
+			screensByCategoryResponseList.add(screensByCategoryResponse);
+		}
+
+		return screensByCategoryResponseList;
+		
+		
 	}
 	
 	@Override

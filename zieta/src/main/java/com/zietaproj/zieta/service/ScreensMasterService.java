@@ -18,4 +18,6 @@ public interface ScreensMasterService {
 	public void deleteById(Long id);
 	
 	public List<ScreensMaster> getScreensByIds(List<Long> ids);
+
+	public List<ScreensMasterDTO> getAllScreensByCategory(String screenCategory);
 }

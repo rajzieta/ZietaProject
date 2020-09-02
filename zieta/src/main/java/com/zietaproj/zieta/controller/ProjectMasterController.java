@@ -116,4 +116,12 @@ public class ProjectMasterController {
 	public void editProjectStatus(@Valid @RequestBody EditProjStatusRequest editprojStatusRequest) throws Exception {
 		projectmasterService.editProjectStatus(editprojStatusRequest);
 	}
+	
+	@ApiOperation(value = "Updates the Project with the provided template id", notes = "Table reference: project_info")
+	@RequestMapping(value = "editProjectByTemplate", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public boolean editProjectByTemplate(@RequestParam(required=true) Long projectId, @RequestParam(required=true) Long templateId) throws Exception {
+		Boolean status = projectmasterService.editProjectByTemplate(projectId, templateId);
+		return status;
+		
+	}
 }

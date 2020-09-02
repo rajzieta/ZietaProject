@@ -19,6 +19,8 @@ import com.zietaproj.zieta.dto.ProcessStepsDTO;
 import com.zietaproj.zieta.model.ProcessConfig;
 import com.zietaproj.zieta.model.ProcessMaster;
 import com.zietaproj.zieta.model.ProcessSteps;
+import com.zietaproj.zieta.model.ProjectInfo;
+import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.ProcessConfigRepository;
 import com.zietaproj.zieta.repository.ProcessMasterRepository;
@@ -26,6 +28,7 @@ import com.zietaproj.zieta.repository.ProcessStepsRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
 import com.zietaproj.zieta.repository.TaskInfoRepository;
 import com.zietaproj.zieta.service.ProcessService;
+import com.zietaproj.zieta.util.TSMUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -165,16 +168,39 @@ public List<ProcessMasterDTO> getAllProcess() {
 	
 	//Implementation for ProcessConfig API
 	
-public List<ProcessConfigDTO> getAllProcessConfig() {
-		
+	public List<ProcessConfigDTO> getAllProcessConfig() {
+
 		List<ProcessConfig> processconfigs = processConfigRepository.findAll();
 		List<ProcessConfigDTO> processconfigDTOs = new ArrayList<ProcessConfigDTO>();
 		ProcessConfigDTO processConfigDTO = null;
 		for (ProcessConfig processconfig : processconfigs) {
-			processConfigDTO = modelMapper.map(processconfig,ProcessConfigDTO.class);
+			processConfigDTO = modelMapper.map(processconfig, ProcessConfigDTO.class);
 			processconfigDTOs.add(processConfigDTO);
+		}
+
+		return processconfigDTOs;
 	}
 	
-		return processconfigDTOs;
-}
+	
+	public List<ProcessSteps> createProcessSteps(TaskInfo taskInfo, ProjectInfo projectInfo) {
+		List<ProcessConfig> processConfigList = processConfigRepository.findByTemplateId(projectInfo.getTemplateId());
+		
+		//construct process-steps entries based on the template-id used by project
+		
+		List<ProcessSteps> processStepsList = new ArrayList<ProcessSteps>();
+		ProcessSteps processSteps = null;
+		for (ProcessConfig processConfig : processConfigList) {
+			processSteps = new  ProcessSteps();
+			processSteps.setClientId(taskInfo.getClientId());
+			processSteps.setProjectId(taskInfo.getProjectId());
+			processSteps.setTemplateId(taskInfo.getProjectId());
+			processSteps.setTemplateId(projectInfo.getTemplateId());
+			processSteps.setProjectTaskId(taskInfo.getTaskInfoId());
+			processSteps.setStepId(processConfig.getStepId());
+			String approverId = TSMUtil.getApproverId(taskInfo, projectInfo, processConfig);
+			processSteps.setApproverId(approverId);
+			processStepsList.add(processSteps);
+		}
+		return processStepsList;
+	}
 }

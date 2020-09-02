@@ -159,7 +159,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		
 		List<TSInfo> tsinfoEntites = tSInfoRepository.saveAll(tsInfoList);
 //		enable for testing
-//		submitTimeSheet(tsinfoEntites); 
+		submitTimeSheet(tsinfoEntites); 
 
 		return tsinfoEntites;
 	}
@@ -170,51 +170,58 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		// call to save workflow_request
 		try {
 			List<WorkflowRequest> workflowRequestList = new ArrayList<WorkflowRequest>();
-//			Map<String, Long> statusTypes = null;
-			boolean statusTypesLoad = Boolean.FALSE;
 			WorkflowRequest workflowRequest = null;
 			for (TSInfo tsInfo : tsInfoList) {
-				
-				//get the approverid from the process_step based on the clientId, projectId and taskId
-				List<ProcessSteps> processStepsList = processStepsRepository.findByClientIdAndProjectIdAndProjectTaskId(
-						tsInfo.getClientId(),tsInfo.getProjectId(), tsInfo.getTaskId());
-				List<ProcessSteps> processStepFiltered = processStepsList.stream().filter(
-						step -> step.getStepId().equals(stateByName.get(TMSConstants.STATE_NULL))).collect(Collectors.toList());
-			 
-				String approverIds[] = null;
-				if(processStepFiltered.get(0).getApproverId() != null && !processStepFiltered.get(0).getApproverId().isEmpty()){
-					
-					approverIds = processStepFiltered.get(0).getApproverId().split("\\|");
-				}
-				
-				if(approverIds == null) {
 
-					// we are in the condition where there are NO approvals required for this task.
-					long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(tsInfo.getClientId(), 
-							TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_APPROVED, (short)0).getId();
-					tsInfo.setStatusId(statusId);
-					tSInfoRepository.save(tsInfo);
+				// get the approverid from the process_step based on the clientId, projectId and
+				// taskId
+				List<ProcessSteps> processStepsList = processStepsRepository
+						.findByClientIdAndProjectIdAndProjectTaskIdOrderByStepId(tsInfo.getClientId(),
+								tsInfo.getProjectId(), tsInfo.getTaskId());
+
+				Long statusId = null;
+
+				if (processStepsList != null && processStepsList.size() == 1
+						&& processStepsList.get(0).getApproverId() == null) {
+
+					statusId = statusMasterRepository
+							.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(tsInfo.getClientId(),
+									TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_APPROVED, (short) 0)
+							.getId();
 					continue;
-				}else {
-					List<WorkflowRequest> exsitignList = workflowRequestRepository.findByTsId(tsInfo.getId());
-					for (int i=0 ; i < approverIds.length; i++) {
-						
-						// check does the WF exists or not, if exists means it came for revise.
-						// don't create the new WF request, instead update the exisiting WF object.
-						workflowRequest = new WorkflowRequest();
-						if(exsitignList !=null && exsitignList.size() > 0) {
-							workflowRequest = exsitignList.get(i);
-						}
-						
-						buildWFRForSubmission(workflowRequest, tsInfo, approverIds[i]);
-						workflowRequestList.add(workflowRequest);
-						
-					}
+				} else {
+					statusId = statusMasterRepository
+							.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(tsInfo.getClientId(),
+									TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_SUBMITTED, (short) 0)
+							.getId();
+
 				}
-			
-				
+				tsInfo.setStatusId(statusId);
+
+				for (int i = 0; i < processStepsList.size(); i++) {
+
+					String approverIds[] = null;
+					if (processStepsList.get(i).getApproverId() != null
+							&& !processStepsList.get(i).getApproverId().isEmpty()) {
+
+						approverIds = processStepsList.get(i).getApproverId().split("\\|");
+					}
+					for (int j = 0; j < approverIds.length; j++) {
+
+						workflowRequest = new WorkflowRequest();
+						buildWFRForSubmission(workflowRequest, tsInfo, approverIds[j]);
+						if( i == 0) {
+							//considering this as the first step
+							workflowRequest.setCurrentStep(1L);
+							workflowRequest.setStateType(stateByName.get(TMSConstants.STATE_START));
+						}
+						workflowRequestList.add(workflowRequest);
+					}
+
+				}
+
 			}
-			
+
 			workflowRequestRepository.saveAll(workflowRequestList);
 		} catch (Exception e) {
 			log.error("Exception occured while populating workflow request", e);
@@ -226,18 +233,15 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 
 	private void buildWFRForSubmission( WorkflowRequest workflowRequest, TSInfo tsInfo,
 			String approverId) {
-		Long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(tsInfo.getClientId(), 
-				TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_SUBMITTED, (short)0).getId();
-		tsInfo.setStatusId(statusId);
 		workflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_NULL));
 		workflowRequest.setApproverId(Long.valueOf(approverId));
-		workflowRequest.setComments("Submitted for Approval");
-		workflowRequest.setStateType(stateByName.get(TMSConstants.STATE_START));
+		workflowRequest.setComments(StringUtils.EMPTY);
+		workflowRequest.setStateType(stateByName.get(TMSConstants.STATE_OPEN));
 
 		workflowRequest.setClientId(tsInfo.getClientId());
 		// there will be no action date while submitting the WF request
 		//workflowRequest.setActionDate(new Date());
-		workflowRequest.setCurrentStep(1L);
+		workflowRequest.setCurrentStep(0L);
 		workflowRequest.setProjectId(tsInfo.getProjectId());
 		workflowRequest.setProjectTaskId(tsInfo.getTaskId());
 		workflowRequest.setRequestorId(tsInfo.getUserId());

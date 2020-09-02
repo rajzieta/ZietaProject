@@ -10,35 +10,34 @@ import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
-import com.zietaproj.zieta.dto.ProjectMasterDTO;
-import com.zietaproj.zieta.model.ActivityMaster;
 import com.zietaproj.zieta.model.CustInfo;
+import com.zietaproj.zieta.model.ProcessSteps;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.ProjectMaster;
-import com.zietaproj.zieta.model.RoleMaster;
 import com.zietaproj.zieta.model.TaskInfo;
-import com.zietaproj.zieta.model.TaskTypeMaster;
 import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.CustInfoRepository;
 import com.zietaproj.zieta.repository.OrgInfoRepository;
+import com.zietaproj.zieta.repository.ProcessStepsRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
-import com.zietaproj.zieta.repository.StatusMasterRepository;
 import com.zietaproj.zieta.repository.ProjectMasterRepository;
+import com.zietaproj.zieta.repository.StatusMasterRepository;
+import com.zietaproj.zieta.repository.TaskInfoRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.request.EditProjStatusRequest;
-import com.zietaproj.zieta.request.EditTasksByClientProjectRequest;
 import com.zietaproj.zieta.request.ProjectMasterEditRequest;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
 import com.zietaproj.zieta.response.ProjectTypeByClientResponse;
-import com.zietaproj.zieta.response.ProjectsByClientResponse;
-import com.zietaproj.zieta.response.TaskTypesByClientResponse;
+import com.zietaproj.zieta.service.ProcessService;
 import com.zietaproj.zieta.service.ProjectMasterService;
 import com.zietaproj.zieta.util.TSMUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class ProjectMasterServiceImpl implements ProjectMasterService{
 
 	
@@ -63,6 +62,15 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	
 	@Autowired
 	StatusMasterRepository statusMasterRepository;
+	
+	@Autowired
+	ProcessStepsRepository processStepsRepository;
+	
+	@Autowired
+	TaskInfoRepository taskInfoRepository;
+	
+	@Autowired
+	ProcessService processService;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -203,6 +211,49 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		
 		
 		
+	}
+
+	@Override
+	public boolean editProjectByTemplate(Long projectId, Long templateId) {
+		ProjectInfo  projectInfo = null;
+		try {
+			projectInfo = projectInfoRepository.findById(projectId).get();
+			projectInfo.setTemplateId(templateId);
+		}catch (Exception e) {
+			log.error("Exception occured while updating the projectInfo {} with the provided template-id {}",projectId, templateId);
+			log.error(e.getMessage(),e);
+			return false;
+		}
+		
+		try {
+			List<ProcessSteps> processStepsList = processStepsRepository.findByProjectId(projectId);
+			//flush and fill the process-step entries based on the project id
+			processStepsRepository.deleteAll(processStepsList);
+		}catch(Exception e) {
+			log.error(e.getMessage(),e);
+			return false;
+		}
+		
+		try {
+			//create the process steps for all the tasks associated with the project.
+			List<TaskInfo> taskInfoList =  taskInfoRepository.findByProjectIdAndIsDelete(projectId, (short)0);
+			List<ProcessSteps> processStepsForAllTasks = new ArrayList<ProcessSteps>();
+			
+			for (TaskInfo taskInfo : taskInfoList) {
+				
+				List<ProcessSteps> processStepForTask = processService.createProcessSteps(taskInfo, projectInfo);
+				processStepsForAllTasks.addAll(processStepForTask);
+				
+			}
+			//finally saving all the steps created for the task with new template id/
+			processStepsRepository.saveAll(processStepsForAllTasks);
+		}catch(Exception e) {
+			log.error(e.getMessage(),e);
+			return false;
+		
+		}
+		
+		return true;
 	}
 
 	

@@ -11,5 +11,6 @@ public interface TaskInfoRepository extends JpaRepository<TaskInfo, Long> {
 
 	List<TaskInfo> findByClientIdAndProjectId(Long clientId, Long projectId);
 	List<TaskInfo> findByClientIdAndProjectIdAndIsDelete(Long clientId, Long projectId,Short isDelete);
+	List<TaskInfo> findByProjectIdAndIsDelete(Long projectId,Short isDelete);
 
 }

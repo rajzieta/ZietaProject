@@ -30,4 +30,6 @@ public interface ProjectMasterService {
 	public void editProjectsById(@Valid ProjectMasterEditRequest projectmasterEditRequest) throws Exception;
 
 	public void deleteProjectsById(Long id, String modifiedBy) throws Exception;
+	
+	public boolean editProjectByTemplate(Long projectId, Long templateId);
 }

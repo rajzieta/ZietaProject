@@ -17,6 +17,11 @@ public interface AccessTypeScreenMappingRepository extends JpaRepository<AccessT
 			  @Param("accessTypeId") Long accessTypeId);
 
 	List<AccessTypeScreenMapping> findByIsDelete(short notDeleted);
+
+	//List<AccessTypeScreenMapping> findByClientIdANDAccessTypeIdANDIsDelete(Long clientId, Long accessTypeId,
+	//		short notDeleted);
+
+	//List<Long> findByIdANDClientId(Long id, Long clientId);
 	  
 	  
 

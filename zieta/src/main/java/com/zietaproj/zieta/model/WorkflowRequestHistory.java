@@ -18,10 +18,16 @@ import lombok.Data;
 @Entity
 @Table(name = "wf_request_history")
 @Data
-public class WorkflowRequestHistory extends AbstractPersistable<Long> {
+public class WorkflowRequestHistory {
 
-
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="id")
     private Long id;
+    
+	@Column(name="WR_ID")
+	private Long wrId;
+    
 
     @Column(name="client_id")
     private Long clientId;
@@ -37,6 +43,9 @@ public class WorkflowRequestHistory extends AbstractPersistable<Long> {
   
     @Column(name="ts_id")
     private Long tsId;
+    
+    @Column(name="step_id")
+    private Long stepId;
     
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="request_date")

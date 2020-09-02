@@ -86,7 +86,7 @@ public class TSWorkFlowController {
 	public List<WorkFlowHistoryModel> workFlowHistoryModelList(@RequestParam(required = true) Long tsId){
 		List<WorkFlowHistoryModel> workFlowHistoryModelList = null;
 		try {
-			workFlowHistoryModelList = workFlowRequestService.workFlowHistoryModelList(tsId);
+			workFlowHistoryModelList = workFlowRequestService.getWorkFlowHistoryForTS(tsId);
 		}catch (Exception e) {
 			log.error("Error Occured in TSWorkFlowController#getWFRHistoryForTS", e);
 

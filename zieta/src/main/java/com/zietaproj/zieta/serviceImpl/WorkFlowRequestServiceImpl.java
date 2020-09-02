@@ -209,40 +209,37 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 		WorkflowRequest workFlowRequest = workflowRequestRepository.findById(
 				workflowRequestProcessModel.getWorkFlowRequestId()).get();
 		
-		List<ProcessSteps> processStepsList = processStepsRepository.findByClientIdAndProjectIdAndProjectTaskId(
+		/*List<ProcessSteps> processStepsList = processStepsRepository.findByClientIdAndProjectIdAndProjectTaskId(
 				workFlowRequest.getClientId(),workFlowRequest.getProjectId(), workFlowRequest.getProjectTaskId());
-		int workFlowDepth = processStepsList.size();
+		int workFlowDepth = processStepsList.size();*/
 		
 		TSInfo tsInfo = tsInfoRepository.findById(workFlowRequest.getTsId()).get();
+		long nextStep = workFlowRequest.getStepId() +1;
 		
-		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByTsId(workFlowRequest.getTsId());
+		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByTsIdAndStepId(workFlowRequest.getTsId(), nextStep);
+		List<WorkflowRequest> multipleApprovalsAtOneStep = new ArrayList<WorkflowRequest>();
 		for (int i = 0; workFlowRequestList != null && i < workFlowRequestList.size(); i++) {
 			
-			if(workFlowRequestList.get(i).getId() == workflowRequestProcessModel.getWorkFlowRequestId()) {
-				workFlowInAction(workflowRequestProcessModel, workFlowRequestList.get(i), processStepsList, workFlowDepth, tsInfo);
-			}else {
-				workflowRequestRepository.deleteById(workFlowRequestList.get(i).getId());
+			if(workFlowRequestList.get(i).getId() != workflowRequestProcessModel.getWorkFlowRequestId()) {
+				multipleApprovalsAtOneStep.add(workFlowRequestList.get(i));
 			}
+			workFlowInAction(workflowRequestProcessModel, workFlowRequestList.get(i), 3, tsInfo);
 			
 		}
+		workflowRequestRepository.deleteAll(multipleApprovalsAtOneStep);
 	}
 	
 	
 	private void workFlowInAction(WorkflowRequestProcessModel workflowRequestProcessModel, WorkflowRequest workFlowRequest,
-			List<ProcessSteps> processStepsList, int workFlowDepth, TSInfo tsInfo) {
+			 int workFlowDepth, TSInfo tsInfo) {
 		if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_APPROVE)) {
 			// promote the approval to next level
 			long currentStep = workFlowRequest.getCurrentStep();
-			if (currentStep <= workFlowDepth) {
 				if (currentStep != workFlowDepth) {
 					long nextStep = currentStep + 1;
-					List<ProcessSteps> processStepFiltered = processStepsList.stream()
-							.filter(step -> step.getStepId().equals(nextStep)).collect(Collectors.toList());
-					workFlowRequest.setCurrentStep(nextStep);
 					// Promoting to next level approval
 					workFlowRequest.setComments(workflowRequestProcessModel.getComments());
-					workFlowRequest.setApproverId(Long.valueOf(processStepFiltered.get(0).getApproverId()));
-					workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_INPROCESS));
+//					workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_INPROCESS));
 
 					// approved from the current step point of view
 					workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
@@ -269,7 +266,6 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 					workFlowRequest.setActionDate(new Date());
 				}
 
-			}
 		} else if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_REJECT)) {
 			// Request Rejected
 			workFlowRequest.setComments(workflowRequestProcessModel.getComments());
@@ -288,7 +284,7 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			// Request sent for revise
 			workFlowRequest.setComments(workflowRequestProcessModel.getComments());
 			workFlowRequest.setActionDate(new Date());
-			workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_NULL));
+			workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_OPEN));
 			workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_REVISE));
 			Long statuId = statusMasterRepository.findByClientIdAndStatusTypeAndIsDefaultAndIsDelete(
 					tsInfo.getClientId(), TMSConstants.TIMESHEET, Boolean.TRUE, (short) 0).getId();
@@ -313,7 +309,7 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	}
 
 	@Override
-	public List<WorkFlowHistoryModel> workFlowHistoryModelList(Long tsId) {
+	public List<WorkFlowHistoryModel> getWorkFlowHistoryForTS(Long tsId) {
 		List<WorkflowRequestHistory> workflowRequestHistoryList = workflowRequestHistoryRepository
 				.findByTsIdOrderByActionDateDesc(tsId);
 		List<WorkFlowHistoryModel> workFlowHistoryModelList = new ArrayList<WorkFlowHistoryModel>();

@@ -35,6 +35,9 @@ public class WorkflowRequest {
     @Column(name="project_task_id")
     private Long projectTaskId;
   
+    @Column(name="step_id")
+    private Long stepId;
+    
     @Column(name="ts_id")
     private Long tsId;
     

@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zietaproj.zieta.dto.TaskMasterDTO;
-import com.zietaproj.zieta.model.ProcessConfig;
 import com.zietaproj.zieta.model.ProcessSteps;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.StatusMaster;
@@ -37,6 +36,7 @@ import com.zietaproj.zieta.request.UpdateTaskInfoRequest;
 import com.zietaproj.zieta.response.TaskTypesByClientResponse;
 import com.zietaproj.zieta.response.TasksByClientProjectResponse;
 import com.zietaproj.zieta.response.TasksByUserModel;
+import com.zietaproj.zieta.service.ProcessService;
 import com.zietaproj.zieta.service.TaskTypeMasterService;
 import com.zietaproj.zieta.util.TSMUtil;
 
@@ -74,6 +74,9 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 	
 	@Autowired
 	ProcessStepsRepository processStepsRepository;
+	
+	@Autowired
+	ProcessService processService;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -212,24 +215,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 			TaskInfo taskInfoDB = taskInfoRepository.save(taskInfo);
 			ProjectInfo projectInfo = projectInfoRepository.findById(taskInfo.getProjectId()).get();
 			
-			List<ProcessConfig> processConfigList = processConfigRepository.findByTemplateId(projectInfo.getTemplateId());
-			
-			//construct process-steps entries based on the template-id used by project
-			
-			List<ProcessSteps> processStepsList = new ArrayList<ProcessSteps>();
-			ProcessSteps processSteps = null;
-			for (ProcessConfig processConfig : processConfigList) {
-				processSteps = new  ProcessSteps();
-				processSteps.setClientId(taskInfo.getClientId());
-				processSteps.setProjectId(taskInfo.getProjectId());
-				processSteps.setTemplateId(taskInfo.getProjectId());
-				processSteps.setTemplateId(projectInfo.getTemplateId());
-				processSteps.setProjectTaskId(taskInfoDB.getTaskInfoId());
-				processSteps.setStepId(processConfig.getStepId());
-				String approverId = TSMUtil.getApproverId(taskInfoDB, projectInfo, processConfig);
-				processSteps.setApproverId(approverId);
-				processStepsList.add(processSteps);
-			}
+			List<ProcessSteps> processStepsList = processService.createProcessSteps(taskInfoDB, projectInfo);
 			
 			processStepsRepository.saveAll(processStepsList);
 			
@@ -240,6 +226,8 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 		}
 
 	}
+
+
 	
 	public void editTaskInfo(@Valid EditTasksByClientProjectRequest editasksByClientProjectRequest) throws Exception {
 		Optional<TaskInfo> taskInfoEntity = taskInfoRepository.findById(editasksByClientProjectRequest.getTaskInfoId());

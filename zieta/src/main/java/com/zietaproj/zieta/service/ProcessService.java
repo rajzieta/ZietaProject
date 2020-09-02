@@ -9,6 +9,8 @@ import com.zietaproj.zieta.dto.ProcessMasterDTO;
 import com.zietaproj.zieta.dto.ProcessStepsDTO;
 import com.zietaproj.zieta.model.ProcessMaster;
 import com.zietaproj.zieta.model.ProcessSteps;
+import com.zietaproj.zieta.model.ProjectInfo;
+import com.zietaproj.zieta.model.TaskInfo;
 
 public interface ProcessService {
 
@@ -29,6 +31,8 @@ public interface ProcessService {
 	public void deleteProcessById(Long id) throws Exception;
 
 	public List<ProcessConfigDTO> getAllProcessConfig();
+	
+	public List<ProcessSteps> createProcessSteps(TaskInfo taskInfo, ProjectInfo projectInfo);
 
 	
 	

@@ -22,6 +22,6 @@ public interface WorkFlowRequestService {
 	
 	public void processWorkFlow(WorkflowRequestProcessModel workflowRequestProcessModel);
 	
-	public List<WorkFlowHistoryModel> workFlowHistoryModelList(Long tsId);
+	public List<WorkFlowHistoryModel> getWorkFlowHistoryForTS(Long tsId);
 
 }

@@ -77,10 +77,11 @@ public class AccessTypeScreenMappingServiceImpl implements AccessTypeScreenMappi
 				accessScreenmappingDTO.setAccessTypeId(accessscreens.getAccessTypeId());
 				accessScreenmappingDTO.setScreenId(accessscreens.getScreenId());
 			//accessScreenmappingDTO = modelMapper.map(accessscreens, AccessTypeScreenMappingDTO.class);
+
 				accessScreenmappingDTO.setClientCode(clientInfoRepository.findById(accessscreens.getClientId())
 						.get().getClientCode());
 				accessScreenmappingDTO.setClientDescription(clientInfoRepository.findById(accessscreens.getClientId())
-					.get().getClientName());
+               .get().getClientName());
 			accessScreenmappingDTO.setAccessTypeDescription(accessTypeRepository.findById(accessscreens.getAccessTypeId())
 					.get().getAccessType());
 //			accessScreenmappingDTO.setScreenDescription(screensmasterRepository.findById(accessscreens.getScreenId())

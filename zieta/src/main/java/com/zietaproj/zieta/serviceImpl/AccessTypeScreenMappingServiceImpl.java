@@ -14,11 +14,13 @@ import com.zietaproj.zieta.dto.OrgInfoDTO;
 import com.zietaproj.zieta.model.AccessTypeScreenMapping;
 import com.zietaproj.zieta.model.ClientInfo;
 import com.zietaproj.zieta.model.OrgInfo;
+import com.zietaproj.zieta.model.ScreensMaster;
 import com.zietaproj.zieta.repository.AccessTypeMasterRepository;
 import com.zietaproj.zieta.repository.AccessTypeScreenMappingRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.ScreensMasterRepository;
 import com.zietaproj.zieta.service.AccessTypeScreenMappingService;
+import com.zietaproj.zieta.service.ScreensMasterService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,6 +39,9 @@ public class AccessTypeScreenMappingServiceImpl implements AccessTypeScreenMappi
 	@Autowired
 	ScreensMasterRepository screensmasterRepository;
 
+	@Autowired
+	ScreensMasterService screensMasterService;
+	
 	@Autowired
 	ModelMapper modelMapper;
 	
@@ -58,17 +63,32 @@ public class AccessTypeScreenMappingServiceImpl implements AccessTypeScreenMappi
 	@Override
 	public List<AccessTypeScreenMappingDTO> getAllAccesstypeScreensMapping() {
 		short notDeleted = 0;
+		//AccessTypeScreenMappingDTO accessScreenmappingDTO = null;
 		List<AccessTypeScreenMapping> accessTypeScreenMappinginfos= accessTypeScreenMappingRepository.findByIsDelete(notDeleted);
+		//List<AccessTypeScreenMapping> accessControlConfigList = accessTypeScreenMappingRepository.findByClientIdANDAccessTypeIdANDIsDelete(accessScreenmappingDTO.getClientId(), accessScreenmappingDTO.getAccessTypeId(), notDeleted );
 		List<AccessTypeScreenMappingDTO> accessScreenmappingDTOs = new ArrayList<AccessTypeScreenMappingDTO>();
 		AccessTypeScreenMappingDTO accessScreenmappingDTO = null;
 		for (AccessTypeScreenMapping accessscreens : accessTypeScreenMappinginfos) {
-			accessScreenmappingDTO = modelMapper.map(accessscreens, AccessTypeScreenMappingDTO.class);
+			accessScreenmappingDTO = new AccessTypeScreenMappingDTO();
+			
+				
+				accessScreenmappingDTO.setId(accessscreens.getId());
+				accessScreenmappingDTO.setClientId(accessscreens.getClientId());
+				accessScreenmappingDTO.setAccessTypeId(accessscreens.getAccessTypeId());
+				accessScreenmappingDTO.setScreenId(accessscreens.getScreenId());
+			//accessScreenmappingDTO = modelMapper.map(accessscreens, AccessTypeScreenMappingDTO.class);
 			accessScreenmappingDTO.setClientDescription(clientInfoRepository.findById(accessscreens.getClientId())
 					.get().getClientName());
 			accessScreenmappingDTO.setAccessTypeDescription(accessTypeRepository.findById(accessscreens.getAccessTypeId())
 					.get().getAccessType());
-			accessScreenmappingDTO.setScreenDescription(screensmasterRepository.findById(accessscreens.getScreenId())
-					.get().getScreenDesc());
+//			accessScreenmappingDTO.setScreenDescription(screensmasterRepository.findById(accessscreens.getScreenId())
+//					.get().getScreenDesc());
+			//List<Long> accessControlConfigList = accessTypeScreenMappingRepository.
+			//		findByIdANDClientId(((AccessTypeScreenMapping) accessTypeScreenMappinginfos).getId(), ((AccessTypeScreenMapping) accessTypeScreenMappinginfos).getClientId());
+			 List<Long> accessControlConfigList = accessTypeScreenMappingRepository.findByClientIdANDAccessTypeId(accessScreenmappingDTO.getClientId(), accessScreenmappingDTO.getAccessTypeId());
+				
+				List<ScreensMaster> screensListByClientId = screensMasterService.getScreensByIds(accessControlConfigList);
+			accessScreenmappingDTO.setScreensByClient(screensListByClientId);
 			accessScreenmappingDTOs.add(accessScreenmappingDTO);
 		}
 		return accessScreenmappingDTOs;

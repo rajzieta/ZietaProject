@@ -173,56 +173,81 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 			WorkflowRequest workflowRequest = null;
 			for (TSInfo tsInfo : tsInfoList) {
 
-				// get the approverid from the process_step based on the clientId, projectId and
-				// taskId
-				List<ProcessSteps> processStepsList = processStepsRepository
-						.findByClientIdAndProjectIdAndProjectTaskIdOrderByStepId(tsInfo.getClientId(),
-								tsInfo.getProjectId(), tsInfo.getTaskId());
-
-				Long statusId = null;
-
-				if (processStepsList != null && processStepsList.size() == 1
-						&& processStepsList.get(0).getApproverId() == null) {
-
-					statusId = statusMasterRepository
-							.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(tsInfo.getClientId(),
-									TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_APPROVED, (short) 0)
-							.getId();
-					continue;
-				} else {
-					statusId = statusMasterRepository
-							.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(tsInfo.getClientId(),
-									TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_SUBMITTED, (short) 0)
-							.getId();
-
-				}
+				workflowRequestList = workflowRequestRepository.findByTsIdOrderByStepId(tsInfo.getId());
+				Long statusId = statusMasterRepository
+						.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(tsInfo.getClientId(),
+								TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_SUBMITTED, (short) 0)
+						.getId();
 				tsInfo.setStatusId(statusId);
+				if (workflowRequestList.size() == 0) {
+					// get the approverid from the process_step based on the clientId, projectId and taskId
+					List<ProcessSteps> processStepsList = processStepsRepository
+							.findByClientIdAndProjectIdAndProjectTaskIdOrderByStepId(tsInfo.getClientId(),
+									tsInfo.getProjectId(), tsInfo.getTaskId());
 
-				for (int i = 0; i < processStepsList.size(); i++) {
+					if (processStepsList != null && processStepsList.size() == 1
+							&& processStepsList.get(0).getApproverId() == null) {
 
-					String approverIds[] = null;
-					if (processStepsList.get(i).getApproverId() != null
-							&& !processStepsList.get(i).getApproverId().isEmpty()) {
-
-						approverIds = processStepsList.get(i).getApproverId().split("\\|");
+						statusId = statusMasterRepository
+								.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(tsInfo.getClientId(),
+										TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_APPROVED, (short) 0)
+								.getId();
+						// set the status as approved and there are no actions on the workflow, so move
+						// to next TSInfo item.
+						tsInfo.setStatusId(statusId);
+						continue;
 					}
-					for (int j = 0; j < approverIds.length; j++) {
 
-						workflowRequest = new WorkflowRequest();
-						buildWFRForSubmission(workflowRequest, tsInfo, approverIds[j]);
-						if( i == 0) {
-							//considering this as the first step
-							workflowRequest.setCurrentStep(1L);
-							workflowRequest.setStateType(stateByName.get(TMSConstants.STATE_START));
+					for (int i = 0; i < processStepsList.size(); i++) {
+
+						String approverIds[] = null;
+						if (processStepsList.get(i).getApproverId() != null
+								&& !processStepsList.get(i).getApproverId().isEmpty()) {
+
+							approverIds = processStepsList.get(i).getApproverId().split("\\|");
 						}
-						workflowRequestList.add(workflowRequest);
+						for (int j = 0; j < approverIds.length; j++) {
+
+							workflowRequest = new WorkflowRequest();
+							workflowRequest.setStepId(processStepsList.get(i).getStepId());
+							buildWFRForSubmission(workflowRequest, tsInfo, approverIds[j]);
+							if (processStepsList.get(i).getStepId() == 1) {
+								// considering this as the first step
+								workflowRequest.setCurrentStep(1L);
+								
+								workflowRequest.setStateType(stateByName.get(TMSConstants.STATE_START));
+							}
+							workflowRequestList.add(workflowRequest);
+						}
+
+					}
+					workflowRequestRepository.saveAll(workflowRequestList);
+				} else {
+					// old workflow objects came for revision
+					for(WorkflowRequest oldWorkflowRequest: workflowRequestList ) {
+
+						oldWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_NULL));
+						oldWorkflowRequest.setRequestDate(new Date());
+						oldWorkflowRequest.setActionDate(null);
+						// rest of other attributes will be retained from the previous WFR phases.
+						
+
+						if (oldWorkflowRequest.getStepId() == 1) {
+							// considering this as the first step
+							oldWorkflowRequest.setCurrentStep(1L);
+							oldWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_START));
+						} else {
+							oldWorkflowRequest.setCurrentStep(0L);
+							oldWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_OPEN));
+						}
+
+
 					}
 
 				}
 
 			}
 
-			workflowRequestRepository.saveAll(workflowRequestList);
 		} catch (Exception e) {
 			log.error("Exception occured while populating workflow request", e);
 			return false;
@@ -240,7 +265,8 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 
 		workflowRequest.setClientId(tsInfo.getClientId());
 		// there will be no action date while submitting the WF request
-		//workflowRequest.setActionDate(new Date());
+		workflowRequest.setActionDate(null);
+
 		workflowRequest.setCurrentStep(0L);
 		workflowRequest.setProjectId(tsInfo.getProjectId());
 		workflowRequest.setProjectTaskId(tsInfo.getTaskId());

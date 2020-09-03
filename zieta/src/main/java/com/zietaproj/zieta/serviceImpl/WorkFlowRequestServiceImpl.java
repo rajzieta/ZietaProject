@@ -206,51 +206,72 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	@Transactional
 	public void processWorkFlow(WorkflowRequestProcessModel workflowRequestProcessModel) {
 		
-		WorkflowRequest workFlowRequest = workflowRequestRepository.findById(
+		WorkflowRequest currentStepWorkFlowRequest = workflowRequestRepository.findById(
 				workflowRequestProcessModel.getWorkFlowRequestId()).get();
+		int workFlowDepth = workflowRequestRepository.countByStepIdFromTsId(currentStepWorkFlowRequest.getTsId());
 		
-		/*List<ProcessSteps> processStepsList = processStepsRepository.findByClientIdAndProjectIdAndProjectTaskId(
-				workFlowRequest.getClientId(),workFlowRequest.getProjectId(), workFlowRequest.getProjectTaskId());
-		int workFlowDepth = processStepsList.size();*/
+		TSInfo tsInfo = tsInfoRepository.findById(currentStepWorkFlowRequest.getTsId()).get();
+		long nextStep = currentStepWorkFlowRequest.getStepId() +1;
 		
-		TSInfo tsInfo = tsInfoRepository.findById(workFlowRequest.getTsId()).get();
-		long nextStep = workFlowRequest.getStepId() +1;
-		
-		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByTsIdAndStepId(workFlowRequest.getTsId(), nextStep);
-		List<WorkflowRequest> multipleApprovalsAtOneStep = new ArrayList<WorkflowRequest>();
-		for (int i = 0; workFlowRequestList != null && i < workFlowRequestList.size(); i++) {
-			
-			if(workFlowRequestList.get(i).getId() != workflowRequestProcessModel.getWorkFlowRequestId()) {
-				multipleApprovalsAtOneStep.add(workFlowRequestList.get(i));
+		List<WorkflowRequest> currentStepWorkFlowRequestList = workflowRequestRepository.findByTsIdAndStepId(currentStepWorkFlowRequest.getTsId(),
+				currentStepWorkFlowRequest.getStepId());
+		for (int i = 0; currentStepWorkFlowRequestList != null && i < currentStepWorkFlowRequestList.size(); i++) {
+
+			if (currentStepWorkFlowRequestList.get(i).getId() != workflowRequestProcessModel.getWorkFlowRequestId()) {
+				// we are in the situation, where the current step having multiple approvers, so the current step with the other approvers are made zero
+				currentStepWorkFlowRequestList.get(i).setCurrentStep(0L);
+			} else {
+				workFlowInAction(workflowRequestProcessModel, currentStepWorkFlowRequestList.get(i), workFlowDepth,
+						tsInfo);
 			}
-			workFlowInAction(workflowRequestProcessModel, workFlowRequestList.get(i), 3, tsInfo);
-			
+
 		}
-		workflowRequestRepository.deleteAll(multipleApprovalsAtOneStep);
 	}
 	
 	
 	private void workFlowInAction(WorkflowRequestProcessModel workflowRequestProcessModel, WorkflowRequest workFlowRequest,
 			 int workFlowDepth, TSInfo tsInfo) {
+		
+		workFlowRequest.setActionDate(new Date());
+		String commentsChain = getFormattedComments(workflowRequestProcessModel, workFlowRequest);
+		workFlowRequest.setComments(commentsChain);
 		if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_APPROVE)) {
 			// promote the approval to next level
-			long currentStep = workFlowRequest.getCurrentStep();
+			long currentStep = workFlowRequest.getStepId();
 				if (currentStep != workFlowDepth) {
 					long nextStep = currentStep + 1;
 					// Promoting to next level approval
-					workFlowRequest.setComments(workflowRequestProcessModel.getComments());
-//					workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_INPROCESS));
-
+					workFlowRequest.setCurrentStep(0L);
+					workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_INPROCESS));
 					// approved from the current step point of view
 					workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
-					workFlowRequest.setActionDate(new Date());
+					
+					//prepare the workflow object for the next step
+					List<WorkflowRequest> nextStepWorkFlowRequestList = workflowRequestRepository.findByTsIdAndStepId(workFlowRequest.getTsId(), nextStep);
+					
+					for (WorkflowRequest nextStepWorkFlowRequest : nextStepWorkFlowRequestList) {
+
+						nextStepWorkFlowRequest.setCurrentStep(1L);
+						nextStepWorkFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_INPROCESS));
+
+					}
+					
+					//
 					float totalRejectTime = getTotalRejectedTime(tsInfo);
 					// reduce the total rejected timeentries time from the total submitted time
 					float totalApprovedTime = tsInfo.getTsTotalSubmittedTime() - totalRejectTime;
 					tsInfo.setTsTotalApprovedTime(totalApprovedTime);
+					long statusId = statusMasterRepository
+							.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(tsInfo.getClientId(),
+									TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_APPROVED, (short) 0).getId();
+					tsInfo.setStatusId(statusId);
+					
 				} else {
 					// Final Approval Done
-					workFlowRequest.setComments(workflowRequestProcessModel.getComments());
+					workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_COMPLETE));
+					workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
+					workFlowRequest.setCurrentStep(0L);
+					
 					long statusId = statusMasterRepository
 							.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(tsInfo.getClientId(),
 									TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_APPROVED, (short) 0)
@@ -261,14 +282,11 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 					float totalApprovedTime = tsInfo.getTsTotalSubmittedTime() - totalRejectTime;
 					tsInfo.setTsTotalApprovedTime(totalApprovedTime);
 					tsInfoRepository.save(tsInfo);
-					workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_COMPLETE));
-					workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
-					workFlowRequest.setActionDate(new Date());
+					
 				}
 
 		} else if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_REJECT)) {
 			// Request Rejected
-			workFlowRequest.setComments(workflowRequestProcessModel.getComments());
 			workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_REJECT));
 			workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_REJECT));
 			long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(
@@ -279,18 +297,43 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			float totalApprovedTime = tsInfo.getTsTotalSubmittedTime() - totalRejectTime;
 			tsInfo.setTsTotalApprovedTime(totalApprovedTime);
 			tsInfoRepository.save(tsInfo);
-			workFlowRequest.setActionDate(new Date());
+			
+			
+			nullifyNextSteps(workFlowRequest, workFlowDepth);
+			
 		} else if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_REVISE)) {
 			// Request sent for revise
-			workFlowRequest.setComments(workflowRequestProcessModel.getComments());
-			workFlowRequest.setActionDate(new Date());
 			workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_OPEN));
 			workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_REVISE));
+			workFlowRequest.setCurrentStep(0L);
+			//set the status the default one
 			Long statuId = statusMasterRepository.findByClientIdAndStatusTypeAndIsDefaultAndIsDelete(
 					tsInfo.getClientId(), TMSConstants.TIMESHEET, Boolean.TRUE, (short) 0).getId();
 			tsInfo.setStatusId(statuId);
 			tsInfoRepository.save(tsInfo);
+			nullifyNextSteps(workFlowRequest, workFlowDepth);
+			
 		}
+	}
+
+	private void nullifyNextSteps(WorkflowRequest workFlowRequest, int workFlowDepth) {
+		List<WorkflowRequest> nextStepsWorkFlowRequestList = workflowRequestRepository.findByTsId(workFlowRequest.getTsId());
+		for (int i= workFlowRequest.getStepId().intValue(); i <workFlowDepth; i++) {
+			WorkflowRequest workflowRequest = nextStepsWorkFlowRequestList.get(i);
+			workflowRequest.setStateType(stateByName.get(TMSConstants.STATE_OPEN));
+			workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_NULL));
+			workFlowRequest.setCurrentStep(0L);
+			
+		}
+	}
+
+	private String  getFormattedComments(WorkflowRequestProcessModel workflowRequestProcessModel,
+			WorkflowRequest workFlowRequest) {
+		String DATE_COMMENT_SEPERATOR = ":";
+		StringBuffer commentsChain = new StringBuffer();
+		return commentsChain.append(workFlowRequest.getComments())
+				.append(TSMUtil.getFormattedDateAsString(workFlowRequest.getActionDate())).append(DATE_COMMENT_SEPERATOR)
+				.append(workflowRequestProcessModel.getComments()).append("\\n").toString();
 	}
 	
 	

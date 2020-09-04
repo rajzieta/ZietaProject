@@ -146,15 +146,16 @@ public class TSMUtil {
 		if (null != processConfig.getApproverType()) {
 
 			if (processConfig.getApproverType().equals(ApproverType.TASKMANAGER.getApproverType())) {
-				return taskInfo.getTaskManager().toString();
+				//if task manager is not available, then fall back to project manager.
+				return taskInfo.getTaskManager() != null ? taskInfo.getTaskManager().toString():projectInfo.getProjectManager().toString() ;
 
 			} else if (processConfig.getApproverType().equals(ApproverType.PROJECTMANAGER.getApproverType())) {
 				return projectInfo.getProjectManager().toString();
 			} else if (processConfig.getApproverType().equals(ApproverType.DIRECTAPPROVER.getApproverType())) {
-				return projectInfo.getDirectApprover().toString();
+				return projectInfo.getDirectApprover() != null ? projectInfo.getDirectApprover().toString() : projectInfo.getProjectManager().toString() ;
 			} else if (processConfig.getApproverType().equals(ApproverType.TMORPM.getApproverType())) {
 
-				return taskInfo.getTaskManager().toString().concat(SEPERATOR)
+				return  (taskInfo.getTaskManager() != null ? taskInfo.getTaskManager().toString():projectInfo.getProjectManager().toString()).concat(SEPERATOR)
 						.concat(projectInfo.getProjectManager().toString());
 			}
 		}

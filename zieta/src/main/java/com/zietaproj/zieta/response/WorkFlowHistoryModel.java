@@ -1,6 +1,6 @@
 package com.zietaproj.zieta.response;
 
-import com.zietaproj.zieta.model.WorkflowRequestHistory;
+import com.zietaproj.zieta.model.WorkflowRequest;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class WorkFlowHistoryModel {
 	
-	WorkflowRequestHistory workflowRequestHistory;
+	WorkflowRequest workflowRequestHistory;
 	String  activityName;
 	String taskName;
 	String approverName;

@@ -354,11 +354,11 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
 	@Override
 	public List<WorkFlowHistoryModel> getWorkFlowHistoryForTS(Long tsId) {
-		List<WorkflowRequestHistory> workflowRequestHistoryList = workflowRequestHistoryRepository
-				.findByTsIdOrderByActionDateDesc(tsId);
+		List<WorkflowRequest> workflowRequestHistoryList = workflowRequestRepository
+				.findByTsIdOrderByStepId(tsId);
 		List<WorkFlowHistoryModel> workFlowHistoryModelList = new ArrayList<WorkFlowHistoryModel>();
 		WorkFlowHistoryModel workFlowHistoryModel = null;
-		for (WorkflowRequestHistory workflowRequestHistory : workflowRequestHistoryList) {
+		for (WorkflowRequest workflowRequestHistory : workflowRequestHistoryList) {
 			workFlowHistoryModel = new WorkFlowHistoryModel();
 			TSInfo tsInfo = tsInfoRepository.findById(tsId).get();
 			workFlowHistoryModel = new WorkFlowHistoryModel();

@@ -109,7 +109,8 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
 	@Override
 	public List<WFRDetailsForApprover> findByApproverId(long approverId) {
-		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverId(approverId);
+		Long currentStepPointer = 1L;
+		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndCurrentStep(approverId,currentStepPointer);
 		List<WFRDetailsForApprover> wFRDetailsForApproverList = new ArrayList<WFRDetailsForApprover>();
 		WFRDetailsForApprover wFRDetailsForApprover = null;
 		for (WorkflowRequest workflowRequest : workFlowRequestList) {

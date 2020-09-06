@@ -17,8 +17,12 @@ public class ProcessStepsDTO {
     
     //description details
     
+    private String clientCode;
     private String clientDescription;
+    private String projectCode;
     private String projectDescription;
+    private String taskCode;
     private String taskDescription;
     private String processDescription;
+    private String approverName;
 }

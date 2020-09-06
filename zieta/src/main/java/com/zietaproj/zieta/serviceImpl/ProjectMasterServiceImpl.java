@@ -7,11 +7,13 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zietaproj.zieta.model.CustInfo;
+import com.zietaproj.zieta.model.ProcessMaster;
 import com.zietaproj.zieta.model.ProcessSteps;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.ProjectMaster;
@@ -20,6 +22,7 @@ import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.CustInfoRepository;
 import com.zietaproj.zieta.repository.OrgInfoRepository;
+import com.zietaproj.zieta.repository.ProcessMasterRepository;
 import com.zietaproj.zieta.repository.ProcessStepsRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
 import com.zietaproj.zieta.repository.ProjectMasterRepository;
@@ -62,6 +65,9 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	
 	@Autowired
 	StatusMasterRepository statusMasterRepository;
+	
+	@Autowired
+	ProcessMasterRepository processMasterRepository;
 	
 	@Autowired
 	ProcessStepsRepository processStepsRepository;
@@ -142,6 +148,22 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 			projectDetailsByUserModel.setProjectStatusDescription(statusMasterRepository.findById(projectInfo.getProjectStatus()).get().getStatusCode());
 			CustInfo custoInfo = custInfoRepository.findById(projectInfo.getCustId()).get();
 			projectDetailsByUserModel.setCustInfo(custoInfo);
+			
+			projectDetailsByUserModel.setTemplateDesc(StringUtils.EMPTY);
+			if(null != projectInfo.getTemplateId()) {
+				Optional <ProcessMaster> processmaster = processMasterRepository.findById(projectInfo.getTemplateId());
+				if(processmaster.isPresent()) {
+					projectDetailsByUserModel.setTemplateDesc(processmaster.get().getProcessName());
+				}
+			}
+			projectDetailsByUserModel.setApproverName(StringUtils.EMPTY);
+			if(null != projectInfo.getDirectApprover()) {
+				Optional <UserInfo> userInfo = userInfoRepository.findById(projectInfo.getDirectApprover());
+				if(userInfo.isPresent()) {
+					String userName = TSMUtil.getFullName(userInfo.get());
+					projectDetailsByUserModel.setApproverName(userName);
+				}
+			}
 			//setting additonal details ends
 			projectDetailsByUserList.add(projectDetailsByUserModel);
 		}

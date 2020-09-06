@@ -34,6 +34,8 @@ public class ProjectDetailsByUserModel {
 	String clientCode;
 	String clientDescription;
 	CustInfo custInfo;
+	String templateDesc;
+	String approverName;
 	//additional details ends
 	
 	

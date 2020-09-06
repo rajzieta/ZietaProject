@@ -1,12 +1,17 @@
 package com.zietaproj.zieta.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+//import java.lang.StringBuffer;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+//import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +26,14 @@ import com.zietaproj.zieta.model.ProcessMaster;
 import com.zietaproj.zieta.model.ProcessSteps;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.TaskInfo;
+import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.ProcessConfigRepository;
 import com.zietaproj.zieta.repository.ProcessMasterRepository;
 import com.zietaproj.zieta.repository.ProcessStepsRepository;
 import com.zietaproj.zieta.repository.ProjectInfoRepository;
 import com.zietaproj.zieta.repository.TaskInfoRepository;
+import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.service.ProcessService;
 import com.zietaproj.zieta.util.TSMUtil;
 
@@ -54,6 +61,9 @@ public class ProcessServiceImpl implements ProcessService {
 	
 	@Autowired
 	TaskInfoRepository taskInfoRepository;
+	
+	@Autowired
+	UserInfoRepository userInfoRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -115,24 +125,61 @@ public List<ProcessMasterDTO> getAllProcess() {
 	
 	
 	
-	public List<ProcessStepsDTO> getAllProcessSteps() {
+	public List<ProcessStepsDTO> getAllProcessSteps() throws Exception {
 		
 		List<ProcessSteps> processsteps = processStepsRepository.findAll();
 		List<ProcessStepsDTO> processstepsDTOs = new ArrayList<ProcessStepsDTO>();
 		ProcessStepsDTO processStepDTO = null;
+		
 		for (ProcessSteps processstep : processsteps) {
 			processStepDTO = modelMapper.map(processstep,ProcessStepsDTO.class);
+			processStepDTO.setClientCode(clientInfoRepository.findById(processstep.getClientId()).get().getClientCode());	
 			processStepDTO.setClientDescription(clientInfoRepository.findById(processstep.getClientId()).get().getClientName());
+			processStepDTO.setProjectCode(projectInfoRepository.findById(processstep.getProjectId()).get().getProjectCode());
 			processStepDTO.setProjectDescription(projectInfoRepository.findById(processstep.getProjectId()).get().getProjectName());
+			processStepDTO.setTaskCode(taskInfoRepository.findById(processstep.getProjectTaskId()).get().getTaskCode());
 			processStepDTO.setTaskDescription(taskInfoRepository.findById(processstep.getProjectTaskId()).get().getTaskDescription());
 			processStepDTO.setProcessDescription(processMasterRepository.findById(processstep.getTemplateId()).get().getProcessName());
+				String approverIds[] = null;
+				if (processstep.getApproverId() != null
+						&& !processstep.getApproverId().isEmpty()) {
 
+					approverIds = processstep.getApproverId().split("\\|");
+				}
+			
+					 System.out.println("check ApproverId value" +processstep.getApproverId());
+					 System.out.println("check ApproverIds value" +approverIds);
+				         String str = (Arrays.toString(approverIds));
+				         System.out.println("check String value before parsing" +str);
+				         str = convertStringArrayToString(approverIds);
+				 		System.out.println("Convert Java String array to String = " + str);
+				         try {
+				      Long l1 = Long.parseLong(str);
+				         
+				      System.out.println("check whether values are equal" +str +l1 );
+				      System.out.println("check ApproverId value" +approverIds);
+						Optional<UserInfo> userInfo = userInfoRepository.findById(l1);
+				        
+						if (userInfo.isPresent()) {
+							String	userName = TSMUtil.getFullName(userInfo.get());
+							 System.out.println("check UserName value" +userName);
+					processStepDTO.setApproverName(userName);
+						}
+						else 
+						{
+							throw new Exception("ProcessStep not found with the provided  ApproverID" +processStepDTO.getApproverId());
+								
+						}
+				         } catch (NumberFormatException exception) {
+				        	 System.out.println("excepion came");
+								}
 
 			processstepsDTOs.add(processStepDTO);
-	}
-	
-		return processstepsDTOs;
+		}
+			return processstepsDTOs;
 }
+	
+	
 	@Override
 	public void addProcessSteps(ProcessSteps processstep) {
 		processStepsRepository.save(processstep);
@@ -203,4 +250,14 @@ public List<ProcessMasterDTO> getAllProcess() {
 		}
 		return processStepsList;
 	}
+	
+	
+	
+	private static String convertStringArrayToString(String[] strArr) {
+		StringBuilder sb = new StringBuilder();
+		for (String str : strArr)
+			sb.append(str);
+		return sb.substring(0);
+	}
+	
 }

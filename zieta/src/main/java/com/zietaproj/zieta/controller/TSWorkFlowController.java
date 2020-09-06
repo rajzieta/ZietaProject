@@ -48,11 +48,24 @@ public class TSWorkFlowController {
 
 	}
 	
-	@RequestMapping(value = "getWorkFlowRequestsByApprover", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<WFRDetailsForApprover> getAllWorkFlowRequests(@RequestParam(required = true) Long approverId) {
+	@RequestMapping(value = "getActiveWorkFlowRequestsByApprover", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<WFRDetailsForApprover> getActiveWorkFlowRequestsByApprover(@RequestParam(required = true) Long approverId) {
 		List<WFRDetailsForApprover> workFlowRequestList = null;
 		try {
-			workFlowRequestList = workFlowRequestService.findByApproverId(approverId);
+			workFlowRequestList = workFlowRequestService.findActiveWorkFlowRequestsByApproverId(approverId);
+		} catch (Exception e) {
+
+			log.error("Error Occured in TSWorkFlowController#getActiveWorkFlowRequestsByApprover", e);
+		}
+		return workFlowRequestList;
+
+	}
+
+	@RequestMapping(value = "getWorkFlowRequestsByApprover", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<WFRDetailsForApprover> getWorkFlowRequestsByApprover(@RequestParam(required = true) Long approverId) {
+		List<WFRDetailsForApprover> workFlowRequestList = null;
+		try {
+			workFlowRequestList = workFlowRequestService.findWorkFlowRequestsByApproverId(approverId);
 		} catch (Exception e) {
 
 			log.error("Error Occured in TSWorkFlowController#getWorkFlowRequestsByApprover", e);
@@ -60,8 +73,6 @@ public class TSWorkFlowController {
 		return workFlowRequestList;
 
 	}
-	
-
 	@RequestMapping(value = "getWorkFlowRequestsByRequestor", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<WorkFlowRequestorData> getWorkFlowRequestsByRequestor(@RequestParam(required = true) Long requestorId) {
 		List<WorkFlowRequestorData> workFlowRequestList = null;

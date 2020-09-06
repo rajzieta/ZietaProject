@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -14,13 +13,11 @@ import org.springframework.stereotype.Service;
 
 import com.zietaproj.zieta.common.TMSConstants;
 import com.zietaproj.zieta.model.ActivityMaster;
-import com.zietaproj.zieta.model.ProcessSteps;
 import com.zietaproj.zieta.model.TSInfo;
 import com.zietaproj.zieta.model.TSTimeEntries;
 import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.model.WorkflowRequest;
-import com.zietaproj.zieta.model.WorkflowRequestHistory;
 import com.zietaproj.zieta.repository.ActivityMasterRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.ProcessStepsRepository;
@@ -108,9 +105,15 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	
 
 	@Override
-	public List<WFRDetailsForApprover> findByApproverId(long approverId) {
+	public List<WFRDetailsForApprover> findActiveWorkFlowRequestsByApproverId(long approverId) {
 		Long currentStepPointer = 1L;
 		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndCurrentStep(approverId,currentStepPointer);
+		List<WFRDetailsForApprover> wFRDetailsForApproverList = getWorkFlowRequestDetails(workFlowRequestList);
+
+		return wFRDetailsForApproverList;
+	}
+
+	private List<WFRDetailsForApprover> getWorkFlowRequestDetails(List<WorkflowRequest> workFlowRequestList) {
 		List<WFRDetailsForApprover> wFRDetailsForApproverList = new ArrayList<WFRDetailsForApprover>();
 		WFRDetailsForApprover wFRDetailsForApprover = null;
 		for (WorkflowRequest workflowRequest : workFlowRequestList) {
@@ -143,7 +146,6 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			wFRDetailsForApproverList.add(wFRDetailsForApprover);
 
 		}
-
 		return wFRDetailsForApproverList;
 	}
 	
@@ -377,6 +379,13 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			workFlowHistoryModelList.add(workFlowHistoryModel);
 		}
 		return workFlowHistoryModelList;
+	}
+
+	@Override
+	public List<WFRDetailsForApprover> findWorkFlowRequestsByApproverId(long approverId) {
+		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverId(approverId);
+		List<WFRDetailsForApprover> wFRDetailsForApproverList = getWorkFlowRequestDetails(workFlowRequestList);
+		return wFRDetailsForApproverList;
 	}
 
 }

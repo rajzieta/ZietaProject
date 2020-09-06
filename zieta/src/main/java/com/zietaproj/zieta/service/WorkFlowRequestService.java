@@ -13,7 +13,9 @@ import com.zietaproj.zieta.response.WorkFlowRequestorData;
 
 public interface WorkFlowRequestService {
 
-	public List<WFRDetailsForApprover> findByApproverId(long approverId);
+	public List<WFRDetailsForApprover> findActiveWorkFlowRequestsByApproverId(long approverId);
+	
+	public List<WFRDetailsForApprover> findWorkFlowRequestsByApproverId(long approverId);
 	
 
 	public List<WorkFlowRequestorData> findByRequestorId(long requestorId);

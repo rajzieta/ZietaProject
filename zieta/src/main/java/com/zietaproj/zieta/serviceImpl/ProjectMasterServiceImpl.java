@@ -12,6 +12,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.zietaproj.zieta.dto.ClientInfoDTO;
+import com.zietaproj.zieta.dto.ProjectMasterDTO;
+import com.zietaproj.zieta.model.ClientInfo;
 import com.zietaproj.zieta.model.CustInfo;
 import com.zietaproj.zieta.model.ProcessMaster;
 import com.zietaproj.zieta.model.ProcessSteps;
@@ -31,6 +34,7 @@ import com.zietaproj.zieta.repository.TaskInfoRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.request.EditProjStatusRequest;
 import com.zietaproj.zieta.request.ProjectMasterEditRequest;
+import com.zietaproj.zieta.request.ProjectTypeEditRequest;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
 import com.zietaproj.zieta.response.ProjectTypeByClientResponse;
 import com.zietaproj.zieta.service.ProcessService;
@@ -278,6 +282,71 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		return true;
 	}
 
+	
+	@Override
+	public List<ProjectMasterDTO> getAllProjectTypes() {
+		short notDeleted = 0;
+		List<ProjectMaster> projectmasters= projectMasterRepository.findByIsDelete(notDeleted);
+		List<ProjectMasterDTO> projectmasterDTOs = new ArrayList<ProjectMasterDTO>();
+		ProjectMasterDTO projectmasterDTO = null;
+		for (ProjectMaster projectmaster : projectmasters) {
+			projectmasterDTO = modelMapper.map(projectmaster, ProjectMasterDTO.class);
+			projectmasterDTO.setClientCode(clientInfoRepository.findById(projectmaster.getClientId()).get().getClientCode());
+		//	projectmasterDTO.setClientDescription(clientInfoRepository.findById(projectmaster.getClientId()).get().getClientName());
+			
+			projectmasterDTOs.add(projectmasterDTO);
+		}
+		return projectmasterDTOs;
+	}
+	
+	
+	
+	
+	@Override
+	public void addProjectTypeMaster(ProjectMaster projectmaster)
+	{
+		projectMasterRepository.save(projectmaster);
+	}
+	
+	
+	
+	@Override
+	public void editProjectTypesById(@Valid ProjectTypeEditRequest projectTypeEditRequest) throws Exception {
+	
+		Optional<ProjectMaster> projectMasterEntity = projectMasterRepository.findById(projectTypeEditRequest.getProjectTypeId());
+		if(projectMasterEntity.isPresent()) {
+			ProjectMaster projectmaster = modelMapper.map(projectTypeEditRequest, ProjectMaster.class);
+			projectMasterRepository.save(projectmaster);
+			
+		}else {
+			throw new Exception("Project Details not found with the provided ID : "+projectTypeEditRequest.getProjectTypeId());
+		}
+		
+		
+	}
+	
+	public void deleteProjectTypesById(Long id, String modifiedBy) throws Exception {
+		
+		Optional<ProjectMaster> projectmaster = projectMasterRepository.findById(id);
+		if (projectmaster.isPresent()) {
+			ProjectMaster projectmasterEntitiy = projectmaster.get();
+			short delete = 1;
+			projectmasterEntitiy.setIsDelete(delete);
+			projectmasterEntitiy.setModifiedBy(modifiedBy);
+			projectMasterRepository.save(projectmasterEntitiy);
+
+		}else {
+		//	log.info("No ProjectDetails found with the provided ID{} in the DB",id);
+			throw new Exception("No ProjectTypeDetails found with the provided ID in the DB :"+id);
+		}
+		
+		
+		
+	}
+	
+	
+	
+	
 	
 	
 	

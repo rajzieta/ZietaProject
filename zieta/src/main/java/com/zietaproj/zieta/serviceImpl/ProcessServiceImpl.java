@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 //import java.lang.StringBuffer;
 import org.apache.commons.lang3.StringUtils;
@@ -149,11 +150,13 @@ public List<ProcessMasterDTO> getAllProcess() {
 			
 					 System.out.println("check ApproverId value" +processstep.getApproverId());
 					 System.out.println("check ApproverIds value" +approverIds);
-				         String str = (Arrays.toString(approverIds));
-				         System.out.println("check String value before parsing" +str);
-				         str = convertStringArrayToString(approverIds);
+				         String str1 = (Arrays.toString(approverIds));
+				         System.out.println("check String value before parsing" +str1);
+				        String str = convertStringArrayToString(approverIds, ",");
 				 		System.out.println("Convert Java String array to String = " + str);
 				         try {
+				        //	 for (int j = 0; j < str1.length() - 1; j++)
+				        //	 {
 				      Long l1 = Long.parseLong(str);
 				         
 				      System.out.println("check whether values are equal" +str +l1 );
@@ -162,14 +165,21 @@ public List<ProcessMasterDTO> getAllProcess() {
 				        
 						if (userInfo.isPresent()) {
 							String	userName = TSMUtil.getFullName(userInfo.get());
+							//StringJoiner userName1 = new StringJoiner(",");
+						//	userName = TSMUtil.getFullName(userInfo.get());
+							//userName1.add(userName);
+						
 							 System.out.println("check UserName value" +userName);
 					processStepDTO.setApproverName(userName);
 						}
+						
+				        	 
 						else 
 						{
 							throw new Exception("ProcessStep not found with the provided  ApproverID" +processStepDTO.getApproverId());
 								
 						}
+				        	// }
 				         } catch (NumberFormatException exception) {
 				        	 System.out.println("excepion came");
 								}
@@ -253,11 +263,11 @@ public List<ProcessMasterDTO> getAllProcess() {
 	
 	
 	
-	private static String convertStringArrayToString(String[] strArr) {
+	private static String convertStringArrayToString(String[] strArr, String delimiter) {
 		StringBuilder sb = new StringBuilder();
 		for (String str : strArr)
-			sb.append(str);
-		return sb.substring(0);
+			sb.append(str).append(delimiter);
+		return sb.substring(0, sb.length() - 1);
 	}
 	
 }

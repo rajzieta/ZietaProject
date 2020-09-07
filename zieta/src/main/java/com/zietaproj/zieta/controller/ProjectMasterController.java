@@ -24,6 +24,7 @@ import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.ProjectMaster;
 import com.zietaproj.zieta.request.EditProjStatusRequest;
 import com.zietaproj.zieta.request.ProjectMasterEditRequest;
+import com.zietaproj.zieta.request.ProjectTypeEditRequest;
 import com.zietaproj.zieta.request.RoleMasterEditRequest;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
 import com.zietaproj.zieta.response.ProjectTypeByClientResponse;
@@ -60,6 +61,11 @@ public class ProjectMasterController {
 	public void addProjectMaster(@Valid @RequestBody ProjectInfo projectinfo) {
 		projectmasterService.addProjectinfo(projectinfo);
 	}
+	
+	@RequestMapping(value = "addProjectTypeMaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addProjectTypeMaster(@Valid @RequestBody ProjectMaster projectmaster) {
+		projectmasterService.addProjectTypeMaster(projectmaster);
+	}
 
 	@ApiOperation(value = "List projects based on the  userId", notes = "Table reference: Project_Info,"
 			+ " org_info, user_info, cust_info, client_info")
@@ -84,6 +90,18 @@ public class ProjectMasterController {
 			return new ResponseEntity<List<ProjectDetailsByUserModel>>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@RequestMapping(value = "getAllProjectTypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<ProjectMasterDTO> getAllProjectTypes() {
+		List<ProjectMasterDTO> projecttypesList = null;
+		try {
+			projecttypesList = projectmasterService.getAllProjectTypes();
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in ProjectMasterController#getAllProjectTypes",e);
+		}
+		return projecttypesList;
+	}
+	
 	
 	@GetMapping("/getProjectTypesByClient")
 	@ApiOperation(value = "List ProjectTypes based on the clientId", notes = "Table reference: project_type_master")
@@ -110,6 +128,20 @@ public class ProjectMasterController {
 	}
 	
 	
+	@ApiOperation(value = "Updates the ProjectTypes for the provided Id", notes = "Table reference: project_type_master")
+	@RequestMapping(value = "editProjectTypeMaster", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editProjectTypeMaster(@Valid @RequestBody ProjectTypeEditRequest projectTypeEditRequest) throws Exception {
+		projectmasterService.editProjectTypesById(projectTypeEditRequest);
+		
+	}
+	
+	@ApiOperation(value = "Deletes entries from project_type_master based on Id", notes = "Table reference: project_type_master")
+	@RequestMapping(value = "deleteProjectTypeMasterById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteProjectTypeMasterById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		projectmasterService.deleteProjectTypesById(id, modifiedBy);
+	}
+	
+	
 	
 	
 	@RequestMapping(value = "editProjectStatus", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -124,4 +156,10 @@ public class ProjectMasterController {
 		return status;
 		
 	}
+	
+	
+	
+	
+	
+	
 }

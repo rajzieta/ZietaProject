@@ -15,5 +15,7 @@ public interface ProjectMasterRepository extends JpaRepository<ProjectMaster, Lo
 	List<ProjectMaster> findByClientId(long client_id);
 
 	List<ProjectMaster> findByClientIdAndIsDelete(Long clientId, short notDeleted);
+
+	List<ProjectMaster> findByIsDelete(short notDeleted);
 	
 }

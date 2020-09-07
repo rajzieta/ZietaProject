@@ -9,6 +9,7 @@ import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.ProjectMaster;
 import com.zietaproj.zieta.request.EditProjStatusRequest;
 import com.zietaproj.zieta.request.ProjectMasterEditRequest;
+import com.zietaproj.zieta.request.ProjectTypeEditRequest;
 import com.zietaproj.zieta.response.ProjectDetailsByUserModel;
 import com.zietaproj.zieta.response.ProjectTypeByClientResponse;
 import com.zietaproj.zieta.response.ProjectsByClientResponse;
@@ -32,4 +33,12 @@ public interface ProjectMasterService {
 	public void deleteProjectsById(Long id, String modifiedBy) throws Exception;
 	
 	public boolean editProjectByTemplate(Long projectId, Long templateId);
+
+	public List<ProjectMasterDTO> getAllProjectTypes();
+
+	public void addProjectTypeMaster(@Valid ProjectMaster projectmaster);
+
+	public void editProjectTypesById(@Valid ProjectTypeEditRequest projectTypeEditRequest) throws Exception;
+
+	public void deleteProjectTypesById(Long id, String modifiedBy) throws Exception;
 }

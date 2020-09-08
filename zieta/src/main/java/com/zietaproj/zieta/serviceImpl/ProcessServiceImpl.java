@@ -141,38 +141,41 @@ public List<ProcessMasterDTO> getAllProcess() {
 			processStepDTO.setTaskCode(taskInfoRepository.findById(processstep.getProjectTaskId()).get().getTaskCode());
 			processStepDTO.setTaskDescription(taskInfoRepository.findById(processstep.getProjectTaskId()).get().getTaskDescription());
 			processStepDTO.setProcessDescription(processMasterRepository.findById(processstep.getTemplateId()).get().getProcessName());
-				String approverIds[] = null;
+			String[]  approverIds = null;
 				if (processstep.getApproverId() != null
 						&& !processstep.getApproverId().isEmpty()) {
 
 					approverIds = processstep.getApproverId().split("\\|");
 				}
-			
-					 System.out.println("check ApproverId value" +processstep.getApproverId());
-					 System.out.println("check ApproverIds value" +approverIds);
-				         String str1 = (Arrays.toString(approverIds));
-				         System.out.println("check String value before parsing" +str1);
-				        String str = convertStringArrayToString(approverIds, ",");
-				 		System.out.println("Convert Java String array to String = " + str);
+				for (int i=0; i<approverIds.length; i++)
+		         {
+		             System.out.println("approverIds["+i+"] : "+approverIds[i]);
 				         try {
-				        //	 for (int j = 0; j < str1.length() - 1; j++)
-				        //	 {
-				      Long l1 = Long.parseLong(str);
+				      
+				        	 
+				      Long l1 = Long.parseLong(approverIds[i]);
 				         
-				      System.out.println("check whether values are equal" +str +l1 );
-				      System.out.println("check ApproverId value" +approverIds);
+				      System.out.println("check whether values are equal" +l1 +approverIds[i]);
 						Optional<UserInfo> userInfo = userInfoRepository.findById(l1);
 				        
 						if (userInfo.isPresent()) {
+							if (approverIds.length >= 1) {
+								String	userName, u2;
+								StringJoiner userName1 = new StringJoiner(",");;
+								System.out.println("check approverIds len value" +approverIds.length);
+								userName = TSMUtil.getFullName(userInfo.get());
+								userName1.add(userName);
+								u2 = userName1.toString();
+								System.out.println("check username2 value" +u2);
+								processStepDTO.setApproverName(u2);
+								
+							}
+							else {
 							String	userName = TSMUtil.getFullName(userInfo.get());
-							//StringJoiner userName1 = new StringJoiner(",");
-						//	userName = TSMUtil.getFullName(userInfo.get());
-							//userName1.add(userName);
-						
-							 System.out.println("check UserName value" +userName);
+							System.out.println("check username value" +userName);
 					processStepDTO.setApproverName(userName);
+						} 
 						}
-						
 				        	 
 						else 
 						{
@@ -185,7 +188,7 @@ public List<ProcessMasterDTO> getAllProcess() {
 								}
 
 			processstepsDTOs.add(processStepDTO);
-		}
+		} }
 			return processstepsDTOs;
 }
 	

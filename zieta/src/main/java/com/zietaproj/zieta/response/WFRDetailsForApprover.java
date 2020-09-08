@@ -26,4 +26,5 @@ public class WFRDetailsForApprover {
 	String wfStateType;
 	String taskName;
 	String activityName;
+	List<WorkFlowComment> workFlowCommentList;
 }

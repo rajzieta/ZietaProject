@@ -260,7 +260,6 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 			String approverId) {
 		workflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_NULL));
 		workflowRequest.setApproverId(Long.valueOf(approverId));
-		workflowRequest.setComments(StringUtils.EMPTY);
 		workflowRequest.setStateType(stateByName.get(TMSConstants.STATE_OPEN));
 
 		workflowRequest.setClientId(tsInfo.getClientId());

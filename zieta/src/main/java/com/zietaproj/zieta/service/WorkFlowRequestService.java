@@ -5,6 +5,7 @@ import java.util.List;
 import com.zietaproj.zieta.model.WorkflowRequest;
 import com.zietaproj.zieta.request.WorkflowRequestProcessModel;
 import com.zietaproj.zieta.response.WFRDetailsForApprover;
+import com.zietaproj.zieta.response.WorkFlowComment;
 import com.zietaproj.zieta.response.WorkFlowHistoryModel;
 import com.zietaproj.zieta.response.WorkFlowRequestorData;
 
@@ -25,5 +26,7 @@ public interface WorkFlowRequestService {
 	public void processWorkFlow(WorkflowRequestProcessModel workflowRequestProcessModel);
 	
 	public List<WorkFlowHistoryModel> getWorkFlowHistoryForTS(Long tsId);
+	
+	public List<WorkFlowComment> getWFRCommentsChain(long tsId);
 
 }

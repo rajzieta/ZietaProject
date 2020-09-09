@@ -17,6 +17,7 @@ import com.zietaproj.zieta.model.TSInfo;
 import com.zietaproj.zieta.model.TSTimeEntries;
 import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.UserInfo;
+import com.zietaproj.zieta.model.WorkFlowRequestComments;
 import com.zietaproj.zieta.model.WorkflowRequest;
 import com.zietaproj.zieta.repository.ActivityMasterRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
@@ -29,11 +30,12 @@ import com.zietaproj.zieta.repository.TSTimeEntriesRepository;
 import com.zietaproj.zieta.repository.TaskInfoRepository;
 import com.zietaproj.zieta.repository.TimeTypeRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
-import com.zietaproj.zieta.repository.WorkflowRequestHistoryRepository;
+import com.zietaproj.zieta.repository.WorkflowRequestCommentRepository;
 import com.zietaproj.zieta.repository.WorkflowRequestRepository;
 import com.zietaproj.zieta.request.WorkflowRequestProcessModel;
 import com.zietaproj.zieta.response.WFRDetailsForApprover;
 import com.zietaproj.zieta.response.WFTSTimeEntries;
+import com.zietaproj.zieta.response.WorkFlowComment;
 import com.zietaproj.zieta.response.WorkFlowHistoryModel;
 import com.zietaproj.zieta.response.WorkFlowRequestorData;
 import com.zietaproj.zieta.service.WorkFlowRequestService;
@@ -47,7 +49,7 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	WorkflowRequestRepository workflowRequestRepository;
 	
 	@Autowired
-	WorkflowRequestHistoryRepository workflowRequestHistoryRepository;
+	WorkflowRequestCommentRepository workflowRequestCommentRepository;
 
 	
 	@Autowired
@@ -120,7 +122,8 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
 			wFRDetailsForApprover = new WFRDetailsForApprover();
 			wFRDetailsForApprover.setWorkflowRequest(workflowRequest);
-
+			List<WorkFlowComment> workFlowCommentList = getWFRCommentsChain(workflowRequest.getTsId());
+			wFRDetailsForApprover.setWorkFlowCommentList(workFlowCommentList);
 			TSInfo tsInfo = tsInfoRepository.findById(workflowRequest.getTsId()).get();
 			wFRDetailsForApprover.setTsinfo(tsInfo);
 
@@ -234,10 +237,7 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	
 	private void workFlowInAction(WorkflowRequestProcessModel workflowRequestProcessModel, WorkflowRequest workFlowRequest,
 			 int workFlowDepth, TSInfo tsInfo) {
-		
 		workFlowRequest.setActionDate(new Date());
-		String commentsChain = getFormattedComments(workflowRequestProcessModel, workFlowRequest);
-		workFlowRequest.setComments(commentsChain);
 		if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_APPROVE)) {
 			// promote the approval to next level
 			long currentStep = workFlowRequest.getStepId();
@@ -317,6 +317,16 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			nullifyNextSteps(workFlowRequest, workFlowDepth);
 			
 		}
+		
+		//fill the workflow comments data
+		WorkFlowRequestComments workFlowRequestComment = new WorkFlowRequestComments();
+		workFlowRequestComment.setActionDate(workFlowRequest.getActionDate());
+		workFlowRequestComment.setComments(workflowRequestProcessModel.getComments());
+		workFlowRequestComment.setApproverId(workFlowRequest.getApproverId());
+		workFlowRequestComment.setTsId(workFlowRequest.getTsId());
+		workFlowRequestComment.setWrId(workFlowRequest.getId());
+		
+		workflowRequestCommentRepository.save(workFlowRequestComment);
 	}
 
 	private void nullifyNextSteps(WorkflowRequest workFlowRequest, int workFlowDepth) {
@@ -330,15 +340,6 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 		}
 	}
 
-	private String  getFormattedComments(WorkflowRequestProcessModel workflowRequestProcessModel,
-			WorkflowRequest workFlowRequest) {
-		String DATE_COMMENT_SEPERATOR = ":";
-		StringBuffer commentsChain = new StringBuffer();
-		return commentsChain.append(workFlowRequest.getComments())
-				.append(TSMUtil.getFormattedDateAsString(workFlowRequest.getActionDate())).append(DATE_COMMENT_SEPERATOR)
-				.append(workflowRequestProcessModel.getComments()).append("\\n").toString();
-	}
-	
 	
 	private float getTotalRejectedTime(TSInfo tsInfo) {
 		
@@ -386,6 +387,23 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverId(approverId);
 		List<WFRDetailsForApprover> wFRDetailsForApproverList = getWorkFlowRequestDetails(workFlowRequestList);
 		return wFRDetailsForApproverList;
+	}
+
+	@Override
+	public List<WorkFlowComment> getWFRCommentsChain(long tsId) {
+		
+		List<WorkFlowComment> workFlowCommentList = new ArrayList<>();
+		WorkFlowComment workFlowComment = null;
+		List<WorkFlowRequestComments> workFlowRequestCommentsList = workflowRequestCommentRepository.findByTsIdOrderByIdDesc(tsId);
+		for (WorkFlowRequestComments workFlowRequestComment : workFlowRequestCommentsList) {
+			workFlowComment = new WorkFlowComment();
+			workFlowComment.setApproverName(TSMUtil.getFullName(
+					userInfoRepository.findById(workFlowRequestComment.getApproverId()).get()));
+			workFlowComment.setWorkFlowRequestComments(workFlowRequestComment);
+			workFlowCommentList.add(workFlowComment);
+			
+		}
+		return workFlowCommentList;
 	}
 
 }

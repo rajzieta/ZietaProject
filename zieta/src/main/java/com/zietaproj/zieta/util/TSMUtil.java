@@ -39,7 +39,12 @@ public class TSMUtil {
 	
 	
 	public static String getFormattedDateAsString(Date date) {
-		String pattern = "yyyy-MM-dd";
+		return getFormatteDate(date,null);
+	}
+	
+	public static String getFormatteDate(Date date, String pattern) {
+		
+		pattern = org.apache.commons.lang3.StringUtils.isEmpty(pattern ) ? "yyyy-MM-dd" : pattern;
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		String formattedDate = null;
 

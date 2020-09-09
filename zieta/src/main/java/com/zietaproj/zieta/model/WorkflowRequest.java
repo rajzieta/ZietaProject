@@ -66,6 +66,5 @@ public class WorkflowRequest {
     @Column(name="action_type")
     private Long actionType;
     
-    private String comments;
     
 }

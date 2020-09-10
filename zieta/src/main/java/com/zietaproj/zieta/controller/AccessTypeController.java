@@ -19,16 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zietaproj.zieta.dto.AccessTypeMasterDTO;
 import com.zietaproj.zieta.dto.AccessTypeScreenMappingDTO;
-import com.zietaproj.zieta.dto.OrgInfoDTO;
-import com.zietaproj.zieta.dto.RoleMasterDTO;
-import com.zietaproj.zieta.model.AccessTypeMaster;
 import com.zietaproj.zieta.model.AccessTypeScreenMapping;
+import com.zietaproj.zieta.request.AccessScreensRequest;
 //import com.zietaproj.zieta.model.UserAccessType;
 import com.zietaproj.zieta.request.AccessTypeAddRequest;
 import com.zietaproj.zieta.response.AccesstypesByClientResponse;
-import com.zietaproj.zieta.response.RolesByClientResponse;
 import com.zietaproj.zieta.service.AccessTypeMasterService;
 import com.zietaproj.zieta.service.AccessTypeScreenMappingService;
+
 //import com.zietaproj.zieta.service.UserAccessTypeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -122,13 +120,6 @@ public class AccessTypeController {
 	
 	
 	
-//	@ApiOperation(value = "Adds the entries into the accesstype_user_mapping table", notes = "Table reference: accesstype_user_mapping")
-//	@RequestMapping(value = "assignAccessTypeToUser", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-//	public void assignAccessTypeToUser(@Valid @RequestBody UserAccessType userAccessType) {
-//		userAccessTypeService.assignAccessTypeToUser(userAccessType);
-//	}
-	
-	
 	@ApiOperation(value = "Updates the AccessType for the provided Id", notes = "Table reference: access_type_master")
 	@RequestMapping(value = "editAccessTypesById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void editAccessTypesById(@Valid @RequestBody AccessTypeAddRequest accesstypeeditRequest) throws Exception {
@@ -138,10 +129,23 @@ public class AccessTypeController {
 	
 	
 	
-	@ApiOperation(value = "Deletes entries from access_type_master based on Id", notes = "Table reference: access_type_master")
+	@ApiOperation(value = "Soft deletion of entries from access_type_master based on Id", notes = "Table reference: access_type_master")
 	@RequestMapping(value = "deleteAccessTypesById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void deleteAccessTypesById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
 		accesstypemasterService.deleteAccessTypesById(id, modifiedBy);
+	}
+	
+	
+	@ApiOperation(value = "Deletes entries from accesstype_screen_mapping based on clientId and accessTypeId ", notes = "Table reference: accesstype_screen_mapping")
+	@RequestMapping(value = "deleteAccessTypeAndScreens", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteAccessTypeAndScreens(@RequestParam(required=true) Long clientId, @RequestParam(required=true) Long accessTypeId) throws Exception {
+		accessTypeScreenMappingService.deleteAccessTypeAndScreens(clientId, accessTypeId);
+	}
+	
+	@ApiOperation(value = "Adds the entries into the accesstype_screen_mapping table", notes = "Table reference: accesstype_screen_mapping")
+	@RequestMapping(value = "assignMultipleScreensToAccessType", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void assignMultipleScreensToAccessType(@Valid @RequestBody AccessScreensRequest accessScreensRequest) {
+		accessTypeScreenMappingService.assignMultipleScreensToAccessType(accessScreensRequest);
 	}
 	
 	

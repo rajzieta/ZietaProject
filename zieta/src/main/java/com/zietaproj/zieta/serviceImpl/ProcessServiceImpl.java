@@ -1,21 +1,15 @@
 package com.zietaproj.zieta.serviceImpl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.StringJoiner;
-import java.util.stream.Collectors;
-//import java.lang.StringBuffer;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.math.NumberUtils;
 //import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +21,6 @@ import com.zietaproj.zieta.model.ProcessMaster;
 import com.zietaproj.zieta.model.ProcessSteps;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.TaskInfo;
-import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.ProcessConfigRepository;
 import com.zietaproj.zieta.repository.ProcessMasterRepository;
@@ -69,7 +62,6 @@ public class ProcessServiceImpl implements ProcessService {
 	@Autowired
 	ModelMapper modelMapper;
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessServiceImpl.class);
 	
 	
 public List<ProcessMasterDTO> getAllProcess() {
@@ -119,78 +111,51 @@ public List<ProcessMasterDTO> getAllProcess() {
 	}
 	
 	
-	
-	
-	//Implementation for Process Steps API's
-	
-	
-	
-	
 	public List<ProcessStepsDTO> getAllProcessSteps() throws Exception {
-		
+
 		List<ProcessSteps> processsteps = processStepsRepository.findAll();
 		List<ProcessStepsDTO> processstepsDTOs = new ArrayList<ProcessStepsDTO>();
 		ProcessStepsDTO processStepDTO = null;
-		
+
 		for (ProcessSteps processstep : processsteps) {
-			processStepDTO = modelMapper.map(processstep,ProcessStepsDTO.class);
-			processStepDTO.setClientCode(clientInfoRepository.findById(processstep.getClientId()).get().getClientCode());	
-			processStepDTO.setClientDescription(clientInfoRepository.findById(processstep.getClientId()).get().getClientName());
-			processStepDTO.setProjectCode(projectInfoRepository.findById(processstep.getProjectId()).get().getProjectCode());
-			processStepDTO.setProjectDescription(projectInfoRepository.findById(processstep.getProjectId()).get().getProjectName());
+			processStepDTO = modelMapper.map(processstep, ProcessStepsDTO.class);
+			processStepDTO
+					.setClientCode(clientInfoRepository.findById(processstep.getClientId()).get().getClientCode());
+			processStepDTO.setClientDescription(
+					clientInfoRepository.findById(processstep.getClientId()).get().getClientName());
+			processStepDTO
+					.setProjectCode(projectInfoRepository.findById(processstep.getProjectId()).get().getProjectCode());
+			processStepDTO.setProjectDescription(
+					projectInfoRepository.findById(processstep.getProjectId()).get().getProjectName());
 			processStepDTO.setTaskCode(taskInfoRepository.findById(processstep.getProjectTaskId()).get().getTaskCode());
-			processStepDTO.setTaskDescription(taskInfoRepository.findById(processstep.getProjectTaskId()).get().getTaskDescription());
-			processStepDTO.setProcessDescription(processMasterRepository.findById(processstep.getTemplateId()).get().getProcessName());
-			String[]  approverIds = null;
-				if (processstep.getApproverId() != null
-						&& !processstep.getApproverId().isEmpty()) {
+			processStepDTO.setTaskDescription(
+					taskInfoRepository.findById(processstep.getProjectTaskId()).get().getTaskDescription());
+			processStepDTO.setProcessDescription(
+					processMasterRepository.findById(processstep.getTemplateId()).get().getProcessName());
+			String[] approverIds = null;
+			if (processstep.getApproverId() != null && !processstep.getApproverId().isEmpty()) {
 
-					approverIds = processstep.getApproverId().split("\\|");
+				approverIds = processstep.getApproverId().split("\\|");
+			}
+			List<String> approverNames = new ArrayList<String>();
+			for (String approverId : approverIds) {
+				Long stepApproverId = null;
+				try {
+					stepApproverId = NumberUtils.createLong(approverId);
+					approverNames.add(TSMUtil.getFullName(userInfoRepository.findById(stepApproverId).get()));
+				} catch (NumberFormatException  e) {
+					log.error("Exception in parsing the approverIds",e);
+				}catch(Exception e) {
+					log.error("Exception in getAllProcessSteps",e);
 				}
-				for (int i=0; i<approverIds.length; i++)
-		         {
-		             System.out.println("approverIds["+i+"] : "+approverIds[i]);
-				         try {
-				      
-				        	 
-				      Long l1 = Long.parseLong(approverIds[i]);
-				         
-				      System.out.println("check whether values are equal" +l1 +approverIds[i]);
-						Optional<UserInfo> userInfo = userInfoRepository.findById(l1);
-				        
-						if (userInfo.isPresent()) {
-							if (approverIds.length >= 1) {
-								String	userName, u2;
-								StringJoiner userName1 = new StringJoiner(",");;
-								System.out.println("check approverIds len value" +approverIds.length);
-								userName = TSMUtil.getFullName(userInfo.get());
-								userName1.add(userName);
-								u2 = userName1.toString();
-								System.out.println("check username2 value" +u2);
-								processStepDTO.setApproverName(u2);
-								
-							}
-							else {
-							String	userName = TSMUtil.getFullName(userInfo.get());
-							System.out.println("check username value" +userName);
-					processStepDTO.setApproverName(userName);
-						} 
-						}
-				        	 
-						else 
-						{
-							throw new Exception("ProcessStep not found with the provided  ApproverID" +processStepDTO.getApproverId());
-								
-						}
-				        	// }
-				         } catch (NumberFormatException exception) {
-				        	 System.out.println("excepion came");
-								}
-
+				
+			}
+			String allApproverNames = String.join(",", approverNames);
+			processStepDTO.setApproverName(allApproverNames);
 			processstepsDTOs.add(processStepDTO);
-		} }
-			return processstepsDTOs;
-}
+		}
+		return processstepsDTOs;
+	}
 	
 	
 	@Override

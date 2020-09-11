@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import com.zietaproj.zieta.repository.AccessTypeMasterRepository;
 import com.zietaproj.zieta.repository.AccessTypeScreenMappingRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.ScreensMasterRepository;
+import com.zietaproj.zieta.request.AccessScreensRequest;
 import com.zietaproj.zieta.service.AccessTypeScreenMappingService;
 import com.zietaproj.zieta.service.ScreensMasterService;
 
@@ -59,6 +62,23 @@ public class AccessTypeScreenMappingServiceImpl implements AccessTypeScreenMappi
 		}
 	}
 
+	
+	@Override
+	public void assignMultipleScreensToAccessType(AccessScreensRequest accessScreensRequest) {
+		
+		List<AccessTypeScreenMapping> accessTypeScreenMappingList = new ArrayList<AccessTypeScreenMapping>();
+		AccessTypeScreenMapping accessTypeScreenMapping = null;
+		List<Long> screenIds = accessScreensRequest.getScreenIds();
+		for (Long screenId : screenIds) {
+			accessTypeScreenMapping = new AccessTypeScreenMapping();
+			accessTypeScreenMapping.setClientId(accessScreensRequest.getClientId());
+			accessTypeScreenMapping.setAccessTypeId(accessScreensRequest.getAccessTypeId());
+			accessTypeScreenMapping.setScreenId(screenId);
+			accessTypeScreenMappingList.add(accessTypeScreenMapping);
+		}
+		accessTypeScreenMappingRepository.saveAll(accessTypeScreenMappingList);
+		
+	}
 	
 	@Override
 	public List<AccessTypeScreenMappingDTO> getAllAccesstypeScreensMapping() {
@@ -132,5 +152,13 @@ public class AccessTypeScreenMappingServiceImpl implements AccessTypeScreenMappi
 		
 		
 	}
-	
+
+
+	@Override
+	@Transactional
+	public void  deleteAccessTypeAndScreens(Long clientId, Long accessTypeId) {
+		 accessTypeScreenMappingRepository.deleteAccessTypeAndScreens(clientId, accessTypeId);
+	}
+
+
 }

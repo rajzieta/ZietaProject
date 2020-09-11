@@ -2,7 +2,10 @@ package com.zietaproj.zieta.repository;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -16,13 +19,11 @@ public interface AccessTypeScreenMappingRepository extends JpaRepository<AccessT
 	  List<Long> findByClientIdANDAccessTypeId(@Param("clientId") Long clientId,
 			  @Param("accessTypeId") Long accessTypeId);
 
-	List<AccessTypeScreenMapping> findByIsDelete(short notDeleted);
-
-	//List<AccessTypeScreenMapping> findByClientIdANDAccessTypeIdANDIsDelete(Long clientId, Long accessTypeId,
-	//		short notDeleted);
-
-	//List<Long> findByIdANDClientId(Long id, Long clientId);
+	  List<AccessTypeScreenMapping> findByIsDelete(short notDeleted);
 	  
-	  
+	  @Modifying
+	  @Transactional
+	  @Query("delete from AccessTypeScreenMapping a where a.clientId=:clientId or a.accessTypeId=:accessTypeId")
+	  void  deleteAccessTypeAndScreens(@Param("clientId") Long clientId, @Param("accessTypeId") Long accessTypeId);
 
 }

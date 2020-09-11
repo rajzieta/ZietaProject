@@ -73,6 +73,10 @@ public class OrgNodesServiceImpl implements OrgNodesService {
 		OrgInfoDTO orginfoDTO = null;
 		for (OrgInfo orgInfo : orginfos) {
 			orginfoDTO = modelMapper.map(orgInfo, OrgInfoDTO.class);
+			orginfoDTO.setOrgUnitTypeDescription(orgunitTypeRepository.findById(orgInfo.getOrgType()).get().getTypeName());
+			orginfoDTO.setClientCode(clientInfoRepository.findById(orgInfo.getClientId()).get().getClientCode());
+			orginfoDTO.setClientDescription(clientInfoRepository.findById(orgInfo.getClientId()).get().getClientName());
+			
 			orginfoDTOs.add(orginfoDTO);
 		}
 		return orginfoDTOs;

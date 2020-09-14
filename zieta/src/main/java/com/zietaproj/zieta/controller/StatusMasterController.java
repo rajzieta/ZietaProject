@@ -73,6 +73,10 @@ public class StatusMasterController {
 		
 	}
 
-	
+	@ApiOperation(value = "Deletes entries from status_master based on Id", notes = "Table reference: status_master")
+	@RequestMapping(value = "deleteStatusById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteStatusById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		statusMasterService.deleteStatusById(id, modifiedBy);
+	}
 	
 }

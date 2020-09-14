@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.zietaproj.zieta.dto.StatusMasterDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
+import com.zietaproj.zieta.model.RoleMaster;
 import com.zietaproj.zieta.model.ScreensMaster;
 import com.zietaproj.zieta.model.StatusMaster;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
@@ -21,8 +22,11 @@ import com.zietaproj.zieta.request.StatusByClientTypeRequest;
 import com.zietaproj.zieta.response.StatusByClienttypeResponse;
 import com.zietaproj.zieta.service.StatusMasterService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
 @Transactional
+@Slf4j
 public class StatusMasterServiceImpl implements StatusMasterService {
 	
 	@Autowired
@@ -99,5 +103,24 @@ public class StatusMasterServiceImpl implements StatusMasterService {
 	  
 	  }
 	  
+	  
+	  public void deleteStatusById(Long id, String modifiedBy) throws Exception {
+			
+			Optional<StatusMaster> statusmaster = statusMasterRepository.findById(id);
+			if (statusmaster.isPresent()) {
+				StatusMaster statusmasterEntitiy = statusmaster.get();
+				short delete = 1;
+				statusmasterEntitiy.setIsDelete(delete);
+				statusmasterEntitiy.setModifiedBy(modifiedBy);
+				statusMasterRepository.save(statusmasterEntitiy);
+
+			}else {
+				log.info("No Status found with the provided ID{} in the DB",id);
+				throw new Exception("No Status found with the provided ID in the DB :"+id);
+			}
+			
+			
+		}
+		
 	  
 }

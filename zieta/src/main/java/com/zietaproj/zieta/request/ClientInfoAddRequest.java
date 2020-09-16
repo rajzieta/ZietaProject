@@ -1,8 +1,5 @@
 package com.zietaproj.zieta.request;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +17,7 @@ public class ClientInfoAddRequest {
 	private String createdBy;
 	private String modifiedBy;
 	private boolean isDelete;
+	private short superAdmin;
 
 
 

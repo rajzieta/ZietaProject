@@ -23,7 +23,7 @@ public interface AccessTypeScreenMappingRepository extends JpaRepository<AccessT
 	  
 	  @Modifying
 	  @Transactional
-	  @Query("delete from AccessTypeScreenMapping a where a.clientId=:clientId or a.accessTypeId=:accessTypeId")
+	  @Query("delete from AccessTypeScreenMapping a where a.clientId=:clientId and a.accessTypeId=:accessTypeId")
 	  void  deleteAccessTypeAndScreens(@Param("clientId") Long clientId, @Param("accessTypeId") Long accessTypeId);
 
 }

@@ -1,25 +1,17 @@
 package com.zietaproj.zieta.serviceImpl;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
 
 import com.zietaproj.zieta.dto.UserInfoDTO;
+import com.zietaproj.zieta.model.ClientInfo;
 import com.zietaproj.zieta.model.ScreensMaster;
 //import com.zietaproj.zieta.model.UserAccessType;
 import com.zietaproj.zieta.model.UserInfo;
@@ -35,9 +27,7 @@ import com.zietaproj.zieta.service.AccessTypeMasterService;
 import com.zietaproj.zieta.service.ScreensMasterService;
 //import com.zietaproj.zieta.service.UserAccessTypeService;
 import com.zietaproj.zieta.service.UserInfoService;
-import com.zietaproj.zieta.util.PasswordUtil;
 
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -154,14 +144,16 @@ public class UserInfoServiceImpl implements UserInfoService {
 	
 	public LoginResponse authenticateUser(String email, String password) {
 		LoginResponse loginResponse = LoginResponse.builder().infoMessage("").build();
-		
 		UserInfoDTO dbUserInfo = findByEmail(email);
 		if (dbUserInfo != null) {
 			if (password.equals(dbUserInfo.getPassword())) {
-				loginResponse.setActive(dbUserInfo.getIsActive() !=0);
+				ClientInfo clientInfo = clientInfoRepo.findById(dbUserInfo.getClientId()) .get();
+				Long clientStatus = clientInfo.getClientStatus();
+				boolean active = ((dbUserInfo.getIsActive() !=0) &&  (clientStatus !=0));
+				loginResponse.setActive(active);
 				loginResponse.setInfoMessage("Valid credentials are provided !!");
 				loginResponse.setLoginValid(true);
-				
+				loginResponse.setIsSuperAdmin(clientInfo.getSuperAdmin());
 				return loginResponse;
 				
 			} else {

@@ -20,6 +20,7 @@ import com.zietaproj.zieta.model.ProcessConfig;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.UserInfo;
+import com.zietaproj.zieta.response.OrgNodesByClientResponse;
 import com.zietaproj.zieta.response.TasksByClientProjectResponse;
 
 public class TSMUtil {
@@ -111,7 +112,7 @@ public class TSMUtil {
 	            }
 	        }
 	        
-	        sortTaskInfoDataBySortKey(treeTask);
+	      //  sortTaskInfoDataBySortKey(treeTask);
 	    	
 	        
 	        return treeTask;
@@ -167,5 +168,75 @@ public class TSMUtil {
 		
 		return null;
 	}
+	
+	//create tree structure for org Nodes
+	
+	 public static List<OrgNodesByClientResponse> createTreeStructure(List<OrgNodesByClientResponse> nodes) {
+
+	        Map<Long, OrgNodesByClientResponse> mapTmp = new HashMap<>();
+	        List<OrgNodesByClientResponse> treeTask = new ArrayList<>();
+	        
+	        //Save all nodes to a map
+	        for (OrgNodesByClientResponse current : nodes) {
+	            mapTmp.put(current.getOrgUnitId(), current);
+	        }
+
+	        //loop and assign parent/child relationships
+	        for (OrgNodesByClientResponse current : nodes) {
+	            long parentId = current.getOrgParentId();
+
+	            if (parentId != 0) {
+	            	OrgNodesByClientResponse parent = mapTmp.get(parentId);
+	                if (parent != null) {
+	                    current.setParent(parent);
+	                    parent.addChild(current);
+	                    mapTmp.put(parentId, parent);
+	                    mapTmp.put(current.getOrgUnitId(), current);
+	                }
+	            }
+
+	        }
+	    
+	        //get the root
+	        for (OrgNodesByClientResponse node : mapTmp.values()) {
+	            if(node.getParent() == null) {
+	            	treeTask.add(node);
+	            }
+	        }
+	        
+	        //sortOrgInfoDataBySortKey(treeTask);
+	    	
+	        
+	        return treeTask;
+	    } 
+	
+	
+	
+//	 private static void sortOrgInfoDataBySortKey(List<OrgNodesByClientResponse> treeTask) {
+//			for (OrgNodesByClientResponse orgnodesByClientResponse : treeTask) {
+//
+//				if (orgnodesByClientResponse.getChildren() != null) {
+//					List<OrgNodesByClientResponse> innerChild = orgnodesByClientResponse.getChildren();
+//					sortOrgInfoDataBySortKey(innerChild);
+//					
+//				}
+//			}
+//			treeTask.sort(getSortOrdering());
+//		}
+//	 
+//	 
+//	 
+//	 private static Ordering<OrgNodesByClientResponse> getSortOrdering() {
+//			Ordering<OrgNodesByClientResponse> orderingBySortKey = new Ordering<OrgNodesByClientResponse>() {
+//				@Override
+//				public int compare(OrgNodesByClientResponse p1, OrgNodesByClientResponse p2) {
+//					if(p1.getSortKey() == null  && p2.getSortKey() == null) return 0;
+//					if(p1.getSortKey() == null) return -1;
+//					if(p2.getSortKey() == null) return 1;
+//					return Longs.compare(p1.getSortKey(), p2.getSortKey());
+//				}
+//			};
+//			return orderingBySortKey;
+//		}
 
 }

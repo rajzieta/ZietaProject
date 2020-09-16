@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -19,11 +20,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.zietaproj.zieta.dto.OrgInfoDTO;
 import com.zietaproj.zieta.model.OrgInfo;
 import com.zietaproj.zieta.model.OrgUnitTypeMaster;
+import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
 import com.zietaproj.zieta.repository.OrgInfoRepository;
 import com.zietaproj.zieta.repository.OrgUnitTypeRepository;
 import com.zietaproj.zieta.response.OrgNodesByClientResponse;
+import com.zietaproj.zieta.response.TasksByClientProjectResponse;
 import com.zietaproj.zieta.service.OrgNodesService;
+import com.zietaproj.zieta.util.TSMUtil;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +64,6 @@ public class OrgNodesServiceImpl implements OrgNodesService {
 			
 			orgnodesByClientResponseList.add(orgnodesByClientResponse);
 		}
-
 		return orgnodesByClientResponseList;
 	}
 	
@@ -122,6 +125,33 @@ public class OrgNodesServiceImpl implements OrgNodesService {
 		}
 		
 		
+	}
+	
+	@Override
+	public List<OrgNodesByClientResponse> findByClientIdAsHierarchy(Long clientId) {
+		short notDeleted = 0;
+		List<OrgInfo> orgnodesByClientList = orgInfoRepository.findByClientIdAndIsDelete(clientId, notDeleted);
+		List<OrgNodesByClientResponse> orgnodesByClientResponseList = new ArrayList<>();
+			constructOrgInfoData(orgnodesByClientList, orgnodesByClientResponseList);
+		
+		List<OrgNodesByClientResponse> treeList = TSMUtil.createTreeStructure(orgnodesByClientResponseList);
+		return treeList;
+	}
+	
+	
+	
+	private void constructOrgInfoData(List<OrgInfo> orgnodesByClientList,
+			List<OrgNodesByClientResponse> orgnodesByClientResponseList) {
+		for (OrgInfo orgnodesByClient : orgnodesByClientList) {
+			modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+			OrgNodesByClientResponse orgnodesByClientResponse = modelMapper.map(orgnodesByClient, OrgNodesByClientResponse.class);
+	
+			orgnodesByClientResponse.setOrgUnitTypeDescription(orgunitTypeRepository.findById(orgnodesByClient.getOrgType()).get().getTypeName());
+			orgnodesByClientResponse.setClientCode(clientInfoRepository.findById(orgnodesByClient.getClientId()).get().getClientCode());
+			orgnodesByClientResponse.setClientDescription(clientInfoRepository.findById(orgnodesByClient.getClientId()).get().getClientName());
+			
+			orgnodesByClientResponseList.add(orgnodesByClientResponse);
+		}
 	}
 	
 }

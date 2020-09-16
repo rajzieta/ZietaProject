@@ -103,6 +103,17 @@ public class AccessTypeController {
 	}
 	
 	
+	@GetMapping("/getAllAccesstypeScreenMappingByClient")
+	@ApiOperation(value = "List AccesstypesScreensMapping based on the clientId", notes = "Table reference: accesstype_screen_mapping")
+	public ResponseEntity<List<AccessTypeScreenMappingDTO>> getAllAccesstypeScreenMappingByClient(@RequestParam(required = true) Long clientId) {
+		try {
+			List<AccessTypeScreenMappingDTO> accesstypesbyclientList = accessTypeScreenMappingService.getAccessTypeScreenMappingByClient(clientId);
+			return new ResponseEntity<List<AccessTypeScreenMappingDTO>>(accesstypesbyclientList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<AccessTypeScreenMappingDTO>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
 	
 	@ApiOperation(value = "Updates the accesstype_screen_mapping for the provided Id", notes = "Table reference: accesstype_screen_mapping")
 	@RequestMapping(value = "editAccessTypeScreenMapping", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)

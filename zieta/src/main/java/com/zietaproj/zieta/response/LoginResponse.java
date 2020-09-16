@@ -16,5 +16,6 @@ public class LoginResponse {
 	boolean isLoginValid;
 	boolean isActive;
 	String infoMessage;
+	short isSuperAdmin;
 
 }

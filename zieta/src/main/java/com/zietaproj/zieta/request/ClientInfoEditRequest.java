@@ -18,4 +18,5 @@ public class ClientInfoEditRequest {
 	private String clientComments;
 	private String modifiedBy;
 	private boolean isDelete;
+	private short superAdmin;
 }

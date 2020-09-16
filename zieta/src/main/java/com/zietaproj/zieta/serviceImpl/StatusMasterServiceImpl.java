@@ -121,6 +121,39 @@ public class StatusMasterServiceImpl implements StatusMasterService {
 			
 			
 		}
+	  
+	  
+	  @Override
+			public List<StatusByClienttypeResponse> findByClientId(Long clientId) {
+			  short notDeleted=0;
+				List<StatusMaster> statusList = statusMasterRepository.findByClientIdAndIsDelete(clientId, notDeleted);
+				
+				List<StatusByClienttypeResponse> statusByClientStatustypeList = new ArrayList<>();
+				
+				for(StatusMaster statusmaster: statusList) {
+					StatusByClienttypeResponse statusbyclienttypeList = new StatusByClienttypeResponse();
+					
+					statusbyclienttypeList.setId(statusmaster.getId());
+					statusbyclienttypeList.setClientId(statusmaster.getClientId());
+					statusbyclienttypeList.setStatusCode(statusmaster.getStatusCode());
+					statusbyclienttypeList.setStatusDesc(statusmaster.getStatusDesc());
+					statusbyclienttypeList.setStatusType(statusmaster.getStatusType());
+					statusbyclienttypeList.setCreatedBy(statusmaster.getCreatedBy());
+					statusbyclienttypeList.setCreatedDate(statusmaster.getCreatedDate());
+					statusbyclienttypeList.setModifiedBy(statusmaster.getModifiedBy());
+					statusbyclienttypeList.setModifiedDate(statusmaster.getModifiedDate());
+					statusbyclienttypeList.setIsDelete(statusmaster.getIsDelete());
+					statusbyclienttypeList.setIsDefault(statusmaster.getIsDefault());
+					statusbyclienttypeList.setClientCode(clientInfoRepository.findById(statusmaster.getClientId()).get().getClientCode());
+					statusbyclienttypeList.setClientDescription(clientInfoRepository.findById(statusmaster.getClientId()).get().getClientName());
+
+					
+					statusByClientStatustypeList.add(statusbyclienttypeList);
+				}
+				
+				return statusByClientStatustypeList;
+
+	}
 		
 	  
 }

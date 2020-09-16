@@ -23,5 +23,7 @@ public interface StatusMasterService {
 	public void addStatusmaster(StatusMaster statusmaster);
 
 	public void deleteStatusById(Long id, String modifiedBy) throws Exception;
+
+	public List<StatusByClienttypeResponse> findByClientId(Long clientId);
 	
 }

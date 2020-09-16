@@ -79,4 +79,16 @@ public class StatusMasterController {
 		statusMasterService.deleteStatusById(id, modifiedBy);
 	}
 	
+	
+	@RequestMapping(value = "getStatusByClient", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "List Status based on the  clientId", notes = "Table reference: Status_master")
+	public ResponseEntity<List<StatusByClienttypeResponse>> getStatusByClient(@RequestParam(required = true) Long clientId) {
+		try {
+			List<StatusByClienttypeResponse> statusByClientStatustypeList = statusMasterService.findByClientId(clientId);
+			return new ResponseEntity<List<StatusByClienttypeResponse>>(statusByClientStatustypeList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<StatusByClienttypeResponse>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
 }

@@ -20,6 +20,7 @@ import com.zietaproj.zieta.model.ProcessMaster;
 import com.zietaproj.zieta.model.ProcessSteps;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.ProjectMaster;
+import com.zietaproj.zieta.model.StatusMaster;
 import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
@@ -149,7 +150,16 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 					.get().getOrgNodeName());
 			String prjManagerName = getProjectManagerName(projectInfo);
 			projectDetailsByUserModel.setProjectManagerName(prjManagerName);
-			projectDetailsByUserModel.setProjectStatusDescription(statusMasterRepository.findById(projectInfo.getProjectStatus()).get().getStatusCode());
+		//	projectDetailsByUserModel.setProjectStatusDescription(statusMasterRepository.findById(projectInfo.getProjectStatus()).get().getStatusCode());
+			
+			projectDetailsByUserModel.setProjectStatusDescription(StringUtils.EMPTY);
+			if(null != projectInfo.getProjectStatus()) {
+				Optional <StatusMaster> statusmaster = statusMasterRepository.findById(projectInfo.getProjectStatus());
+				if(statusmaster.isPresent()) {
+					projectDetailsByUserModel.setProjectStatusDescription(statusmaster.get().getStatusCode());
+				}
+			}
+			
 			CustInfo custoInfo = custInfoRepository.findById(projectInfo.getCustId()).get();
 			projectDetailsByUserModel.setCustInfo(custoInfo);
 			

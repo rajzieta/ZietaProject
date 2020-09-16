@@ -80,4 +80,18 @@ public class OrgNodeController {
 		orgnodesService.deleteOrgInfoById(id, modifiedBy);
 	}
 	
+	
+	
+	@GetMapping("/getAllOrgNodesByClientAsHeirarchy")
+	@ApiOperation(value = "List OrgInfo based on the  clientId", notes = "Table reference:"
+			+ " org_info")
+	public ResponseEntity<List<OrgNodesByClientResponse>> getAllOrgNodesByClientAsHeirarchy(@RequestParam(required=true) Long clientId) {
+		try {
+			List<OrgNodesByClientResponse> orgnodesbyclientList = orgnodesService.findByClientIdAsHierarchy(clientId);
+			return new ResponseEntity<List<OrgNodesByClientResponse>>(orgnodesbyclientList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<OrgNodesByClientResponse>>(HttpStatus.NOT_FOUND);
+		} 
+	}
+	
 }

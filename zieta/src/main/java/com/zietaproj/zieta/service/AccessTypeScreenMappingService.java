@@ -21,4 +21,8 @@ public interface AccessTypeScreenMappingService {
 	
 	public void deleteAccessTypeAndScreens(Long clientId, Long accessTypeId);
 
+	public List<AccessTypeScreenMappingDTO> getAccessTypeScreenMappingByClient(Long clientId);
+
+
+
 }

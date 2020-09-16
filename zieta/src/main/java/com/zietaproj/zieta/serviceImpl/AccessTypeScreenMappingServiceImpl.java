@@ -120,6 +120,39 @@ public class AccessTypeScreenMappingServiceImpl implements AccessTypeScreenMappi
 	
 	
 	@Override
+	public List<AccessTypeScreenMappingDTO> getAccessTypeScreenMappingByClient(Long clientId) {
+		short notDeleted = 0;
+		List<AccessTypeScreenMapping> accessTypeScreenMappinginfos= accessTypeScreenMappingRepository.findByClientIdAndIsDelete(clientId, notDeleted);
+		//List<AccessTypeScreenMapping> accessControlConfigList = accessTypeScreenMappingRepository.findByClientIdANDAccessTypeIdANDIsDelete(accessScreenmappingDTO.getClientId(), accessScreenmappingDTO.getAccessTypeId(), notDeleted );
+		List<AccessTypeScreenMappingDTO> accessScreenmappingDTOs = new ArrayList<AccessTypeScreenMappingDTO>();
+		AccessTypeScreenMappingDTO accessScreenmappingDTO = null;
+		for (AccessTypeScreenMapping accessscreens : accessTypeScreenMappinginfos) {
+			accessScreenmappingDTO = new AccessTypeScreenMappingDTO();
+			
+				
+				accessScreenmappingDTO.setId(accessscreens.getId());
+				accessScreenmappingDTO.setClientId(accessscreens.getClientId());
+				accessScreenmappingDTO.setAccessTypeId(accessscreens.getAccessTypeId());
+				accessScreenmappingDTO.setScreenId(accessscreens.getScreenId());
+
+				accessScreenmappingDTO.setClientCode(clientInfoRepository.findById(accessscreens.getClientId())
+						.get().getClientCode());
+				accessScreenmappingDTO.setClientDescription(clientInfoRepository.findById(accessscreens.getClientId())
+               .get().getClientName());
+			accessScreenmappingDTO.setAccessTypeDescription(accessTypeRepository.findById(accessscreens.getAccessTypeId())
+					.get().getAccessType());
+
+			 List<Long> accessControlConfigList = accessTypeScreenMappingRepository.findByClientIdANDAccessTypeId(accessScreenmappingDTO.getClientId(), accessScreenmappingDTO.getAccessTypeId());
+				
+				List<ScreensMaster> screensListByClientId = screensMasterService.getScreensByIds(accessControlConfigList);
+			accessScreenmappingDTO.setScreensByClient(screensListByClientId);
+			accessScreenmappingDTOs.add(accessScreenmappingDTO);
+		}
+		return accessScreenmappingDTOs;
+	}
+	
+	
+	@Override
 	public void editAccessScreenMapping(AccessTypeScreenMappingDTO accessScreenmapdto) throws Exception {
 		
 		Optional<AccessTypeScreenMapping> accessscreenmapEntity = accessTypeScreenMappingRepository.findById(accessScreenmapdto.getId());

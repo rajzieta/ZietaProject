@@ -27,9 +27,6 @@ import lombok.Data;
 
 @Entity
 @Table(name = "orgunit_info")
-@EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
-        allowGetters = true)
 @Data
 public class OrgInfo extends BaseEntity implements Serializable {
 

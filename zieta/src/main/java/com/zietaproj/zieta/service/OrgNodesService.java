@@ -20,5 +20,7 @@ public interface OrgNodesService {
 
 	public void deleteOrgInfoById(Long id, String modifiedBy) throws Exception;
 
+	public List<OrgNodesByClientResponse> findByClientIdAsHierarchy(Long clientId);
+
 	
 }

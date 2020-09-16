@@ -21,6 +21,8 @@ public interface AccessTypeScreenMappingRepository extends JpaRepository<AccessT
 
 	  List<AccessTypeScreenMapping> findByIsDelete(short notDeleted);
 	  
+	  List<AccessTypeScreenMapping> findByClientIdAndIsDelete(Long clientId, short notDeleted);
+	  
 	  @Modifying
 	  @Transactional
 	  @Query("delete from AccessTypeScreenMapping a where a.clientId=:clientId and a.accessTypeId=:accessTypeId")

@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -16,14 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.zietaproj.zieta.common.ActionType;
-import com.zietaproj.zieta.common.StateType;
-import com.zietaproj.zieta.common.Status;
 import com.zietaproj.zieta.common.TMSConstants;
 import com.zietaproj.zieta.dto.WorkflowDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
 import com.zietaproj.zieta.model.ProcessSteps;
-import com.zietaproj.zieta.model.StatusMaster;
 import com.zietaproj.zieta.model.TSInfo;
 import com.zietaproj.zieta.model.TSTimeEntries;
 import com.zietaproj.zieta.model.TSWorkflow;
@@ -299,10 +294,6 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	public void addTimeEntriesByTsId(@Valid List<TimeEntriesByTsIdRequest> timeentriesbytsidRequestList) throws Exception {
 			for (TimeEntriesByTsIdRequest timeEntriesByTsIdRequest : timeentriesbytsidRequestList) {
 				TSTimeEntries tstimeentries = modelMapper.map(timeEntriesByTsIdRequest, TSTimeEntries.class);
-				TSInfo tsInfo = tSInfoRepository.findById(tstimeentries.getTsId()).get();
-				Long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndIsDefaultAndIsDelete(tsInfo.getClientId(), 
-						TMSConstants.TIMEENTRY, Boolean.TRUE, (short)0).getId();
-				tstimeentries.setStatusId(statusId);
 				tstimeentriesRepository.save(tstimeentries);
 			}
 
@@ -310,16 +301,15 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	
 	@Override
 	public void updateTimeSheetById(@Valid UpdateTimesheetByIdRequest updatetimesheetRequest) throws Exception {
-		//for (UpdateTimesheetByIdRequest updateRequest : updatetimesheetRequest) {
 		Optional<TSInfo> TsInfoEntity = tSInfoRepository.findById(updatetimesheetRequest.getId());
-		if(TsInfoEntity.isPresent()) {
+		if (TsInfoEntity.isPresent()) {
 			TSInfo tsinfo = modelMapper.map(updatetimesheetRequest, TSInfo.class);
-			
+
 			tSInfoRepository.save(tsinfo);
 		}
-	
+
 		else {
-			throw new Exception("Timesheet not found with the provided ID : "+updatetimesheetRequest.getId());
+			throw new Exception("Timesheet not found with the provided ID : " + updatetimesheetRequest.getId());
 		}
 	}
 	
@@ -327,7 +317,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	@Override
 	@Transactional
 	public void updateTimeSheetByIds(@Valid List<UpdateTimesheetByIdRequest> updatetimesheetRequest) throws Exception {
-		
+
 		for (UpdateTimesheetByIdRequest updateRequest : updatetimesheetRequest) {
 			updateTimeSheetById(updateRequest);
 		}
@@ -336,24 +326,22 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	
 	
 	public List<WorkflowDTO> getAllWorkflowDetails() {
-		
+
 		List<TSWorkflow> workflows = workflowRepository.findAll();
 		List<WorkflowDTO> workflowDTOs = new ArrayList<WorkflowDTO>();
 		WorkflowDTO workflowDTO = null;
 		for (TSWorkflow workflow : workflows) {
 			workflowDTO = modelMapper.map(workflow, WorkflowDTO.class);
-			
+
 			workflowDTOs.add(workflowDTO);
 		}
 		return workflowDTOs;
-		
-		
+
 	}
 	
 	
 	@Override
 	public void updateTimeEntriesByID(@Valid TimeEntriesByTsIdRequest timeentriesByTsIdRequest) throws Exception {
-		//for (UpdateTimesheetByIdRequest updateRequest : updatetimesheetRequest) {
 		Optional<TSTimeEntries> TsTimeEntity = tstimeentriesRepository.findById(timeentriesByTsIdRequest.getId());
 		if(TsTimeEntity.isPresent()) {
 			TSTimeEntries tsTimeSave = TsTimeEntity.get();
@@ -376,11 +364,6 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 			updateTimeEntriesByID(updateRequest);
 		}
 	}
-	
-	
-	
-	
-	
 	
 	
 }

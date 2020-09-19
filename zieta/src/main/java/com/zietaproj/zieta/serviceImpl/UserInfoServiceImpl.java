@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.zietaproj.zieta.common.MessagesConstants;
 import com.zietaproj.zieta.dto.UserInfoDTO;
 import com.zietaproj.zieta.model.ClientInfo;
 import com.zietaproj.zieta.model.ScreensMaster;
@@ -18,6 +19,7 @@ import com.zietaproj.zieta.model.UserInfo;
 import com.zietaproj.zieta.repository.AccessTypeMasterRepository;
 import com.zietaproj.zieta.repository.AccessTypeScreenMappingRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
+import com.zietaproj.zieta.repository.MessageMasterRepository;
 import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.request.PasswordEditRequest;
 import com.zietaproj.zieta.request.UserInfoEditRequest;
@@ -60,13 +62,10 @@ public class UserInfoServiceImpl implements UserInfoService {
 	ClientInfoRepository clientInfoRepo;
 	
 	@Autowired
-	ModelMapper modelMapper;
+	MessageMasterRepository messageMasterRepository;
 	
-//	@Autowired
-//    private PasswordEncoder passwordEncoder;
-//	
-//	@Autowired
-//    private BCrypt bcrypt;
+	@Autowired
+	ModelMapper modelMapper;
 	
 	@Override
 	public List<UserInfoDTO> getAllUserInfoDetails() {
@@ -105,11 +104,6 @@ public class UserInfoServiceImpl implements UserInfoService {
 	public UserDetailsResponse getUserData(String emailId) {
 		UserInfo userInfo = userInfoRepositoryRepository.findByEmail(emailId);
 		
-//		List<UserAccessType> userAccessTypeList = userAccessTypeService.
-//				findByClientIdAndUserId(userInfo.getClientId(), userInfo.getId());
-//		List<Long> accessIdList = userAccessTypeList.stream().map(UserAccessType::getAccessTypeId)
-//										.collect(Collectors.toList());
-				
 		 List<Long> accessControlConfigList = accessControlConfigRepository.
 				 findByClientIdANDAccessTypeId(userInfo.getClientId(), userInfo.getAccessTypeId());
 		 List<ScreensMaster> screensListByClientId = screensMasterService.getScreensByIds(accessControlConfigList);
@@ -146,27 +140,36 @@ public class UserInfoServiceImpl implements UserInfoService {
 		LoginResponse loginResponse = LoginResponse.builder().infoMessage("").build();
 		UserInfoDTO dbUserInfo = findByEmail(email);
 		if (dbUserInfo != null) {
-			if (password.equals(dbUserInfo.getPassword())) {
-				ClientInfo clientInfo = clientInfoRepo.findById(dbUserInfo.getClientId()) .get();
-				Long clientStatus = clientInfo.getClientStatus();
-				boolean active = ((dbUserInfo.getIsActive() !=0) &&  (clientStatus !=0));
-				loginResponse.setActive(active);
-				loginResponse.setInfoMessage("Valid credentials are provided !!");
-				loginResponse.setLoginValid(true);
-				loginResponse.setIsSuperAdmin(clientInfo.getSuperAdmin());
+			ClientInfo clientInfo = clientInfoRepo.findById(dbUserInfo.getClientId()).get();
+			Long clientStatus = clientInfo.getClientStatus();
+			Boolean active = Boolean.FALSE;
+			loginResponse.setActive(active);
+			loginResponse.setLoginValid(active);
+
+			if (clientStatus == 0) {
+				loginResponse
+						.setInfoMessage(messageMasterRepository.findByMsgCode(MessagesConstants.E103).getMsgDesc());
 				return loginResponse;
-				
-			} else {
-				loginResponse.setInfoMessage("Provided credentials are wrong... "
-						+ email);
+			} else if (dbUserInfo.getIsActive() == 0) {
+				loginResponse
+						.setInfoMessage(messageMasterRepository.findByMsgCode(MessagesConstants.E102).getMsgDesc());
 				return loginResponse;
 			}
-		}else {
-			loginResponse.setInfoMessage("Invalid emailId provided: "+ email);
+			active = ((dbUserInfo.getIsActive() != 0) && (clientStatus != 0));
+			if (password.equals(dbUserInfo.getPassword())) {
+				loginResponse.setIsSuperAdmin(clientInfo.getSuperAdmin());
+				return loginResponse;
+
+			} else {
+				loginResponse
+						.setInfoMessage(messageMasterRepository.findByMsgCode(MessagesConstants.E101).getMsgDesc());
+				return loginResponse;
+			}
+		} else {
+			loginResponse.setInfoMessage(messageMasterRepository.findByMsgCode(MessagesConstants.E101).getMsgDesc());
 			return loginResponse;
 		}
-		
-		
+
 	}
 
 	@Override

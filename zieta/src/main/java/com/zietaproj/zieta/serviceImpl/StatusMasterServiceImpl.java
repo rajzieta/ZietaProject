@@ -48,6 +48,7 @@ public class StatusMasterServiceImpl implements StatusMasterService {
 			statusMasterDTO = modelMapper.map(statusMaster,StatusMasterDTO.class);
 			statusMasterDTO.setClientCode(clientInfoRepository.findById(statusMaster.getClientId()).get().getClientCode());
 			statusMasterDTO.setClientDescription(clientInfoRepository.findById(statusMaster.getClientId()).get().getClientName());
+			statusMasterDTO.setClientStatus(clientInfoRepository.findById(statusMaster.getClientId()).get().getClientStatus());
 
 			statusMasterDTOs.add(statusMasterDTO);
 		}

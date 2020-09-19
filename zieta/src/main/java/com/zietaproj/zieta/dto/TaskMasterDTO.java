@@ -14,6 +14,7 @@ public class TaskMasterDTO {
     private boolean isDelete;
     private String clientCode;
 	private String clientDescription;
+	private Long clientStatus;
    
 	
 }

@@ -83,6 +83,9 @@ public class ActivityServiceImpl implements ActivityService {
 			activityMasterDTO
 			.setClientDescription(clientInfoRepository.findById(activityMaster.getClientId())
 					.get().getClientName());
+			activityMasterDTO
+			.setClientStatus(clientInfoRepository.findById(activityMaster.getClientId())
+					.get().getClientStatus());
 			activityMasterDTO.setActive(activityMaster.isActive());
 			activityMasterDTOs.add(activityMasterDTO);
 		}

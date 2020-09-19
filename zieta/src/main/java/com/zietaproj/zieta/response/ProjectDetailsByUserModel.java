@@ -33,6 +33,7 @@ public class ProjectDetailsByUserModel {
 	String projectStatusDescription;
 	String clientCode;
 	String clientDescription;
+	Long clientStatus;
 	CustInfo custInfo;
 	String templateDesc;
 	String approverName;

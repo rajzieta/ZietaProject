@@ -9,6 +9,7 @@ public class AccessTypeMasterDTO {
     private Long clientId;
     private String clientCode;
     private String clientDescription;
+    private Long clientStatus;
     private String accessType;
     private String createdBy;
     private String modifiedBy;

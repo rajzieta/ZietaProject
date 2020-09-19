@@ -62,7 +62,8 @@ public class TimeTypeServiceImpl implements TimeTypeService {
 			timetypeDTO.setClientId(timetype.getClientId());
 			timetypeDTO.setClientCode(clientInfoRepository.findById(timetype.getClientId()).get().getClientCode());
 			timetypeDTO.setClientDescription(clientInfoRepository.findById(timetype.getClientId()).get().getClientName());
-			
+			timetypeDTO.setClientStatus(clientInfoRepository.findById(timetype.getClientId()).get().getClientStatus());
+
 			timetypeDTO.setModifiedBy(timetype.getModifiedBy());
 		timetypeDTOs.add(timetypeDTO);
 		}

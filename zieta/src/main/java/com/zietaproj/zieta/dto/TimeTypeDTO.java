@@ -22,6 +22,7 @@ public class TimeTypeDTO extends BaseEntity {
     private String timeType;
 	private String clientCode;
 	private String clientDescription;
+	private Long clientStatus;
     
 	
 }

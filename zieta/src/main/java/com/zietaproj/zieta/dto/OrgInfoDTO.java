@@ -22,6 +22,7 @@ public class OrgInfoDTO extends BaseEntity {
     //additional fields
     private String clientCode;
     private String clientDescription;
+    private Long clientStatus;
     private String orgUnitTypeDescription;
 	
 }

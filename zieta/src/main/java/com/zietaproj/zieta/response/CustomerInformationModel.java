@@ -38,6 +38,8 @@ public class CustomerInformationModel {
 
 	private String clientDescription;
 	
+	private Long clientStatus;
+	
 	
 
 

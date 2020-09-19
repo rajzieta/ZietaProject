@@ -21,6 +21,7 @@ import com.zietaproj.zieta.model.TaskTypeMaster;
 import com.zietaproj.zieta.repository.AccessTypeMasterRepository;
 import com.zietaproj.zieta.repository.ActivityMasterRepository;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
+import com.zietaproj.zieta.repository.UserInfoRepository;
 import com.zietaproj.zieta.request.AccessTypeAddRequest;
 import com.zietaproj.zieta.response.AccesstypesByClientResponse;
 import com.zietaproj.zieta.response.RolesByClientResponse;
@@ -37,6 +38,9 @@ public class AccessTypeMasterServiceImpl implements AccessTypeMasterService {
 	
 	@Autowired
 	ClientInfoRepository clientInfoRepository;
+	
+	@Autowired
+	UserInfoRepository userInfoRepository;
 	
 	
 	@Autowired
@@ -57,6 +61,7 @@ public class AccessTypeMasterServiceImpl implements AccessTypeMasterService {
 			accessTypeMasterDTO.setModifiedBy(accesstypeMaster.getModifiedBy());
 			accessTypeMasterDTO.setClientCode(clientInfoRepository.findById(accesstypeMaster.getClientId()).get().getClientCode());
 			accessTypeMasterDTO.setClientDescription(clientInfoRepository.findById(accesstypeMaster.getClientId()).get().getClientName());
+			accessTypeMasterDTO.setClientStatus(clientInfoRepository.findById(accesstypeMaster.getClientId()).get().getClientStatus());
 			
 			accessTypeMasterDTOs.add(accessTypeMasterDTO);
 		}

@@ -57,6 +57,8 @@ public class CustInfoServiceImpl implements CustInfoService {
 			customerInformationModel.setClientCode(clientCode);
 			String clientDesc = clientInfoRepo.findById(custInfo.getClientId()).get().getClientName();
 			customerInformationModel.setClientDescription(clientDesc);
+			Long clientStatus = clientInfoRepo.findById(custInfo.getClientId()).get().getClientStatus();
+			customerInformationModel.setClientStatus(clientStatus);
 			customerInfoList.add(customerInformationModel);
 			
 		}

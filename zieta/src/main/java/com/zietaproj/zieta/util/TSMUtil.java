@@ -212,31 +212,6 @@ public class TSMUtil {
 	
 	
 	
-//	 private static void sortOrgInfoDataBySortKey(List<OrgNodesByClientResponse> treeTask) {
-//			for (OrgNodesByClientResponse orgnodesByClientResponse : treeTask) {
-//
-//				if (orgnodesByClientResponse.getChildren() != null) {
-//					List<OrgNodesByClientResponse> innerChild = orgnodesByClientResponse.getChildren();
-//					sortOrgInfoDataBySortKey(innerChild);
-//					
-//				}
-//			}
-//			treeTask.sort(getSortOrdering());
-//		}
-//	 
-//	 
-//	 
-//	 private static Ordering<OrgNodesByClientResponse> getSortOrdering() {
-//			Ordering<OrgNodesByClientResponse> orderingBySortKey = new Ordering<OrgNodesByClientResponse>() {
-//				@Override
-//				public int compare(OrgNodesByClientResponse p1, OrgNodesByClientResponse p2) {
-//					if(p1.getSortKey() == null  && p2.getSortKey() == null) return 0;
-//					if(p1.getSortKey() == null) return -1;
-//					if(p2.getSortKey() == null) return 1;
-//					return Longs.compare(p1.getSortKey(), p2.getSortKey());
-//				}
-//			};
-//			return orderingBySortKey;
-//		}
+
 
 }

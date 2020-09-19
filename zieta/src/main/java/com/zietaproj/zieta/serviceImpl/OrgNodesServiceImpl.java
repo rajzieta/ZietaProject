@@ -79,7 +79,8 @@ public class OrgNodesServiceImpl implements OrgNodesService {
 			orginfoDTO.setOrgUnitTypeDescription(orgunitTypeRepository.findById(orgInfo.getOrgType()).get().getTypeName());
 			orginfoDTO.setClientCode(clientInfoRepository.findById(orgInfo.getClientId()).get().getClientCode());
 			orginfoDTO.setClientDescription(clientInfoRepository.findById(orgInfo.getClientId()).get().getClientName());
-			
+			orginfoDTO.setClientStatus(clientInfoRepository.findById(orgInfo.getClientId()).get().getClientStatus());
+
 			orginfoDTOs.add(orginfoDTO);
 		}
 		return orginfoDTOs;

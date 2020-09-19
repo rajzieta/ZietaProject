@@ -91,7 +91,8 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 			taskMasterDTO = modelMapper.map(taskTypeMaster,TaskMasterDTO.class);
 			taskMasterDTO.setClientCode(clientInfoRepository.findById(taskTypeMaster.getClientId()).get().getClientCode());
 			taskMasterDTO.setClientDescription(clientInfoRepository.findById(taskTypeMaster.getClientId()).get().getClientName());
-			
+			taskMasterDTO.setClientStatus(clientInfoRepository.findById(taskTypeMaster.getClientId()).get().getClientStatus());
+
 			taskMasterDTOs.add(taskMasterDTO);
 		}
 		return taskMasterDTOs;

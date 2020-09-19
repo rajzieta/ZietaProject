@@ -83,6 +83,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 			userInfoDTO.setPassword("Welcome1");
 			userInfoDTO.setClientCode(clientInfoRepo.findById(userInfo.getClientId()).get().getClientCode());
 			userInfoDTO.setClientDescription(clientInfoRepo.findById(userInfo.getClientId()).get().getClientName());
+			userInfoDTO.setClientStatus(clientInfoRepo.findById(userInfo.getClientId()).get().getClientStatus());
 			userInfoDTO.setAccessType(accessTypeMasterRepo.findById(userInfo.getAccessTypeId()).get().getAccessType());
 			
 			 userInfoDTOs.add(userInfoDTO);

@@ -143,7 +143,8 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 			//setting additonal details starts
 			projectDetailsByUserModel.setClientCode(clientInfoRepository.findById(projectInfo.getClientId()).get().getClientCode());
 			projectDetailsByUserModel.setClientDescription(clientInfoRepository.findById(projectInfo.getClientId()).get().getClientName());
-			
+			projectDetailsByUserModel.setClientStatus(clientInfoRepository.findById(projectInfo.getClientId()).get().getClientStatus());
+
 			projectDetailsByUserModel.setProjectTypeName(
 					projectMasterRepository.findById(projectInfo.getProjectType()).get().getTypeName());
 			projectDetailsByUserModel.setOrgNodeName(orgInfoRepository.findById(projectInfo.getProjectOrgNode())
@@ -303,7 +304,8 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 			projectmasterDTO = modelMapper.map(projectmaster, ProjectMasterDTO.class);
 			projectmasterDTO.setClientCode(clientInfoRepository.findById(projectmaster.getClientId()).get().getClientCode());
 		//	projectmasterDTO.setClientDescription(clientInfoRepository.findById(projectmaster.getClientId()).get().getClientName());
-			
+			projectmasterDTO.setClientStatus(clientInfoRepository.findById(projectmaster.getClientId()).get().getClientStatus());
+
 			projectmasterDTOs.add(projectmasterDTO);
 		}
 		return projectmasterDTOs;

@@ -91,7 +91,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
 	@Override
 	public UserInfoDTO findByEmail(String email) {
-		UserInfoDTO userInfoDTO = new UserInfoDTO();
+		UserInfoDTO userInfoDTO = null;
 		UserInfo userInfo = userInfoRepositoryRepository.findByEmail(email);
 		if(userInfo !=null) {
 			userInfoDTO =  modelMapper.map(userInfo, UserInfoDTO.class);
@@ -158,6 +158,8 @@ public class UserInfoServiceImpl implements UserInfoService {
 			active = ((dbUserInfo.getIsActive() != 0) && (clientStatus != 0));
 			if (password.equals(dbUserInfo.getPassword())) {
 				loginResponse.setIsSuperAdmin(clientInfo.getSuperAdmin());
+				loginResponse.setActive(active);
+				loginResponse.setLoginValid(active);
 				return loginResponse;
 
 			} else {

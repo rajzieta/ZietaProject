@@ -11,6 +11,9 @@ import org.apache.commons.lang3.math.NumberUtils;
 //import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.zietaproj.zieta.dto.ProcessConfigDTO;
@@ -22,6 +25,7 @@ import com.zietaproj.zieta.model.ProcessSteps;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
+import com.zietaproj.zieta.repository.GetProcessStepsRepository;
 import com.zietaproj.zieta.repository.ProcessConfigRepository;
 import com.zietaproj.zieta.repository.ProcessMasterRepository;
 import com.zietaproj.zieta.repository.ProcessStepsRepository;
@@ -43,6 +47,9 @@ public class ProcessServiceImpl implements ProcessService {
 	
 	@Autowired
 	ProcessStepsRepository processStepsRepository;
+	
+	@Autowired
+	GetProcessStepsRepository getprocessStepsRepository;
 	
 	@Autowired
 	ProcessConfigRepository processConfigRepository;
@@ -111,9 +118,11 @@ public List<ProcessMasterDTO> getAllProcess() {
 	}
 	
 	
-	public List<ProcessStepsDTO> getAllProcessSteps() throws Exception {
+	public List<ProcessStepsDTO> getAllProcessSteps(Integer pageNo, Integer pageSize) throws Exception {
 
-		List<ProcessSteps> processsteps = processStepsRepository.findAll();
+		Pageable paging = PageRequest.of(pageNo, pageSize);
+		
+		Page<ProcessSteps> processsteps = getprocessStepsRepository.findAll(paging);
 		List<ProcessStepsDTO> processstepsDTOs = new ArrayList<ProcessStepsDTO>();
 		ProcessStepsDTO processStepDTO = null;
 
@@ -155,8 +164,11 @@ public List<ProcessMasterDTO> getAllProcess() {
 
 			processStepDTO.setApproverName(allApproverNames);
 			processstepsDTOs.add(processStepDTO);
-		}
+		
+	}
+
 		return processstepsDTOs;
+
 	}
 	
 	

@@ -71,10 +71,11 @@ public class ProcessController {
 	
 	
 	@RequestMapping(value = "getAllProcessSteps", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<ProcessStepsDTO> getAllProcessSteps() {
+	public List<ProcessStepsDTO> getAllProcessSteps(@RequestParam(defaultValue = "0") Integer pageNo, 
+            @RequestParam(defaultValue = "10") Integer pageSize) {
 		List<ProcessStepsDTO> processSteps = null;
 		try {
-			processSteps = processService.getAllProcessSteps();
+			processSteps = processService.getAllProcessSteps(pageNo, pageSize);
 		} catch (Exception e) {
 			LOGGER.error("Error Occured in ProcessController#getAllProcessSteps",e);
 		}

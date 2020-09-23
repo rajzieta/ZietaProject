@@ -174,6 +174,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 								TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_SUBMITTED, (short) 0)
 						.getId();
 				tsInfo.setStatusId(statusId);
+				tSInfoRepository.save(tsInfo);
 				if (workflowRequestList.size() == 0) {
 					// get the approverid from the process_step based on the clientId, projectId and taskId
 					List<ProcessSteps> processStepsList = processStepsRepository
@@ -190,6 +191,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 						// set the status as approved and there are no actions on the workflow, so move
 						// to next TSInfo item.
 						tsInfo.setStatusId(statusId);
+						tSInfoRepository.save(tsInfo);
 						continue;
 					}
 

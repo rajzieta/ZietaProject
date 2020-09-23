@@ -264,16 +264,14 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 					// reduce the total rejected timeentries time from the total submitted time
 					float totalApprovedTime = tsInfo.getTsTotalSubmittedTime() - totalRejectTime;
 					tsInfo.setTsTotalApprovedTime(totalApprovedTime);
-					long statusId = statusMasterRepository
-							.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(tsInfo.getClientId(),
-									TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_APPROVED, (short) 0).getId();
-					tsInfo.setStatusId(statusId);
 					
 				} else {
 					// Final Approval Done
 					workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_COMPLETE));
 					workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
-					workFlowRequest.setCurrentStep(0L);
+					//Marking the current step(where final action taken) as 1 which is made by the previous step, 
+					//change request raise by Santhosh, for reporting purpose..
+					//workFlowRequest.setCurrentStep(0L);
 					
 					long statusId = statusMasterRepository
 							.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(tsInfo.getClientId(),
@@ -295,6 +293,8 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(
 					tsInfo.getClientId(), TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_REJECTED, (short) 0).getId();
 			tsInfo.setStatusId(statusId);
+			//Marking the current step(where final action taken) as 1 which is made by the previous step, 
+			//change request raise by Santhosh, for reporting purpose.
 			float totalRejectTime = getTotalRejectedTime(tsInfo);
 			// reduce the total rejected timeentries time from the total submitted time
 			float totalApprovedTime = tsInfo.getTsTotalSubmittedTime() - totalRejectTime;
@@ -303,18 +303,23 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			
 			
 			nullifyNextSteps(workFlowRequest, workFlowDepth);
+			//Marking the current step(where final action taken) as 1 which is made by the previous step, 
+			//change request raise by Santhosh, for reporting purpose.
+			workFlowRequest.setCurrentStep(1L);
 			
 		} else if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_REVISE)) {
 			// Request sent for revise
 			workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_OPEN));
 			workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_REVISE));
-			workFlowRequest.setCurrentStep(0L);
 			//set the status the default one
 			Long statuId = statusMasterRepository.findByClientIdAndStatusTypeAndIsDefaultAndIsDelete(
 					tsInfo.getClientId(), TMSConstants.TIMESHEET, Boolean.TRUE, (short) 0).getId();
 			tsInfo.setStatusId(statuId);
 			tsInfoRepository.save(tsInfo);
 			nullifyNextSteps(workFlowRequest, workFlowDepth);
+			//Marking the current step(where final action taken) as 1 which is made by the previous step, 
+			//change request raise by Santhosh, for reporting purpose.
+			workFlowRequest.setCurrentStep(1L);
 			
 		}
 		
@@ -331,7 +336,7 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
 	private void nullifyNextSteps(WorkflowRequest workFlowRequest, int workFlowDepth) {
 		List<WorkflowRequest> nextStepsWorkFlowRequestList = workflowRequestRepository.findByTsId(workFlowRequest.getTsId());
-		for (int i= workFlowRequest.getStepId().intValue(); i <workFlowDepth; i++) {
+		for (int i= workFlowRequest.getStepId().intValue() +1 ; i <workFlowDepth; i++) {
 			WorkflowRequest workflowRequest = nextStepsWorkFlowRequestList.get(i);
 			workflowRequest.setStateType(stateByName.get(TMSConstants.STATE_OPEN));
 			workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_NULL));

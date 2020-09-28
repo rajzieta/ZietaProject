@@ -288,8 +288,6 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
 		} else if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_REJECT)) {
 			// Request Rejected
-			workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_REJECT));
-			workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_REJECT));
 			long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(
 					tsInfo.getClientId(), TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_REJECTED, (short) 0).getId();
 			tsInfo.setStatusId(statusId);
@@ -307,10 +305,12 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			//change request raise by Santhosh, for reporting purpose.
 			workFlowRequest.setCurrentStep(1L);
 			
+			workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_REJECT));
+			workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_REJECT));
+			
 		} else if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_REVISE)) {
 			// Request sent for revise
-			workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_OPEN));
-			workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_REVISE));
+	
 			//set the status the default one
 			Long statuId = statusMasterRepository.findByClientIdAndStatusTypeAndIsDefaultAndIsDelete(
 					tsInfo.getClientId(), TMSConstants.TIMESHEET, Boolean.TRUE, (short) 0).getId();
@@ -320,6 +320,10 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			//Marking the current step(where final action taken) as 1 which is made by the previous step, 
 			//change request raise by Santhosh, for reporting purpose.
 			workFlowRequest.setCurrentStep(1L);
+			
+			workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_OPEN));
+			workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_REVISE));
+			
 			
 		}
 		

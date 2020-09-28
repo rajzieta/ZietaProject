@@ -123,6 +123,24 @@ public List<ProcessMasterDTO> getAllProcess() {
 		Pageable paging = PageRequest.of(pageNo, pageSize);
 		
 		Page<ProcessSteps> processsteps = getprocessStepsRepository.findAll(paging);
+		List<ProcessStepsDTO> processstepsDTOs = buildProcessSteps(processsteps);
+
+		return processstepsDTOs;
+
+	}
+	
+	public List<ProcessStepsDTO> getProcessStepsByClientIdByProjectId(long clientId, long projectId, Integer pageNo, Integer pageSize) throws Exception {
+
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		
+		Page<ProcessSteps> processsteps = getprocessStepsRepository.findByClientIdAndProjectIdOrderByStepId(clientId, projectId, pageable);
+		List<ProcessStepsDTO> processstepsDTOs = buildProcessSteps(processsteps);
+
+		return processstepsDTOs;
+
+	}
+	
+	private List<ProcessStepsDTO> buildProcessSteps(Page<ProcessSteps> processsteps) {
 		List<ProcessStepsDTO> processstepsDTOs = new ArrayList<ProcessStepsDTO>();
 		ProcessStepsDTO processStepDTO = null;
 
@@ -166,9 +184,7 @@ public List<ProcessMasterDTO> getAllProcess() {
 			processstepsDTOs.add(processStepDTO);
 		
 	}
-
 		return processstepsDTOs;
-
 	}
 	
 	

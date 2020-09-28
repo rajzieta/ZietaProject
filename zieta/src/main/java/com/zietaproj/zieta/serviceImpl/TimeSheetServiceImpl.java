@@ -154,7 +154,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		
 		List<TSInfo> tsinfoEntites = tSInfoRepository.saveAll(tsInfoList);
 //		enable for testing
-//		submitTimeSheet(tsinfoEntites); 
+		submitTimeSheet(tsinfoEntites); 
 
 		return tsinfoEntites;
 	}

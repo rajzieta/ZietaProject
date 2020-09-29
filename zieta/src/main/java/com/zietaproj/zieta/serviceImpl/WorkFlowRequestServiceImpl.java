@@ -393,9 +393,27 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
 	@Override
 	public List<WFRDetailsForApprover> findWorkFlowRequestsByApproverId(long approverId) {
+	/*	boolean isDatesValid = validateDates(startActiondate,endActionDate);
+		Date startDate = null;
+		Date endDate = null;
+		if(!isDatesValid) {
+			CurrentWeekUtil currentWeek = new CurrentWeekUtil(new Locale("en","IN"));
+			startDate = currentWeek.getFirstDay();
+			endDate = currentWeek.getLastDay();
+		}*/
+		
 		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverId(approverId);
 		List<WFRDetailsForApprover> wFRDetailsForApproverList = getWorkFlowRequestDetails(workFlowRequestList);
 		return wFRDetailsForApproverList;
+	}
+	
+	private boolean validateDates(Date startActiondate, Date endActionDate) {
+
+		boolean flag = false;
+		if (!(startActiondate == null) && !(endActionDate == null)) {
+			return true;
+		}
+		return flag;
 	}
 
 	@Override

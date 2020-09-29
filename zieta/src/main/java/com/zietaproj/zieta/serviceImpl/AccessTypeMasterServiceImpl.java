@@ -69,10 +69,11 @@ public class AccessTypeMasterServiceImpl implements AccessTypeMasterService {
 	}
 	
 	@Override
-	public void addAccessTypemaster(AccessTypeAddRequest accesstypeparam)
+	public AccessTypeMaster addAccessTypemaster(AccessTypeAddRequest accesstypeparam)
 	{
 		AccessTypeMaster accesstypemaster = modelMapper.map(accesstypeparam, AccessTypeMaster.class);
-		accesstypeMasterRepository.save(accesstypemaster);
+		accesstypemaster = accesstypeMasterRepository.save(accesstypemaster);
+		return accesstypemaster;
 	}
 
 	@Override

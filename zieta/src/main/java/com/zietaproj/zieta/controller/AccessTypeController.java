@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zietaproj.zieta.dto.AccessTypeMasterDTO;
 import com.zietaproj.zieta.dto.AccessTypeScreenMappingDTO;
+import com.zietaproj.zieta.model.AccessTypeMaster;
 import com.zietaproj.zieta.model.AccessTypeScreenMapping;
 import com.zietaproj.zieta.request.AccessScreensRequest;
 //import com.zietaproj.zieta.model.UserAccessType;
@@ -77,8 +78,9 @@ public class AccessTypeController {
 	
 	
 	@RequestMapping(value = "addAccessTypemaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void addAccessTypemaster(@Valid @RequestBody AccessTypeAddRequest accesstypemaster) {
-		accesstypemasterService.addAccessTypemaster(accesstypemaster);
+	public  ResponseEntity<AccessTypeMaster> addAccessTypemaster(@Valid @RequestBody AccessTypeAddRequest accesstypemaster) {
+		AccessTypeMaster accessTypeMaster =accesstypemasterService.addAccessTypemaster(accesstypemaster);
+		return new ResponseEntity<AccessTypeMaster>(accessTypeMaster, HttpStatus.OK);
 	}
 	
 	

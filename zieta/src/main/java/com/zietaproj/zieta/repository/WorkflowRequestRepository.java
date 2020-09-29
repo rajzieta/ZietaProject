@@ -11,7 +11,8 @@ import com.zietaproj.zieta.model.WorkflowRequest;
 @Repository
 public interface WorkflowRequestRepository extends JpaRepository<WorkflowRequest, Long> {
 	
-	
+	/*public List<WorkflowRequest> findByApproverIdAndActionDateBetweenOrderByIdAscIdAsc(long approverId, 
+	Date startActiondate, Date endActionDate);*/
 	public List<WorkflowRequest> findByApproverId(long approverId);
 	public List<WorkflowRequest> findByApproverIdAndCurrentStep(long approverId, long currentStep);
 

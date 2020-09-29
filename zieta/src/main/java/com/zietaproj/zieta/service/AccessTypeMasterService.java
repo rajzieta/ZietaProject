@@ -16,7 +16,7 @@ public interface AccessTypeMasterService {
 
 	public List<AccessTypeMasterDTO> getAllAccesstypes();
 
-	public void addAccessTypemaster(AccessTypeAddRequest accesstypeparam);
+	public AccessTypeMaster addAccessTypemaster(AccessTypeAddRequest accesstypeparam);
 	
 	public List<String> findByClientIdANDAccessTypeId(Long clientId,
 			  Long accessTypeId);

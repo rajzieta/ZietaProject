@@ -1,8 +1,11 @@
 package com.zietaproj.zieta.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -39,6 +42,7 @@ import com.zietaproj.zieta.response.WorkFlowComment;
 import com.zietaproj.zieta.response.WorkFlowHistoryModel;
 import com.zietaproj.zieta.response.WorkFlowRequestorData;
 import com.zietaproj.zieta.service.WorkFlowRequestService;
+import com.zietaproj.zieta.util.CurrentWeekUtil;
 import com.zietaproj.zieta.util.TSMUtil;
 
 
@@ -392,18 +396,34 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	}
 
 	@Override
-	public List<WFRDetailsForApprover> findWorkFlowRequestsByApproverId(long approverId) {
-	/*	boolean isDatesValid = validateDates(startActiondate,endActionDate);
-		Date startDate = null;
-		Date endDate = null;
+	public List<WFRDetailsForApprover> findWorkFlowRequestsByApproverId(long approverId, Date startActiondate, Date endActionDate) {
+		boolean isDatesValid = validateDates(startActiondate,endActionDate);
+		
 		if(!isDatesValid) {
 			CurrentWeekUtil currentWeek = new CurrentWeekUtil(new Locale("en","IN"));
-			startDate = currentWeek.getFirstDay();
-			endDate = currentWeek.getLastDay();
-		}*/
+			startActiondate =TSMUtil.getFormattedDate(currentWeek.getFirstDay());
+			endActionDate = TSMUtil.getFormattedDate(currentWeek.getLastDay());
+		}
 		
-		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverId(approverId);
-		List<WFRDetailsForApprover> wFRDetailsForApproverList = getWorkFlowRequestDetails(workFlowRequestList);
+		List<Long> actionTypes = new ArrayList<Long>();
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REJECT));
+		
+		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndActionDateBetweenAndActionTypeIn(
+				approverId, startActiondate, endActionDate,actionTypes);
+		HashMap<Long,WorkflowRequest > tempWFRMap = new HashMap<>();
+		for (WorkflowRequest workflowRequest : workFlowRequestList) {
+			if (tempWFRMap.containsKey(workflowRequest.getTsId())) {
+				if (tempWFRMap.get(workflowRequest.getTsId()).getStepId() < workflowRequest.getStepId()) {
+					tempWFRMap.put(workflowRequest.getTsId(), workflowRequest);
+				}
+
+			} else {
+				tempWFRMap.put(workflowRequest.getTsId(), workflowRequest);
+			}
+		}
+		List<WorkflowRequest> wfrCollection = new ArrayList<WorkflowRequest>(tempWFRMap.values());
+		List<WFRDetailsForApprover> wFRDetailsForApproverList = getWorkFlowRequestDetails(wfrCollection);
 		return wFRDetailsForApproverList;
 	}
 	

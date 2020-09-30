@@ -1,5 +1,7 @@
 package com.zietaproj.zieta.repository;
 
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,8 +13,8 @@ import com.zietaproj.zieta.model.WorkflowRequest;
 @Repository
 public interface WorkflowRequestRepository extends JpaRepository<WorkflowRequest, Long> {
 	
-	/*public List<WorkflowRequest> findByApproverIdAndActionDateBetweenOrderByIdAscIdAsc(long approverId, 
-	Date startActiondate, Date endActionDate);*/
+	public List<WorkflowRequest> findByApproverIdAndActionDateBetweenAndActionTypeIn(long approverId, 
+									Date startActiondate, Date endActionDate, Collection<Long> actionType);
 	public List<WorkflowRequest> findByApproverId(long approverId);
 	public List<WorkflowRequest> findByApproverIdAndCurrentStep(long approverId, long currentStep);
 

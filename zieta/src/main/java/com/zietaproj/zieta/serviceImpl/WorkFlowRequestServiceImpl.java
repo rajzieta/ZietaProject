@@ -113,7 +113,12 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	@Override
 	public List<WFRDetailsForApprover> findActiveWorkFlowRequestsByApproverId(long approverId) {
 		Long currentStepPointer = 1L;
-		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndCurrentStep(approverId,currentStepPointer);
+		List<Long> actionTypes = new ArrayList<Long>();
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REJECT));
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REVISE));
+		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndCurrentStepAndActionTypeNotIn(
+															approverId,currentStepPointer,actionTypes);
 		List<WFRDetailsForApprover> wFRDetailsForApproverList = getWorkFlowRequestDetails(workFlowRequestList);
 
 		return wFRDetailsForApproverList;
@@ -171,7 +176,8 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
 
 	public List<WorkFlowRequestorData> findByRequestorId(long requestorId) {
-		List<WorkflowRequest> workFlowRequestorItems = workflowRequestRepository.findByRequestorId(requestorId);
+		Long currentStepPointer = 1L;
+		List<WorkflowRequest> workFlowRequestorItems = workflowRequestRepository.findByRequestorIdAndCurrentStep(requestorId, currentStepPointer);
 		List<WorkFlowRequestorData> workFlowRequestorDataList = new ArrayList<WorkFlowRequestorData>();
 		WorkFlowRequestorData workFlowRequestorData = null;
 
@@ -408,6 +414,7 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 		List<Long> actionTypes = new ArrayList<Long>();
 		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
 		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REJECT));
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REVISE));
 		
 		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndActionDateBetweenAndActionTypeIn(
 				approverId, startActiondate, endActionDate,actionTypes);

@@ -13,8 +13,14 @@ import com.zietaproj.zieta.model.WorkflowRequest;
 @Repository
 public interface WorkflowRequestRepository extends JpaRepository<WorkflowRequest, Long> {
 	
+	
 	public List<WorkflowRequest> findByApproverIdAndActionDateBetweenAndActionTypeIn(long approverId, 
 									Date startActiondate, Date endActionDate, Collection<Long> actionType);
+	
+	/*@Query("select wfr from WorkflowRequest wfr where wfr.approverId =?1 and CAST(wfr.actionDate as DATE) between ?2 and ?3 and wfr.actionType not in ?4")
+	public List<WorkflowRequest> findByApproverIdAndActionDateGreaterThanEqualAndActionDateLessThanEqualAndActionTypeIn(long approverId, 
+			Date startActiondate, Date endActionDate, Collection<Long> actionType);*/
+	
 	public List<WorkflowRequest> findByApproverId(long approverId);
 	
 	

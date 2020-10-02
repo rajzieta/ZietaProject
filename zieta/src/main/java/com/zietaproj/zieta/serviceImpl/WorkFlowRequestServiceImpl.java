@@ -1,7 +1,7 @@
 package com.zietaproj.zieta.serviceImpl;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -409,6 +409,10 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			CurrentWeekUtil currentWeek = new CurrentWeekUtil(new Locale("en","IN"));
 			startActiondate =TSMUtil.getFormattedDate(currentWeek.getFirstDay());
 			endActionDate = TSMUtil.getFormattedDate(currentWeek.getLastDay());
+			Calendar c = Calendar.getInstance(); 
+			c.setTime(endActionDate); 
+			c.add(Calendar.DATE, 1);
+			endActionDate = c.getTime();
 		}
 		
 		List<Long> actionTypes = new ArrayList<Long>();

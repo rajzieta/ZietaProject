@@ -22,6 +22,9 @@ public class TimeSheetReport {
 	@Id
 	private String id;
 
+	@Column(name = "userid")
+	private Long userId;
+	
 	@Column(name = "client_id")
 	private Long clientId;
 

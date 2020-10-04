@@ -47,6 +47,7 @@ import com.zietaproj.zieta.util.TSMUtil;
 
 
 @Service
+@Transactional
 public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
 	@Autowired
@@ -205,6 +206,16 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			List<TSTimeEntries> tsTElist = tSTimeEntriesRepository.findByTsId(tsInfo.getId());
 			workFlowRequestorData.setTsInfo(tsInfo);
 			workFlowRequestorData.setTsTimeEntries(tsTElist);
+			workFlowRequestorData
+					.setProjectName(projectInfoRepository.findById(tsInfo.getProjectId()).get().getProjectName());
+			workFlowRequestorData
+					.setClientName(clientInfoRepository.findById(workflowRequest.getClientId()).get().getClientName());
+			TaskInfo taskInfoMaster = taskInfoRepository.findById(tsInfo.getTaskId()).get();
+			workFlowRequestorData.setTaskName(taskInfoMaster.getTaskDescription());
+
+			ActivityMaster activityMaster = activityMasterRepository.findById(tsInfo.getActivityId()).get();
+			workFlowRequestorData.setActivityName(activityMaster.getActivityDesc());
+
 
 			workFlowRequestorDataList.add(workFlowRequestorData);
 		}
@@ -403,16 +414,13 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
 	@Override
 	public List<WFRDetailsForApprover> findWorkFlowRequestsByApproverId(long approverId, Date startActiondate, Date endActionDate) {
-		boolean isDatesValid = validateDates(startActiondate,endActionDate);
+		boolean isDatesValid = TSMUtil.validateDates(startActiondate,endActionDate);
 		
+		//defaulting to the current week date range, when there is no date range mentioned from front end.
 		if(!isDatesValid) {
 			CurrentWeekUtil currentWeek = new CurrentWeekUtil(new Locale("en","IN"));
-			startActiondate =TSMUtil.getFormattedDate(currentWeek.getFirstDay());
-			endActionDate = TSMUtil.getFormattedDate(currentWeek.getLastDay());
-			Calendar c = Calendar.getInstance(); 
-			c.setTime(endActionDate); 
-			c.add(Calendar.DATE, 1);
-			endActionDate = c.getTime();
+			startActiondate =currentWeek.getFirstDay();
+			endActionDate = currentWeek.getLastDay();
 		}
 		
 		List<Long> actionTypes = new ArrayList<Long>();
@@ -438,14 +446,6 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 		return wFRDetailsForApproverList;
 	}
 	
-	private boolean validateDates(Date startActiondate, Date endActionDate) {
-
-		boolean flag = false;
-		if (!(startActiondate == null) && !(endActionDate == null)) {
-			return true;
-		}
-		return flag;
-	}
 
 	@Override
 	public List<WorkFlowComment> getWFRCommentsChain(long tsId) {

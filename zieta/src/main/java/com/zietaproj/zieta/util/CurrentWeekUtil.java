@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -26,12 +27,17 @@ import java.util.Locale;
 	public Date getFirstDay() {
 		
 		LocalDate date=  LocalDate.now(TZ).with(TemporalAdjusters.previousOrSame(this.firstDayOfWeek));
-		return Date.from(date.atStartOfDay(TZ).toInstant());
+		return TSMUtil.getFormattedDate(Date.from(date.atStartOfDay(TZ).toInstant()));
 	}
 
 	public Date getLastDay() {
 		LocalDate date =  LocalDate.now(TZ).with(TemporalAdjusters.nextOrSame(this.lastDayOfWeek));
-		return Date.from(date.atStartOfDay(TZ).toInstant());
+		Date endDate = TSMUtil.getFormattedDate(Date.from(date.atStartOfDay(TZ).toInstant()));
+		 	Calendar c = Calendar.getInstance(); 
+			c.setTime(endDate); 
+			c.add(Calendar.DATE, 1);
+			endDate = c.getTime();
+		return endDate;
 	}
 
 	@Override

@@ -25,7 +25,6 @@ import com.zietaproj.zieta.model.ProcessSteps;
 import com.zietaproj.zieta.model.ProjectInfo;
 import com.zietaproj.zieta.model.TaskInfo;
 import com.zietaproj.zieta.repository.ClientInfoRepository;
-import com.zietaproj.zieta.repository.GetProcessStepsRepository;
 import com.zietaproj.zieta.repository.ProcessConfigRepository;
 import com.zietaproj.zieta.repository.ProcessMasterRepository;
 import com.zietaproj.zieta.repository.ProcessStepsRepository;
@@ -47,9 +46,6 @@ public class ProcessServiceImpl implements ProcessService {
 	
 	@Autowired
 	ProcessStepsRepository processStepsRepository;
-	
-	@Autowired
-	GetProcessStepsRepository getprocessStepsRepository;
 	
 	@Autowired
 	ProcessConfigRepository processConfigRepository;
@@ -122,7 +118,7 @@ public List<ProcessMasterDTO> getAllProcess() {
 
 		Pageable paging = PageRequest.of(pageNo, pageSize);
 		
-		Page<ProcessSteps> processsteps = getprocessStepsRepository.findAll(paging);
+		Page<ProcessSteps> processsteps = processStepsRepository.findAll(paging);
 		List<ProcessStepsDTO> processstepsDTOs = buildProcessSteps(processsteps);
 
 		return processstepsDTOs;
@@ -133,7 +129,7 @@ public List<ProcessMasterDTO> getAllProcess() {
 
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		
-		Page<ProcessSteps> processsteps = getprocessStepsRepository.findByClientIdAndProjectIdOrderByStepId(clientId, projectId, pageable);
+		Page<ProcessSteps> processsteps = processStepsRepository.findByClientIdAndProjectIdOrderByStepId(clientId, projectId, pageable);
 		List<ProcessStepsDTO> processstepsDTOs = buildProcessSteps(processsteps);
 
 		return processstepsDTOs;

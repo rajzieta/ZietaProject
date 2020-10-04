@@ -52,7 +52,7 @@ public class TimeSheetController {
 	}
 	
 	
-	@ApiOperation(value = "Lists TimeSheet entries based on the ts_date range provided, for the provided client and user",notes="Table reference: ts_info")
+	@ApiOperation(value = "Lists TimeSheet entries based on the ts_date range, client and user filters",notes="Table reference: ts_info, ts_timentries")
 	@RequestMapping(value = "getTimeEntriesByUserDates", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<TSInfoModel> getTimeEntriesByUserDates(@RequestParam(required = true) Long clientId, 
 			@RequestParam(required = true) Long userId, 

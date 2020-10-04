@@ -6,6 +6,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -211,7 +212,18 @@ public class TSMUtil {
 	    } 
 	
 	
-	
+	public static boolean validateDates(Date startActiondate, Date endActionDate) {
+
+		boolean flag = false;
+		if (!(startActiondate == null) && !(endActionDate == null)) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(endActionDate);
+			c.add(Calendar.DATE, 1);
+			endActionDate = c.getTime();
+			return true;
+		}
+		return flag;
+	}	
 
 
 }

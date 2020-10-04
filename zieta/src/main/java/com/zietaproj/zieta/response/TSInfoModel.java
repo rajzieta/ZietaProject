@@ -1,6 +1,9 @@
 package com.zietaproj.zieta.response;
 
+import java.util.List;
+
 import com.zietaproj.zieta.model.TSInfo;
+import com.zietaproj.zieta.model.TSTimeEntries;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +19,7 @@ public class TSInfoModel {
 	String activityDescription;
 	
 	TSInfo tsInfo;
+	List<TSTimeEntries> timeEntries;
 	
 	String clientCode;
 

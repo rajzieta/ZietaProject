@@ -1,6 +1,8 @@
 package com.zietaproj.zieta.serviceImpl;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -48,7 +50,11 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
 			endDate = currentWeek.getLastDay();
 		}else {
 			startDate = TSMUtil.getFormattedDate(startDate);
-			endDate =  TSMUtil.getFormattedDate(startDate);
+			endDate =  TSMUtil.getFormattedDate(endDate);
+			Calendar c = Calendar.getInstance();
+			c.setTime(endDate);
+			c.add(Calendar.DATE, 1);
+			endDate = c.getTime();
 		}
 
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
@@ -71,8 +77,14 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
 			endDate = currentWeek.getLastDay();
 		}else {
 			startDate = TSMUtil.getFormattedDate(startDate);
-			endDate =  TSMUtil.getFormattedDate(startDate);
+			endDate =  TSMUtil.getFormattedDate(endDate);
+			Calendar c = Calendar.getInstance();
+			c.setTime(endDate);
+			c.add(Calendar.DATE, 1);
+			endDate = c.getTime();
 		}
+		
+		
 
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		Page<TimeSheetReport> timeSheetList = timeSheetReportRepository
@@ -92,19 +104,26 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
 			CurrentWeekUtil currentWeek = new CurrentWeekUtil(new Locale("en", "IN"));
 			startDate = currentWeek.getFirstDay();
 			endDate = currentWeek.getLastDay();
+		}else {
+			startDate = TSMUtil.getFormattedDate(startDate);
+			endDate =  TSMUtil.getFormattedDate(endDate);
+			Calendar c = Calendar.getInstance();
+			c.setTime(endDate);
+			c.add(Calendar.DATE, 1);
+			endDate = c.getTime();
 		}
 		return timeSheetReportRepository.findByClientIdAndProjectIdAndStateNameAndRequestDateBetween(clientId, projectId,
 				stateName, startDate, endDate);
 	}
 
 	@Override
-	public void downloadTimeSheetReport(HttpServletResponse response,long clientId,
+	public ByteArrayInputStream downloadTimeSheetReport(HttpServletResponse response,long clientId,
 			long projectId, String stateName, Date startDate, Date endDate ) throws IOException {
 		ReportUtil report = new ReportUtil();
 		
 		List<TimeSheetReport> timeSheetReportList = findByClientIdAndProjectIdAndStateNameAndRequestDateBetween(clientId, projectId, 
 				stateName, startDate, endDate);
-		report.downloadReport(response, timeSheetReportList);
+		return report.downloadReport(response, timeSheetReportList);
 		
 	}
 	

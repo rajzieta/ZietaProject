@@ -1,9 +1,10 @@
 package com.zietaproj.zieta.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -104,15 +105,13 @@ public class ReportUtil {
         }
     }
      
-    public void downloadReport(HttpServletResponse response, List<TimeSheetReport> timeSheetList) throws IOException {
+    public ByteArrayInputStream downloadReport(HttpServletResponse response, List<TimeSheetReport> timeSheetList) throws IOException {
         writeHeaderLine();
         writeDataLines(timeSheetList);
-         
-        ServletOutputStream outputStream = response.getOutputStream();
-        workbook.write(outputStream);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        workbook.write(out);
         workbook.close();
-        outputStream.flush();
-        outputStream.close();
+        return new ByteArrayInputStream(out.toByteArray());
          
     }
 }

@@ -1,5 +1,6 @@
 package com.zietaproj.zieta.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +26,7 @@ public interface TimeSheetReportService {
 	public List<TimeSheetReport> findByClientIdAndProjectIdAndStateNameAndRequestDateBetween(long clientId, long projectId, 
 			String stateName, Date startDate, Date endDate);
 	
-	public void downloadTimeSheetReport(HttpServletResponse response, long clientId,
+	public ByteArrayInputStream downloadTimeSheetReport(HttpServletResponse response, long clientId,
 			long projectId, String stateName, Date startDate, Date endDate) throws IOException;
 
 }

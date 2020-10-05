@@ -46,6 +46,9 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
 			CurrentWeekUtil currentWeek = new CurrentWeekUtil(new Locale("en", "IN"));
 			startDate = currentWeek.getFirstDay();
 			endDate = currentWeek.getLastDay();
+		}else {
+			startDate = TSMUtil.getFormattedDate(startDate);
+			endDate =  TSMUtil.getFormattedDate(startDate);
 		}
 
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
@@ -66,6 +69,9 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
 			CurrentWeekUtil currentWeek = new CurrentWeekUtil(new Locale("en", "IN"));
 			startDate = currentWeek.getFirstDay();
 			endDate = currentWeek.getLastDay();
+		}else {
+			startDate = TSMUtil.getFormattedDate(startDate);
+			endDate =  TSMUtil.getFormattedDate(startDate);
 		}
 
 		Pageable pageable = PageRequest.of(pageNo, pageSize);

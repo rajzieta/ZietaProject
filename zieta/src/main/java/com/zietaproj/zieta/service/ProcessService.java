@@ -16,6 +16,10 @@ public interface ProcessService {
 
 	public List<ProcessStepsDTO> getAllProcessSteps(Integer pageNo, Integer pageSize) throws Exception;
 
+	
+	public List<ProcessStepsDTO> getProcessStepsByClientIdByProjectId(long clientId, long projectId,
+			Integer pageNo, Integer pageSize) throws Exception;
+
 	public void addProcessSteps(@Valid ProcessSteps processstep);
 
 	public void editProcessStepsById(@Valid ProcessStepsDTO processstepsDto) throws Exception;

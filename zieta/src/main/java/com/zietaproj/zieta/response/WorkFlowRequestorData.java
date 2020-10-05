@@ -22,6 +22,10 @@ public class WorkFlowRequestorData {
 	String status;
 	List<TSTimeEntries> tsTimeEntries;
 	TSInfo tsInfo;
+	String projectName;
+	String clientName;
+	String taskName;
+	String activityName;
 	
 
 }

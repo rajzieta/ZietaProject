@@ -1,10 +1,12 @@
 package com.zietaproj.zieta.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,10 +64,12 @@ public class TSWorkFlowController {
 	}
 
 	@RequestMapping(value = "getWorkFlowRequestsByApprover", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<WFRDetailsForApprover> getWorkFlowRequestsByApprover(@RequestParam(required = true) Long approverId) {
+	public List<WFRDetailsForApprover> getWorkFlowRequestsByApprover(@RequestParam(required = true) Long approverId,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startActiondate, 
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endActionDate) {
 		List<WFRDetailsForApprover> workFlowRequestList = null;
 		try {
-			workFlowRequestList = workFlowRequestService.findWorkFlowRequestsByApproverId(approverId);
+			workFlowRequestList = workFlowRequestService.findWorkFlowRequestsByApproverId(approverId, startActiondate, endActionDate);
 		} catch (Exception e) {
 
 			log.error("Error Occured in TSWorkFlowController#getWorkFlowRequestsByApprover", e);

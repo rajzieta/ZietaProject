@@ -83,6 +83,18 @@ public class ProcessController {
 	}
 	
 	
+	@RequestMapping(value = "getProcessStepsByProjectIdByClientId", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<ProcessStepsDTO> getProcessStepsByProjectIdByClientId(@RequestParam Long clientId,@RequestParam Long projectId,
+			@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
+		List<ProcessStepsDTO> processSteps = null;
+		try {
+			processSteps = processService.getProcessStepsByClientIdByProjectId(clientId, projectId, pageNo, pageSize);
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in ProcessController#getProcessStepsByProjectIdByClientId",e);
+		}
+		return processSteps;
+	}
+	
 	@ApiOperation(value = "creates entries in the process_steps table", notes = "Table reference: process_steps")
 	@RequestMapping(value = "addProcessSteps", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void addProcessSteps(@Valid @RequestBody ProcessSteps processstep) {

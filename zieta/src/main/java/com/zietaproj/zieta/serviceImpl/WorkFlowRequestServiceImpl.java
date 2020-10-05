@@ -1,8 +1,11 @@
 package com.zietaproj.zieta.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -39,10 +42,12 @@ import com.zietaproj.zieta.response.WorkFlowComment;
 import com.zietaproj.zieta.response.WorkFlowHistoryModel;
 import com.zietaproj.zieta.response.WorkFlowRequestorData;
 import com.zietaproj.zieta.service.WorkFlowRequestService;
+import com.zietaproj.zieta.util.CurrentWeekUtil;
 import com.zietaproj.zieta.util.TSMUtil;
 
 
 @Service
+@Transactional
 public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
 	@Autowired
@@ -109,7 +114,12 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	@Override
 	public List<WFRDetailsForApprover> findActiveWorkFlowRequestsByApproverId(long approverId) {
 		Long currentStepPointer = 1L;
-		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndCurrentStep(approverId,currentStepPointer);
+		List<Long> actionTypes = new ArrayList<Long>();
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REJECT));
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REVISE));
+		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndCurrentStepAndActionTypeNotIn(
+															approverId,currentStepPointer,actionTypes);
 		List<WFRDetailsForApprover> wFRDetailsForApproverList = getWorkFlowRequestDetails(workFlowRequestList);
 
 		return wFRDetailsForApproverList;
@@ -167,7 +177,8 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
 
 	public List<WorkFlowRequestorData> findByRequestorId(long requestorId) {
-		List<WorkflowRequest> workFlowRequestorItems = workflowRequestRepository.findByRequestorId(requestorId);
+		Long currentStepPointer = 1L;
+		List<WorkflowRequest> workFlowRequestorItems = workflowRequestRepository.findByRequestorIdAndCurrentStep(requestorId, currentStepPointer);
 		List<WorkFlowRequestorData> workFlowRequestorDataList = new ArrayList<WorkFlowRequestorData>();
 		WorkFlowRequestorData workFlowRequestorData = null;
 
@@ -195,6 +206,16 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			List<TSTimeEntries> tsTElist = tSTimeEntriesRepository.findByTsId(tsInfo.getId());
 			workFlowRequestorData.setTsInfo(tsInfo);
 			workFlowRequestorData.setTsTimeEntries(tsTElist);
+			workFlowRequestorData
+					.setProjectName(projectInfoRepository.findById(tsInfo.getProjectId()).get().getProjectName());
+			workFlowRequestorData
+					.setClientName(clientInfoRepository.findById(workflowRequest.getClientId()).get().getClientName());
+			TaskInfo taskInfoMaster = taskInfoRepository.findById(tsInfo.getTaskId()).get();
+			workFlowRequestorData.setTaskName(taskInfoMaster.getTaskDescription());
+
+			ActivityMaster activityMaster = activityMasterRepository.findById(tsInfo.getActivityId()).get();
+			workFlowRequestorData.setActivityName(activityMaster.getActivityDesc());
+
 
 			workFlowRequestorDataList.add(workFlowRequestorData);
 		}
@@ -288,8 +309,6 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
 		} else if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_REJECT)) {
 			// Request Rejected
-			workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_REJECT));
-			workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_REJECT));
 			long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(
 					tsInfo.getClientId(), TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_REJECTED, (short) 0).getId();
 			tsInfo.setStatusId(statusId);
@@ -307,10 +326,12 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			//change request raise by Santhosh, for reporting purpose.
 			workFlowRequest.setCurrentStep(1L);
 			
+			workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_REJECT));
+			workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_REJECT));
+			
 		} else if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_REVISE)) {
 			// Request sent for revise
-			workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_OPEN));
-			workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_REVISE));
+	
 			//set the status the default one
 			Long statuId = statusMasterRepository.findByClientIdAndStatusTypeAndIsDefaultAndIsDelete(
 					tsInfo.getClientId(), TMSConstants.TIMESHEET, Boolean.TRUE, (short) 0).getId();
@@ -320,6 +341,10 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			//Marking the current step(where final action taken) as 1 which is made by the previous step, 
 			//change request raise by Santhosh, for reporting purpose.
 			workFlowRequest.setCurrentStep(1L);
+			
+			workFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_OPEN));
+			workFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_REVISE));
+			
 			
 		}
 		
@@ -388,11 +413,39 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	}
 
 	@Override
-	public List<WFRDetailsForApprover> findWorkFlowRequestsByApproverId(long approverId) {
-		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverId(approverId);
-		List<WFRDetailsForApprover> wFRDetailsForApproverList = getWorkFlowRequestDetails(workFlowRequestList);
+	public List<WFRDetailsForApprover> findWorkFlowRequestsByApproverId(long approverId, Date startActiondate, Date endActionDate) {
+		boolean isDatesValid = TSMUtil.validateDates(startActiondate,endActionDate);
+		
+		//defaulting to the current week date range, when there is no date range mentioned from front end.
+		if(!isDatesValid) {
+			CurrentWeekUtil currentWeek = new CurrentWeekUtil(new Locale("en","IN"));
+			startActiondate =currentWeek.getFirstDay();
+			endActionDate = currentWeek.getLastDay();
+		}
+		
+		List<Long> actionTypes = new ArrayList<Long>();
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REJECT));
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REVISE));
+		
+		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndActionDateBetweenAndActionTypeIn(
+				approverId, startActiondate, endActionDate,actionTypes);
+		HashMap<Long,WorkflowRequest > tempWFRMap = new HashMap<>();
+		for (WorkflowRequest workflowRequest : workFlowRequestList) {
+			if (tempWFRMap.containsKey(workflowRequest.getTsId())) {
+				if (tempWFRMap.get(workflowRequest.getTsId()).getStepId() < workflowRequest.getStepId()) {
+					tempWFRMap.put(workflowRequest.getTsId(), workflowRequest);
+				}
+
+			} else {
+				tempWFRMap.put(workflowRequest.getTsId(), workflowRequest);
+			}
+		}
+		List<WorkflowRequest> wfrCollection = new ArrayList<WorkflowRequest>(tempWFRMap.values());
+		List<WFRDetailsForApprover> wFRDetailsForApproverList = getWorkFlowRequestDetails(wfrCollection);
 		return wFRDetailsForApproverList;
 	}
+	
 
 	@Override
 	public List<WorkFlowComment> getWFRCommentsChain(long tsId) {

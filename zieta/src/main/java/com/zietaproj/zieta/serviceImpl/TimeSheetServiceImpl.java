@@ -3,6 +3,7 @@ package com.zietaproj.zieta.serviceImpl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -39,6 +40,8 @@ import com.zietaproj.zieta.request.UpdateTimesheetByIdRequest;
 import com.zietaproj.zieta.response.TSInfoModel;
 import com.zietaproj.zieta.response.TimeEntriesByTimesheetIDResponse;
 import com.zietaproj.zieta.service.TimeSheetService;
+import com.zietaproj.zieta.util.CurrentWeekUtil;
+import com.zietaproj.zieta.util.TSMUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -91,18 +94,27 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	
 	
 	/**
-	 *  This methods returns ts_info entries based on the date range of ts_date column 
+	 *  This methods returns ts_info entries and its associated tstimeentries based on the date range of ts_date column 
 	 *  and filters based on the userid and clientid
 	 */
 	@Override
 	public List<TSInfoModel> getTimeEntriesByUserDates(Long clientId, Long userId, Date startDate, Date endDate) {
 		short notDeleted=0;
 		List<TSInfoModel> tsInfoModelList = new ArrayList<TSInfoModel>();
+		
+		boolean isDatesValid = TSMUtil.validateDates(startDate,endDate);
+		if(!isDatesValid) {
+			CurrentWeekUtil currentWeek = new CurrentWeekUtil(new Locale("en","IN"));
+			startDate =currentWeek.getFirstDay();
+			endDate = currentWeek.getLastDay();
+		}
 		List<TSInfo> tsInfoList = tSInfoRepository.findByClientIdAndUserIdAndIsDeleteAndTsDateBetweenOrderByTaskActivityIdAscIdAsc(clientId, 
 				userId, notDeleted, startDate, endDate);
 		for (TSInfo tsInfo : tsInfoList) {
 			TSInfoModel taskInfoModel = new TSInfoModel();
 			taskInfoModel.setTsInfo(tsInfo);
+			List<TSTimeEntries> timeEntries = tstimeentriesRepository.findByTsIdAndIsDelete(tsInfo.getId(), notDeleted);
+			taskInfoModel.setTimeEntries(timeEntries);
 			if(tsInfo.getActivityId() != null && tsInfo.getActivityId() !=0) {
 				ActivityMaster activityEntity = activityMasterRepository.findById(tsInfo.getActivityId()).get();
 				taskInfoModel.setActivityCode(activityEntity.getActivityCode());
@@ -129,7 +141,6 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 			
 			taskInfoModel.setClientCode(clientInfoRepository.findById(tsInfo.getClientId()).get().getClientCode());
 			taskInfoModel.setClientDescription(clientInfoRepository.findById(tsInfo.getClientId()).get().getClientName());
-			
 			tsInfoModelList.add(taskInfoModel);
 			
 		}

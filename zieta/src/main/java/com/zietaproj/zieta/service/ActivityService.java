@@ -2,6 +2,8 @@ package com.zietaproj.zieta.service;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.zietaproj.zieta.dto.ActivityMasterDTO;
 import com.zietaproj.zieta.model.ActivityMaster;
 import com.zietaproj.zieta.request.AcitivityRequest;
@@ -20,7 +22,7 @@ public interface ActivityService {
 
 	public List<ActivitiesByClientResponse> getActivitiesByClient(Long clientId);
 	
-	public void  addActivitiesByClientProjectTask(ActivityTaskUserMappingRequest activityTaskUserMappingRequest);
+	public void  addActivitiesByClientProjectTask(@Valid List<ActivityTaskUserMappingRequest> activityTaskUserMappingRequest);
 	
 	public void editActivitiesById(AcitivityRequest acitivityRequest) throws Exception;
 

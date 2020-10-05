@@ -101,7 +101,7 @@ public class ActivityMasterController {
 	
 	@ApiOperation(value = "Maps activities with task and then with user", notes = "Table reference: task_activity")
 	@RequestMapping(value = "addActivitiesByClientProjectTask", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void addActivitiesByClientProjectTask(@Valid @RequestBody ActivityTaskUserMappingRequest activityTaskUserMappingRequest) {
+	public void addActivitiesByClientProjectTask(@Valid @RequestBody List<ActivityTaskUserMappingRequest> activityTaskUserMappingRequest) {
 	 activityService.addActivitiesByClientProjectTask(activityTaskUserMappingRequest);
 	}
 	

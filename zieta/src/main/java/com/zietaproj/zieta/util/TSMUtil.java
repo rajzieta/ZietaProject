@@ -216,10 +216,7 @@ public class TSMUtil {
 
 		boolean flag = false;
 		if (!(startActiondate == null) && !(endActionDate == null)) {
-			Calendar c = Calendar.getInstance();
-			c.setTime(endActionDate);
-			c.add(Calendar.DATE, 1);
-			endActionDate = c.getTime();
+			
 			return true;
 		}
 		return flag;

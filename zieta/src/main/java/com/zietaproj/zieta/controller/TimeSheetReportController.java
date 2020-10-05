@@ -1,5 +1,6 @@
 package com.zietaproj.zieta.controller;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -10,9 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -79,23 +85,24 @@ public class TimeSheetReportController {
 		return timeSheetReport;
 	}
 	
-	@RequestMapping(value = "downloadTimeSheet", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-	public void downloadTimeSheet(HttpServletResponse response,
+	@GetMapping("/download/timesheet")
+	public ResponseEntity<Resource> downloadTimeSheet(HttpServletResponse response,
 			@RequestParam Long clientId,
 			@RequestParam Long projectId, @RequestParam String stateName,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) throws IOException {
-		response.setContentType("application/octet-stream");
+
+		
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 		String currentDateTime = dateFormatter.format(new Date());
-
-		String headerKey = "Content-Disposition";
-		String headerValue = "attachment; filename=timesheet_" + currentDateTime + ".xlsx";
-		response.setHeader(headerKey, headerValue);
-
-		timeSheetReportService.downloadTimeSheetReport(response, clientId, projectId, stateName, startDate, endDate);
-		
-		System.out.print("!___ Download Complete");
+		String filename = "timesheet_" + currentDateTime + ".xlsx";
+		HttpHeaders header = new HttpHeaders();
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+filename);
+        ByteArrayInputStream bri = timeSheetReportService.downloadTimeSheetReport(
+				 response, clientId, projectId, stateName, startDate, endDate);
+        InputStreamResource file = new InputStreamResource(bri);
+        
+		return ResponseEntity.ok().headers(header).body(file);
 	}
 
 }

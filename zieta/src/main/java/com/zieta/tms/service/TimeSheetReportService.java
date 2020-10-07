@@ -15,18 +15,10 @@ import com.zieta.tms.model.TimeSheetReport;
 @Transactional
 public interface TimeSheetReportService {
 
-	public Page<TimeSheetReport> getAllTimeSheets(Integer pageNo, Integer pageSize);
-	
-	public Page<TimeSheetReport> findByClientIdAndStateNameAndRequestDateBetween(long clientId, 
-					String stateName, Date startDate, Date endDate, Integer pageNo, Integer pageSize);
-	
-	public Page<TimeSheetReport> findByClientIdAndProjectIdAndStateNameAndRequestDateBetween(long clientId,
-			long projectId, String stateName, Date startDate, Date endDate, Integer pageNo, Integer pageSize);
-	
-	public List<TimeSheetReport> findByClientIdAndProjectIdAndStateNameAndRequestDateBetween(long clientId, long projectId, 
-			String stateName, Date startDate, Date endDate);
-	
-	public ByteArrayInputStream downloadTimeSheetReport(HttpServletResponse response, long clientId,
-			long projectId, String stateName, Date startDate, Date endDate) throws IOException;
+	public Page<TimeSheetReport> findAll(long clientId, long projectId, String empId, String stateName, Date startDate,
+			Date endDate, Integer pageNo, Integer pageSize);
+
+	public ByteArrayInputStream downloadTimeSheetReport(HttpServletResponse response, long clientId, long projectId,
+			String stateName, String empId, Date startDate, Date endDate) throws IOException;
 
 }

@@ -39,45 +39,16 @@ public class TimeSheetReportController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TimeSheetReportController.class);
 
-	@RequestMapping(value = "getAllTimeSheetsReport", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Page<TimeSheetReport> getAllTimeSheetsReport(@RequestParam(defaultValue = "0") Integer pageNo,
-			@RequestParam(defaultValue = "10") Integer pageSize) {
-		Page<TimeSheetReport> timeSheetReport = null;
-		try {
-			timeSheetReport = timeSheetReportService.getAllTimeSheets(pageNo, pageSize);
-			LOGGER.info("Total number of timesheet entries: " + timeSheetReport.getSize());
-		} catch (Exception e) {
-			LOGGER.error("Error Occured in getAllTimeSheetsReport", e);
-		}
-		return timeSheetReport;
-	}
-
-	@RequestMapping(value = "getByClientIdAndStateName", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Page<TimeSheetReport> getByClientIdAndStateName(@RequestParam Long clientId, @RequestParam String stateName,
+	@RequestMapping(value = "getReports", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public Page<TimeSheetReport> getReports(@RequestParam Long clientId,@RequestParam(defaultValue = "0", required = false) Long projectId,
+			@RequestParam(required = false) String empId, @RequestParam(required = false) String stateName,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
 			@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
 		Page<TimeSheetReport> timeSheetReport = null;
 		try {
-			timeSheetReport = timeSheetReportService.findByClientIdAndStateNameAndRequestDateBetween(clientId,
-					stateName, startDate, endDate, pageNo, pageSize);
-			LOGGER.info("Total number of timesheet entries: " + timeSheetReport.getSize());
-		} catch (Exception e) {
-			LOGGER.error("Error Occured in getByClientIdAndStateNameAndRequestDateBetween", e);
-		}
-		return timeSheetReport;
-	}
-
-	@RequestMapping(value = "getByClientIdAndProjectIdAndStateName", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Page<TimeSheetReport> getByClientIdAndProjectIdAndStateName(@RequestParam Long clientId,
-			@RequestParam Long projectId, @RequestParam String stateName,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
-			@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
-		Page<TimeSheetReport> timeSheetReport = null;
-		try {
-			timeSheetReport = timeSheetReportService.findByClientIdAndProjectIdAndStateNameAndRequestDateBetween(
-					clientId, projectId, stateName, startDate, endDate, pageNo, pageSize);
+			timeSheetReport = timeSheetReportService.findAll(
+					clientId, projectId, empId, stateName, startDate, endDate, pageNo, pageSize);
 			LOGGER.info("Total number of timesheet entries: " + timeSheetReport.getSize());
 		} catch (Exception e) {
 			LOGGER.error("Error Occured in getByClientIdAndProjectIdAndStateNameAndRequestDateBetween", e);
@@ -85,10 +56,12 @@ public class TimeSheetReportController {
 		return timeSheetReport;
 	}
 	
-	@GetMapping("/download/timesheet")
+	@GetMapping("/download/timesheetReport")
 	public ResponseEntity<Resource> downloadTimeSheet(HttpServletResponse response,
 			@RequestParam Long clientId,
-			@RequestParam Long projectId, @RequestParam String stateName,
+			@RequestParam(defaultValue = "0", required = false) Long projectId, 
+			@RequestParam(required = false) String stateName,
+			@RequestParam(required = false) String empId,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) throws IOException {
 
@@ -99,7 +72,7 @@ public class TimeSheetReportController {
 		HttpHeaders header = new HttpHeaders();
         header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+filename);
         ByteArrayInputStream bri = timeSheetReportService.downloadTimeSheetReport(
-				 response, clientId, projectId, stateName, startDate, endDate);
+				 response, clientId, projectId, stateName, empId, startDate, endDate);
         InputStreamResource file = new InputStreamResource(bri);
         
 		return ResponseEntity.ok().headers(header).body(file);

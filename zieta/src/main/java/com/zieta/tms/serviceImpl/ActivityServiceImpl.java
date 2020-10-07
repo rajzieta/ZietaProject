@@ -156,10 +156,13 @@ public class ActivityServiceImpl implements ActivityService {
 	
 	
 	@Override
-	public void editActivitiesByClientProjectTask(ActivityTaskUserMappingRequest activityTaskUserMappingRequest) {
+	@Transactional
+	public void editActivitiesByClientProjectTask(@Valid List<ActivityTaskUserMappingRequest> activityTaskUserMappingRequest) {
 		
-			doUpSert(activityTaskUserMappingRequest);
-
+		for (ActivityTaskUserMappingRequest activityTaskUserMappingRequests : activityTaskUserMappingRequest)
+		{
+			doUpSert(activityTaskUserMappingRequests);
+		}
 	}
 	
 	

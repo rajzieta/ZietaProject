@@ -25,7 +25,7 @@ public interface ActivityService {
 	
 	public void editActivitiesById(AcitivityRequest acitivityRequest) throws Exception;
 
-	public void editActivitiesByClientProjectTask(ActivityTaskUserMappingRequest activityTaskUserMappingRequest);
+	public void editActivitiesByClientProjectTask(@Valid List<ActivityTaskUserMappingRequest> activityTaskUserMappingRequest);
 	
 	public List<ActivitiesByClientProjectTaskResponse> getActivitesByClientProjectTask(long clientId,
 			long projectId,long taskId);

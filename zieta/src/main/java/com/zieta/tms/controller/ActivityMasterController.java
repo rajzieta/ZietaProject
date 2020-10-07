@@ -114,7 +114,7 @@ public class ActivityMasterController {
 	
 	@ApiOperation(value = "Edits the entries from the task_activity table", notes = "Table reference: task_activity")
 	@RequestMapping(value = "editActivitiesByClientProjectTask", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void editActivitiesByClientProjectTask(@Valid @RequestBody ActivityTaskUserMappingRequest activityTaskUserMappingRequest) throws Exception {
+	public void editActivitiesByClientProjectTask(@Valid @RequestBody List<ActivityTaskUserMappingRequest> activityTaskUserMappingRequest) throws Exception {
 		activityService.editActivitiesByClientProjectTask(activityTaskUserMappingRequest);
 		
 	}

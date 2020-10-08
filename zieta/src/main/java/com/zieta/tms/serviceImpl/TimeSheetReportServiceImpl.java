@@ -57,7 +57,7 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
 			endDate = c.getTime();
 		}
 		
-		return findAll(startDate, endDate, stateName, empId,clientId, pageNo, pageSize);
+		return findAll(startDate, endDate, stateName, empId, clientId, projectId, pageNo, pageSize);
 	}
 
 
@@ -66,13 +66,13 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
 			long projectId, String stateName, String empId, Date startDate, Date endDate ) throws IOException {
 		ReportUtil report = new ReportUtil();
 		
-		List<TimeSheetReport> timeSheetReportList = downloadAll(startDate, endDate, stateName, empId, clientId);
+		List<TimeSheetReport> timeSheetReportList = downloadAll(startDate, endDate, stateName, empId, clientId, projectId);
 		return report.downloadReport(response, timeSheetReportList);
 		
 	}
 	
-	public Page<TimeSheetReport> findAll(Date startDate, Date endDate,String stateName,String empId,long clientId, 
-			Integer pageNo, Integer pageSize){
+	public Page<TimeSheetReport> findAll(Date startDate, Date endDate,String stateName,String empId,long clientId,
+			long projectId, Integer pageNo, Integer pageSize){
 		
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
         Page<TimeSheetReport> page = timeSheetReportRepository.findAll(new Specification<TimeSheetReport>() {
@@ -92,6 +92,9 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
                 if(clientId!=0) {
                     predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("clientId"), clientId)));
                 }
+                if(projectId!=0) {
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("projectId"), projectId)));
+                }
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         },pageable);
@@ -100,7 +103,7 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
     }
 	
 
-	public List<TimeSheetReport> downloadAll(Date startDate, Date endDate,String stateName,String empId,long clientId){
+	public List<TimeSheetReport> downloadAll(Date startDate, Date endDate,String stateName,String empId,long clientId, long projectId){
 		
 		List<TimeSheetReport> downloadableReportList = timeSheetReportRepository.findAll(new Specification<TimeSheetReport>() {
         	
@@ -118,6 +121,9 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
                 }
                 if(clientId!=0) {
                     predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("clientId"), clientId)));
+                }
+                if(projectId!=0) {
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("projectId"), projectId)));
                 }
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }

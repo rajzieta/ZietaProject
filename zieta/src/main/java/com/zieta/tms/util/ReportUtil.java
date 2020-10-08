@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -93,7 +94,7 @@ public class ReportUtil {
             createCell(row, columnCount++, timeSheetReport.getProjectName(), style);
             createCell(row, columnCount++, timeSheetReport.getTaskName(), style);
             createCell(row, columnCount++, timeSheetReport.getRequestDate().toString(), style);
-            createCell(row, columnCount++, timeSheetReport.getActionDate().toString(), style);
+            createCell(row, columnCount++, timeSheetReport.getActionDate()!= null ?timeSheetReport.getActionDate().toString():StringUtils.EMPTY, style);
             createCell(row, columnCount++, timeSheetReport.getStateName(), style);
             createCell(row, columnCount++, timeSheetReport.getActionName(), style);
             createCell(row, columnCount++, timeSheetReport.getApproverId().intValue(), style);

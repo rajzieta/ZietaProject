@@ -10,13 +10,19 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.Subselect;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Immutable
 @Table(name = "v_get_all_timesheets")
 @Subselect("select uuid() as id, ts.* from v_get_all_timesheets ts")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TimeSheetReport {
 
 	@Id

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.zieta.tms.dto.OrgInfoDTO;
+import com.zieta.tms.dto.OrgUnitTypeMasterDTO;
 import com.zieta.tms.model.OrgInfo;
 import com.zieta.tms.model.OrgUnitTypeMaster;
 import com.zieta.tms.model.TaskInfo;
@@ -153,6 +154,20 @@ public class OrgNodesServiceImpl implements OrgNodesService {
 			
 			orgnodesByClientResponseList.add(orgnodesByClientResponse);
 		}
+	}
+	
+	
+	public List<OrgUnitTypeMasterDTO> getAllOrgUnitTypeMaster() {
+		
+		short notDeleted=0;
+		List<OrgUnitTypeMaster> orgunitMasters= orgunitTypeRepository.findByIsDelete(notDeleted);
+		List<OrgUnitTypeMasterDTO> orgUnitMastersDTOs = new ArrayList<OrgUnitTypeMasterDTO>();
+		OrgUnitTypeMasterDTO orgUnitTypeMasterDTO = null;
+		for (OrgUnitTypeMaster orgs : orgunitMasters) {
+			orgUnitTypeMasterDTO = modelMapper.map(orgs, OrgUnitTypeMasterDTO.class);
+			orgUnitMastersDTOs.add(orgUnitTypeMasterDTO);
+		}
+		return orgUnitMastersDTOs;
 	}
 	
 }

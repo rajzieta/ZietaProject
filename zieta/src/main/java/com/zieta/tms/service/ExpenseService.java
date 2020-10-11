@@ -15,6 +15,10 @@ public interface ExpenseService {
 
 	public List<ExpenseEntriesDTO> getAllExpenseEntries();
 
+	public List<ExpenseInfoDTO> findByClientIdAndUserId(Long clientId, Long userId);
+
+	public List<ExpenseEntriesDTO> findByExpId(Long expId);
+
 	
 	
 	

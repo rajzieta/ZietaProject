@@ -26,4 +26,7 @@ public class ExpenseEntriesDTO extends BaseEntity {
 	private String fileName;
 	private String filePath;
 
+	private String expenseType;
+	private String expCountryName;
+	private String expCurrencyType;
 }

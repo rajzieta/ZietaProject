@@ -12,5 +12,7 @@ public interface ExpenseEntriesRepository extends JpaRepository<ExpenseEntries, 
 
 	List<ExpenseEntries> findByIsDelete(short notDeleted);
 
+	List<ExpenseEntries> findByExpIdAndIsDelete(Long expId, short notDeleted);
+
 	
 }

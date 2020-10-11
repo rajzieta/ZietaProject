@@ -18,9 +18,6 @@ import lombok.Data;
 
 @Entity
 @Table(name = "orgunit_type_master")
-
-
-
 @Data
 public class OrgUnitTypeMaster extends BaseEntity implements Serializable  {
 

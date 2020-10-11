@@ -24,6 +24,7 @@ public class OrgNodesByClientResponse {
 	 String orgNodeCode;
 	 String orgNodeName;
 	 Long orgType;
+	 Long orgManager;
 	 Long orgParentId;
 	 Long orgStatus;
 	 String orgUnitTypeDescription;

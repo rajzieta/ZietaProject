@@ -24,5 +24,6 @@ public class ExpenseInfoDTO extends BaseEntity{
 	
 	
 	private String projectCode;
+	private String projectDesc;
 	
 }

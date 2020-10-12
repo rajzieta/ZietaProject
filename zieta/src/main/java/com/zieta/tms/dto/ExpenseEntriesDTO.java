@@ -28,5 +28,7 @@ public class ExpenseEntriesDTO extends BaseEntity {
 
 	private String expenseType;
 	private String expCountryName;
+	private String expCountryCode;
 	private String expCurrencyType;
+	private String expCurrencyCode;
 }

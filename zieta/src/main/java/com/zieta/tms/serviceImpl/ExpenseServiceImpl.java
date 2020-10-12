@@ -19,16 +19,14 @@ import com.zieta.tms.model.ExpenseTypeMaster;
 import com.zieta.tms.model.CountryMaster;
 import com.zieta.tms.model.CurrencyMaster;
 import com.zieta.tms.model.ProjectInfo;
-import com.zieta.tms.model.TasksByUser;
 import com.zieta.tms.repository.CountryMasterRepository;
 import com.zieta.tms.repository.CurrencyMasterRepository;
 import com.zieta.tms.repository.ExpenseEntriesRepository;
 import com.zieta.tms.repository.ExpenseInfoRepository;
 import com.zieta.tms.repository.ExpenseTypeMasterRepository;
 import com.zieta.tms.repository.ProjectInfoRepository;
-import com.zieta.tms.response.TasksByUserModel;
 import com.zieta.tms.service.ExpenseService;
-import com.zieta.tms.util.TSMUtil;
+
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -82,6 +80,8 @@ public class ExpenseServiceImpl implements ExpenseService {
 				expenseInfoDTO = modelMapper.map(expenses, ExpenseInfoDTO.class);
 				ProjectInfo projectInfo  = projectInfoRepository.findById(expenses.getProjectId()).get();
 				expenseInfoDTO.setProjectCode(projectInfo.getProjectCode());
+				//ProjectInfo projectInfo  = projectInfoRepository.findById(expenses.getProjectId()).get();
+				expenseInfoDTO.setProjectDesc(projectInfo.getProjectName());
 				expenseInfoList.add(expenseInfoDTO);
 			}
 			return expenseInfoList;
@@ -126,8 +126,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 			ExpenseEntriesDTO expenseEntriDTO = null;
 			for (ExpenseEntries expenseEntry : expenseEntries) {
 				expenseEntriDTO = modelMapper.map(expenseEntry, ExpenseEntriesDTO.class);
-			//	expenseEntriDTO.setExpenseType(expenseTypeMasterRepository.findById(expId).get().getExpenseType());
-				
+		
 				expenseEntriDTO.setExpenseType(StringUtils.EMPTY);
 				if(null != expenseEntry.getExpType()) {
 					Optional <ExpenseTypeMaster> exps = expenseTypeMasterRepository.findById(expenseEntry.getExpType());
@@ -138,7 +137,15 @@ public class ExpenseServiceImpl implements ExpenseService {
 				}
 				
 				
-			//	expenseEntriDTO.setExpCountryName(countryMasterRepository.findById(expenseEntry.getExpCountry()).get().getCountryName());
+			
+				expenseEntriDTO.setExpCountryCode(StringUtils.EMPTY);
+				if(null != expenseEntry.getExpCountry()) {
+					Optional <CountryMaster> exps = countryMasterRepository.findById(expenseEntry.getExpCountry());
+					if(exps.isPresent()) {
+						expenseEntriDTO.setExpCountryCode(exps.get().getCountryCode());
+						
+					}
+				}
 				
 				expenseEntriDTO.setExpCountryName(StringUtils.EMPTY);
 				if(null != expenseEntry.getExpCountry()) {
@@ -149,13 +156,21 @@ public class ExpenseServiceImpl implements ExpenseService {
 					}
 				}
 				
-			//	expenseEntriDTO.setExpCurrencyType(currencyMasterRepository.findById(expenseEntry.getExpCurrency()).get().getCurrencyName());
 				
 				expenseEntriDTO.setExpCurrencyType(StringUtils.EMPTY);
 				if(null != expenseEntry.getExpCurrency()) {
 					Optional <CurrencyMaster> exps = currencyMasterRepository.findById(expenseEntry.getExpCurrency());
 					if(exps.isPresent()) {
 						expenseEntriDTO.setExpCurrencyType(exps.get().getCurrencyName());
+						
+					}
+				}
+				
+				expenseEntriDTO.setExpCurrencyCode(StringUtils.EMPTY);
+				if(null != expenseEntry.getExpCurrency()) {
+					Optional <CurrencyMaster> exps = currencyMasterRepository.findById(expenseEntry.getExpCurrency());
+					if(exps.isPresent()) {
+						expenseEntriDTO.setExpCurrencyCode(exps.get().getCurrencyCode());
 						
 					}
 				}

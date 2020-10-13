@@ -113,6 +113,12 @@ public class TimeSheetController {
 		
 	}
 	
+	@ApiOperation(value = "Deletes entries from ts_timeentries based on Id", notes = "Table reference: ts_timeentries")
+	@RequestMapping(value = "deleteTimeEntriesById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteTimeEntriesById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		timeSheetService.deleteTimeEntriesById(id, modifiedBy);
+	}
+	
 	
 	@RequestMapping(value = "submitTimeSheet", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void submitTimeSheet(@Valid @RequestBody List<TSInfo> tsInfoList) throws Exception {

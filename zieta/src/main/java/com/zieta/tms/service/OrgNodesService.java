@@ -26,6 +26,8 @@ public interface OrgNodesService {
 
 	public List<OrgUnitTypeMasterDTO> getAllOrgUnitTypeMaster();
 
+	public List<OrgInfoDTO> getAllOrgNodesAsHeirarchy();
+
 
 
 	

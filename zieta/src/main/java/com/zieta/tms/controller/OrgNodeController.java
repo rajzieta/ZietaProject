@@ -46,7 +46,19 @@ public class OrgNodeController {
 		try {
 			orginfo = orgnodesService.getAllOrgNodes();
 		} catch (Exception e) {
-			LOGGER.error("Error Occured in StatusMasterController#getAllStatus",e);
+			LOGGER.error("Error Occured in OrgNodeController#getAllStatus",e);
+		}
+		return orginfo;
+	}
+	
+	
+	@RequestMapping(value = "getAllOrgNodesAsHeirarchy", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<OrgInfoDTO> getAllOrgNodesAsHeirarchy() {
+		List<OrgInfoDTO> orginfo = null;
+		try {
+			orginfo = orgnodesService.getAllOrgNodesAsHeirarchy();
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in OrgNodesController#getAllStatus",e);
 		}
 		return orginfo;
 	}

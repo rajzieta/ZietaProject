@@ -20,7 +20,7 @@ public interface WorkFlowRequestService {
 	public List<WFRDetailsForApprover> findWorkFlowRequestsByApproverId(long approverId, Date startActiondate, Date endActionDate);
 	
 
-	public List<WorkFlowRequestorData> findByRequestorId(long requestorId);
+	public List<WorkFlowRequestorData> findByRequestorId(long requestorId, Date startDate, Date endDate);
 
 	public WorkflowRequest findByTsIdAndApproverId(long tsId, long approverId);
 	

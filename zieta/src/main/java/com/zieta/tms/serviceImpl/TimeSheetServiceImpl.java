@@ -20,6 +20,7 @@ import com.zieta.tms.common.TMSConstants;
 import com.zieta.tms.dto.WorkflowDTO;
 import com.zieta.tms.model.ActivityMaster;
 import com.zieta.tms.model.ProcessSteps;
+import com.zieta.tms.model.RoleMaster;
 import com.zieta.tms.model.TSInfo;
 import com.zieta.tms.model.TSTimeEntries;
 import com.zieta.tms.model.TSWorkflow;
@@ -376,6 +377,26 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		for (TimeEntriesByTsIdRequest updateRequest : timeentriesByTsIdRequest) {
 			updateTimeEntriesByID(updateRequest);
 		}
+	}
+	
+	
+	@Override
+public void deleteTimeEntriesById(Long id, String modifiedBy) throws Exception {
+		
+		Optional<TSTimeEntries> timeEntries = tstimeentriesRepository.findById(id);
+		if (timeEntries.isPresent()) {
+			TSTimeEntries timeEntriesEntitiy = timeEntries.get();
+			short delete = 1;
+			timeEntriesEntitiy.setIsDelete(delete);
+			timeEntriesEntitiy.setModifiedBy(modifiedBy);
+			tstimeentriesRepository.save(timeEntriesEntitiy);
+
+		}else {
+			log.info("No timeEntries found with the provided ID{} in the DB",id);
+			throw new Exception("No timeEntries found with the provided ID in the DB :"+id);
+		}
+		
+		
 	}
 	
 	

@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 import com.google.common.collect.Ordering;
 import com.google.common.primitives.Longs;
 import com.zieta.tms.common.ApproverType;
+import com.zieta.tms.dto.OrgInfoDTO;
 import com.zieta.tms.model.ProcessConfig;
 import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.TaskInfo;
@@ -170,7 +171,7 @@ public class TSMUtil {
 		return null;
 	}
 	
-	//create tree structure for org Nodes
+	//create tree structure for org Nodes 
 	
 	 public static List<OrgNodesByClientResponse> createTreeStructure(List<OrgNodesByClientResponse> nodes) {
 
@@ -211,6 +212,45 @@ public class TSMUtil {
 	        return treeTask;
 	    } 
 	
+	 
+	//create tree structure for org Nodes 
+		
+		 public static List<OrgInfoDTO> createTreeStructureHeirarchy(List<OrgInfoDTO> nodes) {
+
+		        Map<Long, OrgInfoDTO> mapTmp = new HashMap<>();
+		        List<OrgInfoDTO> treeTask = new ArrayList<>();
+		        
+		        //Save all nodes to a map
+		        for (OrgInfoDTO current : nodes) {
+		            mapTmp.put(current.getOrgUnitId(), current);
+		        }
+
+		        //loop and assign parent/child relationships
+		        for (OrgInfoDTO current : nodes) {
+		            long parentId = current.getOrgParentId();
+
+		            if (parentId != 0) {
+		            	OrgInfoDTO parent = mapTmp.get(parentId);
+		                if (parent != null) {
+		                    current.setParent(parent);
+		                    parent.addChild(current);
+		                    mapTmp.put(parentId, parent);
+		                    mapTmp.put(current.getOrgUnitId(), current);
+		                }
+		            }
+
+		        }
+		    
+		        //get the root
+		        for (OrgInfoDTO node : mapTmp.values()) {
+		            if(node.getParent() == null) {
+		            	treeTask.add(node);
+		            }
+		        }
+		    	
+		        
+		        return treeTask;
+		    } 
 	
 	public static boolean validateDates(Date startActiondate, Date endActionDate) {
 

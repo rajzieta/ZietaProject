@@ -78,10 +78,12 @@ public class TSWorkFlowController {
 
 	}
 	@RequestMapping(value = "getWorkFlowRequestsByRequestor", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<WorkFlowRequestorData> getWorkFlowRequestsByRequestor(@RequestParam(required = true) Long requestorId) {
+	public List<WorkFlowRequestorData> getWorkFlowRequestsByRequestor(@RequestParam(required = true) Long requestorId, 
+			@RequestParam(required = true)  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+			@RequestParam(required = true)  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
 		List<WorkFlowRequestorData> workFlowRequestList = null;
 		try {
-			workFlowRequestList = workFlowRequestService.findByRequestorId(requestorId);
+			workFlowRequestList = workFlowRequestService.findByRequestorId(requestorId, startDate, endDate);
 		} catch (Exception e) {
 			log.error("Error Occured in TSWorkFlowController#getWorkFlowRequestsByRequestor", e);
 

@@ -18,7 +18,7 @@ public class OrgNodesByClientResponse {
 
 	
 	Long orgUnitId;
-	//long clientId;
+	long clientId;
 	 String clientCode;
      String clientDescription;
 	 String orgNodeCode;
@@ -28,6 +28,7 @@ public class OrgNodesByClientResponse {
 	 Long orgParentId;
 	 Long orgStatus;
 	 String orgUnitTypeDescription;
+     String orgManagerName;
 	
 	
 	@JsonIgnore

@@ -3,6 +3,8 @@ package com.zieta.tms.controller;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zieta.tms.dto.ExpenseEntriesDTO;
 import com.zieta.tms.dto.ExpenseInfoDTO;
 import com.zieta.tms.dto.ExpenseMasterDTO;
+import com.zieta.tms.model.ExpenseEntries;
 import com.zieta.tms.service.ExpenseService;
 
 import io.swagger.annotations.Api;
@@ -102,6 +106,16 @@ public class ExpensesController {
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<List<ExpenseEntriesDTO>>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	
+	
+	@RequestMapping(value="addExpenseEntries", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value="Adds list of rows in expenseEntries", notes= "Table reference:" + "expense_entries")
+	public void addExpenseEntries(@Valid @RequestBody List<ExpenseEntries> expenseEntries) throws Exception {
+		expenseService.addExpenseEntries(expenseEntries);
+		
+		
 	}
 	
 }

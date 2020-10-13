@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -182,5 +184,14 @@ public class ExpenseServiceImpl implements ExpenseService {
 		
 		
 	}
+	
+	
+	public void addExpenseEntries(@Valid List<ExpenseEntries> expenseEntries) throws Exception {
+			expenseEntriesRepository.saveAll(expenseEntries);
+
+		
+	}
+	
+	
 	
 }

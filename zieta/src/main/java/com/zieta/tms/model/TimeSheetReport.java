@@ -69,6 +69,12 @@ public class TimeSheetReport {
 
 	@Column(name = "action_name")
 	private String actionName;
+	
+	@Column(name = "Submitted_hours")
+	private float submittedHours;
+	
+	@Column(name = "Approved_hours")
+	private float approvedHours;
 
 	@Column(name = "approver_id")
 	private Long approverId;

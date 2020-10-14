@@ -175,7 +175,7 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 		return wFTSTimeEntriesList;
 	}
 
-
+ @Override
 	public List<WorkFlowRequestorData> findByRequestorId(long requestorId, Date startDate, Date endDate) {
 		
 boolean isDatesValid = TSMUtil.validateDates(startDate,endDate);
@@ -195,7 +195,8 @@ boolean isDatesValid = TSMUtil.validateDates(startDate,endDate);
 		}
 		
 		Long currentStepPointer = 1L;
-		List<WorkflowRequest> workFlowRequestorItems = workflowRequestRepository.findByRequestorIdAndCurrentStepAndActionDateBetween(requestorId, currentStepPointer, startDate, endDate);
+		
+		List<WorkflowRequest> workFlowRequestorItems = workflowRequestRepository.findByRequestorIdAndCurrentStepAndRequestDateBetween(requestorId, currentStepPointer, startDate, endDate);
 		List<WorkFlowRequestorData> workFlowRequestorDataList = new ArrayList<WorkFlowRequestorData>();
 		WorkFlowRequestorData workFlowRequestorData = null;
 

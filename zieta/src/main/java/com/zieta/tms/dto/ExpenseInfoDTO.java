@@ -13,7 +13,9 @@ public class ExpenseInfoDTO extends BaseEntity{
 	private Long id;
 	private Long clientId;
 	private Long userId;
+	 private String expCategory;
 	private Long projectId;
+	private Long orgUnitId;
 	private String expHeading;
 	private Date expStartDate;
 	private Date expEndDate;

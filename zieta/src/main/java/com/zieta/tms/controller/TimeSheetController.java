@@ -126,5 +126,14 @@ public class TimeSheetController {
 		
 	}
 	
+	
+	@ApiOperation(value = "Deletes entries from ts_info based on Id", notes = "Table reference: ts_info")
+	@RequestMapping(value = "deleteTsInfoById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteTsInfoById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		timeSheetService.deleteTsInfoById(id, modifiedBy);
+	}
+	
+	
+	
 }
 

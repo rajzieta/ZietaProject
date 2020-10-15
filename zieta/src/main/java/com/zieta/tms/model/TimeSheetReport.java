@@ -71,10 +71,10 @@ public class TimeSheetReport {
 	private String actionName;
 	
 	@Column(name = "Submitted_hours")
-	private float submittedHours;
+	private Float submittedHours;
 	
 	@Column(name = "Approved_hours")
-	private float approvedHours;
+	private Float approvedHours;
 
 	@Column(name = "approver_id")
 	private Long approverId;

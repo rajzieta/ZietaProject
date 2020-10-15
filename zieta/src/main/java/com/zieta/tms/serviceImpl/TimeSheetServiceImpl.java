@@ -400,4 +400,22 @@ public void deleteTimeEntriesById(Long id, String modifiedBy) throws Exception {
 	}
 	
 	
+	public void deleteTsInfoById(Long id, String modifiedBy) throws Exception {
+		
+		Optional<TSInfo> tsInfo = tSInfoRepository.findById(id);
+		if (tsInfo.isPresent()) {
+			TSInfo tsInfoEntitiy = tsInfo.get();
+			short delete = 1;
+			tsInfoEntitiy.setIsDelete(delete);
+			tsInfoEntitiy.setModifiedBy(modifiedBy);
+			tSInfoRepository.save(tsInfoEntitiy);
+
+		}else {
+			log.info("No tsInfo found with the provided ID{} in the DB",id);
+			throw new Exception("No tsInfo found with the provided ID in the DB :"+id);
+		}
+		
+		
+	}
+	
 }

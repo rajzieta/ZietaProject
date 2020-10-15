@@ -21,6 +21,8 @@ import com.zieta.tms.model.ExpenseTypeMaster;
 import com.zieta.tms.model.CountryMaster;
 import com.zieta.tms.model.CurrencyMaster;
 import com.zieta.tms.model.ProjectInfo;
+import com.zieta.tms.model.RoleMaster;
+import com.zieta.tms.model.TSInfo;
 import com.zieta.tms.repository.CountryMasterRepository;
 import com.zieta.tms.repository.CurrencyMasterRepository;
 import com.zieta.tms.repository.ExpenseEntriesRepository;
@@ -176,22 +178,82 @@ public class ExpenseServiceImpl implements ExpenseService {
 						
 					}
 				}
-				
-				
 				expenseEntriesDTOs.add(expenseEntriDTO);
 			}
 			return expenseEntriesDTOs;
-		
-		
 	}
 	
 	
 	public void addExpenseEntries(@Valid List<ExpenseEntries> expenseEntries) throws Exception {
 			expenseEntriesRepository.saveAll(expenseEntries);
-
+	}
+	
+public void editExpenseEntriesById(@Valid ExpenseEntriesDTO expenseEntriesDTO) throws Exception {
 		
+		Optional<ExpenseEntries> expenseEntriesEntity = expenseEntriesRepository.findById(expenseEntriesDTO.getId());
+		if(expenseEntriesEntity.isPresent()) {
+			ExpenseEntries expenseinfo = modelMapper.map(expenseEntriesDTO, ExpenseEntries.class);
+			expenseEntriesRepository.save(expenseinfo);
+		
+	}else {
+		throw new Exception("expenseEntries not found with the provided ID : "+expenseEntriesDTO.getId());
+	}
+		
+		
+	}
+
+public void deleteExpenseEntriesById(Long id, String modifiedBy) throws Exception {
+	
+	Optional<ExpenseEntries> expenseEntries = expenseEntriesRepository.findById(id);
+	if (expenseEntries.isPresent()) {
+		ExpenseEntries expenseEntriesEntitiy = expenseEntries.get();
+		short delete = 1;
+		expenseEntriesEntitiy.setIsDelete(delete);
+		expenseEntriesEntitiy.setModifiedBy(modifiedBy);
+		expenseEntriesRepository.save(expenseEntriesEntitiy);
+
+	}else {
+		log.info("No ExpenseEntries found with the provided ID{} in the DB",id);
+		throw new Exception("No ExpenseEntries found with the provided ID in the DB :"+id);
 	}
 	
 	
+}
+
+
+	public void addExpenseInfo(@Valid ExpenseInfo expenseInfo) throws Exception {
+		expenseInfoRepository.save(expenseInfo);
+}
+	
+	public void editExpenseInfoById(@Valid ExpenseInfoDTO expenseInfoDTO) throws Exception {
+		
+		Optional<ExpenseInfo> expenseInfoEntity = expenseInfoRepository.findById(expenseInfoDTO.getId());
+		if(expenseInfoEntity.isPresent()) {
+			ExpenseInfo expenseinfo = modelMapper.map(expenseInfoDTO, ExpenseInfo.class);
+			expenseInfoRepository.save(expenseinfo);
+		
+	}else {
+		throw new Exception("UserRole not found with the provided ID : "+expenseInfoDTO.getId());
+	}
+		
+	}
+
+public void deleteExpenseInfoById(Long id, String modifiedBy) throws Exception {
+		
+		Optional<ExpenseInfo> expenseInfo = expenseInfoRepository.findById(id);
+		if (expenseInfo.isPresent()) {
+			ExpenseInfo expenseInfoEntitiy = expenseInfo.get();
+			short delete = 1;
+			expenseInfoEntitiy.setIsDelete(delete);
+			expenseInfoEntitiy.setModifiedBy(modifiedBy);
+			expenseInfoRepository.save(expenseInfoEntitiy);
+
+		}else {
+			log.info("No ExpenseInfo found with the provided ID{} in the DB",id);
+			throw new Exception("No ExpenseInfo found with the provided ID in the DB :"+id);
+		}
+		
+		
+	}
 	
 }

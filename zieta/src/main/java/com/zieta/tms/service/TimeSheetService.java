@@ -35,4 +35,6 @@ public interface TimeSheetService {
 	public boolean submitTimeSheet(@Valid List<TSInfo> tsInfoList);
 
 	public void deleteTimeEntriesById(Long id, String modifiedBy) throws Exception;
+
+	public void deleteTsInfoById(Long id, String modifiedBy) throws Exception;
 }

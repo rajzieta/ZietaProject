@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import com.zieta.tms.dto.ExpenseInfoDTO;
 import com.zieta.tms.dto.ExpenseMasterDTO;
 import com.zieta.tms.model.ExpenseEntries;
+import com.zieta.tms.model.ExpenseInfo;
 import com.zieta.tms.dto.ExpenseEntriesDTO;
 
 public interface ExpenseService {
@@ -22,6 +23,16 @@ public interface ExpenseService {
 	public List<ExpenseEntriesDTO> findByExpId(Long expId);
 
 	public void addExpenseEntries(@Valid List<ExpenseEntries> expenseEntries) throws Exception;
+
+	public void addExpenseInfo(@Valid ExpenseInfo expenseInfo) throws Exception;
+
+	public void editExpenseInfoById(@Valid ExpenseInfoDTO expenseInfoDTO) throws Exception;
+
+	public void editExpenseEntriesById(@Valid ExpenseEntriesDTO expenseEntriesDTO) throws Exception;
+
+	public void deleteExpenseInfoById(Long id, String modifiedBy) throws Exception;
+
+	public void deleteExpenseEntriesById(Long id, String modifiedBy) throws Exception;
 
 	
 	

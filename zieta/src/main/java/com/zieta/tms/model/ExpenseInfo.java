@@ -28,8 +28,14 @@ public class ExpenseInfo extends BaseEntity implements Serializable{
     @Column(name="user_id")
     private Long userId;
     
+    @Column(name="exp_category")
+    private String expCategory;
+    
     @Column(name="project_id")
     private Long projectId;
+    
+    @Column(name="orgunit_id")
+    private Long orgUnitId;
     
     @Column(name="exp_heading")
     private String expHeading;

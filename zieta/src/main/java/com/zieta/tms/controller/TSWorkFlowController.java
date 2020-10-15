@@ -23,6 +23,7 @@ import com.zieta.tms.service.TimeSheetService;
 import com.zieta.tms.service.WorkFlowRequestService;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -77,13 +78,13 @@ public class TSWorkFlowController {
 		return workFlowRequestList;
 
 	}
+	
+	@ApiOperation(value = "Instead getTimeEntriesByUserDates API is used for the retrieval of Information based on DateRange", notes = "Table reference:")
 	@RequestMapping(value = "getWorkFlowRequestsByRequestor", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<WorkFlowRequestorData> getWorkFlowRequestsByRequestor(@RequestParam(required = true) Long requestorId, 
-			@RequestParam(required = false)  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-			@RequestParam(required = false)  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+	public List<WorkFlowRequestorData> getWorkFlowRequestsByRequestor(@RequestParam(required = true) Long requestorId)  {
 		List<WorkFlowRequestorData> workFlowRequestList = null;
 		try {
-			workFlowRequestList = workFlowRequestService.findByRequestorId(requestorId, startDate, endDate);
+			workFlowRequestList = workFlowRequestService.findByRequestorId(requestorId);
 		} catch (Exception e) {
 			log.error("Error Occured in TSWorkFlowController#getWorkFlowRequestsByRequestor", e);
 

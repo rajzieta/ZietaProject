@@ -53,7 +53,9 @@ public class ReportUtil {
         createCell(row, 15, "Approver First Name", style);
         createCell(row, 16, "Approver Middle Name", style);
         createCell(row, 17, "Approver Last Name", style);
-        createCell(row, 18, "Comments", style);
+        createCell(row, 18, "Submitted Hours", style);
+        createCell(row, 19, "Approved Hours", style);
+        createCell(row, 20, "Comments", style);
         
          
     }
@@ -65,6 +67,8 @@ public class ReportUtil {
             cell.setCellValue((Integer) value);
         } else if (value instanceof Boolean) {
             cell.setCellValue((Boolean) value);
+        } else if (value instanceof Float) {
+            cell.setCellValue((Float) value);
         }else {
             cell.setCellValue((String) value);
         }
@@ -101,6 +105,8 @@ public class ReportUtil {
             createCell(row, columnCount++, timeSheetReport.getApproverFname(), style);
             createCell(row, columnCount++, timeSheetReport.getApproverMname(), style);
             createCell(row, columnCount++, timeSheetReport.getApproverLname(), style);
+            createCell(row, columnCount++, timeSheetReport.getSubmittedHours().floatValue(), style);
+            createCell(row, columnCount++, timeSheetReport.getApprovedHours()!= null ?timeSheetReport.getApprovedHours().floatValue():StringUtils.EMPTY, style);
             createCell(row, columnCount++, timeSheetReport.getComments(), style);
              
         }

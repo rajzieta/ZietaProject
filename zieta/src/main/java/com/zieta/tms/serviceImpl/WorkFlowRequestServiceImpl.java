@@ -176,27 +176,9 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	}
 
  @Override
-	public List<WorkFlowRequestorData> findByRequestorId(long requestorId, Date startDate, Date endDate) {
-		
-boolean isDatesValid = TSMUtil.validateDates(startDate,endDate);
-		
-		//defaulting to the current week date range, when there is no date range mentioned from front end.
-		if(!isDatesValid) {
-			CurrentWeekUtil currentWeek = new CurrentWeekUtil(new Locale("en","IN"));
-			startDate =currentWeek.getFirstDay();
-			endDate = currentWeek.getLastDay();
-		}else {
-			startDate = TSMUtil.getFormattedDate(startDate);
-			endDate =  TSMUtil.getFormattedDate(endDate);
-			Calendar c = Calendar.getInstance();
-			c.setTime(endDate);
-			c.add(Calendar.DATE, 1);
-			endDate = c.getTime();
-		}
-		
+	public List<WorkFlowRequestorData> findByRequestorId(long requestorId) {
 		Long currentStepPointer = 1L;
-		
-		List<WorkflowRequest> workFlowRequestorItems = workflowRequestRepository.findByRequestorIdAndCurrentStepAndRequestDateBetween(requestorId, currentStepPointer, startDate, endDate);
+		List<WorkflowRequest> workFlowRequestorItems = workflowRequestRepository.findByRequestorIdAndCurrentStep(requestorId, currentStepPointer);
 		List<WorkFlowRequestorData> workFlowRequestorDataList = new ArrayList<WorkFlowRequestorData>();
 		WorkFlowRequestorData workFlowRequestorData = null;
 

@@ -22,6 +22,7 @@ import com.zieta.tms.dto.ExpenseEntriesDTO;
 import com.zieta.tms.dto.ExpenseInfoDTO;
 import com.zieta.tms.dto.ExpenseMasterDTO;
 import com.zieta.tms.model.ExpenseEntries;
+import com.zieta.tms.model.ExpenseInfo;
 import com.zieta.tms.service.ExpenseService;
 
 import io.swagger.annotations.Api;
@@ -108,14 +109,47 @@ public class ExpensesController {
 		}
 	}
 	
-	
+	//CUD Ops for expense Entries
 	
 	@RequestMapping(value="addExpenseEntries", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value="Adds list of rows in expenseEntries", notes= "Table reference:" + "expense_entries")
 	public void addExpenseEntries(@Valid @RequestBody List<ExpenseEntries> expenseEntries) throws Exception {
 		expenseService.addExpenseEntries(expenseEntries);
+	}
+	
+	@ApiOperation(value = "Updates the ExpenseEntries for the provided Id", notes = "Table reference: expense_entries")
+	@RequestMapping(value = "editExpenseEntriesById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editExpenseEntriesById(@Valid @RequestBody ExpenseEntriesDTO expenseEntriesDTO) throws Exception {
+		expenseService.editExpenseEntriesById(expenseEntriesDTO);
+			
+	}
+	
+	@ApiOperation(value = "Deletes entries from expense_entries based on Id", notes = "Table reference: expense_entries")
+	@RequestMapping(value = "deleteExpenseEntriesById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteExpenseEntriesById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		expenseService.deleteExpenseEntriesById(id, modifiedBy);
+	}
+	
+	//CUD Ops for Expense Info
+	
+	@RequestMapping(value="addExpenseInfo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value="Adds list of rows in expenseInfo", notes= "Table reference:" + "expense_info")
+	public void addExpenseInfo(@Valid @RequestBody ExpenseInfo expenseInfo) throws Exception {
+		expenseService.addExpenseInfo(expenseInfo);
 		
-		
+	}
+	
+	@ApiOperation(value = "Updates the ExpenseInfo for the provided Id", notes = "Table reference: expense_info")
+	@RequestMapping(value = "editExpenseInfoById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editExpenseInfoById(@Valid @RequestBody ExpenseInfoDTO expenseInfoDTO) throws Exception {
+		expenseService.editExpenseInfoById(expenseInfoDTO);
+			
+	}
+	
+	@ApiOperation(value = "Deletes entries from expense_info based on Id", notes = "Table reference: expense_info")
+	@RequestMapping(value = "deleteExpenseInfoById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteExpenseInfoById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		expenseService.deleteExpenseInfoById(id, modifiedBy);
 	}
 	
 }

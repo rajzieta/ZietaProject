@@ -37,7 +37,7 @@ public class ExpensesController {
 
 	@Autowired
 	ExpenseService expenseService;
-	
+
 	@ApiOperation(value = "List Expenses Info", notes = "Table reference:expense_info")
 	@RequestMapping(value = "getAllExpenses", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<ExpenseInfoDTO> getAllExpenses() {
@@ -50,9 +50,9 @@ public class ExpensesController {
 		}
 		return expenseInfos;
 	}
-	
-//	filter based on client and userid
-	
+
+	// filter based on client and userid
+
 	@GetMapping("/getAllExpensesByClientUser")
 	@ApiOperation(value = "List expenses based on the  clientId and userId", notes = "Table reference:"
 			+ "expense_info")
@@ -65,11 +65,7 @@ public class ExpensesController {
 			return new ResponseEntity<List<ExpenseInfoDTO>>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
-	
-	
-	
-	
+
 	@ApiOperation(value = "Lists ExpenseTypeMaster Information", notes = "Table reference:expense_type_master")
 	@RequestMapping(value = "getAllExpenseMasters", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<ExpenseMasterDTO> getAllExpenseMasters() {
@@ -82,7 +78,7 @@ public class ExpensesController {
 		}
 		return expenseMasters;
 	}
-	
+
 	@ApiOperation(value = "Lists ExpenseEntries Information", notes = "Table reference:expense_entries")
 	@RequestMapping(value = "getAllExpenseEntries", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<ExpenseEntriesDTO> getAllExpenseEntries() {
@@ -95,12 +91,11 @@ public class ExpensesController {
 		}
 		return expenseEntries;
 	}
-	
-	
+
 	@GetMapping("/getAllExpenseEntriesByExpId")
-	@ApiOperation(value = "List expenseEntries based on the expId", notes = "Table reference:"
-			+ "expense_entries")
-	public ResponseEntity<List<ExpenseEntriesDTO>> getAllExpenseEntriesByExpId(@RequestParam(required = true) Long expId) {
+	@ApiOperation(value = "List expenseEntries based on the expId", notes = "Table reference:" + "expense_entries")
+	public ResponseEntity<List<ExpenseEntriesDTO>> getAllExpenseEntriesByExpId(
+			@RequestParam(required = true) Long expId) {
 		try {
 			List<ExpenseEntriesDTO> expenseEntriesList = expenseService.findByExpId(expId);
 			return new ResponseEntity<List<ExpenseEntriesDTO>>(expenseEntriesList, HttpStatus.OK);
@@ -108,48 +103,60 @@ public class ExpensesController {
 			return new ResponseEntity<List<ExpenseEntriesDTO>>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
-	//CUD Ops for expense Entries
-	
-	@RequestMapping(value="addExpenseEntries", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(value="Adds list of rows in expenseEntries", notes= "Table reference:" + "expense_entries")
+
+	// CUD Ops for expense Entries
+
+	@RequestMapping(value = "addExpenseEntries", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Adds list of rows in expenseEntries", notes = "Table reference:" + "expense_entries")
 	public void addExpenseEntries(@Valid @RequestBody List<ExpenseEntries> expenseEntries) throws Exception {
 		expenseService.addExpenseEntries(expenseEntries);
 	}
-	
+
 	@ApiOperation(value = "Updates the ExpenseEntries for the provided Id", notes = "Table reference: expense_entries")
 	@RequestMapping(value = "editExpenseEntriesById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void editExpenseEntriesById(@Valid @RequestBody ExpenseEntriesDTO expenseEntriesDTO) throws Exception {
 		expenseService.editExpenseEntriesById(expenseEntriesDTO);
-			
+
 	}
-	
+
 	@ApiOperation(value = "Deletes entries from expense_entries based on Id", notes = "Table reference: expense_entries")
 	@RequestMapping(value = "deleteExpenseEntriesById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void deleteExpenseEntriesById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+	public void deleteExpenseEntriesById(@RequestParam(required = true) Long id,
+			@RequestParam(required = true) String modifiedBy) throws Exception {
 		expenseService.deleteExpenseEntriesById(id, modifiedBy);
 	}
-	
-	//CUD Ops for Expense Info
-	
-	@RequestMapping(value="addExpenseInfo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(value="Adds list of rows in expenseInfo", notes= "Table reference:" + "expense_info")
+
+	// CUD Ops for Expense Info
+
+	@RequestMapping(value = "addExpenseInfo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Adds list of rows in expenseInfo", notes = "Table reference:" + "expense_info")
 	public void addExpenseInfo(@Valid @RequestBody ExpenseInfo expenseInfo) throws Exception {
 		expenseService.addExpenseInfo(expenseInfo);
-		
+
 	}
-	
+
+	@RequestMapping(value = "addExpenseInfoList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Adds list of rows in expenseInfo", notes = "Table reference:" + "expense_info")
+	public ResponseEntity<List<ExpenseInfo>> addExpenseInfoList(@Valid @RequestBody List<ExpenseInfo> expenseInfo)
+			throws Exception {
+		List<ExpenseInfo> expenseInfoList = expenseService.addExpenseInfo(expenseInfo);
+
+		return new ResponseEntity<List<ExpenseInfo>>(expenseInfoList, HttpStatus.OK);
+
+	}
+
 	@ApiOperation(value = "Updates the ExpenseInfo for the provided Id", notes = "Table reference: expense_info")
 	@RequestMapping(value = "editExpenseInfoById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void editExpenseInfoById(@Valid @RequestBody ExpenseInfoDTO expenseInfoDTO) throws Exception {
 		expenseService.editExpenseInfoById(expenseInfoDTO);
-			
+
 	}
-	
+
 	@ApiOperation(value = "Deletes entries from expense_info based on Id", notes = "Table reference: expense_info")
 	@RequestMapping(value = "deleteExpenseInfoById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void deleteExpenseInfoById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+	public void deleteExpenseInfoById(@RequestParam(required = true) Long id,
+			@RequestParam(required = true) String modifiedBy) throws Exception {
 		expenseService.deleteExpenseInfoById(id, modifiedBy);
 	}
-	
+
 }

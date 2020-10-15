@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.zieta.tms.dto.DateRange;
 import com.zieta.tms.model.TimeSheetReport;
 import com.zieta.tms.repository.TimeSheetReportRepository;
 import com.zieta.tms.service.TimeSheetReportService;
@@ -39,34 +40,20 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
 	@Override
 	public Page<TimeSheetReport> findAll(long clientId, long projectId,
 			String empId, String stateName, Date startDate, Date endDate, Integer pageNo, Integer pageSize) {
-
-		boolean isDatesValid = TSMUtil.validateDates(startDate, endDate);
-
-		// defaulting to the current week date range, when there is no date range
-		// mentioned from front end.
-		if (!isDatesValid) {
-			CurrentWeekUtil currentWeek = new CurrentWeekUtil(new Locale("en", "IN"));
-			startDate = currentWeek.getFirstDay();
-			endDate = currentWeek.getLastDay();
-		}else {
-			startDate = TSMUtil.getFormattedDate(startDate);
-			endDate =  TSMUtil.getFormattedDate(endDate);
-			Calendar c = Calendar.getInstance();
-			c.setTime(endDate);
-			c.add(Calendar.DATE, 1);
-			endDate = c.getTime();
-		}
+				
+		DateRange dateRange = TSMUtil.getFilledDateRange(startDate, endDate);
 		
-		return findAll(startDate, endDate, stateName, empId, clientId, projectId, pageNo, pageSize);
+		return findAll(dateRange.getStartDate(), dateRange.getEndDate(), stateName, empId, 
+				clientId, projectId, pageNo, pageSize);
 	}
-
-
+	
 	@Override
 	public ByteArrayInputStream downloadTimeSheetReport(HttpServletResponse response,long clientId,
 			long projectId, String stateName, String empId, Date startDate, Date endDate ) throws IOException {
 		ReportUtil report = new ReportUtil();
+		DateRange dateRange = TSMUtil.getFilledDateRange(startDate, endDate);
 		
-		List<TimeSheetReport> timeSheetReportList = downloadAll(startDate, endDate, stateName, empId, clientId, projectId);
+		List<TimeSheetReport> timeSheetReportList = downloadAll(dateRange.getStartDate(), dateRange.getEndDate(), stateName, empId, clientId, projectId);
 		return report.downloadReport(response, timeSheetReportList);
 		
 	}
@@ -75,7 +62,7 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
 			long projectId, Integer pageNo, Integer pageSize){
 		
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<TimeSheetReport> page = timeSheetReportRepository.findAll(new Specification<TimeSheetReport>() {
+        return timeSheetReportRepository.findAll(new Specification<TimeSheetReport>() {
         	
             @Override
             public Predicate toPredicate(Root<TimeSheetReport> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
@@ -99,13 +86,12 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
             }
         },pageable);
         
-        return page;
     }
 	
 
 	public List<TimeSheetReport> downloadAll(Date startDate, Date endDate,String stateName,String empId,long clientId, long projectId){
 		
-		List<TimeSheetReport> downloadableReportList = timeSheetReportRepository.findAll(new Specification<TimeSheetReport>() {
+			return timeSheetReportRepository.findAll(new Specification<TimeSheetReport>() {
         	
             @Override
             public Predicate toPredicate(Root<TimeSheetReport> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
@@ -129,7 +115,6 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
             }
         });
         
-        return downloadableReportList;
     }
 	
 }

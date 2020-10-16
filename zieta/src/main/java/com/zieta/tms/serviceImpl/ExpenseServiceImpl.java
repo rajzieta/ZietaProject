@@ -95,20 +95,19 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Override
 	public List<ExpenseInfoDTO> findByClientIdAndUserId(Long clientId, Long userId) {
-
-		short notDeleted = 0;
-		List<ExpenseInfoDTO> expenseInfoList = new ArrayList<>();
-		List<ExpenseInfo> expenseInfos = expenseInfoRepository.findByClientIdAndUserIdAndIsDelete(clientId, userId,
-				notDeleted);
-		ExpenseInfoDTO expenseInfoDTO = null;
-		for (ExpenseInfo expenses : expenseInfos) {
-			expenseInfoDTO = modelMapper.map(expenses, ExpenseInfoDTO.class);
-			ProjectInfo projectInfo = projectInfoRepository.findById(expenses.getProjectId()).get();
-			expenseInfoDTO.setProjectCode(projectInfo.getProjectCode());
-			expenseInfoDTO.setProjectDesc(projectInfo.getProjectName());
-			expenseInfoList.add(expenseInfoDTO);
-		}
-		return expenseInfoList;
+		
+		 short notDeleted=0;
+			List<ExpenseInfoDTO> expenseInfoList = new ArrayList<>();
+			List<ExpenseInfo> expenseInfos = expenseInfoRepository.findByClientIdAndUserIdAndIsDelete(clientId, userId, notDeleted);
+			ExpenseInfoDTO expenseInfoDTO = null;
+			for (ExpenseInfo expenses : expenseInfos) {
+				expenseInfoDTO = modelMapper.map(expenses, ExpenseInfoDTO.class);
+				ProjectInfo projectInfo  = projectInfoRepository.findById(expenses.getProjectId()).get();
+				expenseInfoDTO.setProjectCode(projectInfo.getProjectCode());
+				expenseInfoDTO.setProjectDesc(projectInfo.getProjectName());
+				expenseInfoList.add(expenseInfoDTO);
+			}
+			return expenseInfoList;
 	}
 
 	@Override

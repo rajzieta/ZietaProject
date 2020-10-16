@@ -19,14 +19,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.zieta.tms.dto.OrgInfoDTO;
-import com.zieta.tms.dto.OrgUnitTypeMasterDTO;
 import com.zieta.tms.model.OrgInfo;
-import com.zieta.tms.model.OrgUnitTypeMaster;
 import com.zieta.tms.model.TaskInfo;
 import com.zieta.tms.model.UserInfo;
 import com.zieta.tms.repository.ClientInfoRepository;
 import com.zieta.tms.repository.OrgInfoRepository;
-import com.zieta.tms.repository.OrgUnitTypeRepository;
+//import com.zieta.tms.repository.OrgUnitTypeRepository;
 import com.zieta.tms.repository.UserInfoRepository;
 import com.zieta.tms.response.OrgNodesByClientResponse;
 import com.zieta.tms.response.TasksByClientProjectResponse;
@@ -45,8 +43,8 @@ public class OrgNodesServiceImpl implements OrgNodesService {
 	@Autowired
 	OrgInfoRepository orgInfoRepository;
 	
-	@Autowired
-	OrgUnitTypeRepository orgunitTypeRepository;
+//	@Autowired
+//	OrgUnitTypeRepository orgunitTypeRepository;
 	
 	@Autowired
 	ClientInfoRepository clientInfoRepository;
@@ -65,7 +63,7 @@ public class OrgNodesServiceImpl implements OrgNodesService {
 		for (OrgInfo orgnodesByClient : orgnodesByClientList) {
 			orgnodesByClientResponse = modelMapper.map(orgnodesByClient, 
 					OrgNodesByClientResponse.class);
-			orgnodesByClientResponse.setOrgUnitTypeDescription(orgunitTypeRepository.findById(orgnodesByClient.getOrgType()).get().getTypeName());
+			//orgnodesByClientResponse.setOrgUnitTypeDescription(orgunitTypeRepository.findById(orgnodesByClient.getOrgType()).get().getTypeName());
 			orgnodesByClientResponse.setClientCode(clientInfoRepository.findById(orgnodesByClient.getClientId()).get().getClientCode());
 			orgnodesByClientResponse.setClientDescription(clientInfoRepository.findById(orgnodesByClient.getClientId()).get().getClientName());
 			
@@ -93,7 +91,7 @@ public class OrgNodesServiceImpl implements OrgNodesService {
 		for (OrgInfo orgInfo : orginfos) {
 			//modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 			orginfoDTO = modelMapper.map(orgInfo, OrgInfoDTO.class);
-			orginfoDTO.setOrgUnitTypeDescription(orgunitTypeRepository.findById(orgInfo.getOrgType()).get().getTypeName());
+		//	orginfoDTO.setOrgUnitTypeDescription(orgunitTypeRepository.findById(orgInfo.getOrgType()).get().getTypeName());
 			orginfoDTO.setClientCode(clientInfoRepository.findById(orgInfo.getClientId()).get().getClientCode());
 			orginfoDTO.setClientDescription(clientInfoRepository.findById(orgInfo.getClientId()).get().getClientName());
 			orginfoDTO.setClientStatus(clientInfoRepository.findById(orgInfo.getClientId()).get().getClientStatus());
@@ -125,7 +123,7 @@ public class OrgNodesServiceImpl implements OrgNodesService {
 		for (OrgInfo orgInfo : orginfos) {
 			modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 			orginfoDTO = modelMapper.map(orgInfo, OrgInfoDTO.class);
-			orginfoDTO.setOrgUnitTypeDescription(orgunitTypeRepository.findById(orgInfo.getOrgType()).get().getTypeName());
+		//	orginfoDTO.setOrgUnitTypeDescription(orgunitTypeRepository.findById(orgInfo.getOrgType()).get().getTypeName());
 			orginfoDTO.setClientCode(clientInfoRepository.findById(orgInfo.getClientId()).get().getClientCode());
 			orginfoDTO.setClientDescription(clientInfoRepository.findById(orgInfo.getClientId()).get().getClientName());
 			orginfoDTO.setClientStatus(clientInfoRepository.findById(orgInfo.getClientId()).get().getClientStatus());
@@ -207,7 +205,7 @@ public class OrgNodesServiceImpl implements OrgNodesService {
 			modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 			OrgNodesByClientResponse orgnodesByClientResponse = modelMapper.map(orgnodesByClient, OrgNodesByClientResponse.class);
 	
-			orgnodesByClientResponse.setOrgUnitTypeDescription(orgunitTypeRepository.findById(orgnodesByClient.getOrgType()).get().getTypeName());
+		//	orgnodesByClientResponse.setOrgUnitTypeDescription(orgunitTypeRepository.findById(orgnodesByClient.getOrgType()).get().getTypeName());
 			orgnodesByClientResponse.setClientCode(clientInfoRepository.findById(orgnodesByClient.getClientId()).get().getClientCode());
 			orgnodesByClientResponse.setClientDescription(clientInfoRepository.findById(orgnodesByClient.getClientId()).get().getClientName());
 			
@@ -216,17 +214,17 @@ public class OrgNodesServiceImpl implements OrgNodesService {
 	}
 	
 	
-	public List<OrgUnitTypeMasterDTO> getAllOrgUnitTypeMaster() {
-		
-		short notDeleted=0;
-		List<OrgUnitTypeMaster> orgunitMasters= orgunitTypeRepository.findByIsDelete(notDeleted);
-		List<OrgUnitTypeMasterDTO> orgUnitMastersDTOs = new ArrayList<OrgUnitTypeMasterDTO>();
-		OrgUnitTypeMasterDTO orgUnitTypeMasterDTO = null;
-		for (OrgUnitTypeMaster orgs : orgunitMasters) {
-			orgUnitTypeMasterDTO = modelMapper.map(orgs, OrgUnitTypeMasterDTO.class);
-			orgUnitMastersDTOs.add(orgUnitTypeMasterDTO);
-		}
-		return orgUnitMastersDTOs;
-	}
+//	public List<OrgUnitTypeMasterDTO> getAllOrgUnitTypeMaster() {
+//		
+//		short notDeleted=0;
+//	//	List<OrgUnitTypeMaster> orgunitMasters= orgunitTypeRepository.findByIsDelete(notDeleted);
+//		List<OrgUnitTypeMasterDTO> orgUnitMastersDTOs = new ArrayList<OrgUnitTypeMasterDTO>();
+//		OrgUnitTypeMasterDTO orgUnitTypeMasterDTO = null;
+//		for (OrgUnitTypeMaster orgs : orgunitMasters) {
+//			orgUnitTypeMasterDTO = modelMapper.map(orgs, OrgUnitTypeMasterDTO.class);
+//			orgUnitMastersDTOs.add(orgUnitTypeMasterDTO);
+//		}
+//		return orgUnitMastersDTOs;
+//	}
 	
 }

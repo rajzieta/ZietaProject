@@ -5,9 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.zieta.tms.dto.OrgInfoDTO;
-import com.zieta.tms.dto.OrgUnitTypeMasterDTO;
 import com.zieta.tms.model.OrgInfo;
-import com.zieta.tms.model.OrgUnitTypeMaster;
 import com.zieta.tms.response.OrgNodesByClientResponse;
 
 public interface OrgNodesService {
@@ -24,7 +22,7 @@ public interface OrgNodesService {
 
 	public List<OrgNodesByClientResponse> findByClientIdAsHierarchy(Long clientId);
 
-	public List<OrgUnitTypeMasterDTO> getAllOrgUnitTypeMaster();
+//	public List<OrgUnitTypeMasterDTO> getAllOrgUnitTypeMaster();
 
 	public List<OrgInfoDTO> getAllOrgNodesAsHeirarchy();
 

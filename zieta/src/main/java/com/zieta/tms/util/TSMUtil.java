@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.springframework.util.StringUtils;
@@ -17,6 +18,7 @@ import org.springframework.util.StringUtils;
 import com.google.common.collect.Ordering;
 import com.google.common.primitives.Longs;
 import com.zieta.tms.common.ApproverType;
+import com.zieta.tms.dto.DateRange;
 import com.zieta.tms.dto.OrgInfoDTO;
 import com.zieta.tms.model.ProcessConfig;
 import com.zieta.tms.model.ProjectInfo;
@@ -261,6 +263,33 @@ public class TSMUtil {
 		}
 		return flag;
 	}	
+	
+	public static DateRange getFilledDateRange(Date startDate, Date endDate) {
+
+		DateRange dateRange = new DateRange();
+		boolean isDatesValid = TSMUtil.validateDates(startDate, endDate);
+
+		// defaulting to the current week date range, when there is no date range
+		// mentioned from front end.
+		if (!isDatesValid) {
+			CurrentWeekUtil currentWeek = new CurrentWeekUtil(new Locale("en", "IN"));
+			startDate = currentWeek.getFirstDay();
+			endDate = currentWeek.getLastDay();
+			dateRange.setStartDate(startDate);
+			dateRange.setEndDate(endDate);
+		} else {
+			startDate = TSMUtil.getFormattedDate(startDate);
+			endDate = TSMUtil.getFormattedDate(endDate);
+			Calendar c = Calendar.getInstance();
+			c.setTime(endDate);
+			c.add(Calendar.DATE, 1);
+			endDate = c.getTime();
+			dateRange.setStartDate(startDate);
+			dateRange.setEndDate(endDate);
+		}
+
+		return dateRange;
+	}
 
 
 }

@@ -25,6 +25,8 @@ public interface ExpenseService {
 	public void addExpenseEntries(@Valid List<ExpenseEntries> expenseEntries) throws Exception;
 
 	public void addExpenseInfo(@Valid ExpenseInfo expenseInfo) throws Exception;
+	
+	public List<ExpenseInfo> addExpenseInfo(List<ExpenseInfo> expenseInfo) throws Exception;
 
 	public void editExpenseInfoById(@Valid ExpenseInfoDTO expenseInfoDTO) throws Exception;
 
@@ -33,6 +35,8 @@ public interface ExpenseService {
 	public void deleteExpenseInfoById(Long id, String modifiedBy) throws Exception;
 
 	public void deleteExpenseEntriesById(Long id, String modifiedBy) throws Exception;
+	
+	public boolean submitExpenses(List<ExpenseInfo> expenseInfo) throws Exception;
 
 	
 	

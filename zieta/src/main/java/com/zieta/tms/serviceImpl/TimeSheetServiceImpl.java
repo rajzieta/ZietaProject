@@ -3,7 +3,6 @@ package com.zieta.tms.serviceImpl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -17,10 +16,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.zieta.tms.common.TMSConstants;
+import com.zieta.tms.dto.DateRange;
 import com.zieta.tms.dto.WorkflowDTO;
 import com.zieta.tms.model.ActivityMaster;
 import com.zieta.tms.model.ProcessSteps;
-import com.zieta.tms.model.RoleMaster;
 import com.zieta.tms.model.TSInfo;
 import com.zieta.tms.model.TSTimeEntries;
 import com.zieta.tms.model.TSWorkflow;
@@ -41,7 +40,6 @@ import com.zieta.tms.request.UpdateTimesheetByIdRequest;
 import com.zieta.tms.response.TSInfoModel;
 import com.zieta.tms.response.TimeEntriesByTimesheetIDResponse;
 import com.zieta.tms.service.TimeSheetService;
-import com.zieta.tms.util.CurrentWeekUtil;
 import com.zieta.tms.util.TSMUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -103,14 +101,9 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		short notDeleted=0;
 		List<TSInfoModel> tsInfoModelList = new ArrayList<TSInfoModel>();
 		
-		boolean isDatesValid = TSMUtil.validateDates(startDate,endDate);
-		if(!isDatesValid) {
-			CurrentWeekUtil currentWeek = new CurrentWeekUtil(new Locale("en","IN"));
-			startDate =currentWeek.getFirstDay();
-			endDate = currentWeek.getLastDay();
-		}
+		DateRange dateRange = TSMUtil.getFilledDateRange(startDate, endDate);
 		List<TSInfo> tsInfoList = tSInfoRepository.findByClientIdAndUserIdAndIsDeleteAndTsDateBetweenOrderByTaskActivityIdAscIdAsc(clientId, 
-				userId, notDeleted, startDate, endDate);
+				userId, notDeleted, dateRange.getStartDate(), dateRange.getEndDate());
 		for (TSInfo tsInfo : tsInfoList) {
 			TSInfoModel taskInfoModel = new TSInfoModel();
 			taskInfoModel.setTsInfo(tsInfo);
@@ -154,7 +147,6 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	public List<TSInfo> addTimeSheet(@Valid List<TSInfo> tsInfoList) {
 
 		
-		boolean statusTypesLoad = Boolean.FALSE;
 		for (TSInfo tsInfo : tsInfoList) {
 			
 			//Setting the statusId which is marked as default in the DB for the corresponding the statustype, doing
@@ -164,11 +156,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 			tsInfo.setStatusId(statuId);
 		}
 		
-		List<TSInfo> tsinfoEntites = tSInfoRepository.saveAll(tsInfoList);
-//		enable for testing
-//		submitTimeSheet(tsinfoEntites); 
-
-		return tsinfoEntites;
+		return tSInfoRepository.saveAll(tsInfoList);
 	}
 	
 	
@@ -187,7 +175,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 						.getId();
 				tsInfo.setStatusId(statusId);
 				tSInfoRepository.save(tsInfo);
-				if (workflowRequestList.size() == 0) {
+				if (workflowRequestList.isEmpty()) {
 					// get the approverid from the process_step based on the clientId, projectId and taskId
 					List<ProcessSteps> processStepsList = processStepsRepository
 							.findByClientIdAndProjectIdAndProjectTaskIdOrderByStepId(tsInfo.getClientId(),

@@ -3,7 +3,6 @@ package com.zieta.tms.response;
 import java.util.List;
 
 import com.zieta.tms.model.TSInfo;
-import com.zieta.tms.model.TSTimeEntries;
 import com.zieta.tms.model.WorkflowRequest;
 
 import lombok.Getter;

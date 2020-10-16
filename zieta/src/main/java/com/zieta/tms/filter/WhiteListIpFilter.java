@@ -35,7 +35,7 @@ public class WhiteListIpFilter extends OncePerRequestFilter {
 
 		String inboundIpAddress = request.getHeader("X-FORWARDED-FOR");
 		if(inboundIpAddress == null) {
-			inboundIpAddress = InetAddress.getLocalHost().getHostAddress();
+			inboundIpAddress = request.getRemoteAddr();
 		}
 		System.out.println("In bound ipAddress: " + inboundIpAddress);
 		System.out.println("In bound ipAddress: " + InetAddress.getLocalHost().getHostAddress());

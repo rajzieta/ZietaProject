@@ -45,11 +45,23 @@ public class OrgInfo extends BaseEntity implements Serializable {
 	    @Column(name="org_node_name")
 	    private String orgNodeName;
 	    
-	    @Column(name="org_type")
-	    private Long orgType;
-	    
 	    @Column(name="org_manager")
 	    private Long orgManager;
+	    
+	    @Column(name="is_company")
+	    private Boolean isCompany;
+	    
+	    @Column(name="is_dept")
+	    private Boolean isDept;
+	    
+	    @Column(name="is_cost_center")
+	    private Boolean isCostCenter;
+	    
+	    @Column(name="is_profit_center")
+	    private Boolean isProfitCenter;
+	    
+	    @Column(name="is_business_residence")
+	    private Boolean isBusinessResidence;
 	   
 	    @Column(name="org_parent_id")
 	    private Long orgParentId;

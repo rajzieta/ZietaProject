@@ -23,11 +23,15 @@ public class OrgNodesByClientResponse {
      String clientDescription;
 	 String orgNodeCode;
 	 String orgNodeName;
-	 Long orgType;
 	 Long orgManager;
+	 Boolean isCompany;
+	 Boolean isDept;
+	 Boolean isCostCenter;
+	 Boolean isProfitCenter;
+	 Boolean isBusinessResidence;
 	 Long orgParentId;
 	 Long orgStatus;
-	 String orgUnitTypeDescription;
+	// String orgUnitTypeDescription;
      String orgManagerName;
 	
 	

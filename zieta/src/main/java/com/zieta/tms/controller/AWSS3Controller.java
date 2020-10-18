@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.zieta.tms.service.AWSS3Service;
 
 @RestController
@@ -22,8 +21,9 @@ public class AWSS3Controller{
 	private AWSS3Service service;
 
 	@PostMapping(value= "/s3/upload")
-	public ResponseEntity<String> uploadFile(@RequestPart(value= "file") MultipartFile multipartFile) {
-		service.uploadFile(multipartFile);
+	public ResponseEntity<String> uploadFile(@RequestPart(value= "multipartFile") MultipartFile multipartFile, @RequestParam String clientId  ) {
+		service.uploadFile(multipartFile, clientId);
+
 		final String response = "[" + multipartFile.getOriginalFilename() + "] uploaded successfully.";
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}

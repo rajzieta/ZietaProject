@@ -33,17 +33,18 @@ import lombok.extern.slf4j.Slf4j;
 		AmazonS3Client amazonS3Client;
 		@Value("${aws.s3.bucket}")
 		private String bucketName;
+		
 
 		@Override
 		// @Async annotation ensures that the method is executed in a different background thread 
 		// but not consume the main thread.
 		@Async
-		public void uploadFile(final MultipartFile multipartFile, String clientId) {
+		public void uploadFile(final MultipartFile multipartFile, String objectId) {
 			log.info("File upload in progress.");
 			File file = null;
 			try {
 				file = convertMultiPartFileToFile(multipartFile);
-				uploadFileToS3Bucket(bucketName, file, clientId);
+				uploadFileToS3Bucket(bucketName, file, objectId);
 				log.info("File upload is completed.");
 			} catch (final AmazonServiceException ex) {
 				log.info("File upload is failed.");
@@ -64,30 +65,13 @@ import lombok.extern.slf4j.Slf4j;
 			return file;
 		}
 
-		private void uploadFileToS3Bucket(final String bucketName, final File file,String clientId) {
-			final String uniqueFileName = getObjectKey(clientId) + file.getName();
-			log.info("Uploading file with name= " + uniqueFileName);
-			final PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, uniqueFileName, file);
+		private void uploadFileToS3Bucket(final String bucketName, final File file,String objectKey) {
+			objectKey = objectKey + file.getName();
+			log.info("Uploading file with name= " + objectKey);
+			final PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, objectKey, file);
 			PutObjectResult result = amazonS3Client.putObject(putObjectRequest);
 		}
 		
-		private String getObjectKey(String clientId) {
-			String thisYear = new SimpleDateFormat("yyyy").format(new Date());
-			String thisMonth = new SimpleDateFormat("MM").format(new Date());
-			String thisDay = new SimpleDateFormat("dd").format(new Date());
-			
-			StringBuilder keyPath = new StringBuilder(clientId).append(File.separator);
-//					keyPath.append(s3Attributes.getProjectId())
-//					.append(File.separator).append(s3Attributes.getUserId())
-//					.append(File.separator)
-					keyPath.append(thisYear)
-					.append(File.separator).append(thisMonth)
-					.append(File.separator).append(thisDay)
-//					.append(File.separator).append(s3Attributes.getExpId())
-					.append(File.separator);
-			return keyPath.toString();		
-		}
-					
 
 		@Override
 		// @Async annotation ensures that the method is executed in a different background thread 

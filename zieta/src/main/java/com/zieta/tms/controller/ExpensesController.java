@@ -114,7 +114,7 @@ public class ExpensesController {
 
 	@ApiOperation(value = "Updates the ExpenseEntries for the provided Id", notes = "Table reference: expense_entries")
 	@RequestMapping(value = "editExpenseEntriesById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void editExpenseEntriesById(@Valid @RequestBody ExpenseEntriesDTO expenseEntriesDTO) throws Exception {
+	public void editExpenseEntriesById(@Valid @RequestBody List<ExpenseEntriesDTO> expenseEntriesDTO) throws Exception {
 		expenseService.editExpenseEntriesById(expenseEntriesDTO);
 
 	}
@@ -152,6 +152,13 @@ public class ExpensesController {
 
 	}
 
+	@ApiOperation(value = "Updates the ExpenseInfo for the provided Id", notes = "Table reference: expense_info")
+	@RequestMapping(value = "editExpenseInfoByIds", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editExpenseInfoByIds(@Valid @RequestBody List<ExpenseInfoDTO> expenseInfoDTO) throws Exception {
+		expenseService.editExpenseInfoByIds(expenseInfoDTO);
+
+	}
+	
 	@ApiOperation(value = "Deletes entries from expense_info based on Id", notes = "Table reference: expense_info")
 	@RequestMapping(value = "deleteExpenseInfoById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void deleteExpenseInfoById(@RequestParam(required = true) Long id,

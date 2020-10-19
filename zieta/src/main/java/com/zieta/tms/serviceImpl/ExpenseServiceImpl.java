@@ -35,6 +35,7 @@ import com.zieta.tms.repository.ExpenseTypeMasterRepository;
 import com.zieta.tms.repository.ExpenseWorkflowRepository;
 import com.zieta.tms.repository.OrgInfoRepository;
 import com.zieta.tms.repository.ProjectInfoRepository;
+import com.zieta.tms.request.UpdateTimesheetByIdRequest;
 import com.zieta.tms.service.ExpenseService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -194,12 +195,12 @@ public class ExpenseServiceImpl implements ExpenseService {
 		}
 		return expenseEntriesDTOs;
 	}
-
+@Override
 	public void addExpenseEntries(@Valid List<ExpenseEntries> expenseEntries) throws Exception {
 		expenseEntriesRepository.saveAll(expenseEntries);
 	}
 
-	public void editExpenseEntriesById(@Valid ExpenseEntriesDTO expenseEntriesDTO) throws Exception {
+	public void editExpenseEntries(@Valid ExpenseEntriesDTO expenseEntriesDTO) throws Exception {
 
 		Optional<ExpenseEntries> expenseEntriesEntity = expenseEntriesRepository.findById(expenseEntriesDTO.getId());
 		if (expenseEntriesEntity.isPresent()) {
@@ -211,6 +212,15 @@ public class ExpenseServiceImpl implements ExpenseService {
 		}
 
 	}
+	@Override
+	@Transactional
+	public void editExpenseEntriesById(@Valid List<ExpenseEntriesDTO> expenseEntriesDTO) throws Exception {
+
+		for (ExpenseEntriesDTO updateRequest : expenseEntriesDTO) {
+			editExpenseEntries(updateRequest);
+		}
+	}
+
 
 	public void deleteExpenseEntriesById(Long id, String modifiedBy) throws Exception {
 
@@ -228,7 +238,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 		}
 
 	}
-
+@Override
 	public void addExpenseInfo(@Valid ExpenseInfo expenseInfo) throws Exception {
 		expenseInfoRepository.save(expenseInfo);
 	}
@@ -241,7 +251,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 		 return expenseInfoList;
 	}
 
-
+@Override
 	public void editExpenseInfoById(@Valid ExpenseInfoDTO expenseInfoDTO) throws Exception {
 
 		Optional<ExpenseInfo> expenseInfoEntity = expenseInfoRepository.findById(expenseInfoDTO.getId());
@@ -250,9 +260,30 @@ public class ExpenseServiceImpl implements ExpenseService {
 			expenseInfoRepository.save(expenseinfo);
 
 		} else {
-			throw new Exception("UserRole not found with the provided ID : " + expenseInfoDTO.getId());
+			throw new Exception("ExpenseInfo not found with the provided ID : " + expenseInfoDTO.getId());
 		}
 
+	}
+	
+	public void editExpenseInfos(@Valid ExpenseInfoDTO expenseInfoDTO) throws Exception {
+
+		Optional<ExpenseInfo> expenseInfoEntity = expenseInfoRepository.findById(expenseInfoDTO.getId());
+		if (expenseInfoEntity.isPresent()) {
+			ExpenseInfo expenseinfo = modelMapper.map(expenseInfoDTO, ExpenseInfo.class);
+			expenseInfoRepository.save(expenseinfo);
+
+		} else {
+			throw new Exception("ExpenseInfo not found with the provided ID : " + expenseInfoDTO.getId());
+		}
+
+	}
+	@Override
+	@Transactional
+	public void editExpenseInfoByIds(@Valid List<ExpenseInfoDTO> expenseInfoDTO) throws Exception {
+
+		for (ExpenseInfoDTO updateRequest : expenseInfoDTO) {
+			editExpenseInfos(updateRequest);
+		}
 	}
 
 	public void deleteExpenseInfoById(Long id, String modifiedBy) throws Exception {

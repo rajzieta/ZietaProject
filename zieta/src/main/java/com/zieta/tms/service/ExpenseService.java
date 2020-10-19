@@ -30,7 +30,10 @@ public interface ExpenseService {
 
 	public void editExpenseInfoById(@Valid ExpenseInfoDTO expenseInfoDTO) throws Exception;
 
-	public void editExpenseEntriesById(@Valid ExpenseEntriesDTO expenseEntriesDTO) throws Exception;
+	public void editExpenseInfoByIds(@Valid List<ExpenseInfoDTO> expenseInfoDTO) throws Exception;
+
+	
+	public void editExpenseEntriesById(@Valid List<ExpenseEntriesDTO> expenseEntriesDTO) throws Exception;
 
 	public void deleteExpenseInfoById(Long id, String modifiedBy) throws Exception;
 

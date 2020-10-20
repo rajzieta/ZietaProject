@@ -21,6 +21,9 @@ public class WhiteListIpFilter extends OncePerRequestFilter {
 	@Value("#{'${whitelist.ipaddress}'.split(',')}")
 	private List<String> ipAddressList;
 	
+	@Value("#{'${whitelist.path}'.split(',')}")
+	private List<String> pathList;
+	
 	private static final String WHITE_LIST_PATH = "/api/authenticate";
 
 	@Override
@@ -40,7 +43,7 @@ public class WhiteListIpFilter extends OncePerRequestFilter {
 			inboundIpAddress = request.getRemoteAddr();
 		}
 		System.out.println("In bound ipAddress: " + inboundIpAddress);
-		if (ipAddressList.contains(inboundIpAddress) || request.getRequestURI().equals(WHITE_LIST_PATH)) {
+		if (ipAddressList.contains(inboundIpAddress) || pathList.contains(request.getRequestURI())) {
 			return true;
 		}
 		return false;

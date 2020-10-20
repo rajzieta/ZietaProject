@@ -15,11 +15,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-//@Component
+@Component
 public class WhiteListIpFilter extends OncePerRequestFilter {
 
 	@Value("#{'${whitelist.ipaddress}'.split(',')}")
 	private List<String> ipAddressList;
+	
+	private static final String WHITE_LIST_PATH = "/api/authenticate";
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -38,9 +40,7 @@ public class WhiteListIpFilter extends OncePerRequestFilter {
 			inboundIpAddress = request.getRemoteAddr();
 		}
 		System.out.println("In bound ipAddress: " + inboundIpAddress);
-		System.out.println("In bound ipAddress: " + InetAddress.getLocalHost().getHostAddress());
-		System.out.println("In bound ipAddress: " + InetAddress.getLoopbackAddress().getHostAddress());
-		if (ipAddressList.contains(inboundIpAddress)) {
+		if (ipAddressList.contains(inboundIpAddress) || request.getRequestURI().equals(WHITE_LIST_PATH)) {
 			return true;
 		}
 		return false;

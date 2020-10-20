@@ -264,7 +264,7 @@ public class TSMUtil {
 		return flag;
 	}	
 	
-	public static DateRange getFilledDateRange(Date startDate, Date endDate) {
+	public static DateRange getFilledDateRange(Date startDate, Date endDate, boolean isTimeStamp) {
 
 		DateRange dateRange = new DateRange();
 		boolean isDatesValid = TSMUtil.validateDates(startDate, endDate);
@@ -280,10 +280,12 @@ public class TSMUtil {
 		} else {
 			startDate = TSMUtil.getFormattedDate(startDate);
 			endDate = TSMUtil.getFormattedDate(endDate);
-			Calendar c = Calendar.getInstance();
-			c.setTime(endDate);
-			c.add(Calendar.DATE, 1);
-			endDate = c.getTime();
+			if(isTimeStamp) {
+				Calendar c = Calendar.getInstance();
+				c.setTime(endDate);
+				c.add(Calendar.DATE, 1);
+				endDate = c.getTime();
+			}
 			dateRange.setStartDate(startDate);
 			dateRange.setEndDate(endDate);
 		}

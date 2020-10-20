@@ -101,7 +101,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		short notDeleted=0;
 		List<TSInfoModel> tsInfoModelList = new ArrayList<TSInfoModel>();
 		
-		DateRange dateRange = TSMUtil.getFilledDateRange(startDate, endDate);
+		DateRange dateRange = TSMUtil.getFilledDateRange(startDate, endDate, false);
 		List<TSInfo> tsInfoList = tSInfoRepository.findByClientIdAndUserIdAndIsDeleteAndTsDateBetweenOrderByTaskActivityIdAscIdAsc(clientId, 
 				userId, notDeleted, dateRange.getStartDate(), dateRange.getEndDate());
 		for (TSInfo tsInfo : tsInfoList) {

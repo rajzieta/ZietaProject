@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,19 +40,19 @@ import lombok.extern.slf4j.Slf4j;
 		// @Async annotation ensures that the method is executed in a different background thread 
 		// but not consume the main thread.
 		@Async
-		public void uploadFile(final MultipartFile multipartFile, String objectId) {
+		public String uploadFile(final MultipartFile multipartFile, String objectId) {
 			log.info("File upload in progress.");
 			File file = null;
+			String attachmentPath = StringUtils.EMPTY;
 			try {
 				file = convertMultiPartFileToFile(multipartFile);
-				uploadFileToS3Bucket(bucketName, file, objectId);
+				attachmentPath = uploadFileToS3Bucket(bucketName, file, objectId);
 				log.info("File upload is completed.");
-			} catch (final AmazonServiceException ex) {
-				log.info("File upload is failed.");
-				log.error("Error= {} while uploading file.", ex.getMessage());
 			}finally {
 				file.delete();	// To remove the file locally created in the project folder.
 			}
+			
+			return attachmentPath;
 		}
 
 		private File convertMultiPartFileToFile(final MultipartFile multipartFile) {
@@ -65,11 +66,13 @@ import lombok.extern.slf4j.Slf4j;
 			return file;
 		}
 
-		private void uploadFileToS3Bucket(final String bucketName, final File file,String objectKey) {
+		private String uploadFileToS3Bucket(final String bucketName, final File file,String objectKey) {
+
 			objectKey = objectKey + file.getName();
 			log.info("Uploading file with name= " + objectKey);
 			final PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, objectKey, file);
 			PutObjectResult result = amazonS3Client.putObject(putObjectRequest);
+			return objectKey;
 		}
 		
 

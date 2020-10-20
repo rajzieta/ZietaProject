@@ -20,6 +20,11 @@ public class WhiteListIpFilter extends OncePerRequestFilter {
 
 	@Value("#{'${whitelist.ipaddress}'.split(',')}")
 	private List<String> ipAddressList;
+	
+	@Value("#{'${whitelist.path}'.split(',')}")
+	private List<String> pathList;
+	
+	private static final String WHITE_LIST_PATH = "/api/authenticate";
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -38,9 +43,7 @@ public class WhiteListIpFilter extends OncePerRequestFilter {
 			inboundIpAddress = request.getRemoteAddr();
 		}
 		System.out.println("In bound ipAddress: " + inboundIpAddress);
-		System.out.println("In bound ipAddress: " + InetAddress.getLocalHost().getHostAddress());
-		System.out.println("In bound ipAddress: " + InetAddress.getLoopbackAddress().getHostAddress());
-		if (ipAddressList.contains(inboundIpAddress)) {
+		if (ipAddressList.contains(inboundIpAddress) || pathList.contains(request.getRequestURI())) {
 			return true;
 		}
 		return false;

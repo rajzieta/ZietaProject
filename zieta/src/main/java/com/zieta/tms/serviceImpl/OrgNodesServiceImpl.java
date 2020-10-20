@@ -209,6 +209,15 @@ public class OrgNodesServiceImpl implements OrgNodesService {
 			orgnodesByClientResponse.setClientCode(clientInfoRepository.findById(orgnodesByClient.getClientId()).get().getClientCode());
 			orgnodesByClientResponse.setClientDescription(clientInfoRepository.findById(orgnodesByClient.getClientId()).get().getClientName());
 			
+			orgnodesByClientResponse.setOrgManagerName(StringUtils.EMPTY);
+			if(null != orgnodesByClient.getOrgManager()) {
+				Optional <UserInfo> userInfo = userInfoRepository.findById(orgnodesByClient.getOrgManager());
+				if(userInfo.isPresent()) {
+					String userName = TSMUtil.getFullName(userInfo.get());
+					orgnodesByClientResponse.setOrgManagerName(userName);
+				}
+			}
+			
 			orgnodesByClientResponseList.add(orgnodesByClientResponse);
 		}
 	}

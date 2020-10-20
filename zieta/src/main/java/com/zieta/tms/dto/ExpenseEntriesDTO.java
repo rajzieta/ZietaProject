@@ -23,6 +23,7 @@ public class ExpenseEntriesDTO extends BaseEntity {
 	private float exchangeRate;
 	private float expAmtInr;
 	private String expDesc;
+	private Long statusId;
 	private String fileName;
 	private String filePath;
 

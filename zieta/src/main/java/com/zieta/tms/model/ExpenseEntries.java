@@ -54,6 +54,9 @@ public class ExpenseEntries extends BaseEntity implements Serializable {
 	@Column(name="exp_desc")
 	private String expDesc;
 	
+	@Column(name="status_id")
+	private Long statusId;
+	
 	@Column(name="file_name")
 	private String fileName;
 	

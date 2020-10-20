@@ -103,9 +103,25 @@ public class ExpenseServiceImpl implements ExpenseService {
 			ExpenseInfoDTO expenseInfoDTO = null;
 			for (ExpenseInfo expenses : expenseInfos) {
 				expenseInfoDTO = modelMapper.map(expenses, ExpenseInfoDTO.class);
-				ProjectInfo projectInfo  = projectInfoRepository.findById(expenses.getProjectId()).get();
-				expenseInfoDTO.setProjectCode(projectInfo.getProjectCode());
-				expenseInfoDTO.setProjectDesc(projectInfo.getProjectName());
+				
+				expenseInfoDTO.setProjectCode(StringUtils.EMPTY);
+				if (null != expenses.getProjectId()) {
+				Optional<ProjectInfo> projectInfo  = projectInfoRepository.findById(expenses.getProjectId());
+				if (projectInfo.isPresent()) {
+					expenseInfoDTO.setProjectCode(projectInfo.get().getProjectCode());
+
+				}
+			}
+				
+				expenseInfoDTO.setProjectDesc(StringUtils.EMPTY);
+				if (null != expenses.getProjectId()) {
+				Optional<ProjectInfo> projectInfo  = projectInfoRepository.findById(expenses.getProjectId());
+				if (projectInfo.isPresent()) {
+					expenseInfoDTO.setProjectDesc(projectInfo.get().getProjectName());
+
+				}
+			}
+				
 				expenseInfoList.add(expenseInfoDTO);
 			}
 			return expenseInfoList;

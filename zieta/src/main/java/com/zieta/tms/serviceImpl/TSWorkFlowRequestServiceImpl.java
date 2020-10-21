@@ -418,6 +418,8 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				 tsInfo.getClientId(),TMSConstants.TIMEENTRY, TMSConstants.TIMEENTRY_REJECTED, (short)0).getId();
 		 List<TSTimeEntries> rejectedTimeEntriesList = tSTimeEntriesRepository.findByTsIdAndStatusIdAndIsDelete(
 				 tsInfo.getId(), timeEntryRejectStatusId, (short)0);
+		 
+		 log.info("Getting rejected time: timeEntryRejectStatusId {}, tsInfo.getId() {}, rejectedTimeEntriesList.size {} ",timeEntryRejectStatusId, tsInfo.getId(),rejectedTimeEntriesList.size());
 		 float totalRejectTime = 0.0f;
 		 for (TSTimeEntries tsTimeEntries : rejectedTimeEntriesList) {
 			 

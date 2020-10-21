@@ -338,35 +338,6 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				    }
 					
 				    tsInfoRepository.save(tsInfo);
-					
-					
-//					activitiesTaskRepository
-				    Long taskActivityId = tsInfo.getTaskActivityId();
-				    TaskActivity taskActivity =  activitiesTaskRepository.findByTaskActivityIdAndUserId(taskActivityId,tsInfo.getUserId());
-				    if(taskActivityId !=null &&  taskActivityId.longValue() != 0 && taskActivity != null ) {
-				    	//adding the totalapproved to actualhours.
-				    	float totalActualHours =  totalApprovedTime + taskActivity.getActualHrs();
-				    	taskActivity.setActualHrs(totalActualHours);
-				    	
-				    }else {
-				    	//we are in the situation to handle unplanned activity here.
-				    	 taskActivity = new TaskActivity();
-				    	 taskActivity.setClientId(tsInfo.getClientId());
-				    	 taskActivity.setProjectId(tsInfo.getProjectId());
-				    	 taskActivity.setTaskId(tsInfo.getTaskId());
-				    	 taskActivity.setActivityId(tsInfo.getActivityId());
-				    	 taskActivity.setUserId(tsInfo.getUserId());
-				    	 taskActivity.setPlannedHrs(0.0f);
-				    	 taskActivity.setActualHrs(totalApprovedTime);
-				    	 taskActivity.setCreatedDate(new Date());
-				    	 taskActivity.setModifiedDate(new Date());
-				    	 
-				    	 activitiesTaskRepository.save(taskActivity);
-				    	 
-				    }
-					
-					
-					
 				}
 
 		} else if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_REJECT)) {

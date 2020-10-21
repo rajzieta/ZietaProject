@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -48,9 +47,12 @@ import com.zieta.tms.service.WorkFlowRequestService;
 import com.zieta.tms.util.CurrentWeekUtil;
 import com.zieta.tms.util.TSMUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 
 @Service
 @Transactional
+@Slf4j
 public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
 	@Autowired
@@ -291,6 +293,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 					// reduce the total rejected timeentries time from the total submitted time
 					float totalApprovedTime = tsInfo.getTsTotalSubmittedTime() - totalRejectTime;
 					tsInfo.setTsTotalApprovedTime(totalApprovedTime);
+					log.info("Process inprogress with multistep...");
 					
 				} else {
 					// Final Approval Done
@@ -318,6 +321,8 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				    	//adding the totalapproved to actualhours.
 				    	float totalActualHours =  totalApprovedTime + taskActivity.getActualHrs();
 				    	taskActivity.setActualHrs(totalActualHours);
+				    	log.info("updating the existing taskactivity record: taskactivityid {}, userid {}",taskActivityId,tsInfo.getUserId());
+				    	log.info("Total approved time {}, actualhours {}, rejectedhrs {}", totalApprovedTime,taskActivity.getActualHrs(),totalRejectTime);
 				    	
 				    }else {
 				    	//we are in the situation to handle unplanned activity here.
@@ -334,10 +339,13 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				    	 
 				    	 taskActivity =  activitiesTaskRepository.save(taskActivity);
 				    	 tsInfo.setTaskActivityId(taskActivity.getTaskActivityId());
+				    	 log.info("Creating  he new taskactivity record: taskactivityid {}, userid {}, taskActivityid {}",taskActivityId,tsInfo.getUserId(),taskActivity);
+				    	 log.info("Total approved time {}, actualhours {}, rejectedhrs {}", totalApprovedTime,taskActivity.getActualHrs(),totalRejectTime);
 				    	 
 				    }
 					
 				    tsInfoRepository.save(tsInfo);
+				    log.info("Workflow completed... ");
 				}
 
 		} else if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_REJECT)) {

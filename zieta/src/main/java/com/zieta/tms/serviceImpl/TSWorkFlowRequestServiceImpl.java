@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -18,10 +19,12 @@ import com.zieta.tms.common.TMSConstants;
 import com.zieta.tms.model.ActivityMaster;
 import com.zieta.tms.model.TSInfo;
 import com.zieta.tms.model.TSTimeEntries;
+import com.zieta.tms.model.TaskActivity;
 import com.zieta.tms.model.TaskInfo;
 import com.zieta.tms.model.UserInfo;
 import com.zieta.tms.model.WorkFlowRequestComments;
 import com.zieta.tms.model.WorkflowRequest;
+import com.zieta.tms.repository.ActivitiesTaskRepository;
 import com.zieta.tms.repository.ActivityMasterRepository;
 import com.zieta.tms.repository.ClientInfoRepository;
 import com.zieta.tms.repository.ProcessStepsRepository;
@@ -48,7 +51,7 @@ import com.zieta.tms.util.TSMUtil;
 
 @Service
 @Transactional
-public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
+public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
 	@Autowired
 	WorkflowRequestRepository workflowRequestRepository;
@@ -92,6 +95,9 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	
 	@Autowired
 	ActivityMasterRepository activityMasterRepository;
+	
+	@Autowired
+	ActivitiesTaskRepository activitiesTaskRepository;
 
 	@Autowired
 	@Qualifier("stateByName")
@@ -304,6 +310,33 @@ public class WorkFlowRequestServiceImpl implements WorkFlowRequestService {
 					float totalApprovedTime = tsInfo.getTsTotalSubmittedTime() - totalRejectTime;
 					tsInfo.setTsTotalApprovedTime(totalApprovedTime);
 					tsInfoRepository.save(tsInfo);
+					
+//					activitiesTaskRepository
+				    Long taskActivityId = tsInfo.getTaskActivityId();
+				    TaskActivity taskActivity =  activitiesTaskRepository.findByTaskActivityIdAndUserId(taskActivityId,tsInfo.getUserId());
+				    if(taskActivityId !=null &&  taskActivityId.longValue() != 0 && taskActivity != null ) {
+				    	//adding the totalapproved to actualhours.
+				    	float totalActualHours =  totalApprovedTime + taskActivity.getActualHrs();
+				    	taskActivity.setActualHrs(totalActualHours);
+				    	
+				    }else {
+				    	//we are in the situation to handle unplanned activity here.
+				    	 taskActivity = new TaskActivity();
+				    	 taskActivity.setClientId(tsInfo.getClientId());
+				    	 taskActivity.setProjectId(tsInfo.getProjectId());
+				    	 taskActivity.setTaskId(tsInfo.getTaskId());
+				    	 taskActivity.setActivityId(tsInfo.getActivityId());
+				    	 taskActivity.setUserId(tsInfo.getUserId());
+				    	 taskActivity.setPlannedHrs(0.0f);
+				    	 taskActivity.setActualHrs(totalApprovedTime);
+				    	 taskActivity.setCreatedDate(new Date());
+				    	 taskActivity.setModifiedDate(new Date());
+				    	 
+				    	 activitiesTaskRepository.save(taskActivity);
+				    	 
+				    }
+					
+					
 					
 				}
 

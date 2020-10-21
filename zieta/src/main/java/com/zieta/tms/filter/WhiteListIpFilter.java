@@ -42,7 +42,8 @@ public class WhiteListIpFilter extends OncePerRequestFilter {
 		if(inboundIpAddress == null) {
 			inboundIpAddress = request.getRemoteAddr();
 		}
-		System.out.println("In bound ipAddress: " + inboundIpAddress);
+		System.out.println("In bound ipAddress X-FORWARDED-FOR: " +  request.getHeader("X-FORWARDED-FOR"));
+		System.out.println("In bound ipAddress request.getRemoteAddr(): " + request.getRemoteAddr());
 		if (ipAddressList.contains(inboundIpAddress) || pathList.contains(request.getRequestURI())) {
 			return true;
 		}

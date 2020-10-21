@@ -23,6 +23,7 @@ import com.zieta.tms.dto.ExpenseInfoDTO;
 import com.zieta.tms.dto.ExpenseMasterDTO;
 import com.zieta.tms.model.ExpenseEntries;
 import com.zieta.tms.model.ExpenseInfo;
+import com.zieta.tms.model.TSInfo;
 import com.zieta.tms.service.ExpenseService;
 
 import io.swagger.annotations.Api;
@@ -164,6 +165,14 @@ public class ExpensesController {
 	public void deleteExpenseInfoById(@RequestParam(required = true) Long id,
 			@RequestParam(required = true) String modifiedBy) throws Exception {
 		expenseService.deleteExpenseInfoById(id, modifiedBy);
+	}
+	
+	@ApiOperation(value = "Saves the expense entries into expwf_request", notes = "Table reference: expwf_request")
+	@RequestMapping(value = "submitExpenseSheet", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Boolean> submitExpenseSheet(@Valid @RequestBody List<ExpenseInfo> expenseInfoList)
+			throws Exception {
+		boolean status = expenseService.submitExpenses(expenseInfoList);
+		return new ResponseEntity<Boolean>(status, HttpStatus.OK);
 	}
 
 }

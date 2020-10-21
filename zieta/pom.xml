@@ -133,11 +133,11 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>4.1.0</version>
 		</dependency>
-		<!--  <dependency>
+		<dependency>
 			<groupId>com.github.gavlyukovskiy</groupId>
 			<artifactId>p6spy-spring-boot-starter</artifactId>
 			<version>1.6.2</version>
-		</dependency>-->
+		</dependency>
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk</artifactId>

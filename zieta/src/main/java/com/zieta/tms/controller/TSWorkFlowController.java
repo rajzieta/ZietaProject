@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api")
-@Api(tags = "WorkFlow API")
+@Api(tags = "TS WorkFlow API")
 @Slf4j
 public class TSWorkFlowController {
 	

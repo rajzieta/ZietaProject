@@ -263,7 +263,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 	public List<ExpenseInfo> addExpenseInfo(List<ExpenseInfo> expenseInfo) throws Exception {
 		
 		 List<ExpenseInfo> expenseInfoList =  expenseInfoRepository.saveAll(expenseInfo);
-		 submitExpenses(expenseInfoList);
+//		 submitExpenses(expenseInfoList);
 		 return expenseInfoList;
 	}
 

@@ -289,10 +289,10 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 					}
 					
 					//
-					float totalRejectTime = getTotalRejectedTime(tsInfo);
+//					float totalRejectTime = getTotalRejectedTime(tsInfo);
 					// reduce the total rejected timeentries time from the total submitted time
-					float totalApprovedTime = tsInfo.getTsTotalSubmittedTime() - totalRejectTime;
-					tsInfo.setTsTotalApprovedTime(totalApprovedTime);
+//					float totalApprovedTime = tsInfo.getTsTotalSubmittedTime() - totalRejectTime;
+//					tsInfo.setTsTotalApprovedTime(totalApprovedTime);
 					log.info("Process inprogress with multistep...");
 					
 				} else {
@@ -317,6 +317,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 //					activitiesTaskRepository
 				    Long taskActivityId = tsInfo.getTaskActivityId();
 				    TaskActivity taskActivity =  activitiesTaskRepository.findByTaskActivityIdAndUserId(taskActivityId,tsInfo.getUserId());
+				    log.info("Actual hoours before updating {}",taskActivity.getActualHrs());
 				    if(taskActivityId !=null &&  taskActivityId.longValue() != 0 && taskActivity != null ) {
 				    	//adding the totalapproved to actualhours.
 				    	float totalActualHours =  totalApprovedTime + taskActivity.getActualHrs();

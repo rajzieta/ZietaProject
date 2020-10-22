@@ -329,6 +329,8 @@ public class ExpenseServiceImpl implements ExpenseService {
 				Optional<ExpenseWorkflowRequest> expenseWorkflowRequestOpti = expenseWorkflowRepository.findById(
 						expenseInfo.getId());
 				ExpenseWorkflowRequest expenseWorkflowRequest = null;
+				ExpenseInfo expenseInfoEntitiy = expenseInfoRepository.findById(expenseInfo.getId()).get();
+				expenseInfoEntitiy.setExpPostingDate(new Date());
 				if(!expenseWorkflowRequestOpti.isPresent()) {
 					expenseWorkflowRequest = new ExpenseWorkflowRequest();
 					expenseWorkflowRequest.setClientId(expenseInfo.getClientId());

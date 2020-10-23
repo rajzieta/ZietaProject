@@ -261,6 +261,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			}
 
 		}
+		log.info("Workflow completed ...");
 	}
 	
 	
@@ -317,8 +318,9 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 //					activitiesTaskRepository
 				    Long taskActivityId = tsInfo.getTaskActivityId();
 				    TaskActivity taskActivity =  activitiesTaskRepository.findByTaskActivityIdAndUserId(taskActivityId,tsInfo.getUserId());
-				    log.info("Actual hoours before updating {}",taskActivity.getActualHrs());
+				   
 				    if(taskActivityId !=null &&  taskActivityId.longValue() != 0 && taskActivity != null ) {
+				    	 log.info("Actual hoours before updating {}",taskActivity.getActualHrs());
 				    	//adding the totalapproved to actualhours.
 				    	float totalActualHours =  totalApprovedTime + taskActivity.getActualHrs();
 				    	taskActivity.setActualHrs(totalActualHours);
@@ -346,7 +348,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				    }
 					
 				    tsInfoRepository.save(tsInfo);
-				    log.info("Workflow completed... ");
+				    log.info("Workflow Final Approval done ... ");
 				}
 
 		} else if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_REJECT)) {

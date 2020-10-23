@@ -344,9 +344,10 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	
 	@Override
 	public void updateTimeEntriesByID(@Valid TimeEntriesByTsIdRequest timeentriesByTsIdRequest) throws Exception {
-		Optional<TSTimeEntries> TsTimeEntity = tstimeentriesRepository.findById(timeentriesByTsIdRequest.getId());
-		if(TsTimeEntity.isPresent()) {
-			TSTimeEntries tsTimeSave = TsTimeEntity.get();
+		// todo remove find by and use existsbyid
+		Optional<TSTimeEntries> tsTimeEntity = tstimeentriesRepository.findById(timeentriesByTsIdRequest.getId());
+		if(tsTimeEntity.isPresent()) {
+			
 			TSTimeEntries tstimeentry= modelMapper.map(timeentriesByTsIdRequest, TSTimeEntries.class);
 			
 			tstimeentriesRepository.save(tstimeentry);
@@ -365,6 +366,8 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		for (TimeEntriesByTsIdRequest updateRequest : timeentriesByTsIdRequest) {
 			updateTimeEntriesByID(updateRequest);
 		}
+		
+		log.info("Updated time entries ");
 	}
 	
 	

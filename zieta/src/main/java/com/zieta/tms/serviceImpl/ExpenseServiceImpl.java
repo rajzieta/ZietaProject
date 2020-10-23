@@ -24,6 +24,7 @@ import com.zieta.tms.model.CountryMaster;
 import com.zieta.tms.model.CurrencyMaster;
 import com.zieta.tms.model.ExpenseEntries;
 import com.zieta.tms.model.ExpenseInfo;
+import com.zieta.tms.model.OrgInfo;
 import com.zieta.tms.model.ExpenseTypeMaster;
 import com.zieta.tms.model.ExpenseWorkflowRequest;
 import com.zieta.tms.model.ProjectInfo;
@@ -89,6 +90,24 @@ public class ExpenseServiceImpl implements ExpenseService {
 		ExpenseInfoDTO expenseInfoDTO = null;
 		for (ExpenseInfo expenseInfo : expenseInfos) {
 			expenseInfoDTO = modelMapper.map(expenseInfo, ExpenseInfoDTO.class);
+			expenseInfoDTO.setOrgUnitCode(StringUtils.EMPTY);
+			if (null != expenseInfo.getOrgUnitId()) {
+			Optional<OrgInfo>  orgInfo = orgInfoRepository.findById(expenseInfo.getOrgUnitId());
+			if (orgInfo.isPresent()) {
+				expenseInfoDTO.setOrgUnitCode(orgInfo.get().getOrgNodeCode());
+
+			}
+		}
+			
+			expenseInfoDTO.setOrgUnitDesc(StringUtils.EMPTY);
+			if (null != expenseInfo.getOrgUnitId()) {
+			Optional<OrgInfo> orgInfo  = orgInfoRepository.findById(expenseInfo.getOrgUnitId());
+			if (orgInfo.isPresent()) {
+				expenseInfoDTO.setOrgUnitDesc(orgInfo.get().getOrgNodeName());
+
+			}
+		}
+			
 			expenseInfoDTOs.add(expenseInfoDTO);
 		}
 		return expenseInfoDTOs;
@@ -118,6 +137,24 @@ public class ExpenseServiceImpl implements ExpenseService {
 				Optional<ProjectInfo> projectInfo  = projectInfoRepository.findById(expenses.getProjectId());
 				if (projectInfo.isPresent()) {
 					expenseInfoDTO.setProjectDesc(projectInfo.get().getProjectName());
+
+				}
+			}
+				
+				expenseInfoDTO.setOrgUnitCode(StringUtils.EMPTY);
+				if (null != expenses.getOrgUnitId()) {
+				Optional<OrgInfo>  orgInfo = orgInfoRepository.findById(expenses.getOrgUnitId());
+				if (orgInfo.isPresent()) {
+					expenseInfoDTO.setOrgUnitCode(orgInfo.get().getOrgNodeCode());
+
+				}
+			}
+				
+				expenseInfoDTO.setOrgUnitDesc(StringUtils.EMPTY);
+				if (null != expenses.getOrgUnitId()) {
+				Optional<OrgInfo> orgInfo  = orgInfoRepository.findById(expenses.getOrgUnitId());
+				if (orgInfo.isPresent()) {
+					expenseInfoDTO.setOrgUnitDesc(orgInfo.get().getOrgNodeName());
 
 				}
 			}

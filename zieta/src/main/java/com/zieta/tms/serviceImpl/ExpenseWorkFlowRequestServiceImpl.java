@@ -104,7 +104,7 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 			
 			if(expenseWorkflowRequest.getOrgUnitId() != null && expenseWorkflowRequest.getOrgUnitId() != 0) {
 				expenseWFRDetailsForApprover
-				.setProjectName(orgInfoRepository.findById(expenseWorkflowRequest.getOrgUnitId()).get().getOrgNodeName());
+				.setOrgName(orgInfoRepository.findById(expenseWorkflowRequest.getOrgUnitId()).get().getOrgNodeName());
 			}
 			
 			expenseWFRDetailsForApproverList.add(expenseWFRDetailsForApprover);

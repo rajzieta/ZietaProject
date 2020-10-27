@@ -91,6 +91,13 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 			expenseWFRDetailsForApprover.setWfStateType(stateById.get(expenseWorkflowRequest.getStateType()));
 			expenseWFRDetailsForApprover.setRequestorName(
 					TSMUtil.getFullName(userInfoRepository.findById(expenseWorkflowRequest.getRequestorId()).get()));
+			expenseWFRDetailsForApprover.setExpenseWorkflowRequest(expenseWorkflowRequest);
+			
+			
+			expenseWFRDetailsForApprover
+			.setProjectName(projectInfoRepository.findById(expenseWorkflowRequest.getProjectId()).get().getProjectName());
+			expenseWFRDetailsForApprover
+			.setRequestorName(TSMUtil.getFullName(userInfoRepository.findById(expenseWorkflowRequest.getRequestorId()).get()));
 
 			expenseWFRDetailsForApproverList.add(expenseWFRDetailsForApprover);
 		}

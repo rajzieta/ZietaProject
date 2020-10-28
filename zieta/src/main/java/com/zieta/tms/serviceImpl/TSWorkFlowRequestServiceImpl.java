@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.zieta.tms.common.TMSConstants;
+import com.zieta.tms.dto.TSWorkFlowRequestDTO;
 import com.zieta.tms.model.ActivityMaster;
 import com.zieta.tms.model.TSInfo;
 import com.zieta.tms.model.TSTimeEntries;
@@ -43,6 +44,7 @@ import com.zieta.tms.response.WFTSTimeEntries;
 import com.zieta.tms.response.WorkFlowComment;
 import com.zieta.tms.response.WorkFlowHistoryModel;
 import com.zieta.tms.response.WorkFlowRequestorData;
+import com.zieta.tms.service.TimeSheetService;
 import com.zieta.tms.service.WorkFlowRequestService;
 import com.zieta.tms.util.CurrentWeekUtil;
 import com.zieta.tms.util.TSMUtil;
@@ -100,6 +102,9 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	
 	@Autowired
 	ActivitiesTaskRepository activitiesTaskRepository;
+	
+	@Autowired
+	TimeSheetService timeSheetService;
 
 	@Autowired
 	@Qualifier("stateByName")
@@ -238,8 +243,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	
 	
 	
-	@Transactional
-	public void processWorkFlow(WorkflowRequestProcessModel workflowRequestProcessModel) {
+	private void processWorkFlow(WorkflowRequestProcessModel workflowRequestProcessModel) {
 		
 		WorkflowRequest currentStepWorkFlowRequest = workflowRequestRepository.findById(
 				workflowRequestProcessModel.getWorkFlowRequestId()).get();
@@ -515,6 +519,17 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			
 		}
 		return workFlowCommentList;
+	}
+
+	@Override
+	@Transactional
+	public void processTSWorkFlow(TSWorkFlowRequestDTO tSWorkFlowRequestDTO) throws Exception {
+		if(!tSWorkFlowRequestDTO.getTimeentriesByTsIdRequest().isEmpty()) {
+			timeSheetService.updateTimeEntriesByIds(tSWorkFlowRequestDTO.getTimeentriesByTsIdRequest());
+			log.info("Updated the timeentries");
+		}
+		processWorkFlow(tSWorkFlowRequestDTO.getWorkflowRequestProcessModel());
+		
 	}
 
 }

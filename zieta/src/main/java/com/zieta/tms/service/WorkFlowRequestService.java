@@ -3,6 +3,7 @@ package com.zieta.tms.service;
 import java.util.Date;
 import java.util.List;
 
+import com.zieta.tms.dto.TSWorkFlowRequestDTO;
 import com.zieta.tms.model.WorkflowRequest;
 import com.zieta.tms.request.WorkflowRequestProcessModel;
 import com.zieta.tms.response.WFRDetailsForApprover;
@@ -24,10 +25,10 @@ public interface WorkFlowRequestService {
 
 	public WorkflowRequest findByTsIdAndApproverId(long tsId, long approverId);
 	
-	public void processWorkFlow(WorkflowRequestProcessModel workflowRequestProcessModel);
-	
 	public List<WorkFlowHistoryModel> getWorkFlowHistoryForTS(Long tsId);
 	
 	public List<WorkFlowComment> getWFRCommentsChain(long tsId);
+	
+	public void processTSWorkFlow(TSWorkFlowRequestDTO tSWorkFlowRequestDTO) throws Exception;
 
 }

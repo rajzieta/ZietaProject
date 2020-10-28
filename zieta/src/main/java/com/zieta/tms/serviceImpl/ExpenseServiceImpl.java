@@ -369,6 +369,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 				ExpenseInfo expenseInfoEntitiy = expenseInfoRepository.findById(expenseInfo.getId()).get();
 				expenseInfoEntitiy.setExpPostingDate(new Date());
 				if(!expenseWorkflowRequestOpti.isPresent()) {
+					log.info("Creating new expense WFR objects...");
 					expenseWorkflowRequest = new ExpenseWorkflowRequest();
 					expenseWorkflowRequest.setClientId(expenseInfo.getClientId());
 					expenseWorkflowRequest.setProjectId(expenseInfo.getProjectId());
@@ -383,6 +384,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 					expenseWorkflowRequestList.add(expenseWorkflowRequest);
 				}else {
 					// existing records came for revision
+					log.info("Existing wfrequests came for revision..");
 					expenseWorkflowRequest = expenseWorkflowRequestOpti.get();
 					expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_START));
 					expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_NULL));
@@ -391,6 +393,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 			}
 
 			expenseWorkflowRepository.saveAll(expenseWorkflowRequestList);
+			log.info("Expense WFRequests are submited...");
 		} catch (Exception e) {
 			log.error("Exception occured while populating workflow request", e);
 			return false;

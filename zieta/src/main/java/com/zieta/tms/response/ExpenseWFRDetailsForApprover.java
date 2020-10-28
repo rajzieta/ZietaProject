@@ -2,7 +2,7 @@ package com.zieta.tms.response;
 
 import java.util.List;
 
-import com.zieta.tms.model.ExpenseEntries;
+import com.zieta.tms.dto.ExpenseEntryMetaData;
 import com.zieta.tms.model.ExpenseInfo;
 import com.zieta.tms.model.ExpenseWorkflowRequest;
 
@@ -17,7 +17,7 @@ public class ExpenseWFRDetailsForApprover {
 
 	ExpenseInfo expenseInfo;
 
-	List<ExpenseEntries> expenseEntriesList;
+	List<ExpenseEntryMetaData> expenseEntries;
 
 	String projectName;
 	String clientName;

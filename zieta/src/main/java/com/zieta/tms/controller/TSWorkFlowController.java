@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zieta.tms.dto.TSWorkFlowRequestDTO;
 import com.zieta.tms.dto.WorkflowDTO;
 import com.zieta.tms.request.WorkflowRequestProcessModel;
 import com.zieta.tms.response.WFRDetailsForApprover;
@@ -80,7 +81,7 @@ public class TSWorkFlowController {
 
 	}
 	
-	@ApiOperation(value = "Instead getTimeEntriesByUserDates API is used for the retrieval of Information based on DateRange", notes = "Table reference:")
+	@ApiOperation(value = "Instead getTimeEntriesByUserDates API is used for the retrieval of Information based on DateRange")
 	@RequestMapping(value = "getWorkFlowRequestsByRequestor", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<WorkFlowRequestorData> getWorkFlowRequestsByRequestor(@RequestParam(required = true) Long requestorId)  {
 		List<WorkFlowRequestorData> workFlowRequestList = null;
@@ -94,10 +95,10 @@ public class TSWorkFlowController {
 
 	}
 	
-	
+	@ApiOperation(value = "Updates the timeentries during firststep and process workflow for each step", notes = "Table reference:ts_timeentries,wf_request")
 	@RequestMapping(value = "processWorkFlow", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void processWorkFlow(@Valid @RequestBody WorkflowRequestProcessModel workflowRequestProcessModel) throws Exception {
-		workFlowRequestService.processWorkFlow(workflowRequestProcessModel);
+	public void processWorkFlow(@Valid @RequestBody TSWorkFlowRequestDTO tSWorkFlowRequestDTO) throws Exception {
+		workFlowRequestService.processTSWorkFlow(tSWorkFlowRequestDTO);
 		
 	}
 	

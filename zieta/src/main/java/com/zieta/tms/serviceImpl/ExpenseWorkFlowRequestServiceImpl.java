@@ -19,6 +19,7 @@ import com.zieta.tms.repository.ExpenseEntriesRepository;
 import com.zieta.tms.repository.ExpenseInfoRepository;
 import com.zieta.tms.repository.ExpenseWFRCommentRepository;
 import com.zieta.tms.repository.ExpenseWorkflowRepository;
+import com.zieta.tms.repository.OrgInfoRepository;
 import com.zieta.tms.repository.ProjectInfoRepository;
 import com.zieta.tms.repository.UserInfoRepository;
 import com.zieta.tms.request.WorkflowRequestProcessModel;
@@ -54,6 +55,9 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 
 	@Autowired
 	ExpenseEntriesRepository expenseEntriesRepository;
+	
+	@Autowired
+	OrgInfoRepository orgInfoRepository;
 
 	@Autowired
 	@Qualifier("stateByName")
@@ -91,7 +95,18 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 			expenseWFRDetailsForApprover.setWfStateType(stateById.get(expenseWorkflowRequest.getStateType()));
 			expenseWFRDetailsForApprover.setRequestorName(
 					TSMUtil.getFullName(userInfoRepository.findById(expenseWorkflowRequest.getRequestorId()).get()));
-
+			expenseWFRDetailsForApprover.setExpenseWorkflowRequest(expenseWorkflowRequest);
+			
+			if(expenseWorkflowRequest.getProjectId() != null && expenseWorkflowRequest.getProjectId() != 0) {
+				expenseWFRDetailsForApprover
+				.setProjectName(projectInfoRepository.findById(expenseWorkflowRequest.getProjectId()).get().getProjectName());
+			}
+			
+			if(expenseWorkflowRequest.getOrgUnitId() != null && expenseWorkflowRequest.getOrgUnitId() != 0) {
+				expenseWFRDetailsForApprover
+				.setOrgName(orgInfoRepository.findById(expenseWorkflowRequest.getOrgUnitId()).get().getOrgNodeName());
+			}
+			
 			expenseWFRDetailsForApproverList.add(expenseWFRDetailsForApprover);
 		}
 		return expenseWFRDetailsForApproverList;

@@ -24,6 +24,7 @@ public class ExpenseWFRDetailsForApprover {
 	String requestorName;
 	String wfActionType;
 	String wfStateType;
+	String orgName;
 	List<ExpenseWorkFlowComment> expenseWorkFlowComment;
 
 }

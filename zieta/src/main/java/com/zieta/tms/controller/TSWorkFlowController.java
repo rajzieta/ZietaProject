@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zieta.tms.dto.WorkflowDTO;
 import com.zieta.tms.request.WorkflowRequestProcessModel;
 import com.zieta.tms.response.WFRDetailsForApprover;
+import com.zieta.tms.response.WorkFlowComment;
 import com.zieta.tms.response.WorkFlowHistoryModel;
 import com.zieta.tms.response.WorkFlowRequestorData;
 import com.zieta.tms.service.TimeSheetService;
@@ -113,5 +114,19 @@ public class TSWorkFlowController {
 		
 	}
 	
+	
+	@RequestMapping(value = "getWFRComments", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<WorkFlowComment> getWFRComments(@RequestParam(required = true) Long tsId){
+		List<WorkFlowComment> workFlowCommentList = null;
+		try {
+			workFlowCommentList = workFlowRequestService.getWFRCommentsChain(tsId);
+		}catch (Exception e) {
+			log.error("Error Occured in TSWorkFlowController#workFlowCommentList", e);
+
+		}
+		return workFlowCommentList;
+		
+	}
+
 	
 }

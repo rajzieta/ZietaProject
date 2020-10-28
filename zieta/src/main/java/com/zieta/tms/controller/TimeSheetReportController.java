@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zieta.tms.model.ProjectReport;
 import com.zieta.tms.model.TimeSheetReport;
 import com.zieta.tms.service.TimeSheetReportService;
 
@@ -78,4 +79,24 @@ public class TimeSheetReportController {
 		return ResponseEntity.ok().headers(header).body(file);
 	}
 
+	
+	
+	
+	@RequestMapping(value = "getProjReports", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public Page<ProjectReport> getProjReports(@RequestParam Long clientId,@RequestParam(defaultValue = "0", required = false) Long projectId,
+			@RequestParam(required = false) String empId,
+			@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
+		Page<ProjectReport> projectReport = null;
+		try {
+			projectReport = timeSheetReportService.findAll(
+					clientId, projectId, empId, pageNo, pageSize);
+			LOGGER.info("Total number of projectReport entries: " + projectReport.getSize());
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in getByClientIdAndProjectIdAndEmpId", e);
+		}
+		return projectReport;
+	}
+	
+	
+	
 }

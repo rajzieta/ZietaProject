@@ -363,12 +363,12 @@ public class ExpenseServiceImpl implements ExpenseService {
 		try {
 			for (ExpenseInfo expenseInfo : expenseInfoList) {
 				
-				Optional<ExpenseWorkflowRequest> expenseWorkflowRequestOpti = expenseWorkflowRepository.findById(
+				ExpenseWorkflowRequest expenseWorkflowRequest =  expenseWorkflowRepository.findByExpId(
 						expenseInfo.getId());
-				ExpenseWorkflowRequest expenseWorkflowRequest = null;
 				ExpenseInfo expenseInfoEntitiy = expenseInfoRepository.findById(expenseInfo.getId()).get();
 				expenseInfoEntitiy.setExpPostingDate(new Date());
-				if(!expenseWorkflowRequestOpti.isPresent()) {
+				
+				if(expenseWorkflowRequest == null) {
 					log.info("Creating new expense WFR objects...");
 					expenseWorkflowRequest = new ExpenseWorkflowRequest();
 					expenseWorkflowRequest.setClientId(expenseInfo.getClientId());
@@ -385,7 +385,6 @@ public class ExpenseServiceImpl implements ExpenseService {
 				}else {
 					// existing records came for revision
 					log.info("Existing wfrequests came for revision..");
-					expenseWorkflowRequest = expenseWorkflowRequestOpti.get();
 					expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_START));
 					expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_NULL));
 				}

@@ -22,7 +22,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.zieta.tms.dto.DateRange;
+import com.zieta.tms.model.ProjectReport;
 import com.zieta.tms.model.TimeSheetReport;
+import com.zieta.tms.repository.ProjectReportRepository;
 import com.zieta.tms.repository.TimeSheetReportRepository;
 import com.zieta.tms.service.TimeSheetReportService;
 import com.zieta.tms.util.CurrentWeekUtil;
@@ -34,6 +36,9 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
 	
 	@Autowired
 	private TimeSheetReportRepository timeSheetReportRepository;
+	
+	@Autowired
+	private ProjectReportRepository projectReportRepository;
 
 	
 
@@ -116,5 +121,41 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
         });
         
     }
+	
+	
+	////////////////////////////////////////
+	
+	@Override
+	public Page<ProjectReport> findAll(long clientId, long projectId, String empId, Integer pageNo, Integer pageSize) {
+		
+		return getAll(clientId, projectId, empId, pageNo, pageSize);
+	}
+	
+	
+	
+	
+	public Page<ProjectReport> getAll(long clientId, long projectId, String empId, Integer pageNo, Integer pageSize){
+		
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+        return projectReportRepository.findAll(new Specification<ProjectReport>() {
+        	
+            @Override
+            public Predicate toPredicate(Root<ProjectReport> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+                if(clientId!=0) {
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("clientId"), clientId)));
+                }
+                if(projectId!=0) {
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("projectId"), projectId)));
+                }
+                if(empId!= null) {
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("empId"), empId)));
+                }
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        },pageable);
+        
+    }
+	
 	
 }

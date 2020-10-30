@@ -12,19 +12,29 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.zieta.tms.common.TMSConstants;
+import com.zieta.tms.dto.DateRange;
+import com.zieta.tms.dto.ExpenseEntryMetaData;
+import com.zieta.tms.dto.ExpenseWorkFlowRequestDTO;
+import com.zieta.tms.model.ExpenseEntries;
+import com.zieta.tms.model.ExpenseInfo;
 import com.zieta.tms.model.ExpenseWFRComments;
 import com.zieta.tms.model.ExpenseWorkflowRequest;
 import com.zieta.tms.repository.ClientInfoRepository;
+import com.zieta.tms.repository.CountryMasterRepository;
+import com.zieta.tms.repository.CurrencyMasterRepository;
 import com.zieta.tms.repository.ExpenseEntriesRepository;
 import com.zieta.tms.repository.ExpenseInfoRepository;
+import com.zieta.tms.repository.ExpenseTypeMasterRepository;
 import com.zieta.tms.repository.ExpenseWFRCommentRepository;
 import com.zieta.tms.repository.ExpenseWorkflowRepository;
 import com.zieta.tms.repository.OrgInfoRepository;
 import com.zieta.tms.repository.ProjectInfoRepository;
+import com.zieta.tms.repository.StatusMasterRepository;
 import com.zieta.tms.repository.UserInfoRepository;
 import com.zieta.tms.request.WorkflowRequestProcessModel;
 import com.zieta.tms.response.ExpenseWFRDetailsForApprover;
 import com.zieta.tms.response.ExpenseWorkFlowComment;
+import com.zieta.tms.service.ExpenseService;
 import com.zieta.tms.service.ExpenseWorkFlowRequestService;
 import com.zieta.tms.util.TSMUtil;
 
@@ -58,6 +68,22 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 	
 	@Autowired
 	OrgInfoRepository orgInfoRepository;
+	
+	@Autowired
+	CurrencyMasterRepository currencyMasterRepository;
+	
+	@Autowired
+	CountryMasterRepository countryMasterRepository;
+	
+	@Autowired
+	ExpenseTypeMasterRepository expenseTypeMasterRepository;
+	
+	@Autowired
+	StatusMasterRepository statusMasterRepository;
+	
+	@Autowired
+	ExpenseService expenseService;
+	
 
 	@Autowired
 	@Qualifier("stateByName")
@@ -77,11 +103,43 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 
 	@Override
 	public List<ExpenseWFRDetailsForApprover> findActiveWorkFlowRequestsByApproverId(long approverId) {
+		
+		List<Long> actionTypes = new ArrayList<Long>();
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REJECT));
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REVISE));
 
-		List<ExpenseWFRDetailsForApprover> expenseWFRDetailsForApproverList = new ArrayList<ExpenseWFRDetailsForApprover>();
+		
 		List<ExpenseWorkflowRequest> expenseWorkflowRequestList = expenseWorkflowRepository
-				.findByApproverId(approverId);
+				.findByApproverIdAndActionTypeNotIn(approverId,actionTypes );
+		return getWorkFlowRequestDetails(expenseWorkflowRequestList);
+	}
+	
+	
+
+	@Override
+	public List<ExpenseWFRDetailsForApprover> findWorkFlowRequestsByApproverId(long approverId, Date startActiondate, Date endActionDate) {
+		
+		DateRange dateRange = TSMUtil.getFilledDateRange(startActiondate, endActionDate, true);
+		
+		List<Long> actionTypes = new ArrayList<>();
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REJECT));
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REVISE));
+
+		
+		List<ExpenseWorkflowRequest> expenseWorkflowRequestList = expenseWorkflowRepository.findByApproverIdAndActionDateBetweenAndActionTypeIn(
+																		approverId, dateRange.getStartDate(), dateRange.getEndDate(),actionTypes);
+		return getWorkFlowRequestDetails(expenseWorkflowRequestList);
+	}
+
+	private List<ExpenseWFRDetailsForApprover> getWorkFlowRequestDetails(List<ExpenseWorkflowRequest> expenseWorkflowRequestList) {
+		
+		List<ExpenseWFRDetailsForApprover> expenseWFRDetailsForApproverList = new ArrayList<>();
+		
 		for (ExpenseWorkflowRequest expenseWorkflowRequest : expenseWorkflowRequestList) {
+			ExpenseEntryMetaData expenseEntryMetaData = null;
+			List<ExpenseEntryMetaData> expenseEntries = new ArrayList<>();
 			ExpenseWFRDetailsForApprover expenseWFRDetailsForApprover = new ExpenseWFRDetailsForApprover();
 			expenseWFRDetailsForApprover.setClientName(
 					clientInfoRepository.findById(expenseWorkflowRequest.getClientId()).get().getClientName());
@@ -89,8 +147,22 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 			expenseWFRDetailsForApprover.setExpenseWorkFlowComment(commentList);
 			expenseWFRDetailsForApprover
 					.setExpenseInfo(expenseInfoRepository.findById(expenseWorkflowRequest.getExpId()).get());
-			expenseWFRDetailsForApprover.setExpenseEntriesList(
-					expenseEntriesRepository.findByExpIdAndIsDelete(expenseWorkflowRequest.getExpId(), (short) 0));
+			
+			//fill expenseEntries data for the corresponding expenseInfo entry
+			
+			List<ExpenseEntries> expenseEntryList = expenseEntriesRepository.findByExpIdAndIsDelete(expenseWorkflowRequest.getExpId(), (short) 0);
+			for (ExpenseEntries expenseEntry : expenseEntryList) {
+				expenseEntryMetaData = new  ExpenseEntryMetaData();
+				expenseEntryMetaData.setExpenseEntriesList(expenseEntry);
+				expenseEntryMetaData.setExpCountry(countryMasterRepository.findById(expenseEntry.getExpCountry()).get().getCountryName());
+				expenseEntryMetaData.setExpCurrency(currencyMasterRepository.findById(expenseEntry.getExpCurrency()).get().getCurrencyName());
+				expenseEntryMetaData.setExpType(expenseTypeMasterRepository.findById(expenseEntry.getExpType()).get().getExpenseType());
+				expenseEntries.add(expenseEntryMetaData);
+			}
+			
+			expenseWFRDetailsForApprover.setExpenseEntries(expenseEntries);
+			// end of expenseEntries
+			
 			expenseWFRDetailsForApprover.setWfActionType(actionTypeById.get(expenseWorkflowRequest.getActionType()));
 			expenseWFRDetailsForApprover.setWfStateType(stateById.get(expenseWorkflowRequest.getStateType()));
 			expenseWFRDetailsForApprover.setRequestorName(
@@ -117,22 +189,46 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 
 		ExpenseWorkflowRequest expenseWorkflowRequest = null;
 		if (expenseWorkflowRepository.findById(workflowRequestProcessModel.getWorkFlowRequestId()).isPresent()) {
+			
+			
 			expenseWorkflowRequest = expenseWorkflowRepository
 					.findById(workflowRequestProcessModel.getWorkFlowRequestId()).get();
+			
+			long expenseId = expenseWorkflowRequest.getExpId();
+			ExpenseInfo  expenseInfo = expenseInfoRepository.findById(expenseId).get();
 
 			if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_APPROVE)) {
 
 				expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
 				expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_COMPLETE));
 
+				long statusId = statusMasterRepository
+						.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(expenseInfo.getClientId(),
+								TMSConstants.EXPENSE, TMSConstants.EXPENSE_APPROVED, (short) 0)
+						.getId();
+				expenseInfo.setStatusId(statusId);
+				
+				float totalRejectAmount = getTotalRejectedAmount(expenseInfo);
+				float totalApprovedAmount = expenseInfo.getExpAmount() - totalRejectAmount;
+				expenseInfo.setApprovedAmt(totalApprovedAmount);
+
 			} else if (workflowRequestProcessModel.getActionType() == actionTypeByName
 					.get(TMSConstants.ACTION_REJECT)) {
 
+				long statusId = statusMasterRepository
+						.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(expenseInfo.getClientId(),
+								TMSConstants.EXPENSE, TMSConstants.EXPENSE_REJECTED, (short) 0)
+						.getId();
+				expenseInfo.setStatusId(statusId);
 				expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_REJECT));
 				expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_REJECT));
 
 			} else if (workflowRequestProcessModel.getActionType() == actionTypeByName
 					.get(TMSConstants.ACTION_REVISE)) {
+
+				Long statuId = statusMasterRepository.findByClientIdAndStatusTypeAndIsDefaultAndIsDelete(
+						expenseInfo.getClientId(), TMSConstants.EXPENSE, Boolean.TRUE, (short) 0).getId();
+				expenseInfo.setStatusId(statuId);
 
 				expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_REVISE));
 				expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_OPEN));
@@ -148,6 +244,8 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 			workFlowRequestComment.setExpWrId(expenseWorkflowRequest.getId());
 
 			expenseWFRCommentRepository.save(workFlowRequestComment);
+			expenseInfoRepository.save(expenseInfo);
+			log.info("Workflow process completed for the expense id: {}",expenseInfo.getId());
 
 		} else {
 			log.error("Expense entry not found in the DB {}", workflowRequestProcessModel.getWorkFlowRequestId());
@@ -156,8 +254,20 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 		}
 
 	}
+	
+	
+	@Override
+	@Transactional
+	public void processExpenseWorkFlow(ExpenseWorkFlowRequestDTO expenseWorkFlowRequestDTO) throws Exception {
+		if(!expenseWorkFlowRequestDTO.getExpenseInfoDTO().isEmpty()) {
+			expenseService.editExpenseInfoByIds(expenseWorkFlowRequestDTO.getExpenseInfoDTO());
+			log.info("Updated the expense entries");
+		}
+		processWorkFlow(expenseWorkFlowRequestDTO.getWorkflowRequestProcessModel());
+		
+	}
 
-	public List<ExpenseWorkFlowComment> getWFRCommentsChain(long expId) {
+	private List<ExpenseWorkFlowComment> getWFRCommentsChain(long expId) {
 
 		List<ExpenseWorkFlowComment> workFlowCommentList = new ArrayList<>();
 		ExpenseWorkFlowComment workFlowComment = null;
@@ -173,4 +283,24 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 		}
 		return workFlowCommentList;
 	}
+	
+	
+	
+	private float getTotalRejectedAmount(ExpenseInfo expenseInfo) {
+		
+		 long expenseEntryRejectStatusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(
+				 expenseInfo.getClientId(),TMSConstants.EXPENSEENTRY, TMSConstants.EXPENSEENTRY_REJECTED, (short)0).getId();
+		 List<ExpenseEntries> rejectedExpenseEntriesList = expenseEntriesRepository.findByExpIdAndStatusIdAndIsDelete(
+				 expenseInfo.getId(), expenseEntryRejectStatusId, (short)0);
+		 
+		 log.info("Getting rejected expense amount: expenseEntryRejectStatusId {}, expenseInfo.getId() {}, rejectedExpenseEntriesList.size {} ",expenseEntryRejectStatusId, expenseInfo.getId(),rejectedExpenseEntriesList.size());
+		 float totalRejectAmount = 0.0f;
+		 for (ExpenseEntries expenseEntries : rejectedExpenseEntriesList) {
+			 
+			 totalRejectAmount += expenseEntries.getExpAmount();
+		}
+		return totalRejectAmount;
+	}
+	
+	
 }

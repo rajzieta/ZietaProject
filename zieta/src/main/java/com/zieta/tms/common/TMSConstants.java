@@ -29,5 +29,17 @@ public class TMSConstants {
 	public final static String STATE_REJECT = "Reject";
 	
 	
+	public final static String EXPENSE = "Expense";
+	public final static String EXPENSE_DRAFT = "Draft";
+	public final static String EXPENSE_SUBMITTED = "Submitted";
+	public final static String EXPENSE_APPROVED = "Approved";
+	public final static String EXPENSE_REJECTED = "Rejected";
+	
+	public final static String EXPENSEENTRY = "ExpEntry";
+	public final static String EXPENSEENTRY_DRAFT = "Draft";
+	public final static String EXPENSEENTRY_SUBMITTED = "Submitted";
+	public final static String EXPENSEENTRY_APPROVED = "Approved";
+	public final static String EXPENSEENTRY_REJECTED = "Rejected";
+	
 
 }

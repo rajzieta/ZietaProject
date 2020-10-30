@@ -149,8 +149,9 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			wFRDetailsForApprover.setWorkFlowCommentList(workFlowCommentList);
 			TSInfo tsInfo = tsInfoRepository.findById(workflowRequest.getTsId()).get();
 			wFRDetailsForApprover.setTsinfo(tsInfo);
-
-			List<TSTimeEntries> tsTimeEntriesList = tSTimeEntriesRepository.findByTsId(tsInfo.getId());
+			
+			short delFlag = 0;
+			List<TSTimeEntries> tsTimeEntriesList = tSTimeEntriesRepository.findByTsIdAndIsDelete(tsInfo.getId(),delFlag);
 			List<WFTSTimeEntries> wfTSTimeEntrieslist = buildWfTsTimeEtnries(tsTimeEntriesList);
 			wFRDetailsForApprover.setTimeEntriesList(wfTSTimeEntrieslist);
 

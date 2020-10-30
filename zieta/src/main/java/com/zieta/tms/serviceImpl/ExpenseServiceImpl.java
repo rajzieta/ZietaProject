@@ -36,6 +36,7 @@ import com.zieta.tms.repository.ExpenseTypeMasterRepository;
 import com.zieta.tms.repository.ExpenseWorkflowRepository;
 import com.zieta.tms.repository.OrgInfoRepository;
 import com.zieta.tms.repository.ProjectInfoRepository;
+import com.zieta.tms.repository.StatusMasterRepository;
 import com.zieta.tms.request.UpdateTimesheetByIdRequest;
 import com.zieta.tms.service.ExpenseService;
 
@@ -69,6 +70,9 @@ public class ExpenseServiceImpl implements ExpenseService {
 	
 	@Autowired
 	OrgInfoRepository orgInfoRepository;
+	
+	@Autowired
+	StatusMasterRepository statusMasterRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
@@ -368,6 +372,12 @@ public class ExpenseServiceImpl implements ExpenseService {
 				ExpenseInfo expenseInfoEntitiy = expenseInfoRepository.findById(expenseInfo.getId()).get();
 				expenseInfoEntitiy.setExpPostingDate(new Date());
 				
+				Long statusId = statusMasterRepository
+						.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(expenseInfo.getClientId(),
+								TMSConstants.EXPENSE, TMSConstants.EXPENSE_SUBMITTED, (short) 0)
+						.getId();
+				expenseInfo.setStatusId(statusId);
+				
 				if(expenseWorkflowRequest == null) {
 					log.info("Creating new expense WFR objects...");
 					expenseWorkflowRequest = new ExpenseWorkflowRequest();
@@ -388,10 +398,12 @@ public class ExpenseServiceImpl implements ExpenseService {
 					expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_START));
 					expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_NULL));
 				}
+				expenseInfoRepository.save(expenseInfo);
 			
 			}
 
 			expenseWorkflowRepository.saveAll(expenseWorkflowRequestList);
+			
 			log.info("Expense WFRequests are submited...");
 		} catch (Exception e) {
 			log.error("Exception occured while populating workflow request", e);

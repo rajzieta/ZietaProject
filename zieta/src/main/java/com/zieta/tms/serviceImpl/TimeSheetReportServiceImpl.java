@@ -145,7 +145,7 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
             public Predicate toPredicate(Root<ProjectReport> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
                 if(startDate!= null && endDate!=null){
-                    predicates.add(criteriaBuilder.between(root.get("requestDate"),startDate,endDate));
+                    predicates.add(criteriaBuilder.between(root.get("tsDate"),startDate,endDate));
                 }
                 if(clientId!=0) {
                     predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("clientId"), clientId)));
@@ -185,7 +185,7 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
         public Predicate toPredicate(Root<ProjectReport> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
             List<Predicate> predicates = new ArrayList<>();
             if(startDate!= null && endDate!=null){
-                predicates.add(criteriaBuilder.between(root.get("requestDate"),startDate,endDate));
+                predicates.add(criteriaBuilder.between(root.get("tsDate"),startDate,endDate));
             }
             if(empId!= null) {
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("empId"), empId)));

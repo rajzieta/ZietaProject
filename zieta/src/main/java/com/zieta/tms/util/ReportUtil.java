@@ -15,6 +15,7 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.zieta.tms.model.ProjectReport;
 import com.zieta.tms.model.TimeSheetReport;
  
 public class ReportUtil {
@@ -121,4 +122,122 @@ public class ReportUtil {
         return new ByteArrayInputStream(out.toByteArray());
          
     }
+    
+    //Proj Repor
+    
+    public ByteArrayInputStream downloadProjReport(HttpServletResponse response, List<ProjectReport> projectList) throws IOException {
+        writeHeaderLines();
+        writeDataLiness(projectList);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        workbook.write(out);
+        workbook.close();
+        return new ByteArrayInputStream(out.toByteArray());
+         
+    }
+    
+    private void writeDataLiness( List<ProjectReport> projectList) {
+        int rowCount = 1;
+ 
+        CellStyle style = workbook.createCellStyle();
+        XSSFFont font = workbook.createFont();
+        font.setFontHeight(14);
+        style.setFont(font);
+                 
+        for (ProjectReport projectReport : projectList) {
+            Row row = sheet.createRow(rowCount++);
+            int columnCount = 0;
+             
+            createCell(row, columnCount++, projectReport.getClientId().intValue(), style);
+            createCell(row, columnCount++, projectReport.getClientCode(), style);
+            createCell(row, columnCount++, projectReport.getClientName(), style);
+            createCell(row, columnCount++, projectReport.getProjectId().intValue(), style);
+            createCell(row, columnCount++, projectReport.getProjectCode(), style);
+            createCell(row, columnCount++, projectReport.getProjectName(), style);
+            createCell(row, columnCount++, projectReport.getProjectManager().intValue(), style);
+            createCell(row, columnCount++, projectReport.getPmFname(), style);
+            createCell(row, columnCount++, projectReport.getPmMname(), style);
+            createCell(row, columnCount++, projectReport.getPmLname(), style);
+            createCell(row, columnCount++, projectReport.getUserId().intValue(), style);
+            createCell(row, columnCount++, projectReport.getUserFname(), style);
+            createCell(row, columnCount++, projectReport.getUserMname(), style);
+            createCell(row, columnCount++, projectReport.getUserLname(), style);
+            createCell(row, columnCount++, projectReport.getEmpId(), style);
+            createCell(row, columnCount++, projectReport.getTsId().intValue(), style);
+            createCell(row, columnCount++, projectReport.getTsDate().toString(), style);
+            createCell(row, columnCount++, projectReport.getRequestDate().toString(), style);
+            createCell(row, columnCount++, projectReport.getTaskId().intValue(), style);
+            createCell(row, columnCount++, projectReport.getTaskName(), style);
+            createCell(row, columnCount++, projectReport.getTaskCode(), style);
+            createCell(row, columnCount++, projectReport.getActivityId().intValue(), style);
+            createCell(row, columnCount++, projectReport.getActivityCode(), style);
+            createCell(row, columnCount++, projectReport.getActivityDesc(), style);
+            createCell(row, columnCount++, projectReport.getTimesheetStatus().intValue(), style);
+            createCell(row, columnCount++, projectReport.getTimesheetStatusDesc(), style);
+            createCell(row, columnCount++, projectReport.getTsStartTime()!= null ?projectReport.getTsStartTime().floatValue():StringUtils.EMPTY, style);
+            createCell(row, columnCount++, projectReport.getTsEndTime()!= null ?projectReport.getTsEndTime().floatValue():StringUtils.EMPTY, style);
+            createCell(row, columnCount++, projectReport.getTimeEntryDuration()!= null ?projectReport.getTimeEntryDuration().floatValue():StringUtils.EMPTY, style);
+            createCell(row, columnCount++, projectReport.getTimeentryDesc(), style);
+            createCell(row, columnCount++, projectReport.getTimetypeId().intValue(), style);
+            createCell(row, columnCount++, projectReport.getTimeType(), style);
+            createCell(row, columnCount++, projectReport.getTimeentryStatus().intValue(), style);
+            createCell(row, columnCount++, projectReport.getTimeentryStatusDesc(), style);
+            
+            
+        }
+    }
+    
+    
+    private void writeHeaderLines() {
+    	workbook = new XSSFWorkbook();
+        sheet = workbook.createSheet("TimeSheet");
+         
+        Row row = sheet.createRow(0);
+         
+        CellStyle style = workbook.createCellStyle();
+        XSSFFont font = workbook.createFont();
+        font.setBold(true);
+        font.setFontHeight(16);
+        style.setFont(font);
+         
+        createCell(row, 0, "Client ID", style);     
+        createCell(row, 1, "Client Code", style);   
+        createCell(row, 2, "Client Name", style);   
+        createCell(row, 3, "Project Id", style); 
+        createCell(row, 4, "Project Name", style);
+        createCell(row, 5, "Project Code", style);  
+        createCell(row, 6, "Project Manager", style);   
+        createCell(row, 7, "Pm FName", style);
+        createCell(row, 8, "Pm Middle Name", style);
+        createCell(row, 9, "Pm Last Name", style);     
+        createCell(row, 10, "User ID", style);    
+        createCell(row, 11, "User First Name", style);
+        createCell(row, 12, "User Middle Name", style);
+        createCell(row, 13, "User Last Name", style);
+        createCell(row, 14, "Emp Id", style);
+        createCell(row, 15, "TS ID", style); 
+        createCell(row, 16, "TS Date", style); 
+        createCell(row, 17, "Request Date", style);
+        createCell(row, 18, "Task Id", style);
+        createCell(row, 19, "Task Name", style);
+        createCell(row, 20, "Task Code", style);
+        createCell(row, 21, "Activity Id", style);
+        createCell(row, 22, "Activity Code", style);
+        createCell(row, 23, "Activity Desc", style);
+        createCell(row, 24, "Timesheet Status", style);
+        createCell(row, 25, "TimesheetStatus Desc", style);
+        createCell(row, 26, "Ts Start Time", style);
+        createCell(row, 27, "TS End Time", style);
+        createCell(row, 28, "TimeEntry Duration", style);
+        createCell(row, 29, "TimeEntry Desc", style);
+        createCell(row, 30, "TimeType Id", style);
+        createCell(row, 31, "TimeType", style);
+        createCell(row, 32, "TimeEntry Status", style);
+        createCell(row, 33, "TimeEntry Status Desc", style);
+        
+         
+    }
+    
+    
+    
+    
 }

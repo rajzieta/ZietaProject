@@ -126,15 +126,17 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
 	////////////////////////////////////////
 	
 	@Override
-	public Page<ProjectReport> findAll(long clientId, long projectId, String empId, Integer pageNo, Integer pageSize) {
+	public Page<ProjectReport> findAll(long clientId, long projectId, String empId, Date startDate, Date endDate, Integer pageNo, Integer pageSize) {
 		
-		return getAll(clientId, projectId, empId, pageNo, pageSize);
+		DateRange dateRange = TSMUtil.getFilledDateRange(startDate, endDate, true);
+		
+		return getAll(dateRange.getStartDate(), dateRange.getEndDate(), clientId, projectId, empId, pageNo, pageSize);
 	}
 	
 	
 	
 	
-	public Page<ProjectReport> getAll(long clientId, long projectId, String empId, Integer pageNo, Integer pageSize){
+	public Page<ProjectReport> getAll(Date startDate, Date endDate, long clientId, long projectId, String empId, Integer pageNo, Integer pageSize){
 		
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
         return projectReportRepository.findAll(new Specification<ProjectReport>() {
@@ -142,6 +144,9 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
             @Override
             public Predicate toPredicate(Root<ProjectReport> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
+                if(startDate!= null && endDate!=null){
+                    predicates.add(criteriaBuilder.between(root.get("requestDate"),startDate,endDate));
+                }
                 if(clientId!=0) {
                     predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("clientId"), clientId)));
                 }
@@ -156,6 +161,46 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
         },pageable);
         
     }
+	
+	
+	
+	@Override
+	public ByteArrayInputStream downloadProjectReport(HttpServletResponse response,long clientId,
+			long projectId, String empId, Date startDate, Date endDate ) throws IOException {
+		ReportUtil report = new ReportUtil();
+		DateRange dateRange = TSMUtil.getFilledDateRange(startDate, endDate, true);
+		
+		List<ProjectReport> projectReportList = downloadAll(dateRange.getStartDate(), dateRange.getEndDate(), empId, clientId, projectId);
+		return report.downloadProjReport(response, projectReportList);
+		
+	}
+	
+	
+	
+	public List<ProjectReport> downloadAll(Date startDate, Date endDate, String empId,long clientId, long projectId){
+		
+		return projectReportRepository.findAll(new Specification<ProjectReport>() {
+    	
+        @Override
+        public Predicate toPredicate(Root<ProjectReport> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+            List<Predicate> predicates = new ArrayList<>();
+            if(startDate!= null && endDate!=null){
+                predicates.add(criteriaBuilder.between(root.get("requestDate"),startDate,endDate));
+            }
+            if(empId!= null) {
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("empId"), empId)));
+            }
+            if(clientId!=0) {
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("clientId"), clientId)));
+            }
+            if(projectId!=0) {
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("projectId"), projectId)));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+        }
+    });
+    
+}
 	
 	
 }

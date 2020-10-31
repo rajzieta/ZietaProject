@@ -303,7 +303,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		for (ProjectMaster projectmaster : projectmasters) {
 			projectmasterDTO = modelMapper.map(projectmaster, ProjectMasterDTO.class);
 			projectmasterDTO.setClientCode(clientInfoRepository.findById(projectmaster.getClientId()).get().getClientCode());
-		//	projectmasterDTO.setClientDescription(clientInfoRepository.findById(projectmaster.getClientId()).get().getClientName());
+			projectmasterDTO.setClientDescription(clientInfoRepository.findById(projectmaster.getClientId()).get().getClientName());
 			projectmasterDTO.setClientStatus(clientInfoRepository.findById(projectmaster.getClientId()).get().getClientStatus());
 
 			projectmasterDTOs.add(projectmasterDTO);

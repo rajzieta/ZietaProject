@@ -53,7 +53,7 @@ public class ProjectReport {
 	private String pmFname;
 	
 	@Column(name = "pm_mname")
-	private String pmMame;
+	private String pmMname;
 	
 	@Column(name = "pm_lname")
 	private String pmLname;
@@ -79,6 +79,12 @@ public class ProjectReport {
 	
 	@Column(name = "ts_id")
 	private Long tsId;
+	
+	@Column(name = "ts_date")
+	private Date tsDate;
+	
+	@Column(name = "request_date")
+	private Date requestDate;
 	
 	@Column(name = "task_id")
 	private Long taskId;

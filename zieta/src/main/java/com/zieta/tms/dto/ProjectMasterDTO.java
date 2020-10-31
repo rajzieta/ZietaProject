@@ -15,6 +15,7 @@ public class ProjectMasterDTO extends BaseEntity {
 //    private boolean IS_DELETE;
     private String clientCode;
     private Long clientStatus;
-  //  private String projectCode;
+    private String clientDescription;
+ //  private String projectCode;
     private String typeName;
 }

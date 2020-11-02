@@ -164,7 +164,7 @@ public class ReportUtil {
             createCell(row, columnCount++, projectReport.getEmpId(), style);
             createCell(row, columnCount++, projectReport.getTsId().intValue(), style);
             createCell(row, columnCount++, projectReport.getTsDate().toString(), style);
-            createCell(row, columnCount++, projectReport.getRequestDate().toString(), style);
+      //      createCell(row, columnCount++, projectReport.getRequestDate().toString(), style);
             createCell(row, columnCount++, projectReport.getTaskId().intValue(), style);
             createCell(row, columnCount++, projectReport.getTaskName(), style);
             createCell(row, columnCount++, projectReport.getTaskCode(), style);
@@ -206,9 +206,9 @@ public class ReportUtil {
         createCell(row, 4, "Project Name", style);
         createCell(row, 5, "Project Code", style);  
         createCell(row, 6, "Project Manager", style);   
-        createCell(row, 7, "Pm FName", style);
-        createCell(row, 8, "Pm Middle Name", style);
-        createCell(row, 9, "Pm Last Name", style);     
+        createCell(row, 7, "PM FName", style);
+        createCell(row, 8, "PM Middle Name", style);
+        createCell(row, 9, "PM Last Name", style);     
         createCell(row, 10, "User ID", style);    
         createCell(row, 11, "User First Name", style);
         createCell(row, 12, "User Middle Name", style);
@@ -216,23 +216,23 @@ public class ReportUtil {
         createCell(row, 14, "Emp Id", style);
         createCell(row, 15, "TS ID", style); 
         createCell(row, 16, "TS Date", style); 
-        createCell(row, 17, "Request Date", style);
-        createCell(row, 18, "Task Id", style);
-        createCell(row, 19, "Task Name", style);
-        createCell(row, 20, "Task Code", style);
-        createCell(row, 21, "Activity Id", style);
-        createCell(row, 22, "Activity Code", style);
-        createCell(row, 23, "Activity Desc", style);
-        createCell(row, 24, "Timesheet Status", style);
-        createCell(row, 25, "TimesheetStatus Desc", style);
-        createCell(row, 26, "Ts Start Time", style);
-        createCell(row, 27, "TS End Time", style);
-        createCell(row, 28, "TimeEntry Duration", style);
-        createCell(row, 29, "TimeEntry Desc", style);
-        createCell(row, 30, "TimeType Id", style);
-        createCell(row, 31, "TimeType", style);
-        createCell(row, 32, "TimeEntry Status", style);
-        createCell(row, 33, "TimeEntry Status Desc", style);
+     //   createCell(row, 17, "Request Date", style);
+        createCell(row, 17, "Task Id", style);
+        createCell(row, 18, "Task Name", style);
+        createCell(row, 19, "Task Code", style);
+        createCell(row, 20, "Activity Id", style);
+        createCell(row, 21, "Activity Code", style);
+        createCell(row, 22, "Activity Desc", style);
+        createCell(row, 23, "Timesheet Status", style);
+        createCell(row, 24, "TimesheetStatus Desc", style);
+        createCell(row, 25, "Ts Start Time", style);
+        createCell(row, 26, "TS End Time", style);
+        createCell(row, 27, "TimeEntry Duration", style);
+        createCell(row, 28, "TimeEntry Desc", style);
+        createCell(row, 29, "TimeType Id", style);
+        createCell(row, 30, "TimeType", style);
+        createCell(row, 31, "TimeEntry Status", style);
+        createCell(row, 32, "TimeEntry Status Desc", style);
         
          
     }

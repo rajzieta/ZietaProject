@@ -128,7 +128,7 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
 	@Override
 	public Page<ProjectReport> findAll(long clientId, long projectId, String empId, Date startDate, Date endDate, Integer pageNo, Integer pageSize) {
 		
-		DateRange dateRange = TSMUtil.getFilledDateRange(startDate, endDate, true);
+		DateRange dateRange = TSMUtil.getFilledDateRange(startDate, endDate, false);
 		
 		return getAll(dateRange.getStartDate(), dateRange.getEndDate(), clientId, projectId, empId, pageNo, pageSize);
 	}
@@ -168,7 +168,7 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
 	public ByteArrayInputStream downloadProjectReport(HttpServletResponse response,long clientId,
 			long projectId, String empId, Date startDate, Date endDate ) throws IOException {
 		ReportUtil report = new ReportUtil();
-		DateRange dateRange = TSMUtil.getFilledDateRange(startDate, endDate, true);
+		DateRange dateRange = TSMUtil.getFilledDateRange(startDate, endDate, false);
 		
 		List<ProjectReport> projectReportList = downloadAll(dateRange.getStartDate(), dateRange.getEndDate(), empId, clientId, projectId);
 		return report.downloadProjReport(response, projectReportList);

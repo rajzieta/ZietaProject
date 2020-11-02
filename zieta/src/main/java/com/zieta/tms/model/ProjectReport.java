@@ -83,8 +83,8 @@ public class ProjectReport {
 	@Column(name = "ts_date")
 	private Date tsDate;
 	
-	@Column(name = "request_date")
-	private Date requestDate;
+	//@Column(name = "request_date")
+	//private Date requestDate;
 	
 	@Column(name = "task_id")
 	private Long taskId;

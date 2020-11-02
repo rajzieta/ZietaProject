@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ExpenseWorkFlowRequestDTO {
-	
-	List<ExpenseInfoDTO> expenseInfoDTO;
+
+	List<ExpenseEntriesDTO> expenseEntriesDTO;
 	WorkflowRequestProcessModel workflowRequestProcessModel;
 }

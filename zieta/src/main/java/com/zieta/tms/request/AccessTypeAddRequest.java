@@ -18,6 +18,7 @@ public class AccessTypeAddRequest {
     private Long id;
 	private Long clientId;
     private String accessType;
+    private String accessDesc;
 	private String createdBy;
     private String modifiedBy;
 	private boolean isDelete;

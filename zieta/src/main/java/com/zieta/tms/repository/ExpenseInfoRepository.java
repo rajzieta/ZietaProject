@@ -15,6 +15,9 @@ public interface ExpenseInfoRepository extends JpaRepository<ExpenseInfo, Long>{
 
 	List<ExpenseInfo> findByClientIdAndUserIdAndIsDelete(Long clientId, Long userId, short notDeleted);
 
+	List<ExpenseInfo> findByClientIdAndUserIdAndStatusIdAndIsDelete(Long clientId, Long userId, Long statusId,
+			short notDeleted);
+
 	
 
 	

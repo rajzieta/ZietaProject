@@ -16,6 +16,7 @@ public class AccesstypesByClientResponse {
 	private String clientCode;
 	private String clientDescription;
     private String accessType;
+    private String accessDesc;
 	private String createdBy;
    	private Date createdDate;
     private Date modifiedDate;

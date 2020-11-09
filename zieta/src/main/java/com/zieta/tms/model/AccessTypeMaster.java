@@ -42,7 +42,8 @@ public class AccessTypeMaster extends BaseEntity {
     @Column(name = "ACCESS_TYPE")
     private String accessType;
     
-	
+    @Column(name = "ACCESS_DESC")
+    private String accessDesc;
 	
 
 	

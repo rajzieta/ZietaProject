@@ -57,6 +57,7 @@ public class AccessTypeMasterServiceImpl implements AccessTypeMasterService {
 			accessTypeMasterDTO.setId(accesstypeMaster.getId());
 			accessTypeMasterDTO.setClientId(accesstypeMaster.getClientId());
 			accessTypeMasterDTO.setAccessType(accesstypeMaster.getAccessType());
+			accessTypeMasterDTO.setAccessDesc(accesstypeMaster.getAccessDesc());
 			accessTypeMasterDTO.setCreatedBy(accesstypeMaster.getCreatedBy());
 			accessTypeMasterDTO.setModifiedBy(accesstypeMaster.getModifiedBy());
 			accessTypeMasterDTO.setClientCode(clientInfoRepository.findById(accesstypeMaster.getClientId()).get().getClientCode());

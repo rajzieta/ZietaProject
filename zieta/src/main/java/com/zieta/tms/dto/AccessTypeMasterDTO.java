@@ -11,6 +11,7 @@ public class AccessTypeMasterDTO {
     private String clientDescription;
     private Long clientStatus;
     private String accessType;
+    private String accessDesc;
     private String createdBy;
     private String modifiedBy;
     private boolean isDelete;

@@ -267,7 +267,8 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 		
 	}
 
-	private List<ExpenseWorkFlowComment> getWFRCommentsChain(long expId) {
+	@Override
+	public List<ExpenseWorkFlowComment> getWFRCommentsChain(long expId) {
 
 		List<ExpenseWorkFlowComment> workFlowCommentList = new ArrayList<>();
 		ExpenseWorkFlowComment workFlowComment = null;

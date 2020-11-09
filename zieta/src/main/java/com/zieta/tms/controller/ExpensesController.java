@@ -66,6 +66,21 @@ public class ExpensesController {
 			return new ResponseEntity<List<ExpenseInfoDTO>>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	//get only Draft State expenses 
+	
+	@GetMapping("/getAllExpensesByClientUserStatus")
+	@ApiOperation(value = "List Draft expenses based on the  clientId and userId and StatusId", notes = "Table reference:"
+			+ "expense_info")
+	public ResponseEntity<List<ExpenseInfoDTO>> getAllExpensesByClientUserStatus(@RequestParam(required = true) Long clientId,
+			@RequestParam(required = true) Long userId, @RequestParam(required = true) Long statusId) {
+		try {
+			List<ExpenseInfoDTO> expensesList = expenseService.findByClientIdAndUserIdAndStatusId(clientId, userId, statusId);
+			return new ResponseEntity<List<ExpenseInfoDTO>>(expensesList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<ExpenseInfoDTO>>(HttpStatus.NOT_FOUND);
+		}
+	}
 
 	@ApiOperation(value = "Lists ExpenseTypeMaster Information", notes = "Table reference:expense_type_master")
 	@RequestMapping(value = "getAllExpenseMasters", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

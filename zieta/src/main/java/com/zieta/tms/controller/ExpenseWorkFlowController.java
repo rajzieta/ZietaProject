@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zieta.tms.dto.ExpenseWorkFlowRequestDTO;
 import com.zieta.tms.request.WorkflowRequestProcessModel;
+import com.zieta.tms.response.ExpenseWFRCommentsDetails;
 import com.zieta.tms.response.ExpenseWFRDetailsForApprover;
+import com.zieta.tms.response.ExpenseWorkFlowComment;
 import com.zieta.tms.service.ExpenseWorkFlowRequestService;
 
 import io.swagger.annotations.Api;
@@ -67,5 +69,17 @@ public class ExpenseWorkFlowController {
 
 	}
 	
+	@RequestMapping(value = "getExpenseCommentsByExpId", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<ExpenseWorkFlowComment> getExpenseCommentsByExpId(@RequestParam(required = true) Long expId) {
+		List<ExpenseWorkFlowComment> workFlowRequestList = null;
+		try {
+			workFlowRequestList = expenseWorkFlowRequestService.getWFRCommentsChain(expId);
+		} catch (Exception e) {
+
+			log.error("Error Occured in ExpenseWorkFlowController#getExpenseCommentsByExpId", e);
+		}
+		return workFlowRequestList;
+
+	}
 	
 }

@@ -168,6 +168,61 @@ public class ExpenseServiceImpl implements ExpenseService {
 			return expenseInfoList;
 	}
 
+	
+	//draft Expenses
+	
+	@Override
+	public List<ExpenseInfoDTO> findByClientIdAndUserIdAndStatusId(Long clientId, Long userId, Long statusId) {
+		
+		 short notDeleted=0;
+			List<ExpenseInfoDTO> expenseInfoList = new ArrayList<>();
+			List<ExpenseInfo> expenseInfos = expenseInfoRepository.findByClientIdAndUserIdAndStatusIdAndIsDelete(clientId, userId, statusId, notDeleted);
+			ExpenseInfoDTO expenseInfoDTO = null;
+			for (ExpenseInfo expenses : expenseInfos) {
+				expenseInfoDTO = modelMapper.map(expenses, ExpenseInfoDTO.class);
+				
+				expenseInfoDTO.setProjectCode(StringUtils.EMPTY);
+				if (null != expenses.getProjectId()) {
+				Optional<ProjectInfo> projectInfo  = projectInfoRepository.findById(expenses.getProjectId());
+				if (projectInfo.isPresent()) {
+					expenseInfoDTO.setProjectCode(projectInfo.get().getProjectCode());
+
+				}
+			}
+				
+				expenseInfoDTO.setProjectDesc(StringUtils.EMPTY);
+				if (null != expenses.getProjectId()) {
+				Optional<ProjectInfo> projectInfo  = projectInfoRepository.findById(expenses.getProjectId());
+				if (projectInfo.isPresent()) {
+					expenseInfoDTO.setProjectDesc(projectInfo.get().getProjectName());
+
+				}
+			}
+				
+				expenseInfoDTO.setOrgUnitCode(StringUtils.EMPTY);
+				if (null != expenses.getOrgUnitId()) {
+				Optional<OrgInfo>  orgInfo = orgInfoRepository.findById(expenses.getOrgUnitId());
+				if (orgInfo.isPresent()) {
+					expenseInfoDTO.setOrgUnitCode(orgInfo.get().getOrgNodeCode());
+
+				}
+			}
+				
+				expenseInfoDTO.setOrgUnitDesc(StringUtils.EMPTY);
+				if (null != expenses.getOrgUnitId()) {
+				Optional<OrgInfo> orgInfo  = orgInfoRepository.findById(expenses.getOrgUnitId());
+				if (orgInfo.isPresent()) {
+					expenseInfoDTO.setOrgUnitDesc(orgInfo.get().getOrgNodeName());
+
+				}
+			}
+				
+				expenseInfoList.add(expenseInfoDTO);
+			}
+			return expenseInfoList;
+	}
+
+	
 	@Override
 	public List<ExpenseMasterDTO> getAllExpenseMasters() {
 		short notDeleted = 0;

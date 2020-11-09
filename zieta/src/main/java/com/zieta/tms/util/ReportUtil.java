@@ -3,14 +3,19 @@ package com.zieta.tms.util;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -35,6 +40,8 @@ public class ReportUtil {
         font.setBold(true);
         font.setFontHeight(16);
         style.setFont(font);
+        
+
          
         createCell(row, 0, "Client ID", style);      
         createCell(row, 1, "TS ID", style);       
@@ -63,6 +70,7 @@ public class ReportUtil {
      
     private void createCell(Row row, int columnCount, Object value, CellStyle style) {
         sheet.autoSizeColumn(columnCount);
+     //   DecimalFormat df = new DecimalFormat("#.00");
         Cell cell = row.createCell(columnCount);
         if (value instanceof Integer) {
             cell.setCellValue((Integer) value);
@@ -84,6 +92,10 @@ public class ReportUtil {
         font.setFontHeight(14);
         style.setFont(font);
                  
+        CellStyle style2= formatDecimalStyle(workbook);
+        font.setFontHeight(14);
+        style2.setFont(font);
+        
         for (TimeSheetReport timeSheetReport : timeSheetList) {
             Row row = sheet.createRow(rowCount++);
             int columnCount = 0;
@@ -106,8 +118,8 @@ public class ReportUtil {
             createCell(row, columnCount++, timeSheetReport.getApproverFname(), style);
             createCell(row, columnCount++, timeSheetReport.getApproverMname(), style);
             createCell(row, columnCount++, timeSheetReport.getApproverLname(), style);
-            createCell(row, columnCount++, timeSheetReport.getSubmittedHours().floatValue(), style);
-            createCell(row, columnCount++, timeSheetReport.getApprovedHours()!= null ?timeSheetReport.getApprovedHours().floatValue():StringUtils.EMPTY, style);
+            createCell(row, columnCount++, timeSheetReport.getSubmittedHours().floatValue(), style2);
+            createCell(row, columnCount++, timeSheetReport.getApprovedHours()!= null ?timeSheetReport.getApprovedHours().floatValue():StringUtils.EMPTY, style2);
             createCell(row, columnCount++, timeSheetReport.getComments(), style);
              
         }
@@ -134,7 +146,7 @@ public class ReportUtil {
         return new ByteArrayInputStream(out.toByteArray());
          
     }
-    
+  
     private void writeDataLiness( List<ProjectReport> projectList) {
         int rowCount = 1;
  
@@ -142,11 +154,17 @@ public class ReportUtil {
         XSSFFont font = workbook.createFont();
         font.setFontHeight(14);
         style.setFont(font);
+       CellStyle style2= formatDecimalStyle(workbook);
+       font.setFontHeight(14);
+       style2.setFont(font);
                  
         for (ProjectReport projectReport : projectList) {
             Row row = sheet.createRow(rowCount++);
             int columnCount = 0;
-             
+         
+            
+         // BigDecimal bd= new BigDecimal(values);
+            
             createCell(row, columnCount++, projectReport.getClientId().intValue(), style);
             createCell(row, columnCount++, projectReport.getClientCode(), style);
             createCell(row, columnCount++, projectReport.getClientName(), style);
@@ -173,9 +191,9 @@ public class ReportUtil {
             createCell(row, columnCount++, projectReport.getActivityDesc(), style);
             createCell(row, columnCount++, projectReport.getTimesheetStatus().intValue(), style);
             createCell(row, columnCount++, projectReport.getTimesheetStatusDesc(), style);
-            createCell(row, columnCount++, projectReport.getTsStartTime()!= null ?projectReport.getTsStartTime().floatValue():StringUtils.EMPTY, style);
-            createCell(row, columnCount++, projectReport.getTsEndTime()!= null ?projectReport.getTsEndTime().floatValue():StringUtils.EMPTY, style);
-            createCell(row, columnCount++, projectReport.getTimeEntryDuration()!= null ?projectReport.getTimeEntryDuration().floatValue():StringUtils.EMPTY, style);
+            createCell(row, columnCount++, projectReport.getTsStartTime()!=null?projectReport.getTsStartTime().floatValue():StringUtils.EMPTY, style2);
+           createCell(row, columnCount++, projectReport.getTsEndTime()!= null ?projectReport.getTsEndTime().floatValue():StringUtils.EMPTY, style2);
+            createCell(row, columnCount++, projectReport.getTimeEntryDuration()!= null ?projectReport.getTimeEntryDuration().floatValue():StringUtils.EMPTY, style2);
             createCell(row, columnCount++, projectReport.getTimeentryDesc(), style);
             createCell(row, columnCount++, projectReport.getTimetypeId().intValue(), style);
             createCell(row, columnCount++, projectReport.getTimeType(), style);
@@ -186,8 +204,16 @@ public class ReportUtil {
         }
     }
     
+    private CellStyle formatDecimalStyle(Workbook workbook) {
+    	
+    	CellStyle style1 = workbook.createCellStyle();
+    	style1.setDataFormat(workbook.createDataFormat().getFormat("0.00"));
+    	return style1;
+    	
+    }
     
-    private void writeHeaderLines() {
+
+	private void writeHeaderLines() {
     	workbook = new XSSFWorkbook();
         sheet = workbook.createSheet("TimeSheet");
          

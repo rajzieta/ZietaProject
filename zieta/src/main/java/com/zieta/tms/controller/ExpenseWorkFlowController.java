@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zieta.tms.dto.ExpenseWorkFlowRequestDTO;
 import com.zieta.tms.request.WorkflowRequestProcessModel;
-import com.zieta.tms.response.ExpenseWFRCommentsDetails;
 import com.zieta.tms.response.ExpenseWFRDetailsForApprover;
 import com.zieta.tms.response.ExpenseWorkFlowComment;
 import com.zieta.tms.service.ExpenseWorkFlowRequestService;

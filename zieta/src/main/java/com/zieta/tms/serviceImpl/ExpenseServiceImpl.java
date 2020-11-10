@@ -38,6 +38,7 @@ import com.zieta.tms.repository.OrgInfoRepository;
 import com.zieta.tms.repository.ProjectInfoRepository;
 import com.zieta.tms.repository.StatusMasterRepository;
 import com.zieta.tms.request.UpdateTimesheetByIdRequest;
+import com.zieta.tms.response.ExpenseWFRDetailsForApprover;
 import com.zieta.tms.service.ExpenseService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -85,6 +86,9 @@ public class ExpenseServiceImpl implements ExpenseService {
 	@Qualifier("actionTypeByName")
 	Map<String, Long> actionTypeByName;
 	
+	//@Autowired
+	//@Qualifier("statusIdByCode")
+	//Map<String, Long> statusIdByCode;
 
 	@Override
 	public List<ExpenseInfoDTO> getAllExpenses() {
@@ -171,16 +175,45 @@ public class ExpenseServiceImpl implements ExpenseService {
 	
 	//draft Expenses
 	
+	
+//	@Override
+//	public List<ExpenseInfoDTO> findActiveExpensesByClientIdAndUserId(Long clientId, Long userId) {
+//		
+//		List<Long> actionTypes = new ArrayList<Long>();
+//		actionTypes.add(actionTypeByName.get(TMSConstants.EXPENSE_SUBMITTED));
+//		actionTypes.add(actionTypeByName.get(TMSConstants.EXPENSE_APPROVED));
+//		actionTypes.add(actionTypeByName.get(TMSConstants.EXPENSE_REJECTED));
+//
+//		
+//		List<ExpenseInfo> expenseRequestList = expenseInfoRepository
+//				.findByClientIdAndUserIdAndActionTypeNotIn(clientId, userId, actionTypes);
+//		return getActiveExpensesDetails(expenseRequestList);
+//	}
+//	
+	
 	@Override
-	public List<ExpenseInfoDTO> findByClientIdAndUserIdAndStatusId(Long clientId, Long userId, Long statusId) {
+	@Transactional
+	public List<ExpenseInfoDTO> findActiveExpensesByClientIdAndUserId(Long clientId, Long userId) {
 		
 		 short notDeleted=0;
 			List<ExpenseInfoDTO> expenseInfoList = new ArrayList<>();
-			List<ExpenseInfo> expenseInfos = expenseInfoRepository.findByClientIdAndUserIdAndStatusIdAndIsDelete(clientId, userId, statusId, notDeleted);
+			
+			List<ExpenseInfo> expenseInfos = expenseInfoRepository.findByClientIdAndUserIdAndIsDelete(clientId, userId, notDeleted);
+		//	List<StatusMaster> expenseInfossss = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCode(clientId, statusType)
 			ExpenseInfoDTO expenseInfoDTO = null;
 			for (ExpenseInfo expenses : expenseInfos) {
 				expenseInfoDTO = modelMapper.map(expenses, ExpenseInfoDTO.class);
+			//	if (StatusMaster.getStatusCode() == "Draft" && StatusMaster.getStatusType()=="Expense") {
+			//List<Long> StatusId =statusMasterRepository.findByClientIdAndStatusTypeAndStatusCode(clientId, StatusMaster.getStatusCode(), StatusMaster.getStatusType());
+				//if (expenses.getStatusId() == statusIdByCode.get(TMSConstants.EXPENSE_DRAFT)) {
+
 				
+					long statusId = statusMasterRepository
+							.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(expenses.getClientId(),
+									TMSConstants.EXPENSE, TMSConstants.EXPENSE_DRAFT, (short) 0)
+							.getId();
+					expenseInfoDTO.setStatusId(statusId);
+			//	}
 				expenseInfoDTO.setProjectCode(StringUtils.EMPTY);
 				if (null != expenses.getProjectId()) {
 				Optional<ProjectInfo> projectInfo  = projectInfoRepository.findById(expenses.getProjectId());
@@ -217,11 +250,18 @@ public class ExpenseServiceImpl implements ExpenseService {
 				}
 			}
 				
+				
+				
+				
 				expenseInfoList.add(expenseInfoDTO);
 			}
+		//	}
 			return expenseInfoList;
 	}
 
+	
+	
+	
 	
 	@Override
 	public List<ExpenseMasterDTO> getAllExpenseMasters() {

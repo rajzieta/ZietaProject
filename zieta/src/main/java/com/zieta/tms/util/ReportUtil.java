@@ -45,25 +45,22 @@ public class ReportUtil {
          
         createCell(row, 0, "Client ID", style);      
         createCell(row, 1, "TS ID", style);       
-        createCell(row, 2, "User ID", style);    
-        createCell(row, 3, "User First Name", style);
-        createCell(row, 4, "User Middle Name", style);
-        createCell(row, 5, "User Last Name", style);
-        createCell(row, 6, "Emp Id", style);
-        createCell(row, 7, "Project Id", style);
-        createCell(row, 8, "Project Name", style);
-        createCell(row, 9, "Task Name", style);
-        createCell(row, 10, "Request Date", style);
-        createCell(row, 11, "Action Date", style);
-        createCell(row, 12, "State Name", style);
-        createCell(row, 13, "Action Name", style);
-        createCell(row, 14, "Approver Id", style);
-        createCell(row, 15, "Approver First Name", style);
-        createCell(row, 16, "Approver Middle Name", style);
-        createCell(row, 17, "Approver Last Name", style);
-        createCell(row, 18, "Submitted Hours", style);
-        createCell(row, 19, "Approved Hours", style);
-        createCell(row, 20, "Comments", style);
+        createCell(row, 2, "Ts Date", style);    
+        createCell(row, 3, "User Id", style);
+        createCell(row, 4, "User Name", style);
+        createCell(row, 5, "Emp Id", style);
+        createCell(row, 6, "Project Id", style);
+        createCell(row, 7, "Project Name", style);
+        createCell(row, 8, "Task Name", style);
+        createCell(row, 9, "Request Date", style);
+        createCell(row, 10, "Action Date", style);
+        createCell(row, 11, "State Name", style);
+        createCell(row, 12, "Action Name", style);
+        createCell(row, 13, "Approver Id", style);
+        createCell(row, 14, "Approver Name", style);
+        createCell(row, 15, "Submitted Hours", style);
+        createCell(row, 16, "Approved Hours", style);
+        createCell(row, 17, "Comments", style);
         
          
     }
@@ -102,10 +99,9 @@ public class ReportUtil {
              
             createCell(row, columnCount++, timeSheetReport.getClientId().intValue(), style);
             createCell(row, columnCount++, timeSheetReport.getTsId().intValue(), style);
+            createCell(row, columnCount++, timeSheetReport.getTsDate(), style);
             createCell(row, columnCount++, timeSheetReport.getUserId().intValue(), style);
-            createCell(row, columnCount++, timeSheetReport.getUserFname(), style);
-            createCell(row, columnCount++, timeSheetReport.getUserMname(), style);
-            createCell(row, columnCount++, timeSheetReport.getUserLname(), style);
+            createCell(row, columnCount++, timeSheetReport.getUserName(), style);
             createCell(row, columnCount++, timeSheetReport.getEmpId(), style);
             createCell(row, columnCount++, timeSheetReport.getProjectId().intValue(), style);
             createCell(row, columnCount++, timeSheetReport.getProjectName(), style);
@@ -115,9 +111,7 @@ public class ReportUtil {
             createCell(row, columnCount++, timeSheetReport.getStateName(), style);
             createCell(row, columnCount++, timeSheetReport.getActionName(), style);
             createCell(row, columnCount++, timeSheetReport.getApproverId().intValue(), style);
-            createCell(row, columnCount++, timeSheetReport.getApproverFname(), style);
-            createCell(row, columnCount++, timeSheetReport.getApproverMname(), style);
-            createCell(row, columnCount++, timeSheetReport.getApproverLname(), style);
+            createCell(row, columnCount++, timeSheetReport.getApproverName(), style);
             createCell(row, columnCount++, timeSheetReport.getSubmittedHours().floatValue(), style2);
             createCell(row, columnCount++, timeSheetReport.getApprovedHours()!= null ?timeSheetReport.getApprovedHours().floatValue():StringUtils.EMPTY, style2);
             createCell(row, columnCount++, timeSheetReport.getComments(), style);

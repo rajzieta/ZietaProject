@@ -73,9 +73,9 @@ public class ExpensesController {
 	@ApiOperation(value = "List Draft expenses based on the  clientId and userId and StatusId", notes = "Table reference:"
 			+ "expense_info")
 	public ResponseEntity<List<ExpenseInfoDTO>> getAllExpensesByClientUserStatus(@RequestParam(required = true) Long clientId,
-			@RequestParam(required = true) Long userId, @RequestParam(required = true) Long statusId) {
+			@RequestParam(required = true) Long userId) {
 		try {
-			List<ExpenseInfoDTO> expensesList = expenseService.findByClientIdAndUserIdAndStatusId(clientId, userId, statusId);
+			List<ExpenseInfoDTO> expensesList = expenseService.findActiveExpensesByClientIdAndUserId(clientId, userId);
 			return new ResponseEntity<List<ExpenseInfoDTO>>(expensesList, HttpStatus.OK);
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<List<ExpenseInfoDTO>>(HttpStatus.NOT_FOUND);

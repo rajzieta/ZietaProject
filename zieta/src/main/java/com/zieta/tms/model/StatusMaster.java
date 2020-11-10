@@ -11,10 +11,14 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "STATUS_MASTER")
+@EqualsAndHashCode(callSuper=false)
 @Data
 public class StatusMaster extends BaseEntity implements Serializable {
 

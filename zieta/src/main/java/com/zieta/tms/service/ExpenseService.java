@@ -41,7 +41,7 @@ public interface ExpenseService {
 	
 	public boolean submitExpenses(List<ExpenseInfo> expenseInfo) throws Exception;
 
-	public List<ExpenseInfoDTO> findByClientIdAndUserIdAndStatusId(Long clientId, Long userId, Long statusId);
+	public List<ExpenseInfoDTO> findActiveExpensesByClientIdAndUserId(Long clientId, Long userId);
 
 	
 	

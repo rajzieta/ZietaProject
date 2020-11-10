@@ -36,15 +36,12 @@ public class TimeSheetReport {
 
 	@Column(name = "ts_id")
 	private Long tsId;
+	
+	@Column(name = "ts_date")
+	private Date tsDate;
 
-	@Column(name = "user_fname")
-	private String userFname;
-
-	@Column(name = "user_mname")
-	private String userMname;
-
-	@Column(name = "user_lname")
-	private String userLname;
+	@Column(name = "user_name")
+	private String userName;
 
 	@Column(name = "emp_id")
 	private String empId;
@@ -79,15 +76,8 @@ public class TimeSheetReport {
 	@Column(name = "approver_id")
 	private Long approverId;
 	
-	@Column(name = "approver_fname")
-	private String approverFname;
-
-	@Column(name = "approver_mname")
-	private String approverMname;
-
-	@Column(name = "approver_lname")
-	private String approverLname;
-
+	@Column(name = "approver_name")
+	private String approverName;
 
 	@Column(name = "comments")
 	private String comments;

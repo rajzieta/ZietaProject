@@ -1,21 +1,26 @@
 package com.zieta.tms.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zieta.tms.dto.OrgInfoDTO;
 import com.zieta.tms.dto.SkillsetMasterDTO;
 import com.zieta.tms.model.SkillsetMaster;
+import com.zieta.tms.response.StatusByClienttypeResponse;
 import com.zieta.tms.service.SkillsetMasterService;
 
 import io.swagger.annotations.Api;
@@ -55,4 +60,27 @@ public class SkillsetMasterController {
 	public void deleteSkillsetById(@RequestParam(required=true) Long id) throws Exception {
 		skillsetMasterService.deleteSkillsetById(id);
 	}
+	
+	
+	@RequestMapping(value = "getSkillsetByClient", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "List Status based on the  clientId", notes = "Table reference: Skillset_master")
+	public ResponseEntity<List<SkillsetMasterDTO>> getSkillsetByClient(@RequestParam(required = true) Long clientId) {
+		try {
+			List<SkillsetMasterDTO> statusByClientStatustypeList = skillsetMasterService.findByClientId(clientId);
+			return new ResponseEntity<List<SkillsetMasterDTO>>(statusByClientStatustypeList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<SkillsetMasterDTO>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	
+	
+	@ApiOperation(value = "Updates the Skillset for the provided Id", notes = "Table reference: Skillset_master")
+	@RequestMapping(value = "editSkillsetById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editSkillsetById(@Valid @RequestBody SkillsetMasterDTO skilldto) throws Exception {
+		skillsetMasterService.editskillmaster(skilldto);
+		
+		
+	}
+	
 }

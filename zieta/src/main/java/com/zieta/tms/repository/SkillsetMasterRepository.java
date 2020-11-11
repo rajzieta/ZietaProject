@@ -11,6 +11,9 @@ import com.zieta.tms.model.SkillsetMaster;
 @Repository
 public interface SkillsetMasterRepository extends JpaRepository<SkillsetMaster, Long>{
 
+	List<SkillsetMaster> findByClientId(Long clientId);
+
+
 
 
 }

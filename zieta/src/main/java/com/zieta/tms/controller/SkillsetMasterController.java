@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zieta.tms.dto.OrgInfoDTO;
 import com.zieta.tms.dto.SkillsetMasterDTO;
+import com.zieta.tms.dto.SkillsetUserMappingDTO;
 import com.zieta.tms.model.SkillsetMaster;
+import com.zieta.tms.model.SkillsetUserMapping;
 import com.zieta.tms.response.StatusByClienttypeResponse;
 import com.zieta.tms.service.SkillsetMasterService;
 
@@ -66,8 +68,8 @@ public class SkillsetMasterController {
 	@ApiOperation(value = "List Status based on the  clientId", notes = "Table reference: Skillset_master")
 	public ResponseEntity<List<SkillsetMasterDTO>> getSkillsetByClient(@RequestParam(required = true) Long clientId) {
 		try {
-			List<SkillsetMasterDTO> statusByClientStatustypeList = skillsetMasterService.findByClientId(clientId);
-			return new ResponseEntity<List<SkillsetMasterDTO>>(statusByClientStatustypeList, HttpStatus.OK);
+			List<SkillsetMasterDTO> skillsByClientList = skillsetMasterService.findByClientId(clientId);
+			return new ResponseEntity<List<SkillsetMasterDTO>>(skillsByClientList, HttpStatus.OK);
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<List<SkillsetMasterDTO>>(HttpStatus.NOT_FOUND);
 		}
@@ -81,6 +83,36 @@ public class SkillsetMasterController {
 		skillsetMasterService.editskillmaster(skilldto);
 		
 		
+	}
+	
+	
+	////Skillset User Mapping 
+	
+	
+
+	@RequestMapping(value = "getAllSkillsetUserMapping", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<SkillsetUserMappingDTO> getAllSkillsetUserMapping() {
+		List<SkillsetUserMappingDTO> skillusersMapping = null;
+		try {
+			skillusersMapping = skillsetMasterService.getAllSkillsetUserMapping();
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in SkillMasterController#getAllSkillsetUserMapping",e);
+		}
+		return skillusersMapping;
+	}
+	
+	
+	@RequestMapping(value = "addSkillsetUserMapping", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addSkillsetUserMapping(@Valid @RequestBody SkillsetUserMapping skilluserMapping) {
+		skillsetMasterService.addSkillsetUserMapping(skilluserMapping);
+	}
+
+	
+	
+	@ApiOperation(value = "Deletes entries from status_master based on Id", notes = "Table reference: skillset_user_mapping")
+	@RequestMapping(value = "deleteSkillsetUserMappingById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteSkillsetUserMappingById(@RequestParam(required=true) Long id) throws Exception {
+		skillsetMasterService.deleteSkillUserMappingById(id);
 	}
 	
 }

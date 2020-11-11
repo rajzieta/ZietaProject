@@ -76,7 +76,7 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
                     predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("stateName"), "%" + stateName + "%")));
                 }
                 if(startDate!= null && endDate!=null){
-                    predicates.add(criteriaBuilder.between(root.get("requestDate"),startDate,endDate));
+                    predicates.add(criteriaBuilder.between(root.get("tsDate"),startDate,endDate));
                 }
                 if(empId!= null) {
                     predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("empId"), empId)));
@@ -105,7 +105,7 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
                     predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("stateName"), "%" + stateName + "%")));
                 }
                 if(startDate!= null && endDate!=null){
-                    predicates.add(criteriaBuilder.between(root.get("requestDate"),startDate,endDate));
+                    predicates.add(criteriaBuilder.between(root.get("tsDate"),startDate,endDate));
                 }
                 if(empId!= null) {
                     predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("empId"), empId)));

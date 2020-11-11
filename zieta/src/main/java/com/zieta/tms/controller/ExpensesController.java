@@ -69,10 +69,10 @@ public class ExpensesController {
 	
 	//get only Draft State expenses 
 	
-	@GetMapping("/getAllExpensesByClientUserStatus")
+	@GetMapping("/getAllExpensesHistoryByClientUser")
 	@ApiOperation(value = "List Draft expenses based on the  clientId and userId and StatusId", notes = "Table reference:"
 			+ "expense_info")
-	public ResponseEntity<List<ExpenseInfoDTO>> getAllExpensesByClientUserStatus(@RequestParam(required = true) Long clientId,
+	public ResponseEntity<List<ExpenseInfoDTO>> getAllExpensesHistoryByClientUser(@RequestParam(required = true) Long clientId,
 			@RequestParam(required = true) Long userId) {
 		try {
 			List<ExpenseInfoDTO> expensesList = expenseService.findActiveExpensesByClientIdAndUserId(clientId, userId);

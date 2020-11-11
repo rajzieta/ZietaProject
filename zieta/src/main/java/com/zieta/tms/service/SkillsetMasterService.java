@@ -18,5 +18,9 @@ public List<SkillsetMasterDTO> getAllSkillset();
 
 public void deleteSkillsetById(Long id) throws Exception;
 
+public List<SkillsetMasterDTO> findByClientId(Long clientId);
+
+public void editskillmaster(@Valid SkillsetMasterDTO skilldto) throws Exception;
+
 	
 }

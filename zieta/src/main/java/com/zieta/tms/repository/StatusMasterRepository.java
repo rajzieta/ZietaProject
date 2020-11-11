@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.zieta.tms.dto.ExpenseEntriesDTO;
+import com.zieta.tms.dto.ExpenseInfoDTO;
 import com.zieta.tms.model.StatusMaster;
 
 
@@ -23,5 +25,6 @@ public interface StatusMasterRepository extends JpaRepository<StatusMaster, Long
 	StatusMaster findByClientIdAndStatusTypeAndIsDefaultAndIsDelete(Long clientId, String statusType, boolean isDefault, short notDeleted);
 
 	List<StatusMaster> findByClientIdAndIsDelete(Long clientId, short notDeleted);
+
 
 }

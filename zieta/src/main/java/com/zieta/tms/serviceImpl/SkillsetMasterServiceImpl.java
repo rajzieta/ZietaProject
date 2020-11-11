@@ -12,11 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zieta.tms.dto.SkillsetMasterDTO;
+import com.zieta.tms.dto.SkillsetUserMappingDTO;
 import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.SkillsetMaster;
+import com.zieta.tms.model.SkillsetUserMapping;
 import com.zieta.tms.model.StatusMaster;
 import com.zieta.tms.repository.ClientInfoRepository;
 import com.zieta.tms.repository.SkillsetMasterRepository;
+import com.zieta.tms.repository.SkillsetUserMappingRepository;
 import com.zieta.tms.request.ProjectMasterEditRequest;
 import com.zieta.tms.response.StatusByClienttypeResponse;
 import com.zieta.tms.service.SkillsetMasterService;
@@ -31,6 +34,9 @@ public class SkillsetMasterServiceImpl implements SkillsetMasterService {
 
 	@Autowired
 	SkillsetMasterRepository skillsetMasterRepository;
+	
+	@Autowired
+	SkillsetUserMappingRepository skillsetUserMappingRepository;
 	
 	@Autowired
 	ClientInfoRepository clientInfoRepository;
@@ -113,5 +119,46 @@ public class SkillsetMasterServiceImpl implements SkillsetMasterService {
 
 }
 	
+	 ///Skillset UserMapping DTO
 	 
+	 @Override
+		public List<SkillsetUserMappingDTO> getAllSkillsetUserMapping() {
+			List<SkillsetUserMapping> skillUsers= skillsetUserMappingRepository.findAll();
+			List<SkillsetUserMappingDTO> skillUsermapDTOs = new ArrayList<SkillsetUserMappingDTO>();
+			SkillsetUserMappingDTO skillUsermapDTO = null;
+			for (SkillsetUserMapping skillMaster : skillUsers) {
+				skillUsermapDTO = modelMapper.map(skillMaster,SkillsetUserMappingDTO.class);
+			//	skillUsermapDTO.setClientCode(clientInfoRepository.findById(skillMaster.getClientId()).get().getClientCode());
+			//	skillUsermapDTO.setClientDescription(clientInfoRepository.findById(skillMaster.getClientId()).get().getClientName());
+				//staMasterDTO.setClientStatus(clientInfoRepository.findById(skillMaster.getClientId()).get().getClientStatus());
+
+				skillUsermapDTOs.add(skillUsermapDTO);
+			}
+			return skillUsermapDTOs;
+		}
+		
+		
+		 @Override 
+		  public void addSkillsetUserMapping(SkillsetUserMapping skillsetUsermap) {
+			
+		  skillsetUserMappingRepository.save(skillsetUsermap); 
+		  
+		  }
+		 
+		 
+		 public void deleteSkillUserMappingById(Long id) throws Exception {
+				
+				Optional<SkillsetUserMapping> skillmaster = skillsetUserMappingRepository.findById(id);
+				if (skillmaster.isPresent()) {
+					skillsetUserMappingRepository.deleteById(id);
+
+				}else {
+					log.info("No Skill found with the provided ID{} in the DB",id);
+					throw new Exception("No Skill found with the provided ID in the DB :"+id);
+				}
+				
+				
+			}
+		 
+		 
 }

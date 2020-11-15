@@ -9,13 +9,11 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class TeamMasterDTO extends BaseEntity {
+public class OrgUnitUserMappingDTO {
 
 	private Long id;
     private Long clientId;
-    private String teamName;
-    private String teamDesc;
-    
-    private String clientCode;
-    private String clientDescription;
+    private Long orgUnitId;
+    private Long userId;
+   
 }

@@ -28,7 +28,7 @@ public class ScreensMaster implements Serializable {
 	    private Long id;
 
 	    @NotBlank
-	    @Column(name="screen_code")
+	    @Column(name="screen_code", unique= true)
 	    private String screenCode;
 
 	    @Column(name="screen_category")

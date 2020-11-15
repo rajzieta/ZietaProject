@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
@@ -28,6 +29,7 @@ public class ProjectInfo extends BaseEntity implements Serializable {
 	@Column(name = "client_id")
 	private Long clientId;
 
+	@NotBlank
 	@Column(name = "project_code")
 	private String projectCode;
 

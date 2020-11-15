@@ -38,7 +38,8 @@ public class ClientInfo extends BaseEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name="client_code")
+	@NotBlank
+	@Column(name="client_code", unique= true)
 	private String clientCode;
 
 	@Column(name="client_name")

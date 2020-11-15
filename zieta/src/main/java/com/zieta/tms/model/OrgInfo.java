@@ -39,6 +39,7 @@ public class OrgInfo extends BaseEntity implements Serializable {
 	    @Column(name="client_id")
 	    private Long clientId;
 	
+	    @NotBlank
 	    @Column(name="org_node_code")
 	    private String orgNodeCode;
 	  

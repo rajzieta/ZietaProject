@@ -15,10 +15,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import lombok.Data;
 
 @Entity
-@Table(name = "TEAM_MASTER")
+@Table(name = "orgunit_user_mapping")
 @EntityListeners(AuditingEntityListener.class)
 @Data
-public class TeamMaster extends BaseEntity implements Serializable {
+public class OrgUnitUserMapping implements Serializable {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,10 +29,10 @@ public class TeamMaster extends BaseEntity implements Serializable {
     private Long clientId;
     
   
-    @Column(name = "team_name")
-    private String teamName;
+    @Column(name = "orgunit_id")
+    private Long orgunitId;
     
     
-    @Column(name = "team_desc")
-    private String teamDesc;
+    @Column(name = "user_id")
+    private Long userId;
 }

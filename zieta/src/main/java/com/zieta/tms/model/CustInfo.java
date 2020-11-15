@@ -50,6 +50,7 @@ import lombok.Data;
 	    @Column(name = "cust_details")
 	    private String custDetails;
 	    
+	    @NotBlank
 	    @Column(name = "cust_code")
 	    private String custCode;
 	    

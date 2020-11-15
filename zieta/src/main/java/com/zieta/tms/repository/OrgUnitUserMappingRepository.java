@@ -6,12 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.zieta.tms.model.SkillsetMaster;
-import com.zieta.tms.model.TeamMaster;
+import com.zieta.tms.model.OrgUnitUserMapping;
 
 @Repository
-public interface TeamMasterRepository extends JpaRepository<TeamMaster, Long> {
+public interface OrgUnitUserMappingRepository extends JpaRepository<OrgUnitUserMapping, Long> {
 
-	List<TeamMaster> findByClientIdAndIsDelete(Long clientId, short notDeleted);
+	List<OrgUnitUserMapping> findByClientId(Long clientId);
 
 	
 }

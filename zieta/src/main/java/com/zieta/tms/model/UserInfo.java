@@ -47,7 +47,8 @@ public class UserInfo extends BaseEntity {
 	@Column(name = "user_lname")
 	private String userLname;
 	
-	@Column(name = "EMAIL_ID")
+	@NotBlank	
+	@Column(name = "EMAIL_ID", unique= true)
 	private String email;
 	
 	@Column(name = "EMP_ID")

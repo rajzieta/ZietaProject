@@ -17,8 +17,10 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.google.common.base.Strings;
 import com.zieta.tms.model.ActionTypeMaster;
 import com.zieta.tms.model.StateTypeMaster;
+import com.zieta.tms.model.StatusMaster;
 import com.zieta.tms.repository.ActionTypeMasterRepository;
 import com.zieta.tms.repository.StateTypeMasterRepository;
+import com.zieta.tms.repository.StatusMasterRepository;
 
 @Configuration
 public class BeanConfig {
@@ -30,6 +32,8 @@ public class BeanConfig {
 	@Autowired
 	ActionTypeMasterRepository actionTypeMasterRepository;
 	
+	@Autowired
+	StatusMasterRepository statusMasterRepository;
 	
 	@Bean
 	@Qualifier("stateByName")
@@ -66,6 +70,23 @@ public class BeanConfig {
 		List<ActionTypeMaster> actionTypeMasterList = actionTypeMasterRepository.findAll();
 		return actionTypeMasterList.stream().collect(Collectors.toMap(ActionTypeMaster::getId, ActionTypeMaster::getActionName));
 	}
+	
+	
+//	@Bean
+//	@Qualifier("statusByName")
+//	public Map<String, Long> getstatusByName(){
+//		
+//		List<StatusMaster> statusMasterList = statusMasterRepository.findAll();
+//		return statusMasterList.stream().collect(Collectors.toMap(StatusMaster::getStatusCode, StatusMaster::getId));
+//	}
+//	
+//	@Bean
+//	@Qualifier("statusById")
+//	public Map<Long, String> getstatusById(){
+//		
+//		List<StatusMaster> statusMasterList = statusMasterRepository.findAll();
+//		return statusMasterList.stream().collect(Collectors.toMap(StatusMaster::getId, StatusMaster::getStatusCode));
+//	}
 
 	@Bean
 	@Profile("!dev")

@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -25,7 +26,7 @@ import lombok.Data;
 
 
 	@Entity
-	@Table(name = "cust_info")
+	@Table(name = "cust_info", uniqueConstraints=@UniqueConstraint(columnNames= {"client_id", "cust_code"}))
 	@EntityListeners(AuditingEntityListener.class)
 	@JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
 	        allowGetters = true)

@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -15,7 +16,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
-@Table(name = "project_info")
+@Table(name = "project_info", uniqueConstraints=@UniqueConstraint(columnNames= {"client_id", "project_code"}))
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class ProjectInfo extends BaseEntity implements Serializable {

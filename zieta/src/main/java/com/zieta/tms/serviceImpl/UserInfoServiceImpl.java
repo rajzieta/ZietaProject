@@ -265,12 +265,12 @@ public class UserInfoServiceImpl implements UserInfoService {
 			}
 		}
 		else {
-			throw new Exception("Old Password doesnt match with the current password : ");
+			throw new Exception("Old Password does not match with the existing password : ");
 			
 		}
 		}
 		else {
-			throw new Exception("User doesnt exist : ");
+			throw new Exception("User does not exist : ");
 			
 		}
 	}

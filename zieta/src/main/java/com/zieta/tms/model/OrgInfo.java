@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -26,7 +27,7 @@ import lombok.Data;
 
 
 @Entity
-@Table(name = "orgunit_info")
+@Table(name = "orgunit_info", uniqueConstraints=@UniqueConstraint(columnNames= {"client_id", "org_node_code"}))
 @Data
 public class OrgInfo extends BaseEntity implements Serializable {
 

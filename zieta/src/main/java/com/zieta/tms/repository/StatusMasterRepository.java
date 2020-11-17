@@ -26,5 +26,6 @@ public interface StatusMasterRepository extends JpaRepository<StatusMaster, Long
 
 	List<StatusMaster> findByClientIdAndIsDelete(Long clientId, short notDeleted);
 
+	
 
 }

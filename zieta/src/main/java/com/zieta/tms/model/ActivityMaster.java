@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -16,7 +17,7 @@ import lombok.Data;
 
 
 @Entity
-@Table(name = "ACTIVITY_MASTER")
+@Table(name = "ACTIVITY_MASTER", uniqueConstraints=@UniqueConstraint(columnNames= {"client_id", "activity_code"}))
 @Data
 public class ActivityMaster extends BaseEntity implements Serializable{
 

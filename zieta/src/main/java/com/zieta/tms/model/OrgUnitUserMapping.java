@@ -30,7 +30,7 @@ public class OrgUnitUserMapping implements Serializable {
     
   
     @Column(name = "orgunit_id")
-    private Long orgunitId;
+    private Long orgUnitId;
     
     
     @Column(name = "user_id")

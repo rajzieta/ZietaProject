@@ -160,5 +160,21 @@ public class SkillsetMasterServiceImpl implements SkillsetMasterService {
 				
 			}
 		 
-		 
+		 @Override
+			public List<SkillsetUserMappingDTO> findByClientIdAndUserId(Long clientId, Long userId) {
+				List<SkillsetUserMapping> skillList = skillsetUserMappingRepository.findByClientIdAndUserId(clientId, userId);
+				List<SkillsetUserMappingDTO> skillsByClientList = new ArrayList<>();
+				for(SkillsetUserMapping skillmaster: skillList) {
+					SkillsetUserMappingDTO skillbyclientList = null;
+					skillbyclientList = modelMapper.map(skillmaster,SkillsetUserMappingDTO.class);
+					skillbyclientList.setClientCode(clientInfoRepository.findById(skillmaster.getClientId()).get().getClientCode());
+					skillbyclientList.setClientDescription(clientInfoRepository.findById(skillmaster.getClientId()).get().getClientName());
+
+					
+					skillsByClientList.add(skillbyclientList);
+				}
+				
+				return skillsByClientList;
+
+	}
 }

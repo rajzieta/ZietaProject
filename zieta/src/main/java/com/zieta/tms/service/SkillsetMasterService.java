@@ -30,5 +30,7 @@ public void addSkillsetUserMapping(@Valid SkillsetUserMapping skilluserMapping);
 
 public void deleteSkillUserMappingById(Long id) throws Exception;
 
+public List<SkillsetUserMappingDTO> findByClientIdAndUserId(Long clientId, Long userId);
+
 	
 }

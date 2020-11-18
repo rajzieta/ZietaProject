@@ -115,4 +115,17 @@ public class SkillsetMasterController {
 		skillsetMasterService.deleteSkillUserMappingById(id);
 	}
 	
+	
+	@RequestMapping(value = "getSkillsetUserMappingByClientAndUser", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "List Status based on the  clientId", notes = "Table reference: skillset_user_mapping")
+	public ResponseEntity<List<SkillsetUserMappingDTO>> getSkillsetUserMappingByClientAndUser(@RequestParam(required = true) Long clientId, @RequestParam(required = true) Long userId) {
+		try {
+			List<SkillsetUserMappingDTO> skillsByClientList = skillsetMasterService.findByClientIdAndUserId(clientId, userId);
+			return new ResponseEntity<List<SkillsetUserMappingDTO>>(skillsByClientList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<SkillsetUserMappingDTO>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	
 }

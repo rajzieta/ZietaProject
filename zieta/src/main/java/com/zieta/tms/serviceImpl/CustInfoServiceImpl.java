@@ -66,10 +66,17 @@ public class CustInfoServiceImpl implements CustInfoService {
 	}
 
 	@Override
-	public void addCustInfo(CustInfo custInfo) {
-		custInfoRepository.save(custInfo);
+	public void addCustInfo(CustInfo custInfo){
 		
-	}
+		try {
+		custInfoRepository.save(custInfo);
+		}
+		catch(Exception ex) {
+			log.error("Exception occured during the save Cust information",ex);
+			}
+		}
+		
+	
 
 	@Override
 	public List<CustInfo> getAllCustomersByClient(Long clientId) {

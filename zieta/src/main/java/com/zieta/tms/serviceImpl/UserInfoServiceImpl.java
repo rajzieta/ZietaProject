@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.zieta.tms.common.MessagesConstants;
 import com.zieta.tms.dto.UserInfoDTO;
 import com.zieta.tms.model.ClientInfo;
+import com.zieta.tms.model.OrgUnitUserMapping;
 import com.zieta.tms.model.ScreensMaster;
 import com.zieta.tms.model.UserInfo;
 import com.zieta.tms.repository.AccessTypeMasterRepository;
@@ -275,6 +276,11 @@ public class UserInfoServiceImpl implements UserInfoService {
 		}
 	}
 	
-	
+	//@Override
+	//public List<UserInfo> getUsersByIds(List<Long> teamList){
+		
+	//	return userInfoRepositoryRepository.findAllById(teamList);
+		
+	//}
 	
 }

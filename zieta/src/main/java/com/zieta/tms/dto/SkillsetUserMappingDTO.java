@@ -15,4 +15,7 @@ public class SkillsetUserMappingDTO {
     private Long skillsetId;
     private Long skillLevel;
     private String comments;
+    
+    private String ClientCode;
+    private String ClientDescription;
 }

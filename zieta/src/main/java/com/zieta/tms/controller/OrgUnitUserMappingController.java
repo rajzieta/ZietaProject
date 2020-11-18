@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zieta.tms.dto.SkillsetMasterDTO;
 import com.zieta.tms.dto.OrgUnitUserMappingDTO;
 import com.zieta.tms.model.SkillsetMaster;
+import com.zieta.tms.response.OrgUnitUsersResponse;
 import com.zieta.tms.model.OrgUnitUserMapping;
 import com.zieta.tms.service.SkillsetMasterService;
 import com.zieta.tms.service.OrgUnitUserMappingService;
@@ -56,7 +57,7 @@ public class OrgUnitUserMappingController {
 
 	
 	
-	@ApiOperation(value = "Deletes entries from team_master based on Id", notes = "Table reference: team_master")
+	@ApiOperation(value = "Deletes entries from team_master based on Id", notes = "Table reference: orgunit_user_mapping")
 	@RequestMapping(value = "deleteOrgUnitUserMappingById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void deleteOrgUnitUserMappingById(@RequestParam(required=true) Long id) throws Exception {
 		teamMasterService.deleteTeamMasterById(id);
@@ -65,14 +66,14 @@ public class OrgUnitUserMappingController {
 	
 	
 
-	@ApiOperation(value = "Updates the TeamMaster for the provided Id", notes = "Table reference: team_master")
+	@ApiOperation(value = "Updates the TeamMaster for the provided Id", notes = "Table reference: orgunit_user_mapping")
 	@RequestMapping(value = "editOrgUnitUserMappingById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void editOrgUnitUserMappingById(@Valid @RequestBody OrgUnitUserMappingDTO teamdto) throws Exception {
 		teamMasterService.editTeamMaster(teamdto);
 	}
 		
 		@RequestMapping(value = "getOrgUnitUserMappingByClient", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-		@ApiOperation(value = "List Status based on the  clientId", notes = "Table reference: Skillset_master")
+		@ApiOperation(value = "List OrgunitUserMapping Info based on the  clientId", notes = "Table reference: orgunit_user_mapping")
 		public ResponseEntity<List<OrgUnitUserMappingDTO>> getOrgUnitUserMappingByClient(@RequestParam(required = true) Long clientId) {
 			try {
 				List<OrgUnitUserMappingDTO> teamsByClientList = teamMasterService.findByClientId(clientId);
@@ -82,5 +83,15 @@ public class OrgUnitUserMappingController {
 			}
 		}
 	
+		
+//		@RequestMapping(value = "getOrgUnitUserDataByClient", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//		@ApiOperation(value = "List Users Data based on the  clientId", notes = "Table reference: orgunit_user_mapping")
+//		public OrgUnitUsersResponse getOrgUnitUserDataByClient(@RequestParam(required = true) Long clientId) {
+//			
+//				OrgUnitUsersResponse teamsByClientList = teamMasterService.findData(clientId);
+//			
+//				return teamsByClientList;
+//			
+//		}
 
 }

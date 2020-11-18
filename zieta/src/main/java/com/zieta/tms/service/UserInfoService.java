@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.zieta.tms.dto.UserInfoDTO;
+import com.zieta.tms.model.OrgUnitUserMapping;
 import com.zieta.tms.model.UserInfo;
 import com.zieta.tms.request.PasswordEditRequest;
 import com.zieta.tms.request.UserInfoEditRequest;
@@ -30,4 +31,6 @@ public interface UserInfoService {
 	public void EditPasswordByEmailId(@Valid PasswordEditRequest passwordeditRequest) throws Exception;
 
 	public void deleteUsersById(Long id, String modifiedBy) throws Exception;
+
+	//public List<UserInfo> getUsersByIds(List<Long> teamList);
 }

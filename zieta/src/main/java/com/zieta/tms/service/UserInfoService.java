@@ -32,5 +32,5 @@ public interface UserInfoService {
 
 	public void deleteUsersById(Long id, String modifiedBy) throws Exception;
 
-	//public List<UserInfo> getUsersByIds(List<Long> teamList);
+	public List<UserInfo> getUsersByIds(List<Long> teamList);
 }

@@ -17,11 +17,11 @@ public interface OrgUnitUserMappingRepository extends JpaRepository<OrgUnitUserM
 
 	//List<Long> findByClientIdAndOrgUnitId(Long clientId, Long orgUnitId);
 	
-	OrgUnitUserMapping findAllById(Long clientId);
+	//OrgUnitUserMapping findAllById(Long clientId);
 	
-//	@Query( "select o.userId from OrgUnitUserMapping o where o.clientId= :clientId AND o.orgUnitId= :orgUnitId")
-//	  List<Long> findByClientIdANDOrgUnitId(@Param("clientId") Long clientId,
-//			  @Param("orgUnitId") Long orgUnitId);
+	@Query( "select o.userId from OrgUnitUserMapping o where o.clientId= :clientId AND o.orgUnitId= :orgUnitId")
+	  List<Long> findByClientIdANDOrgUnitId(@Param("clientId") Long clientId,
+		  @Param("orgUnitId") Long orgUnitId);
 //
 //	
 

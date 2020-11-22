@@ -147,46 +147,15 @@ public class OrgUnitUserMappingServiceImpl implements OrgUnitUserMappingService 
 		}
 	 
 	 
-//	 @Override
-//		public OrgUnitUsersResponse findData(Long clientId) {
-//		  
-//			OrgUnitUserMapping teamList = orgUUMRepository.findAllById(clientId);
-//			
-//		//	OrgUnitUserMappingDTO teamByClientList = null;
-//			// List<Long> orgUnitUsersList = orgUUMRepository.findByClientId(clientId);
-//			 List<Long> usersListByClient = orgUUMRepository.findByClientIdANDOrgUnitId(teamList.getClientId(), teamList.getOrgUnitId());
-//			 List<UserInfo> screensListByClientId = userInfoService.getUsersByIds(usersListByClient);
-//			 
-//			 OrgUnitUsersResponse users = giveOrgData(teamList);
-//			 users.setUsersByClient(screensListByClientId);
-//			 
-//			return users;
-//
-//}
-	 
-	 
-	 private OrgUnitUsersResponse giveOrgData(OrgUnitUserMapping userInfo) {
-			
-		 OrgUnitUsersResponse userDetailsResponse = new OrgUnitUsersResponse();
-			userDetailsResponse.setClientId(userInfo.getClientId());
-			userDetailsResponse.setOrgUnitId(userInfo.getOrgUnitId());
-			userDetailsResponse.setUserId(userInfo.getUserId());
-			
-			userDetailsResponse.setClientCode(clientInfoRepository.findById(userInfo.getClientId()).get().getClientCode());
-			userDetailsResponse.setClientDescription(clientInfoRepository.findById(userInfo.getClientId()).get().getClientName());
-			
-		//	userDetailsResponse.setInfoMessage("User details after successful login");
-			
-			return userDetailsResponse;
-		}
-	 
+
 	 
 	 @Override
 		public List<OrgUnitUserMappingDTO> findByClientId(Long clientId) {
 			List<OrgUnitUserMapping> teamList = orgUUMRepository.findByClientId(clientId);
 			List<OrgUnitUserMappingDTO> teamsByClientList = new ArrayList<>();
+			OrgUnitUserMappingDTO teamByClientList = null;
 			for(OrgUnitUserMapping teammaster: teamList) {
-				OrgUnitUserMappingDTO teamByClientList = null;
+				
 				teamByClientList = modelMapper.map(teammaster,OrgUnitUserMappingDTO.class);
 				teamByClientList.setClientCode(clientInfoRepository.findById(teammaster.getClientId()).get().getClientCode());
 				teamByClientList.setClientDescription(clientInfoRepository.findById(teammaster.getClientId()).get().getClientName());
@@ -220,7 +189,10 @@ public class OrgUnitUserMappingServiceImpl implements OrgUnitUserMappingService 
 					}
 				}
 				
-				
+				 List<Long> accessControlConfigList = orgUUMRepository.findByClientIdANDOrgUnitId(teamByClientList.getClientId(), teamByClientList.getOrgUnitId());
+					
+					List<UserInfo> usersListByClientId = userInfoService.getUsersByIds(accessControlConfigList);
+					teamByClientList.setUsersByClient(usersListByClientId);
 				
 				
 				teamsByClientList.add(teamByClientList);

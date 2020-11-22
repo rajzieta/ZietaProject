@@ -276,11 +276,11 @@ public class UserInfoServiceImpl implements UserInfoService {
 		}
 	}
 	
-	//@Override
-	//public List<UserInfo> getUsersByIds(List<Long> teamList){
+	@Override
+	public List<UserInfo> getUsersByIds(List<Long> teamList){
 		
-	//	return userInfoRepositoryRepository.findAllById(teamList);
+		return userInfoRepositoryRepository.findAllById(teamList);
 		
-	//}
+	}
 	
 }

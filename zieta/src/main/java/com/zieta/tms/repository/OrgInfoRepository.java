@@ -16,6 +16,8 @@ public interface OrgInfoRepository extends JpaRepository<OrgInfo, Long> {
 
 	List<OrgInfo> findByIsDelete(short notDeleted);
 
+
+
 	
 	
 

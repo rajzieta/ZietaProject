@@ -18,11 +18,7 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, Long>{
 
 	List<UserInfo> findByIsDelete(short notDeleted);
 
-
-	
-	//Optional<UserInfo> findAllById(String[] strings);
-
-	//Optional<UserInfo> findById(int numbers);
+	List<Long> findByClientId(Long clientId);
 
 	
 

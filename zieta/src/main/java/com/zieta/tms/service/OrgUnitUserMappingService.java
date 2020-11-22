@@ -20,7 +20,7 @@ public interface OrgUnitUserMappingService {
 
 	List<OrgUnitUserMappingDTO> findByClientId(Long clientId);
 
-	//public OrgUnitUsersResponse findData(Long clientId);
+
 
 	
 	

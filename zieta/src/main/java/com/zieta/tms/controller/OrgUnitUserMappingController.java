@@ -82,16 +82,5 @@ public class OrgUnitUserMappingController {
 				return new ResponseEntity<List<OrgUnitUserMappingDTO>>(HttpStatus.NOT_FOUND);
 			}
 		}
-	
-		
-//		@RequestMapping(value = "getOrgUnitUserDataByClient", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//		@ApiOperation(value = "List Users Data based on the  clientId", notes = "Table reference: orgunit_user_mapping")
-//		public OrgUnitUsersResponse getOrgUnitUserDataByClient(@RequestParam(required = true) Long clientId) {
-//			
-//				OrgUnitUsersResponse teamsByClientList = teamMasterService.findData(clientId);
-//			
-//				return teamsByClientList;
-//			
-//		}
 
 }

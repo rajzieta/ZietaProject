@@ -6,13 +6,14 @@ import javax.validation.Valid;
 
 import com.zieta.tms.dto.OrgUnitUserMappingDTO;
 import com.zieta.tms.model.OrgUnitUserMapping;
+import com.zieta.tms.request.OrgUnitUsersRequest;
 import com.zieta.tms.response.OrgUnitUsersResponse;
 
 public interface OrgUnitUserMappingService {
 
 	public List<OrgUnitUserMappingDTO> getAllTeamMaster();
 
-	public void addTeamMaster(@Valid OrgUnitUserMapping teammaster);
+	public void addTeamMaster(@Valid OrgUnitUsersRequest usersRequest);
 
 	public void deleteTeamMasterById(Long id) throws Exception;
 

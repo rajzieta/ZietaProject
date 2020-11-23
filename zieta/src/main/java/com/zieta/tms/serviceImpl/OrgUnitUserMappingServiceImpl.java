@@ -16,11 +16,13 @@ import com.zieta.tms.dto.SkillsetMasterDTO;
 import com.zieta.tms.dto.OrgUnitUserMappingDTO;
 import com.zieta.tms.model.SkillsetMaster;
 import com.zieta.tms.model.UserInfo;
+import com.zieta.tms.model.AccessTypeScreenMapping;
 import com.zieta.tms.model.OrgInfo;
 import com.zieta.tms.model.OrgUnitUserMapping;
 import com.zieta.tms.model.ScreensMaster;
 import com.zieta.tms.repository.ClientInfoRepository;
 import com.zieta.tms.repository.UserInfoRepository;
+import com.zieta.tms.request.OrgUnitUsersRequest;
 import com.zieta.tms.response.OrgUnitUsersResponse;
 import com.zieta.tms.response.UserDetailsResponse;
 import com.zieta.tms.repository.OrgInfoRepository;
@@ -99,6 +101,12 @@ public class OrgUnitUserMappingServiceImpl implements OrgUnitUserMappingService 
 			}
 			
 			
+			 List<Long> accessControlConfigList = orgUUMRepository.findByClientIdANDOrgUnitId(teamMasterDTO.getClientId(), teamMasterDTO.getOrgUnitId());
+				
+				List<UserInfo> usersListByClientId = userInfoService.getUsersByIds(accessControlConfigList);
+				teamMasterDTO.setUsersByClient(usersListByClientId);
+			
+			
 			
 			//staMasterDTO.setClientStatus(clientInfoRepository.findById(skillMaster.getClientId()).get().getClientStatus());
 
@@ -109,9 +117,23 @@ public class OrgUnitUserMappingServiceImpl implements OrgUnitUserMappingService 
 	
 	
 	 @Override 
-	  public void addTeamMaster(OrgUnitUserMapping teammaster) {
+	  public void addTeamMaster(OrgUnitUsersRequest usersRequest) {
 		
-		 orgUUMRepository.save(teammaster); 
+		 List<OrgUnitUserMapping> accessTypeScreenMappingList = new ArrayList<OrgUnitUserMapping>();
+		 OrgUnitUserMapping accessTypeScreenMapping = null;
+			List<Long> userIds = usersRequest.getUserIds();
+			for (Long userId : userIds) {
+				accessTypeScreenMapping = new OrgUnitUserMapping();
+				accessTypeScreenMapping.setId(usersRequest.getId());
+				accessTypeScreenMapping.setClientId(usersRequest.getClientId());
+				accessTypeScreenMapping.setOrgUnitId(usersRequest.getOrgUnitId());
+				accessTypeScreenMapping.setUserId(userId);
+				accessTypeScreenMappingList.add(accessTypeScreenMapping);
+			}
+			orgUUMRepository.saveAll(accessTypeScreenMappingList);
+		 
+		 
+		
 	  
 	  }
 	 

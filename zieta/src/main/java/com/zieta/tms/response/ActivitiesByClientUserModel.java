@@ -19,6 +19,8 @@ public class ActivitiesByClientUserModel {
 	private Long projectId;
 	private String projectCode;
 	private String projectName;
+	private short allowUnplanned;
+	
 	
 	private String clientCode;
 	private String clientDescription;

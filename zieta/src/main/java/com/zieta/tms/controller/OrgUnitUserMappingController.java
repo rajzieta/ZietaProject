@@ -23,6 +23,7 @@ import com.zieta.tms.model.SkillsetMaster;
 import com.zieta.tms.response.OrgUnitUsersResponse;
 import com.zieta.tms.model.OrgUnitUserMapping;
 import com.zieta.tms.service.SkillsetMasterService;
+import com.zieta.tms.request.OrgUnitUsersRequest;
 import com.zieta.tms.service.OrgUnitUserMappingService;
 
 import io.swagger.annotations.Api;
@@ -51,8 +52,8 @@ public class OrgUnitUserMappingController {
 	
 	
 	@RequestMapping(value = "addOrgUnitUserMapping", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void addOrgUnitUserMapping(@Valid @RequestBody OrgUnitUserMapping teammaster) {
-		teamMasterService.addTeamMaster(teammaster);
+	public void addOrgUnitUserMapping(@Valid @RequestBody OrgUnitUsersRequest usersRequest) {
+		teamMasterService.addTeamMaster(usersRequest);
 	}
 
 	

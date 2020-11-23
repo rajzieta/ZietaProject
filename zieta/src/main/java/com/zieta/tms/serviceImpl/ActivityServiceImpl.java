@@ -250,6 +250,7 @@ public class ActivityServiceImpl implements ActivityService {
 			activitiesByClientUserModel.setProjectId(taskActivity.getProjectId());
 			activitiesByClientUserModel.setProjectCode(projectInfo.getProjectCode());
 			activitiesByClientUserModel.setProjectName(projectInfo.getProjectName());
+			activitiesByClientUserModel.setAllowUnplanned(projectInfo.getAllowUnplanned());
 			
 			TaskInfo taskInfo = taskInfoRepository.findById(taskActivity.getTaskId()).get();
 			activitiesByClientUserModel.setTaskId(taskActivity.getTaskId());

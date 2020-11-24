@@ -36,7 +36,7 @@ public class TaskInfo extends BaseEntity implements Serializable {
 	    @Column(name = "task_name")
 	    private String taskDescription;
 	    
-	    @NotBlank
+	  //  @NotBlank
 	    @Column(name ="task_code")
 	    private String taskCode;
 	    

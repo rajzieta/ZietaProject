@@ -10,14 +10,14 @@ public class ActivitiesByClientUserModel {
 	
 	private Long activityId;
 	private String activityDesc;
-	private String activityCode;
+//	private String activityCode;
 	
 	private Long taskId;
 	private String taskDescription;
-	private String taskCode;
+//	private String taskCode;
 	
 	private Long projectId;
-	private String projectCode;
+//	private String projectCode;
 	private String projectName;
 	private short allowUnplanned;
 	

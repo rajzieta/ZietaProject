@@ -124,8 +124,8 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 			tasksByUserModel.setTaskName(taskName);
 			tasksByUserModel.setTaskId(taskId);
 			tasksByUserModel.setUserId(userIdent);
-			tasksByUserModel.setProjectCode(tasksByUser.getProject_code());
-			tasksByUserModel.setTaskCode(tasksByUser.getTask_code());
+		//	tasksByUserModel.setProjectCode(tasksByUser.getProject_code());
+		//	tasksByUserModel.setTaskCode(tasksByUser.getTask_code());
 			tasksByUserModel.setClientCode(clientInfoRepository.findById(tasksByUser.getClientId()).get().getClientCode());
 			tasksByUserModel.setClientDescription(clientInfoRepository.findById(tasksByUser.getClientId()).get().getClientName());
 			
@@ -154,10 +154,10 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 			TasksByClientProjectResponse tasksByClientProjectResponse =  modelMapper.map(taskInfo, TasksByClientProjectResponse.class);
 			Optional<ProjectInfo> projectInfo = projectInfoRepository.findById(taskInfo.getProjectId());
 			if(projectInfo.isPresent()) {
-				tasksByClientProjectResponse.setProjectCode(projectInfo.get().getProjectCode());
+		//		tasksByClientProjectResponse.setProjectCode(projectInfo.get().getProjectCode());
 				tasksByClientProjectResponse.setProjectDescription(projectInfo.get().getProjectName());	
 			}else {
-				tasksByClientProjectResponse.setProjectCode(StringUtils.EMPTY);
+		//		tasksByClientProjectResponse.setProjectCode(StringUtils.EMPTY);
 				tasksByClientProjectResponse.setProjectDescription(StringUtils.EMPTY);
 			}
 			

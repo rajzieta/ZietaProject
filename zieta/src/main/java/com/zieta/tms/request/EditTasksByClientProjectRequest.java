@@ -11,7 +11,7 @@ public class EditTasksByClientProjectRequest {
 	private Long clientId;
 	private Long projectId;
 	private String taskDescription;
-	private String taskCode;
+//	private String taskCode;
 	private Long taskType;
 	private Long taskParent;
 	private Long taskManager;

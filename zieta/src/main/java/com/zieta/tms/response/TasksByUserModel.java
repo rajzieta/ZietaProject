@@ -11,8 +11,8 @@ public class TasksByUserModel {
 	long userId;
 	String projectName;
 	String taskName;
-	String projectCode;
-	String taskCode;
+//	String projectCode;
+//	String taskCode;
 	String clientCode;
 	String clientDescription;
 

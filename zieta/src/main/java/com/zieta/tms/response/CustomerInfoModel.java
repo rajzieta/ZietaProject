@@ -14,7 +14,7 @@ public class CustomerInfoModel {
     private String custName;
     private String custAddress;
     private String custDetails;
-    private String custCode;
+ //   private String custCode;
 	private String createdBy;
     private Date createdDate;
     private Date modifiedDate;

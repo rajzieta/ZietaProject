@@ -142,7 +142,7 @@ public class ActivityServiceImpl implements ActivityService {
 		if(activityMasterEntity.isPresent()) {
 			ActivityMaster activityMasterSave = activityMasterEntity.get();
 			activityMasterSave.setActive(acitivityRequest.isActive());
-			activityMasterSave.setActivityCode(acitivityRequest.getActivityCode());
+	//		activityMasterSave.setActivityCode(acitivityRequest.getActivityCode());
 			activityMasterSave.setActivityDesc(acitivityRequest.getActivityDesc());
 			activityMasterSave.setModifiedBy(acitivityRequest.getModifiedBy());
 			activityMasterRepository.save(activityMasterSave);
@@ -199,7 +199,7 @@ public class ActivityServiceImpl implements ActivityService {
 					.findById(activitiesbytask.getActivityId());
 			if (activitymaster.isPresent()) {
 				// otherdetails
-				additionalDetails.setActivityCode(activitymaster.get().getActivityCode());
+		//		additionalDetails.setActivityCode(activitymaster.get().getActivityCode());
 				additionalDetails.setActivityDesc(activitymaster.get().getActivityDesc());
 			}
 
@@ -243,18 +243,18 @@ public class ActivityServiceImpl implements ActivityService {
 			
 			ActivityMaster activityMaster = activityMasterRepository.findById(taskActivity.getActivityId()).get();
 			activitiesByClientUserModel.setActivityId(taskActivity.getActivityId());
-			activitiesByClientUserModel.setActivityCode(activityMaster.getActivityCode());
+		//	activitiesByClientUserModel.setActivityCode(activityMaster.getActivityCode());
 			activitiesByClientUserModel.setActivityDesc(activityMaster.getActivityDesc());
 			
 			ProjectInfo projectInfo  = projectInfoRepository.findById(taskActivity.getProjectId()).get();
 			activitiesByClientUserModel.setProjectId(taskActivity.getProjectId());
-			activitiesByClientUserModel.setProjectCode(projectInfo.getProjectCode());
+		//	activitiesByClientUserModel.setProjectCode(projectInfo.getProjectCode());
 			activitiesByClientUserModel.setProjectName(projectInfo.getProjectName());
 			activitiesByClientUserModel.setAllowUnplanned(projectInfo.getAllowUnplanned());
 			
 			TaskInfo taskInfo = taskInfoRepository.findById(taskActivity.getTaskId()).get();
 			activitiesByClientUserModel.setTaskId(taskActivity.getTaskId());
-			activitiesByClientUserModel.setTaskCode(taskInfo.getTaskCode());
+		//	activitiesByClientUserModel.setTaskCode(taskInfo.getTaskCode());
 			activitiesByClientUserModel.setTaskDescription(taskInfo.getTaskDescription());
 			activitiesByClientUserModel.setTaskActivityId(taskActivity.getTaskActivityId());
 			

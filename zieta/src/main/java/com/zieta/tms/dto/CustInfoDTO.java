@@ -13,7 +13,7 @@ public class CustInfoDTO {
     private String custName;
     private String custAddress;
     private String custDetails;
-    private String custCode;
+//    private String custCode;
     private String createdBy;
     private String modifiedBy;
     private short isDelete;

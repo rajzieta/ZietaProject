@@ -24,8 +24,8 @@ public class TasksByClientProjectResponse {
 	String taskManagerName;
 	Long taskManager;
 	String taskStatusDescription;
-	String projectCode;
-	String taskCode;
+//	String projectCode;
+//	String taskCode;
 	String projectDescription;
 	String taskDescription;
 	String taskTypeDescription;

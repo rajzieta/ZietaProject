@@ -21,7 +21,7 @@ public class OrgNodesByClientResponse {
 	long clientId;
 	 String clientCode;
      String clientDescription;
-	 String orgNodeCode;
+//	 String orgNodeCode;
 	 String orgNodeName;
 	 Long orgManager;
 	 Boolean isCompany;

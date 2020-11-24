@@ -11,7 +11,7 @@ public class ActivityMasterDTO extends BaseEntity {
 
 	private Long activityId;
 	private Long clientId;
-	private String activityCode;
+//	private String activityCode;
 	private String activityDesc;
 	private boolean active;
 //	private String createdBy;

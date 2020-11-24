@@ -30,7 +30,7 @@ public class ProjectInfo extends BaseEntity implements Serializable {
 	@Column(name = "client_id")
 	private Long clientId;
 
-	@NotBlank
+//	@NotBlank
 	@Column(name = "project_code")
 	private String projectCode;
 

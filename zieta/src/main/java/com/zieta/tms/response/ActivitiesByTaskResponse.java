@@ -11,7 +11,7 @@ public class ActivitiesByTaskResponse {
 	Long taskId;
     private Long clientId;
     private Long activityId;
-    private String activityCode;
+  //  private String activityCode;
     private String activityDesc;
     private String userName;
     private Long userId;

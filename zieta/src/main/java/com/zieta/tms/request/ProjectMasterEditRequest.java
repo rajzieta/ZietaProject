@@ -9,7 +9,7 @@ public class ProjectMasterEditRequest {
 	
 	private Long projectInfoId;
     private Long clientId;
-    private String projectCode;
+ //   private String projectCode;
     private String projectName;
     private long projectType;
     private long projectOrgNode;

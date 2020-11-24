@@ -29,7 +29,7 @@ public class ActivityMaster extends BaseEntity implements Serializable{
     @Column(name="client_id")
     private Long clientId;
 
-    @NotBlank
+   
     @Column(name = "activity_code")
     private String activityCode;
     

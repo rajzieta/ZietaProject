@@ -44,7 +44,7 @@ public class ActivitiesByClientProjectTaskResponse {
 	@Setter
 	public static class AdditionalDetails {
 		private String userName;
-		private String activityCode;
+	//	private String activityCode;
 		private String activityDesc;
 		
 

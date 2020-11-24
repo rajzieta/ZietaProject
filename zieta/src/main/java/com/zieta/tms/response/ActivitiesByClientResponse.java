@@ -9,7 +9,7 @@ public class ActivitiesByClientResponse {
 
 	long activityId;
     Long clientId;
-    private String activityCode;
+  //  private String activityCode;
     private String activityDesc;
     private String clientCode;
     private String clientDescription;

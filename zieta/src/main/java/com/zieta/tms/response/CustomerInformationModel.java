@@ -20,7 +20,7 @@ public class CustomerInformationModel {
     
     private String custDetails;
     
-    private String custCode;
+  //  private String custCode;
     
     
 	private String createdBy;

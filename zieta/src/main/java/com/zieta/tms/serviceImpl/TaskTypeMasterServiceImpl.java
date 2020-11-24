@@ -276,6 +276,27 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 			throw new Exception("No task type found with the provided ID in the DB :"+taskTypeId);
 		}
 	}
+	
+	
+	
+	////////////////////
+	
+	@Override
+	public void deleteTaskInfoByClient(Long taskInfoId, String modifiedBy) throws Exception {
+		Optional<TaskInfo> taskInfo = taskInfoRepository.findById(taskInfoId);
+		if (taskInfo.isPresent()) {
+			TaskInfo tasktypeEntitiy = taskInfo.get();
+			short delete = 1;
+			tasktypeEntitiy.setIsDelete(delete);
+			tasktypeEntitiy.setModifiedBy(modifiedBy);
+			taskInfoRepository.save(tasktypeEntitiy);
+
+		}else {
+			log.info("No task Info found with the provided ID{} in the DB",taskInfoId);
+			throw new Exception("No task Info found with the provided ID in the DB :"+taskInfoId);
+		}
+	}
+			
 
 	@Override
 	public List<TasksByClientProjectResponse> findByClientIdAndProjectIdAsHierarchy(Long clientId, Long projectId) {

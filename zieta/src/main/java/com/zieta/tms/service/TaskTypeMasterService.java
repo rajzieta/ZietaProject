@@ -41,5 +41,7 @@ public interface TaskTypeMasterService {
 	
 	public void updateTaskSortKeyByIDs(List<UpdateTaskInfoRequest> taskIdWithSortKeys);
 
+	public void deleteTaskInfoByClient(Long taskInfoId, String modifiedBy) throws Exception;
+
 	
 }

@@ -26,7 +26,7 @@ import lombok.Data;
 
 
 	@Entity
-	@Table(name = "cust_info", uniqueConstraints=@UniqueConstraint(columnNames= {"client_id", "cust_code"}))
+	@Table(name = "cust_info")
 	@EntityListeners(AuditingEntityListener.class)
 	@JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
 	        allowGetters = true)
@@ -52,8 +52,8 @@ import lombok.Data;
 	    private String custDetails;
 	    
 	  //  @NotBlank
-	    @Column(name = "cust_code")
-	    private String custCode;
+	//    @Column(name = "cust_code")
+	 //   private String custCode;
 	    
 	   
 

@@ -17,7 +17,7 @@ import lombok.Data;
 
 
 @Entity
-@Table(name = "task_info", uniqueConstraints=@UniqueConstraint(columnNames= {"project_id", "task_code"}))
+@Table(name = "task_info")
 @Data
 public class TaskInfo extends BaseEntity implements Serializable {
 
@@ -37,8 +37,8 @@ public class TaskInfo extends BaseEntity implements Serializable {
 	    private String taskDescription;
 	    
 	  //  @NotBlank
-	    @Column(name ="task_code")
-	    private String taskCode;
+	//    @Column(name ="task_code")
+	 //   private String taskCode;
 	    
 	    @Column(name = "task_type")
 	    private Long taskType;

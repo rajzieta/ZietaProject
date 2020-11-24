@@ -72,14 +72,14 @@ public class OrgUnitUserMappingServiceImpl implements OrgUnitUserMappingService 
 			teamMasterDTO.setClientDescription(clientInfoRepository.findById(teamMaster.getClientId()).get().getClientName());
 			
 			
-			teamMasterDTO.setOrgNodeCode(StringUtils.EMPTY);
-			if (null != teamMaster.getOrgUnitId()) {
-			Optional<OrgInfo>  orgInfo = orgInfoRepository.findById(teamMaster.getOrgUnitId());
-			if (orgInfo.isPresent()) {
-				teamMasterDTO.setOrgNodeCode(orgInfo.get().getOrgNodeCode());
-
-			}
-		}
+//			teamMasterDTO.setOrgNodeCode(StringUtils.EMPTY);
+//			if (null != teamMaster.getOrgUnitId()) {
+//			Optional<OrgInfo>  orgInfo = orgInfoRepository.findById(teamMaster.getOrgUnitId());
+//			if (orgInfo.isPresent()) {
+//				teamMasterDTO.setOrgNodeCode(orgInfo.get().getOrgNodeCode());
+//
+//			}
+//		}
 			
 			teamMasterDTO.setOrgNodeName(StringUtils.EMPTY);
 			if (null != teamMaster.getOrgUnitId()) {
@@ -183,14 +183,14 @@ public class OrgUnitUserMappingServiceImpl implements OrgUnitUserMappingService 
 				teamByClientList.setClientDescription(clientInfoRepository.findById(teammaster.getClientId()).get().getClientName());
 				
 				
-				teamByClientList.setOrgNodeCode(StringUtils.EMPTY);
-				if (null != teammaster.getOrgUnitId()) {
-				Optional<OrgInfo>  orgInfo = orgInfoRepository.findById(teammaster.getOrgUnitId());
-				if (orgInfo.isPresent()) {
-					teamByClientList.setOrgNodeCode(orgInfo.get().getOrgNodeCode());
-
-				}
-			}
+//				teamByClientList.setOrgNodeCode(StringUtils.EMPTY);
+//				if (null != teammaster.getOrgUnitId()) {
+//				Optional<OrgInfo>  orgInfo = orgInfoRepository.findById(teammaster.getOrgUnitId());
+//				if (orgInfo.isPresent()) {
+//					teamByClientList.setOrgNodeCode(orgInfo.get().getOrgNodeCode());
+//
+//				}
+//			}
 				
 				teamByClientList.setOrgNodeName(StringUtils.EMPTY);
 				if (null != teammaster.getOrgUnitId()) {

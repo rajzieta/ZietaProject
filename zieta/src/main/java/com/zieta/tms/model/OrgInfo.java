@@ -27,7 +27,7 @@ import lombok.Data;
 
 
 @Entity
-@Table(name = "orgunit_info", uniqueConstraints=@UniqueConstraint(columnNames= {"client_id", "org_node_code"}))
+@Table(name = "orgunit_info")
 @Data
 public class OrgInfo extends BaseEntity implements Serializable {
 
@@ -41,8 +41,8 @@ public class OrgInfo extends BaseEntity implements Serializable {
 	    private Long clientId;
 	
 	 //   @NotBlank
-	    @Column(name="org_node_code")
-	    private String orgNodeCode;
+	//    @Column(name="org_node_code")
+	 //   private String orgNodeCode;
 	  
 	    @Column(name="org_node_name")
 	    private String orgNodeName;

@@ -103,6 +103,15 @@ public class TaskController {
 		}
 	}
 
+	
+	@ApiOperation(value = "Deletes entries from task_info based on tasktypeId", notes = "Table reference: task_info")
+	@RequestMapping(value = "deleteTaskInfoByClient", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteTaskInfoByClient(@RequestParam(required=true) Long taskInfoId, @RequestParam(required=true) String modifiedBy) throws Exception {
+		taskTypeMasterService.deleteTaskInfoByClient(taskInfoId, modifiedBy);
+	}
+	
+	
+	
 
 	@GetMapping("/getAllTaskTypesByClient")
 	@ApiOperation(value = "List TaskTypes based on the clientId", notes = "Table reference: task_type_master")

@@ -12,10 +12,10 @@ import lombok.Setter;
 @Setter
 public class TSInfoModel {
 	
-	String projectCode;
-	String taskCode;
+	//String projectCode;
+	//String taskCode;
 	String taskDescription;
-	String activityCode;
+	//String activityCode;
 	String activityDescription;
 	
 	TSInfo tsInfo;

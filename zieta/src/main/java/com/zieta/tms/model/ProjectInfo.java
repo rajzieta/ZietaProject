@@ -16,7 +16,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
-@Table(name = "project_info", uniqueConstraints=@UniqueConstraint(columnNames= {"client_id", "project_code"}))
+@Table(name = "project_info")
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class ProjectInfo extends BaseEntity implements Serializable {
@@ -31,8 +31,8 @@ public class ProjectInfo extends BaseEntity implements Serializable {
 	private Long clientId;
 
 //	@NotBlank
-	@Column(name = "project_code")
-	private String projectCode;
+	//@Column(name = "project_code")
+//	private String projectCode;
 
 	@Column(name = "project_name")
 	private String projectName;

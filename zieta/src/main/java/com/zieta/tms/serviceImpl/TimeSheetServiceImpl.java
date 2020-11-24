@@ -111,25 +111,25 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 			taskInfoModel.setTimeEntries(timeEntries);
 			if(tsInfo.getActivityId() != null && tsInfo.getActivityId() !=0) {
 				ActivityMaster activityEntity = activityMasterRepository.findById(tsInfo.getActivityId()).get();
-				taskInfoModel.setActivityCode(activityEntity.getActivityCode());
+			//	taskInfoModel.setActivityCode(activityEntity.getActivityCode());
 				taskInfoModel.setActivityDescription(activityEntity.getActivityDesc());
 			}else {
-				taskInfoModel.setActivityCode(null);
+			//	taskInfoModel.setActivityCode(null);
 				taskInfoModel.setActivityDescription(StringUtils.EMPTY);
 			}
 			
-			if(tsInfo.getProjectId() !=null && tsInfo.getProjectId() !=0) {
-				taskInfoModel.setProjectCode(projectInfoRepository.findById(tsInfo.getProjectId()).get().getProjectCode());
-			}else {
-				taskInfoModel.setProjectCode(null);
-			}
+//			if(tsInfo.getProjectId() !=null && tsInfo.getProjectId() !=0) {
+//				taskInfoModel.setProjectCode(projectInfoRepository.findById(tsInfo.getProjectId()).get().getProjectCode());
+//			}else {
+//				taskInfoModel.setProjectCode(null);
+//			}
 			
 			if(tsInfo.getTaskId() !=null && tsInfo.getTaskId() !=0) {
 				TaskInfo taskInfoEntity =taskInfoRepository.findById(tsInfo.getTaskId()).get();
-				taskInfoModel.setTaskCode(taskInfoEntity.getTaskCode());
+			//	taskInfoModel.setTaskCode(taskInfoEntity.getTaskCode());
 				taskInfoModel.setTaskDescription(taskInfoEntity.getTaskDescription());
 			}else {
-				taskInfoModel.setTaskCode(null);
+			//	taskInfoModel.setTaskCode(null);
 				taskInfoModel.setTaskDescription(StringUtils.EMPTY);
 			}
 			

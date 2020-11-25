@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.zieta.tms.model.TSInfo;
 import com.zieta.tms.model.TSTimeEntries;
+import com.zieta.tms.model.TimeType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,9 +18,12 @@ public class TSInfoModel {
 	String taskDescription;
 	//String activityCode;
 	String activityDescription;
+	String projectDescription;
 	
 	TSInfo tsInfo;
 	List<TSTimeEntries> timeEntries;
+	
+	String timeTypeDesc;
 	
 	String clientCode;
 

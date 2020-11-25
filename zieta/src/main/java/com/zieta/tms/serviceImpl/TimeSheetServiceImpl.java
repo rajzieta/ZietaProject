@@ -24,6 +24,7 @@ import com.zieta.tms.model.TSInfo;
 import com.zieta.tms.model.TSTimeEntries;
 import com.zieta.tms.model.TSWorkflow;
 import com.zieta.tms.model.TaskInfo;
+import com.zieta.tms.model.TimeType;
 import com.zieta.tms.model.WorkflowRequest;
 import com.zieta.tms.repository.ActivityMasterRepository;
 import com.zieta.tms.repository.ClientInfoRepository;
@@ -33,6 +34,7 @@ import com.zieta.tms.repository.StatusMasterRepository;
 import com.zieta.tms.repository.TSInfoRepository;
 import com.zieta.tms.repository.TSTimeEntriesRepository;
 import com.zieta.tms.repository.TaskInfoRepository;
+import com.zieta.tms.repository.TimeTypeRepository;
 import com.zieta.tms.repository.WorkflowRepository;
 import com.zieta.tms.repository.WorkflowRequestRepository;
 import com.zieta.tms.request.TimeEntriesByTsIdRequest;
@@ -63,6 +65,9 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	
 	@Autowired
 	TSTimeEntriesRepository tstimeentriesRepository;
+	
+	@Autowired
+	TimeTypeRepository timeTypeRepository;
 	
 	@Autowired
 	ClientInfoRepository  clientInfoRepository;
@@ -108,7 +113,15 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 			TSInfoModel taskInfoModel = new TSInfoModel();
 			taskInfoModel.setTsInfo(tsInfo);
 			List<TSTimeEntries> timeEntries = tstimeentriesRepository.findByTsIdAndIsDelete(tsInfo.getId(), notDeleted);
+			
+			for (TSTimeEntries timetp : timeEntries) {
+				taskInfoModel.setTimeTypeDesc(timeTypeRepository.findById(timetp.getTimeType()).get().getTimeType());
+				//List<TimeType> timeTypes = timeTypeRepository.findByIdAndIsDelete(timetp.getTimeType(), notDeleted);
+				//taskInfoModel.setTimeTypes(timeTypes);
+			}
 			taskInfoModel.setTimeEntries(timeEntries);
+			
+			
 			if(tsInfo.getActivityId() != null && tsInfo.getActivityId() !=0) {
 				ActivityMaster activityEntity = activityMasterRepository.findById(tsInfo.getActivityId()).get();
 			//	taskInfoModel.setActivityCode(activityEntity.getActivityCode());
@@ -118,11 +131,11 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 				taskInfoModel.setActivityDescription(StringUtils.EMPTY);
 			}
 			
-//			if(tsInfo.getProjectId() !=null && tsInfo.getProjectId() !=0) {
-//				taskInfoModel.setProjectCode(projectInfoRepository.findById(tsInfo.getProjectId()).get().getProjectCode());
-//			}else {
-//				taskInfoModel.setProjectCode(null);
-//			}
+			if(tsInfo.getProjectId() !=null && tsInfo.getProjectId() !=0) {
+				taskInfoModel.setProjectDescription(projectInfoRepository.findById(tsInfo.getProjectId()).get().getProjectName());
+		}else {
+			taskInfoModel.setProjectDescription(StringUtils.EMPTY);
+			}
 			
 			if(tsInfo.getTaskId() !=null && tsInfo.getTaskId() !=0) {
 				TaskInfo taskInfoEntity =taskInfoRepository.findById(tsInfo.getTaskId()).get();

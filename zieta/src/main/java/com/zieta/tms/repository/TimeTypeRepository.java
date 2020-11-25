@@ -17,4 +17,6 @@ public interface TimeTypeRepository extends JpaRepository<TimeType, Long> {
 
 	List<TimeType> findByClientIdAndIsDelete(Long client_id, short notDeleted);
 
+	List<TimeType> findByIdAndIsDelete(Long timeType, short notDeleted);
+
 }

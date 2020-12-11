@@ -60,7 +60,7 @@ public class TSInfo extends BaseEntity implements Serializable {
     private Date tsDate;
 	
 	@LastModifiedDate
-    @JsonIgnore
+    
     @Temporal(TemporalType.DATE)
 	@Column(name="submit_date")
     private Date submitDate;

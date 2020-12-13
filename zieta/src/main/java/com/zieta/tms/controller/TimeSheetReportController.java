@@ -24,8 +24,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zieta.tms.dto.TimeSheetReportDTO;
 import com.zieta.tms.model.ProjectReport;
 import com.zieta.tms.model.TimeSheetReport;
+import com.zieta.tms.service.TSReportService;
 import com.zieta.tms.service.TimeSheetReportService;
 
 import io.swagger.annotations.Api;
@@ -37,6 +39,9 @@ public class TimeSheetReportController {
 
 	@Autowired
 	TimeSheetReportService timeSheetReportService;
+	
+	@Autowired
+	TSReportService tsReportService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TimeSheetReportController.class);
 
@@ -123,6 +128,47 @@ public class TimeSheetReportController {
         
 		return ResponseEntity.ok().headers(header).body(file);
 	}
-
+	
+	
+	// Reports from Stored procedure
+	//TODO need to check with Santosh on the clearence of previous reports based on the "views"
+	
+	@RequestMapping(value = "getTsByDateRange", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public Page<TimeSheetReportDTO> getTsByDateRange(@RequestParam Long clientId,
+			@RequestParam(required = true) String startDate,
+			@RequestParam(required = true) String endDate,
+			@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
+		Page<TimeSheetReportDTO> tsReport = null;
+		try {
+			tsReport = tsReportService.getTsByDateRange(clientId, startDate, endDate, pageNo, pageSize);
+			LOGGER.info("Total number of TSReport entries: " + tsReport.getSize());
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in getTsByDateRange", e);
+		}
+		return tsReport;
+	}
+	
+	@GetMapping("/download/timesheetReportSP")
+	public ResponseEntity<Resource> downloadTimeSheetReportSP(HttpServletResponse response,
+			@RequestParam Long clientId,
+			@RequestParam(required = true) String startDate,
+			@RequestParam(required = true) String endDate){
+		
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		String currentDateTime = dateFormatter.format(new Date());
+		String filename = "timesheet_" + currentDateTime + ".xlsx";
+		HttpHeaders header = new HttpHeaders();
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+filename);
+        ByteArrayInputStream bri = null;
+		try {
+			bri = tsReportService.downloadTimeSheetReport(
+					 response, clientId,startDate, endDate);
+		} catch (IOException e) {
+			LOGGER.error("Exception occured while downloading the report",e);
+		}
+        InputStreamResource file = new InputStreamResource(bri);
+        
+		return ResponseEntity.ok().headers(header).body(file);
+	}
 	
 }

@@ -17,6 +17,7 @@ public class UserInfoEditRequest {
 		private String userLname;
 		private String email;
 		private String empId;
+		private Long orgNode;
 		private Long accessTypeId;
 		private String phoneNo;
 		private short isActive;

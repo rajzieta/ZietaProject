@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletResponse;
 
 import org.modelmapper.ModelMapper;
@@ -28,9 +27,6 @@ public class TSReportServiceImpl implements TSReportService {
 	TSReportRepository tsReportRepository;
     
     @Autowired
-    private EntityManager entityManager;
-    
-    @Autowired
     TimeSheetReportHelper timeSheetReportHelper;
     
     @Autowired
@@ -50,7 +46,9 @@ public class TSReportServiceImpl implements TSReportService {
 		
 		return page;
 	}
-
+	
+	
+	@Override
 	public List<TimeSheetReportDTO> getTSReportEntriesFromProcedure(long client_id, String startDate, String endDate) {
 		
 		List<TSReport> tsReportList = tsReportRepository.getTsByDateRangeSP(client_id, startDate, endDate);

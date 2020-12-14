@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -134,14 +135,13 @@ public class TimeSheetReportController {
 	//TODO need to check with Santosh on the clearence of previous reports based on the "views"
 	
 	@RequestMapping(value = "getTsByDateRange", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Page<TimeSheetReportDTO> getTsByDateRange(@RequestParam Long clientId,
+	public List<TimeSheetReportDTO> getTsByDateRange(@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
-			@RequestParam(required = true) String endDate,
-			@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
-		Page<TimeSheetReportDTO> tsReport = null;
+			@RequestParam(required = true) String endDate) {
+		List<TimeSheetReportDTO> tsReport = null;
 		try {
-			tsReport = tsReportService.getTsByDateRange(clientId, startDate, endDate, pageNo, pageSize);
-			LOGGER.info("Total number of TSReport entries: " + tsReport.getSize());
+			tsReport = tsReportService.getTSReportEntriesFromProcedure(clientId, startDate, endDate);
+			LOGGER.info("Total number of TSReport entries: " + tsReport.size());
 		} catch (Exception e) {
 			LOGGER.error("Error Occured in getTsByDateRange", e);
 		}

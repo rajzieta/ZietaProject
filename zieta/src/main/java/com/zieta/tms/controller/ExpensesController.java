@@ -45,6 +45,7 @@ public class ExpensesController {
 	@ApiOperation(value = "List Expenses Info", notes = "Table reference:expense_info")
 	@RequestMapping(value = "getAllExpenses", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<ExpenseInfoDTO> getAllExpenses() {
+		
 		List<ExpenseInfoDTO> expenseInfos = null;
 		try {
 			expenseInfos = expenseService.getAllExpenses();

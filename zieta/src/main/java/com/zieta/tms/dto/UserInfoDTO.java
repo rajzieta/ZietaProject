@@ -17,6 +17,7 @@ public class UserInfoDTO {
 	private String userLname;
 	private String email;
 	private String empId;
+	private Long orgNode;
 	private Long accessTypeId;
 	private String phoneNo;
 	private short isActive;
@@ -32,6 +33,7 @@ public class UserInfoDTO {
 	private String clientDescription;
 	private Long clientStatus;
 	private String accessType;
+	private String orgNodeName;
 
 	
 

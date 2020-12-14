@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 import com.zieta.tms.common.MessagesConstants;
 import com.zieta.tms.dto.UserInfoDTO;
 import com.zieta.tms.model.ClientInfo;
-import com.zieta.tms.model.OrgUnitUserMapping;
 import com.zieta.tms.model.ScreensMaster;
 import com.zieta.tms.model.UserInfo;
 import com.zieta.tms.repository.AccessTypeMasterRepository;
 import com.zieta.tms.repository.AccessTypeScreenMappingRepository;
 import com.zieta.tms.repository.ClientInfoRepository;
 import com.zieta.tms.repository.MessageMasterRepository;
+import com.zieta.tms.repository.OrgInfoRepository;
 import com.zieta.tms.repository.UserInfoRepository;
 import com.zieta.tms.request.PasswordEditRequest;
 import com.zieta.tms.request.UserInfoEditRequest;
@@ -64,6 +64,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 	MessageMasterRepository messageMasterRepository;
 	
 	@Autowired
+	OrgInfoRepository orgInfoRepository;
+	
+	@Autowired
 	ModelMapper modelMapper;
 	
 	@Override
@@ -84,6 +87,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 			userInfoDTO.setClientDescription(clientInfoRepo.findById(userInfo.getClientId()).get().getClientName());
 			userInfoDTO.setClientStatus(clientInfoRepo.findById(userInfo.getClientId()).get().getClientStatus());
 			userInfoDTO.setAccessType(accessTypeMasterRepo.findById(userInfo.getAccessTypeId()).get().getAccessType());
+			if(userInfo.getOrgNode() !=null) {
+				userInfoDTO.setOrgNodeName(orgInfoRepository.findById(userInfo.getOrgNode()).get().getOrgNodeName());
+			}
 			
 			 userInfoDTOs.add(userInfoDTO);
 		}
@@ -111,6 +117,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 		 UserDetailsResponse userDetails = fillUserData(userInfo);
 		 userDetails.setClientCode(clientInfoRepo.findById(userInfo.getClientId()).get().getClientCode());
 		 userDetails.setClientDescription(clientInfoRepo.findById(userInfo.getClientId()).get().getClientName());
+		 if(userInfo.getOrgNode() !=null) {
+			 userDetails.setOrgNodeName(orgInfoRepository.findById(userInfo.getOrgNode()).get().getOrgNodeName());
+		 }
 		 userDetails.setScreensByClient(screensListByClientId);
 		 userDetails.setAccessTypesByClient(accessTypes);
 		
@@ -127,6 +136,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 		userDetailsResponse.setLastName(userInfo.getUserLname());
 		userDetailsResponse.setUserEmailId(userInfo.getEmail());
 		userDetailsResponse.setEmpId(userInfo.getEmpId());
+		if(userInfo.getOrgNode() !=null) {
+			userDetailsResponse.setOrgNode(userInfo.getOrgNode());
+		}
 		userDetailsResponse.setAccessTypeId(userInfo.getAccessTypeId());
 		userDetailsResponse.setStatus(userInfo.getIsActive());
 		userDetailsResponse.setUserId(userInfo.getId());
@@ -202,6 +214,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 			userinfosave.setUserLname(userinfoeditRequest.getUserLname());
 			userinfosave.setEmail(userinfoeditRequest.getEmail());
 			userinfosave.setEmpId(userinfoeditRequest.getEmpId());
+			userinfosave.setOrgNode(userinfoeditRequest.getOrgNode());
 			userinfosave.setAccessTypeId(userinfoeditRequest.getAccessTypeId());
 			userinfosave.setPhoneNo(userinfoeditRequest.getPhoneNo());
 			userinfosave.setIsActive(userinfoeditRequest.getIsActive());

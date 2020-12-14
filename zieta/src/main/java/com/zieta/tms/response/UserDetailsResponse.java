@@ -26,10 +26,12 @@ public class UserDetailsResponse implements Serializable {
 	private String lastName;
 	private String userEmailId;
 	private String empId;
+	private long orgNode;
 	private Long accessTypeId;
 	private long userId;
 	private String clientCode;
 	private String clientDescription;
+	private String orgNodeName;
 	
 	private List<ScreensMaster> screensByClient;
 	private List<String> accessTypesByClient;

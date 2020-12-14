@@ -198,7 +198,7 @@ public class ReportUtil {
         }
     }
     
-    private CellStyle formatDecimalStyle(Workbook workbook) {
+    public static CellStyle formatDecimalStyle(Workbook workbook) {
     	
     	CellStyle style1 = workbook.createCellStyle();
     	style1.setDataFormat(workbook.createDataFormat().getFormat("0.00"));

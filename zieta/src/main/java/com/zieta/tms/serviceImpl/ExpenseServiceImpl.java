@@ -530,7 +530,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 	public List<ExpenseTypeMaster> getAllExpenseMastersByClient(Long clientId) {
 		// TODO Auto-generated method stub
 		List<ExpenseTypeMaster> expenseTypeMasterDetails = expenseTypeMasterRepository
-				.findExpenseDetailsByClient(clientId);
+				.findByClientId(clientId);
 		return expenseTypeMasterDetails;
 	}
 

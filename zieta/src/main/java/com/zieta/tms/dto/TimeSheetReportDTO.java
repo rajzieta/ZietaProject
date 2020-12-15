@@ -8,8 +8,10 @@ import lombok.Setter;
 public class TimeSheetReportDTO {
 	
 	public String emp_id ;
+	public String team_id;
 	public String team;
 	public String emp_name;
+	public String project_id;
 	public String project_name;
 	public String task_name;
 	public String activity_desc;

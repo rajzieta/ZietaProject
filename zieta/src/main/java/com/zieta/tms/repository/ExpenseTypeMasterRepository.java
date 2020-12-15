@@ -14,7 +14,6 @@ public interface ExpenseTypeMasterRepository extends JpaRepository<ExpenseTypeMa
 
 	List<ExpenseTypeMaster> findByIsDelete(short notDeleted);
 
-	@Query("SELECT e FROM ExpenseTypeMaster e WHERE e.clientId=:clientId")
-	List<ExpenseTypeMaster> findExpenseDetailsByClient(@Param("clientId") Long clientId);
+	List<ExpenseTypeMaster> findByClientId(long clientId);
 
 }

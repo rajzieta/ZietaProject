@@ -44,18 +44,20 @@ public class TimeSheetReportHelper {
         
 
          
-        createCell(row, 0, "EMP_ID", style);      
-        createCell(row, 1, "TEAM", style);       
-        createCell(row, 2, "EMP_NAME", style);    
-        createCell(row, 3, "PROJECT_NAME", style);
-        createCell(row, 4, "TASK_NAME", style);
-        createCell(row, 5, "ACTIVITY_DESC", style);
-        createCell(row, 6, "PLANNED_HOURS", style);
-        createCell(row, 7, "ACTUAL_HOURS", style);
-        createCell(row, 8, "TS_DATE", style);
-        createCell(row, 9, "SUBMIT_DATE", style);
-        createCell(row, 10, "SUBMITTED_HOURS", style);
-        createCell(row, 11, "APPROVED_HOURS", style);
+        createCell(row, 0, "EMP_ID", style);    
+        createCell(row, 1, "TEAM_ID", style); 
+        createCell(row, 2, "TEAM", style);       
+        createCell(row, 3, "EMP_NAME", style);    
+        createCell(row, 4, "PROJECT_ID", style); 
+        createCell(row, 5, "PROJECT_NAME", style);
+        createCell(row, 6, "TASK_NAME", style);
+        createCell(row, 7, "ACTIVITY_DESC", style);
+        createCell(row, 8, "PLANNED_HOURS", style);
+        createCell(row, 9, "ACTUAL_HOURS", style);
+        createCell(row, 10, "TS_DATE", style);
+        createCell(row, 11, "SUBMIT_DATE", style);
+        createCell(row, 12, "SUBMITTED_HOURS", style);
+        createCell(row, 13, "APPROVED_HOURS", style);
         
          
     }
@@ -93,8 +95,10 @@ public class TimeSheetReportHelper {
             int columnCount = 0;
              
             createCell(row, columnCount++, timeSheetReport.getEmp_id(), style);
+            createCell(row, columnCount++, timeSheetReport.getTeam_id(), style);
             createCell(row, columnCount++, timeSheetReport.getTeam(), style);
             createCell(row, columnCount++, timeSheetReport.getEmp_name(), style);
+            createCell(row, columnCount++, timeSheetReport.getProject_id(), style);
             createCell(row, columnCount++, timeSheetReport.getProject_name(), style);
             createCell(row, columnCount++, timeSheetReport.getTask_name(), style);
             createCell(row, columnCount++, timeSheetReport.getActivity_desc(), style);

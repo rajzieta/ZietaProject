@@ -8,6 +8,7 @@ import com.zieta.tms.dto.ExpenseInfoDTO;
 import com.zieta.tms.dto.ExpenseMasterDTO;
 import com.zieta.tms.model.ExpenseEntries;
 import com.zieta.tms.model.ExpenseInfo;
+import com.zieta.tms.model.ExpenseTypeMaster;
 import com.zieta.tms.dto.ExpenseEntriesDTO;
 
 public interface ExpenseService {
@@ -29,6 +30,8 @@ public interface ExpenseService {
 	public List<ExpenseInfo> addExpenseInfo(List<ExpenseInfo> expenseInfo) throws Exception;
 
 	public void editExpenseInfoById(@Valid ExpenseInfoDTO expenseInfoDTO) throws Exception;
+	
+	
 
 	public void editExpenseInfoByIds(@Valid List<ExpenseInfoDTO> expenseInfoDTO) throws Exception;
 
@@ -43,7 +46,7 @@ public interface ExpenseService {
 
 	public List<ExpenseInfoDTO> findActiveExpensesByClientIdAndUserId(Long clientId, Long userId);
 
-	
+	public List<ExpenseTypeMaster> getAllExpenseMastersByClient(Long clientId);
 	
 	
 }

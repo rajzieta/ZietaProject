@@ -66,30 +66,34 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Autowired
 	ExpenseEntriesRepository expenseEntriesRepository;
-	 
+
 	@Autowired
 	ExpenseWorkflowRepository expenseWorkflowRepository;
-	
+
 	@Autowired
 	OrgInfoRepository orgInfoRepository;
-	
+
 	@Autowired
 	StatusMasterRepository statusMasterRepository;
 
 	@Autowired
 	ModelMapper modelMapper;
+
 	
-	@Autowired
-	@Qualifier("stateByName")
-	Map<String, Long> stateByName;
+	  @Autowired
+	  @Qualifier("stateByName") 
+	  Map<String, Long> stateByName;
+	 
+
 	
-	@Autowired
-	@Qualifier("actionTypeByName")
-	Map<String, Long> actionTypeByName;
-	
-	//@Autowired
-	//@Qualifier("statusIdByCode")
-	//Map<String, Long> statusIdByCode;
+	  @Autowired
+	  @Qualifier("actionTypeByName") 
+	  Map<String, Long> actionTypeByName;
+	 
+
+	// @Autowired
+	// @Qualifier("statusIdByCode")
+	// Map<String, Long> statusIdByCode;
 
 	@Override
 	public List<ExpenseInfoDTO> getAllExpenses() {
@@ -107,16 +111,16 @@ public class ExpenseServiceImpl implements ExpenseService {
 //
 //			}
 //		}
-			
+
 			expenseInfoDTO.setOrgUnitDesc(StringUtils.EMPTY);
 			if (null != expenseInfo.getOrgUnitId()) {
-			Optional<OrgInfo> orgInfo  = orgInfoRepository.findById(expenseInfo.getOrgUnitId());
-			if (orgInfo.isPresent()) {
-				expenseInfoDTO.setOrgUnitDesc(orgInfo.get().getOrgNodeName());
+				Optional<OrgInfo> orgInfo = orgInfoRepository.findById(expenseInfo.getOrgUnitId());
+				if (orgInfo.isPresent()) {
+					expenseInfoDTO.setOrgUnitDesc(orgInfo.get().getOrgNodeName());
 
+				}
 			}
-		}
-			
+
 			expenseInfoDTOs.add(expenseInfoDTO);
 		}
 		return expenseInfoDTOs;
@@ -124,21 +128,22 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Override
 	public List<ExpenseInfoDTO> findByClientIdAndUserId(Long clientId, Long userId) {
-		
-		 short notDeleted=0;
-			List<ExpenseInfoDTO> expenseInfoList = new ArrayList<>();
-			List<ExpenseInfo> expenseInfos = expenseInfoRepository.findByClientIdAndUserIdAndIsDelete(clientId, userId, notDeleted);
-			ExpenseInfoDTO expenseInfoDTO = null;
-			
+
+		short notDeleted = 0;
+		List<ExpenseInfoDTO> expenseInfoList = new ArrayList<>();
+		List<ExpenseInfo> expenseInfos = expenseInfoRepository.findByClientIdAndUserIdAndIsDelete(clientId, userId,
+				notDeleted);
+		ExpenseInfoDTO expenseInfoDTO = null;
+
 //			List<StatusMaster> statusId =  statusMasterRepository
 //					.findByClientIdAndStatusTypeAndStatusCodeNotAndIsDelete(clientId,
 //							TMSConstants.EXPENSE, TMSConstants.EXPENSE_DRAFT, (short) 0);
 //		//	System.out.println(+statusId);
 //			List<ExpenseInfo> expenseInfos  = expenseInfoRepository.findByClientIdAndUserIdAndStatusIdInAndIsDelete(clientId, userId, statusId, notDeleted);
 //			
-			for (ExpenseInfo expenses : expenseInfos) {
-				expenseInfoDTO = modelMapper.map(expenses, ExpenseInfoDTO.class);
-				
+		for (ExpenseInfo expenses : expenseInfos) {
+			expenseInfoDTO = modelMapper.map(expenses, ExpenseInfoDTO.class);
+
 //				expenseInfoDTO.setProjectCode(StringUtils.EMPTY);
 //				if (null != expenses.getProjectId()) {
 //				Optional<ProjectInfo> projectInfo  = projectInfoRepository.findById(expenses.getProjectId());
@@ -147,16 +152,16 @@ public class ExpenseServiceImpl implements ExpenseService {
 //
 //				}
 //			}
-				
-				expenseInfoDTO.setProjectDesc(StringUtils.EMPTY);
-				if (null != expenses.getProjectId()) {
-				Optional<ProjectInfo> projectInfo  = projectInfoRepository.findById(expenses.getProjectId());
+
+			expenseInfoDTO.setProjectDesc(StringUtils.EMPTY);
+			if (null != expenses.getProjectId()) {
+				Optional<ProjectInfo> projectInfo = projectInfoRepository.findById(expenses.getProjectId());
 				if (projectInfo.isPresent()) {
 					expenseInfoDTO.setProjectDesc(projectInfo.get().getProjectName());
 
 				}
 			}
-				
+
 //				expenseInfoDTO.setOrgUnitCode(StringUtils.EMPTY);
 //				if (null != expenses.getOrgUnitId()) {
 //				Optional<OrgInfo>  orgInfo = orgInfoRepository.findById(expenses.getOrgUnitId());
@@ -165,25 +170,23 @@ public class ExpenseServiceImpl implements ExpenseService {
 //
 //				}
 //			}
-				
-				expenseInfoDTO.setOrgUnitDesc(StringUtils.EMPTY);
-				if (null != expenses.getOrgUnitId()) {
-				Optional<OrgInfo> orgInfo  = orgInfoRepository.findById(expenses.getOrgUnitId());
+
+			expenseInfoDTO.setOrgUnitDesc(StringUtils.EMPTY);
+			if (null != expenses.getOrgUnitId()) {
+				Optional<OrgInfo> orgInfo = orgInfoRepository.findById(expenses.getOrgUnitId());
 				if (orgInfo.isPresent()) {
 					expenseInfoDTO.setOrgUnitDesc(orgInfo.get().getOrgNodeName());
 
 				}
 			}
-				
-				expenseInfoList.add(expenseInfoDTO);
-			}
-			return expenseInfoList;
+
+			expenseInfoList.add(expenseInfoDTO);
+		}
+		return expenseInfoList;
 	}
 
-	
-	//draft Expenses
-	
-	
+	// draft Expenses
+
 //	@Override
 //	public List<ExpenseInfoDTO> findActiveExpensesByClientIdAndUserId(Long clientId, Long userId) {
 //		
@@ -198,23 +201,22 @@ public class ExpenseServiceImpl implements ExpenseService {
 //		return getActiveExpensesDetails(expenseRequestList);
 //	}
 //	
-	
+
 	@Override
 	@Transactional
 	public List<ExpenseInfoDTO> findActiveExpensesByClientIdAndUserId(Long clientId, Long userId) {
-		
-		 short notDeleted=0;
-			List<ExpenseInfoDTO> expenseInfoList = new ArrayList<>();
-			ExpenseInfoDTO expenseInfoDTO = null;
-				
-				long statusId = statusMasterRepository
-							.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(clientId,
-									TMSConstants.EXPENSE, TMSConstants.EXPENSE_DRAFT, (short) 0)
-							.getId();
-					List<ExpenseInfo> expInfo  = expenseInfoRepository.findByClientIdAndUserIdAndStatusIdAndIsDelete(clientId, userId, statusId, notDeleted);
-					for (ExpenseInfo expensess : expInfo) {
-					expenseInfoDTO = modelMapper.map(expensess, ExpenseInfoDTO.class);
-						expenseInfoDTO.setStatusId(expensess.getStatusId());
+
+		short notDeleted = 0;
+		List<ExpenseInfoDTO> expenseInfoList = new ArrayList<>();
+		ExpenseInfoDTO expenseInfoDTO = null;
+
+		long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(clientId,
+				TMSConstants.EXPENSE, TMSConstants.EXPENSE_DRAFT, (short) 0).getId();
+		List<ExpenseInfo> expInfo = expenseInfoRepository.findByClientIdAndUserIdAndStatusIdAndIsDelete(clientId,
+				userId, statusId, notDeleted);
+		for (ExpenseInfo expensess : expInfo) {
+			expenseInfoDTO = modelMapper.map(expensess, ExpenseInfoDTO.class);
+			expenseInfoDTO.setStatusId(expensess.getStatusId());
 
 //				expenseInfoDTO.setProjectCode(StringUtils.EMPTY);
 //				if (null != expensess.getProjectId()) {
@@ -224,16 +226,16 @@ public class ExpenseServiceImpl implements ExpenseService {
 //
 //				}
 //			}
-				
-				expenseInfoDTO.setProjectDesc(StringUtils.EMPTY);
-				if (null != expensess.getProjectId()) {
-				Optional<ProjectInfo> projectInfo  = projectInfoRepository.findById(expensess.getProjectId());
+
+			expenseInfoDTO.setProjectDesc(StringUtils.EMPTY);
+			if (null != expensess.getProjectId()) {
+				Optional<ProjectInfo> projectInfo = projectInfoRepository.findById(expensess.getProjectId());
 				if (projectInfo.isPresent()) {
 					expenseInfoDTO.setProjectDesc(projectInfo.get().getProjectName());
 
 				}
 			}
-				
+
 //				expenseInfoDTO.setOrgUnitCode(StringUtils.EMPTY);
 //				if (null != expensess.getOrgUnitId()) {
 //				Optional<OrgInfo>  orgInfo = orgInfoRepository.findById(expensess.getOrgUnitId());
@@ -242,26 +244,21 @@ public class ExpenseServiceImpl implements ExpenseService {
 //
 //				}
 //			}
-				
-				expenseInfoDTO.setOrgUnitDesc(StringUtils.EMPTY);
-				if (null != expensess.getOrgUnitId()) {
-				Optional<OrgInfo> orgInfo  = orgInfoRepository.findById(expensess.getOrgUnitId());
+
+			expenseInfoDTO.setOrgUnitDesc(StringUtils.EMPTY);
+			if (null != expensess.getOrgUnitId()) {
+				Optional<OrgInfo> orgInfo = orgInfoRepository.findById(expensess.getOrgUnitId());
 				if (orgInfo.isPresent()) {
 					expenseInfoDTO.setOrgUnitDesc(orgInfo.get().getOrgNodeName());
 
 				}
 			}
-				
-					
-				expenseInfoList.add(expenseInfoDTO);
-			}
-			return expenseInfoList;
+
+			expenseInfoList.add(expenseInfoDTO);
+		}
+		return expenseInfoList;
 	}
 
-	
-	
-	
-	
 	@Override
 	public List<ExpenseMasterDTO> getAllExpenseMasters() {
 		short notDeleted = 0;
@@ -346,7 +343,8 @@ public class ExpenseServiceImpl implements ExpenseService {
 		}
 		return expenseEntriesDTOs;
 	}
-@Override
+
+	@Override
 	public void addExpenseEntries(@Valid List<ExpenseEntries> expenseEntries) throws Exception {
 		expenseEntriesRepository.saveAll(expenseEntries);
 	}
@@ -363,6 +361,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 		}
 
 	}
+
 	@Override
 	@Transactional
 	public void editExpenseEntriesById(@Valid List<ExpenseEntriesDTO> expenseEntriesDTO) throws Exception {
@@ -371,7 +370,6 @@ public class ExpenseServiceImpl implements ExpenseService {
 			editExpenseEntries(updateRequest);
 		}
 	}
-
 
 	public void deleteExpenseEntriesById(Long id, String modifiedBy) throws Exception {
 
@@ -389,20 +387,21 @@ public class ExpenseServiceImpl implements ExpenseService {
 		}
 
 	}
-@Override
+
+	@Override
 	public void addExpenseInfo(@Valid ExpenseInfo expenseInfo) throws Exception {
 		expenseInfoRepository.save(expenseInfo);
 	}
-	
+
 	@Override
 	public List<ExpenseInfo> addExpenseInfo(List<ExpenseInfo> expenseInfo) throws Exception {
-		
-		 List<ExpenseInfo> expenseInfoList =  expenseInfoRepository.saveAll(expenseInfo);
+
+		List<ExpenseInfo> expenseInfoList = expenseInfoRepository.saveAll(expenseInfo);
 //		 submitExpenses(expenseInfoList);
-		 return expenseInfoList;
+		return expenseInfoList;
 	}
 
-@Override
+	@Override
 	public void editExpenseInfoById(@Valid ExpenseInfoDTO expenseInfoDTO) throws Exception {
 
 		Optional<ExpenseInfo> expenseInfoEntity = expenseInfoRepository.findById(expenseInfoDTO.getId());
@@ -415,7 +414,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 		}
 
 	}
-	
+
 	public void editExpenseInfos(@Valid ExpenseInfoDTO expenseInfoDTO) throws Exception {
 
 		Optional<ExpenseInfo> expenseInfoEntity = expenseInfoRepository.findById(expenseInfoDTO.getId());
@@ -428,6 +427,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 		}
 
 	}
+
 	@Override
 	@Transactional
 	public void editExpenseInfoByIds(@Valid List<ExpenseInfoDTO> expenseInfoDTO) throws Exception {
@@ -460,19 +460,19 @@ public class ExpenseServiceImpl implements ExpenseService {
 		List<ExpenseWorkflowRequest> expenseWorkflowRequestList = new ArrayList<>();
 		try {
 			for (ExpenseInfo expenseInfo : expenseInfoList) {
-				
-				ExpenseWorkflowRequest expenseWorkflowRequest =  expenseWorkflowRepository.findByExpId(
-						expenseInfo.getId());
+
+				ExpenseWorkflowRequest expenseWorkflowRequest = expenseWorkflowRepository
+						.findByExpId(expenseInfo.getId());
 				ExpenseInfo expenseInfoEntitiy = expenseInfoRepository.findById(expenseInfo.getId()).get();
 				expenseInfoEntitiy.setExpPostingDate(new Date());
-				
+
 				Long statusId = statusMasterRepository
 						.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(expenseInfo.getClientId(),
 								TMSConstants.EXPENSE, TMSConstants.EXPENSE_SUBMITTED, (short) 0)
 						.getId();
 				expenseInfo.setStatusId(statusId);
-				
-				if(expenseWorkflowRequest == null) {
+
+				if (expenseWorkflowRequest == null) {
 					log.info("Creating new expense WFR objects...");
 					expenseWorkflowRequest = new ExpenseWorkflowRequest();
 					expenseWorkflowRequest.setClientId(expenseInfo.getClientId());
@@ -486,18 +486,18 @@ public class ExpenseServiceImpl implements ExpenseService {
 					expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_START));
 					expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_NULL));
 					expenseWorkflowRequestList.add(expenseWorkflowRequest);
-				}else {
+				} else {
 					// existing records came for revision
 					log.info("Existing wfrequests came for revision..");
 					expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_START));
 					expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_NULL));
 				}
 				expenseInfoRepository.save(expenseInfo);
-			
+
 			}
 
 			expenseWorkflowRepository.saveAll(expenseWorkflowRequestList);
-			
+
 			log.info("Expense WFRequests are submited...");
 		} catch (Exception e) {
 			log.error("Exception occured while populating workflow request", e);
@@ -507,23 +507,31 @@ public class ExpenseServiceImpl implements ExpenseService {
 		return true;
 
 	}
-	
+
 	private long getApproverId(ExpenseInfo expenseInfo) {
-		
+
 		Long approverId = 0L;
-		
+
 		try {
-			if(expenseInfo.getProjectId() != null && expenseInfo.getProjectId() !=0 ) {
-				approverId = projectInfoRepository.findById(expenseInfo.getProjectId() ).get().getProjectManager();
-				
-			}else if(expenseInfo.getOrgUnitId() != null && expenseInfo.getOrgUnitId() !=0){
-				approverId =  orgInfoRepository.findById(expenseInfo.getOrgUnitId()).get().getOrgManager();
+			if (expenseInfo.getProjectId() != null && expenseInfo.getProjectId() != 0) {
+				approverId = projectInfoRepository.findById(expenseInfo.getProjectId()).get().getProjectManager();
+
+			} else if (expenseInfo.getOrgUnitId() != null && expenseInfo.getOrgUnitId() != 0) {
+				approverId = orgInfoRepository.findById(expenseInfo.getOrgUnitId()).get().getOrgManager();
 			}
-		} catch (NoSuchElementException  e) {
+		} catch (NoSuchElementException e) {
 			log.error("Exception occured while fetching approverId", e);
 		}
-		
+
 		return approverId;
+	}
+
+	@Override
+	public List<ExpenseTypeMaster> getAllExpenseMastersByClient(Long clientId) {
+		// TODO Auto-generated method stub
+		List<ExpenseTypeMaster> expenseTypeMasterDetails = expenseTypeMasterRepository
+				.findExpenseDetailsByClient(clientId);
+		return expenseTypeMasterDetails;
 	}
 
 }

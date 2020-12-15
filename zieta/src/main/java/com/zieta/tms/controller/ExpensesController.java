@@ -25,6 +25,7 @@ import com.zieta.tms.dto.ExpenseInfoDTO;
 import com.zieta.tms.dto.ExpenseMasterDTO;
 import com.zieta.tms.model.ExpenseEntries;
 import com.zieta.tms.model.ExpenseInfo;
+import com.zieta.tms.model.ExpenseTypeMaster;
 import com.zieta.tms.model.TSInfo;
 import com.zieta.tms.service.ExpenseService;
 
@@ -44,6 +45,7 @@ public class ExpensesController {
 	@ApiOperation(value = "List Expenses Info", notes = "Table reference:expense_info")
 	@RequestMapping(value = "getAllExpenses", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<ExpenseInfoDTO> getAllExpenses() {
+		
 		List<ExpenseInfoDTO> expenseInfos = null;
 		try {
 			expenseInfos = expenseService.getAllExpenses();
@@ -60,8 +62,8 @@ public class ExpensesController {
 	@GetMapping("/getAllExpensesHistoryByClientUser")
 	@ApiOperation(value = "List expenses based on the  clientId and userId", notes = "Table reference:"
 			+ "expense_info")
-	public ResponseEntity<List<ExpenseInfoDTO>> getAllExpensesHistoryByClientUser(@RequestParam(required = true) Long clientId,
-			@RequestParam(required = true) Long userId) {
+	public ResponseEntity<List<ExpenseInfoDTO>> getAllExpensesHistoryByClientUser(
+			@RequestParam(required = true) Long clientId, @RequestParam(required = true) Long userId) {
 		try {
 			List<ExpenseInfoDTO> expensesList = expenseService.findByClientIdAndUserId(clientId, userId);
 			return new ResponseEntity<List<ExpenseInfoDTO>>(expensesList, HttpStatus.OK);
@@ -69,9 +71,9 @@ public class ExpensesController {
 			return new ResponseEntity<List<ExpenseInfoDTO>>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
-	//get only Draft State expenses 
-	
+
+	// get only Draft State expenses
+
 	@GetMapping("/getAllExpensesByClientUser")
 	@ApiOperation(value = "List Draft expenses based on the  clientId and userId and StatusId", notes = "Table reference:"
 			+ "expense_info")
@@ -177,14 +179,14 @@ public class ExpensesController {
 		expenseService.editExpenseInfoByIds(expenseInfoDTO);
 
 	}
-	
+
 	@ApiOperation(value = "Deletes entries from expense_info based on Id", notes = "Table reference: expense_info")
 	@RequestMapping(value = "deleteExpenseInfoById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void deleteExpenseInfoById(@RequestParam(required = true) Long id,
 			@RequestParam(required = true) String modifiedBy) throws Exception {
 		expenseService.deleteExpenseInfoById(id, modifiedBy);
 	}
-	
+
 	@ApiOperation(value = "Saves the expense entries into expwf_request", notes = "Table reference: expwf_request")
 	@RequestMapping(value = "submitExpenseSheet", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> submitExpenseSheet(@Valid @RequestBody List<ExpenseInfo> expenseInfoList)
@@ -193,4 +195,15 @@ public class ExpensesController {
 		return new ResponseEntity<Boolean>(status, HttpStatus.OK);
 	}
 
+	@GetMapping("/getAllExpenseMastersByClient")
+	@ApiOperation(value = "List expenses based on the  clientId", notes = "Table reference:expense_type_master")
+	public ResponseEntity<List<ExpenseTypeMaster>> getAllExpenseMastersByClient(
+			@RequestParam(required = true) Long clientId) {
+		try {
+			List<ExpenseTypeMaster> expeTypeList = expenseService.getAllExpenseMastersByClient(clientId);
+			return new ResponseEntity<List<ExpenseTypeMaster>>(expeTypeList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<ExpenseTypeMaster>>(HttpStatus.NOT_FOUND);
+		}
+	}
 }

@@ -99,7 +99,7 @@ public class ReportUtil {
              
             createCell(row, columnCount++, timeSheetReport.getClientId().intValue(), style);
             createCell(row, columnCount++, timeSheetReport.getTsId().intValue(), style);
-            createCell(row, columnCount++, timeSheetReport.getTsDate(), style);
+            createCell(row, columnCount++, timeSheetReport.getTsDate().toString(), style);
             createCell(row, columnCount++, timeSheetReport.getUserId().intValue(), style);
             createCell(row, columnCount++, timeSheetReport.getUserName(), style);
             createCell(row, columnCount++, timeSheetReport.getEmpId(), style);
@@ -176,7 +176,7 @@ public class ReportUtil {
             createCell(row, columnCount++, projectReport.getEmpId(), style);
             createCell(row, columnCount++, projectReport.getTsId().intValue(), style);
             createCell(row, columnCount++, projectReport.getTsDate().toString(), style);
-            createCell(row, columnCount++, projectReport.getSubmitDate().toString(), style);
+            createCell(row, columnCount++, projectReport.getSubmitDate()!= null ?projectReport.getSubmitDate().toString():StringUtils.EMPTY, style);
         //    createCell(row, columnCount++, projectReport.getTaskId().intValue(), style);
             createCell(row, columnCount++, projectReport.getTaskName(), style);
             createCell(row, columnCount++, projectReport.getTaskCode().intValue(), style);
@@ -223,8 +223,8 @@ public class ReportUtil {
         createCell(row, 0, "Client Code", style);   
         createCell(row, 1, "Client Name", style);   
     //    createCell(row, 3, "Project Id", style); 
-        createCell(row, 2, "Project Name", style);
-        createCell(row, 3, "Project Code", style);  
+        createCell(row, 2, "Project Code", style);
+        createCell(row, 3, "Project Name", style);  
         createCell(row, 4, "Project Manager", style);   
         createCell(row, 5, "PM Name", style);
       //  createCell(row, 6, "PM Middle Name", style);

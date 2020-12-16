@@ -148,6 +148,25 @@ public class TimeSheetReportController {
 		return tsReport;
 	}
 	
+	
+	
+	//////////////////////////////
+	@RequestMapping(value = "getTsByDateRangeSum", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<TimeSheetReportDTO> getTsByDateRangeSum(@RequestParam Long clientId,
+			@RequestParam(required = true) String startDate,
+			@RequestParam(required = true) String endDate) {
+		List<TimeSheetReportDTO> tsReport = null;
+		try {
+			tsReport = tsReportService.getTSReportSumEntriesFromProcedure(clientId, startDate, endDate);
+			LOGGER.info("Total number of TSReport entries: " + tsReport.size());
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in getTsByDateRangeSum", e);
+		}
+		return tsReport;
+	}
+	
+	
+	
 	@GetMapping("/download/timesheetReportSP")
 	public ResponseEntity<Resource> downloadTimeSheetReportSP(HttpServletResponse response,
 			@RequestParam Long clientId,

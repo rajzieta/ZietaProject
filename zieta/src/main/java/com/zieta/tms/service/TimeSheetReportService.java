@@ -24,10 +24,10 @@ public interface TimeSheetReportService {
 
 	//public Page<ProjectReport> findAll(long clientId, long projectId, String empId, Integer pageNo, Integer pageSize);
 
-	public ByteArrayInputStream downloadProjectReport(HttpServletResponse response, long clientId, long projectId,
+	public ByteArrayInputStream downloadProjectReport(HttpServletResponse response, long clientCode, long projectCode,
 			String empId, Date startDate, Date endDate) throws IOException;
 
-	public Page<ProjectReport> findAll(long clientId, long projectId, String empId, Date startDate, Date endDate,
+	public Page<ProjectReport> findAll(long clientCode, long projectCode, String empId, Date startDate, Date endDate,
 			Integer pageNo, Integer pageSize);
 
 }

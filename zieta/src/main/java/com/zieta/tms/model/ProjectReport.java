@@ -28,20 +28,21 @@ public class ProjectReport {
 	@Id
 	private String id;
 	
-	@Column(name = "client_id")
-	private Long clientId;
 	
 	@Column(name = "client_code")
-	private String clientCode;
+	private Long clientCode;
+	
+	//@Column(name = "client_code")
+	//private String clientCode;
 	
 	@Column(name = "client_name")
 	private String clientName;
 	
-	@Column(name = "project_id")
-	private Long projectId;
-	
 	@Column(name = "project_code")
-	private String projectCode;
+	private Long projectCode;
+	
+	//@Column(name = "project_code")
+	//private String projectCode;
 	
 	@Column(name = "project_name")
 	private String projectName;
@@ -49,28 +50,28 @@ public class ProjectReport {
 	@Column(name = "project_manager")
 	private Long projectManager;
 	
-	@Column(name = "pm_fname")
-	private String pmFname;
+	@Column(name = "pm_name")
+	private String pMName;
 	
-	@Column(name = "pm_mname")
-	private String pmMname;
+	//@Column(name = "pm_mname")
+	//private String pmMname;
 	
-	@Column(name = "pm_lname")
-	private String pmLname;
+	//@Column(name = "pm_lname")
+	//private String pmLname;
 	
 	
 	@Column(name = "user_id")
 	private Long userId;
 	
 	
-	@Column(name = "user_fname")
-	private String userFname;
+	@Column(name = "user_name")
+	private String userName;
 
-	@Column(name = "user_mname")
-	private String userMname;
+//	@Column(name = "user_mname")
+//	private String userMname;
 
-	@Column(name = "user_lname")
-	private String userLname;
+//	@Column(name = "user_lname")
+//	private String userLname;
 	
 	
 	@Column(name = "emp_id")
@@ -83,24 +84,24 @@ public class ProjectReport {
 	@Column(name = "ts_date")
 	private Date tsDate;
 	
-	//@Column(name = "request_date")
-	//private Date requestDate;
+	@Column(name = "submit_date")
+	private Date submitDate;
 	
-	@Column(name = "task_id")
-	private Long taskId;
+	@Column(name = "task_code")
+	private Long taskCode;
 	
 	@Column(name = "task_name")
 	private String taskName;
 
-	@Column(name = "task_code")
-	private String taskCode;
+	//@Column(name = "task_code")
+	//private String taskCode;
 	
 	
-	@Column(name="activity_id")
-    private Long activityId;
+	@Column(name="activity_code")
+    private Long activityCode;
 
-    @Column(name = "activity_code")
-    private String activityCode;
+   // @Column(name = "activity_code")
+   // private String activityCode;
     
     @Column(name = "activity_desc")
     private String activityDesc;

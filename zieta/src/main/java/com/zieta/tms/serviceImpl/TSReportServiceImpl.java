@@ -61,6 +61,38 @@ public class TSReportServiceImpl implements TSReportService {
 		return timeSheetList;
 	}
 	
+	
+	//////
+	@Override
+	public Page<TimeSheetReportDTO> getTsByDateRangeSum(long client_id, String startDate, String endDate, Integer pageNo, Integer pageSize) {
+		
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		
+		List<TimeSheetReportDTO> tsReportList = getTSReportEntriesFromProcedure(client_id, startDate, endDate);
+		int start =(int) pageable.getOffset();
+		int end = (start + pageable.getPageSize()) > tsReportList.size() ? tsReportList.size() : (start + pageable.getPageSize());
+
+		Page<TimeSheetReportDTO> page = new PageImpl<TimeSheetReportDTO>(tsReportList.subList(start, end), pageable, tsReportList.size());
+		
+		
+		return page;
+	}
+	
+	
+	@Override
+	public List<TimeSheetReportDTO> getTSReportSumEntriesFromProcedure(long client_id, String startDate, String endDate) {
+		
+		List<TSReport> tsReportList = tsReportRepository.getTsByDateRangeSumSP(client_id, startDate, endDate);
+		List<TimeSheetReportDTO> timeSheetList = new ArrayList<>();
+		
+		for (TSReport tsReport : tsReportList) {
+			TimeSheetReportDTO timeSheetReportDTO = modelMapper.map(tsReport, TimeSheetReportDTO.class);
+			timeSheetList.add(timeSheetReportDTO);
+		}
+		return timeSheetList;
+	}
+	
+	///////
 	@Override
 	public ByteArrayInputStream downloadTimeSheetReport(HttpServletResponse response,long clientId,
 			String startDate, String endDate) throws IOException {

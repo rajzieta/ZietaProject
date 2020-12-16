@@ -15,4 +15,8 @@ public interface TSReportRepository extends JpaRepository<TSReport, Integer> {
 	@Query(value = "CALL SP_ts_daterange(:clientId,:start_date,:end_date)", nativeQuery = true)
 	List<TSReport> getTsByDateRangeSP(@Param("clientId") Long year_in, @Param("start_date") String start_date,
 			@Param("end_date") String end_date);
+
+	@Query(value = "CALL SP_ts_daterange_sum(:clientId,:start_date,:end_date)", nativeQuery = true)
+	List<TSReport> getTsByDateRangeSumSP(@Param("clientId") Long year_in, @Param("start_date") String start_date,
+			@Param("end_date") String end_date);
 }

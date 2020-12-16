@@ -20,4 +20,11 @@ public interface TSReportService {
 			String startDate, String endDate) throws IOException ;
 	
 	public List<TimeSheetReportDTO> getTSReportEntriesFromProcedure(long client_id, String startDate, String endDate);
+
+	public List<TimeSheetReportDTO> getTSReportSumEntriesFromProcedure(long clientId, String startDate, String endDate);
+
+	Page<TimeSheetReportDTO> getTsByDateRangeSum(long client_id, String startDate, String endDate, Integer pageNo,
+			Integer pageSize);
+
+	//public List<TimeSheetReportDTO> getTSReportEntriesFromSumProcedure(long clientId, String startDate, String endDate);
 }

@@ -89,7 +89,7 @@ public class TimeSheetReportController {
 	
 	
 	@RequestMapping(value = "getProjReports", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Page<ProjectReport> getProjReports(@RequestParam Long clientId,@RequestParam(defaultValue = "0", required = false) Long projectId,
+	public Page<ProjectReport> getProjReports(@RequestParam Long clientCode,@RequestParam(defaultValue = "0", required = false) Long projectCode,
 			@RequestParam(required = false) String empId,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
@@ -97,7 +97,7 @@ public class TimeSheetReportController {
 		Page<ProjectReport> projectReport = null;
 		try {
 			projectReport = timeSheetReportService.findAll(
-					clientId, projectId, empId, startDate, endDate, pageNo, pageSize);
+					clientCode, projectCode, empId, startDate, endDate, pageNo, pageSize);
 			LOGGER.info("Total number of projectReport entries: " + projectReport.getSize());
 		} catch (Exception e) {
 			LOGGER.error("Error Occured in getByClientIdAndProjectIdAndEmpId", e);
@@ -110,8 +110,8 @@ public class TimeSheetReportController {
 	
 	@GetMapping("/download/projectReport")
 	public ResponseEntity<Resource> downloadProject(HttpServletResponse response,
-			@RequestParam Long clientId,
-			@RequestParam(defaultValue = "0", required = false) Long projectId, 
+			@RequestParam Long clientCode,
+			@RequestParam(defaultValue = "0", required = false) Long projectCode, 
 			//@RequestParam(required = false) String stateName,
 			@RequestParam(required = false) String empId,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
@@ -124,7 +124,7 @@ public class TimeSheetReportController {
 		HttpHeaders header = new HttpHeaders();
         header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+filename);
         ByteArrayInputStream bri = timeSheetReportService.downloadProjectReport(
-				 response, clientId, projectId, empId, startDate, endDate);
+				 response, clientCode, projectCode, empId, startDate, endDate);
         InputStreamResource file = new InputStreamResource(bri);
         
 		return ResponseEntity.ok().headers(header).body(file);

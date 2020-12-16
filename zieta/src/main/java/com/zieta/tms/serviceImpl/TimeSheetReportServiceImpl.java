@@ -126,17 +126,17 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
 	////////////////////////////////////////
 	
 	@Override
-	public Page<ProjectReport> findAll(long clientId, long projectId, String empId, Date startDate, Date endDate, Integer pageNo, Integer pageSize) {
+	public Page<ProjectReport> findAll(long clientCode, long projectCode, String empId, Date startDate, Date endDate, Integer pageNo, Integer pageSize) {
 		
 		DateRange dateRange = TSMUtil.getFilledDateRange(startDate, endDate, false);
 		
-		return getAll(dateRange.getStartDate(), dateRange.getEndDate(), clientId, projectId, empId, pageNo, pageSize);
+		return getAll(dateRange.getStartDate(), dateRange.getEndDate(), clientCode, projectCode, empId, pageNo, pageSize);
 	}
 	
 	
 	
 	
-	public Page<ProjectReport> getAll(Date startDate, Date endDate, long clientId, long projectId, String empId, Integer pageNo, Integer pageSize){
+	public Page<ProjectReport> getAll(Date startDate, Date endDate, long clientCode, long projectCode, String empId, Integer pageNo, Integer pageSize){
 		
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
         return projectReportRepository.findAll(new Specification<ProjectReport>() {
@@ -147,11 +147,11 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
                 if(startDate!= null && endDate!=null){
                     predicates.add(criteriaBuilder.between(root.get("tsDate"),startDate,endDate));
                 }
-                if(clientId!=0) {
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("clientId"), clientId)));
+                if(clientCode!=0) {
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("clientCode"), clientCode)));
                 }
-                if(projectId!=0) {
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("projectId"), projectId)));
+                if(projectCode!=0) {
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("projectCode"), projectCode)));
                 }
                 if(empId!= null) {
                     predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("empId"), empId)));
@@ -165,19 +165,19 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
 	
 	
 	@Override
-	public ByteArrayInputStream downloadProjectReport(HttpServletResponse response,long clientId,
-			long projectId, String empId, Date startDate, Date endDate ) throws IOException {
+	public ByteArrayInputStream downloadProjectReport(HttpServletResponse response,long clientCode,
+			long projectCode, String empId, Date startDate, Date endDate ) throws IOException {
 		ReportUtil report = new ReportUtil();
 		DateRange dateRange = TSMUtil.getFilledDateRange(startDate, endDate, false);
 		
-		List<ProjectReport> projectReportList = downloadAll(dateRange.getStartDate(), dateRange.getEndDate(), empId, clientId, projectId);
+		List<ProjectReport> projectReportList = downloadAll(dateRange.getStartDate(), dateRange.getEndDate(), empId, clientCode, projectCode);
 		return report.downloadProjReport(response, projectReportList);
 		
 	}
 	
 	
 	
-	public List<ProjectReport> downloadAll(Date startDate, Date endDate, String empId,long clientId, long projectId){
+	public List<ProjectReport> downloadAll(Date startDate, Date endDate, String empId,long clientCode, long projectCode){
 		
 		return projectReportRepository.findAll(new Specification<ProjectReport>() {
     	
@@ -190,11 +190,11 @@ public class TimeSheetReportServiceImpl implements TimeSheetReportService {
             if(empId!= null) {
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("empId"), empId)));
             }
-            if(clientId!=0) {
-                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("clientId"), clientId)));
+            if(clientCode!=0) {
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("clientCode"), clientCode)));
             }
-            if(projectId!=0) {
-                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("projectId"), projectId)));
+            if(projectCode!=0) {
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("projectCode"), projectCode)));
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         }

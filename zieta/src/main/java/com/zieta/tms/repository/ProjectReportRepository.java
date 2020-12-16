@@ -17,6 +17,6 @@ import com.zieta.tms.model.ProjectReport;
 @Transactional
 public interface ProjectReportRepository extends JpaRepository<ProjectReport, String>,JpaSpecificationExecutor<ProjectReport> {
 
-	Page<ProjectReport> findByClientIdAndProjectIdAndEmpId(long clientId, long projectId, 
+	Page<ProjectReport> findByClientCodeAndProjectCodeAndEmpId(long clientCode, long projectCode, 
 			long empId, Pageable pageable);
 }

@@ -186,6 +186,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 						.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(tsInfo.getClientId(),
 								TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_SUBMITTED, (short) 0)
 						.getId();
+				tsInfo.setSubmitDate(new Date());
 				tsInfo.setStatusId(statusId);
 				tSInfoRepository.save(tsInfo);
 				if (workflowRequestList.isEmpty()) {

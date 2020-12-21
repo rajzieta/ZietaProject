@@ -103,10 +103,18 @@ public class SkillsetMasterController {
 	
 	
 	@RequestMapping(value = "addSkillsetUserMapping", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void addSkillsetUserMapping(@Valid @RequestBody SkillsetUserMapping skilluserMapping) {
+	public void addSkillsetUserMapping(@Valid @RequestBody List<SkillsetUserMapping> skilluserMapping) {
 		skillsetMasterService.addSkillsetUserMapping(skilluserMapping);
 	}
 
+	
+	@ApiOperation(value = "Updates the SkillsetUserMapping for the provided Id", notes = "Table reference: Skillset_user_mapping")
+	@RequestMapping(value = "editSkillsetUserMappingById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editSkillsetUserMappingById(@Valid @RequestBody List<SkillsetUserMappingDTO> skilluserMappingdto) throws Exception {
+		skillsetMasterService.editSkillUserMapping(skilluserMappingdto);
+		
+		
+	}
 	
 	
 	@ApiOperation(value = "Deletes entries from status_master based on Id", notes = "Table reference: skillset_user_mapping")

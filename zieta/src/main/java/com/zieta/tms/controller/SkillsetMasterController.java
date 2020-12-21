@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zieta.tms.dto.OrgInfoDTO;
+import com.zieta.tms.dto.SkillsetCategoryMasterDTO;
 import com.zieta.tms.dto.SkillsetMasterDTO;
 import com.zieta.tms.dto.SkillsetUserMappingDTO;
 import com.zieta.tms.model.SkillsetMaster;
@@ -134,6 +135,20 @@ public class SkillsetMasterController {
 			return new ResponseEntity<List<SkillsetUserMappingDTO>>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	
+	
+	@RequestMapping(value = "getAllSkillsetCategoryMaster", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<SkillsetCategoryMasterDTO> getAllSkillsetCategoryMaster() {
+		List<SkillsetCategoryMasterDTO> skillsMasters = null;
+		try {
+			skillsMasters = skillsetMasterService.getAllSkillsetCategoryMaster();
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in getAllSkillsetCategoryMasterController#getAllSkillsetCategoryMaster",e);
+		}
+		return skillsMasters;
+	}
+	
 	
 	
 }

@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.zieta.tms.dto.ExpenseEntriesDTO;
 import com.zieta.tms.dto.SkillsetMasterDTO;
 import com.zieta.tms.dto.SkillsetUserMappingDTO;
+import com.zieta.tms.model.ExpenseEntries;
 import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.SkillsetMaster;
 import com.zieta.tms.model.SkillsetUserMapping;
@@ -139,11 +141,35 @@ public class SkillsetMasterServiceImpl implements SkillsetMasterService {
 		
 		
 		 @Override 
-		  public void addSkillsetUserMapping(SkillsetUserMapping skillsetUsermap) {
+		  public void addSkillsetUserMapping(List<SkillsetUserMapping> skillsetUsermap) {
 			
-		  skillsetUserMappingRepository.save(skillsetUsermap); 
+		  skillsetUserMappingRepository.saveAll(skillsetUsermap); 
 		  
 		  }
+		 
+		 
+		 public void editSkillUserMappingById(@Valid SkillsetUserMappingDTO skillusermapDTO) throws Exception {
+
+				Optional<SkillsetUserMapping> expenseEntriesEntity = skillsetUserMappingRepository.findById(skillusermapDTO.getId());
+				if (expenseEntriesEntity.isPresent()) {
+					SkillsetUserMapping skilluserinfo = modelMapper.map(skillusermapDTO, SkillsetUserMapping.class);
+					skillsetUserMappingRepository.save(skilluserinfo);
+
+				} else {
+					throw new Exception("skilluserMapping Info not found with the provided ID : " + skillusermapDTO.getId());
+				}
+
+			}
+
+			@Override
+			@Transactional
+			public void editSkillUserMapping(@Valid List<SkillsetUserMappingDTO> skillusermappingDTO) throws Exception {
+
+				for (SkillsetUserMappingDTO updateRequest : skillusermappingDTO) {
+					editSkillUserMappingById(updateRequest);
+				}
+			}
+		 
 		 
 		 
 		 public void deleteSkillUserMappingById(Long id) throws Exception {

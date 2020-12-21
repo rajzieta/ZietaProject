@@ -52,6 +52,9 @@ public class UserInfo extends BaseEntity {
 	@Column(name = "ORGNODE")
 	private Long orgNode;
 	
+	@Column(name = "REPORTING_MGR")
+	private Long reportingMgr;
+	
 	@Column(name = "ACCESS_TYPE_ID")
 	private Long accessTypeId;
 	

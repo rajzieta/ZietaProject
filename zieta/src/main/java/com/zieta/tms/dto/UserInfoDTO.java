@@ -18,6 +18,7 @@ public class UserInfoDTO {
 	private String email;
 	private String empId;
 	private Long orgNode;
+	private Long reportingMgr;
 	private Long accessTypeId;
 	private String phoneNo;
 	private short isActive;

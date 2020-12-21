@@ -26,11 +26,14 @@ public void editskillmaster(@Valid SkillsetMasterDTO skilldto) throws Exception;
 
 public List<SkillsetUserMappingDTO> getAllSkillsetUserMapping();
 
-public void addSkillsetUserMapping(@Valid SkillsetUserMapping skilluserMapping);
+public void addSkillsetUserMapping(@Valid List<SkillsetUserMapping> skilluserMapping);
 
 public void deleteSkillUserMappingById(Long id) throws Exception;
 
 public List<SkillsetUserMappingDTO> findByClientIdAndUserId(Long clientId, Long userId);
+
+
+public void editSkillUserMapping(@Valid List<SkillsetUserMappingDTO> skillusermappingDTO) throws Exception;
 
 	
 }

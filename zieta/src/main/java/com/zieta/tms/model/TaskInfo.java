@@ -2,6 +2,7 @@ package com.zieta.tms.model;
 
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -51,6 +52,12 @@ public class TaskInfo extends BaseEntity implements Serializable {
 	    
 	    @Column(name = "task_status")
 	    private Long taskStatus;
+	    
+	    @Column(name = "task_start_date")
+	    private Date taskStartDate;
+	    
+	    @Column(name = "task_end_date")
+	    private Date taskendDate;
 	    
 	    @Column(name = "sortkey")
 	    private Long sortKey;

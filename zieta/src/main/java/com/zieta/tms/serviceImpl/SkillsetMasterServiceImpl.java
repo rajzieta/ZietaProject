@@ -12,14 +12,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zieta.tms.dto.ExpenseEntriesDTO;
+import com.zieta.tms.dto.SkillsetCategoryMasterDTO;
 import com.zieta.tms.dto.SkillsetMasterDTO;
 import com.zieta.tms.dto.SkillsetUserMappingDTO;
 import com.zieta.tms.model.ExpenseEntries;
 import com.zieta.tms.model.ProjectInfo;
+import com.zieta.tms.model.SkillsetCategoryMaster;
 import com.zieta.tms.model.SkillsetMaster;
 import com.zieta.tms.model.SkillsetUserMapping;
 import com.zieta.tms.model.StatusMaster;
 import com.zieta.tms.repository.ClientInfoRepository;
+import com.zieta.tms.repository.SkillsetCategoryMasterRepository;
 import com.zieta.tms.repository.SkillsetMasterRepository;
 import com.zieta.tms.repository.SkillsetUserMappingRepository;
 import com.zieta.tms.request.ProjectMasterEditRequest;
@@ -39,6 +42,9 @@ public class SkillsetMasterServiceImpl implements SkillsetMasterService {
 	
 	@Autowired
 	SkillsetUserMappingRepository skillsetUserMappingRepository;
+	
+	@Autowired
+	SkillsetCategoryMasterRepository skillsetCategoryMasterRepository;
 	
 	@Autowired
 	ClientInfoRepository clientInfoRepository;
@@ -203,4 +209,23 @@ public class SkillsetMasterServiceImpl implements SkillsetMasterService {
 				return skillsByClientList;
 
 	}
+		 
+		 @Override
+			public List<SkillsetCategoryMasterDTO> getAllSkillsetCategoryMaster() {
+				List<SkillsetCategoryMaster> skillMasters= skillsetCategoryMasterRepository.findAll();
+				List<SkillsetCategoryMasterDTO> skillMasterDTOs = new ArrayList<SkillsetCategoryMasterDTO>();
+				SkillsetCategoryMasterDTO skillMasterDTO = null;
+				for (SkillsetCategoryMaster skillMaster : skillMasters) {
+					skillMasterDTO = modelMapper.map(skillMaster,SkillsetCategoryMasterDTO.class);
+				//	skillMasterDTO.setClientCode(clientInfoRepository.findById(skillMaster.getClientId()).get().getClientCode());
+				//	skillMasterDTO.setClientDescription(clientInfoRepository.findById(skillMaster.getClientId()).get().getClientName());
+					//staMasterDTO.setClientStatus(clientInfoRepository.findById(skillMaster.getClientId()).get().getClientStatus());
+
+					skillMasterDTOs.add(skillMasterDTO);
+				}
+				return skillMasterDTOs;
+			}
+		 
+		 
+		 
 }

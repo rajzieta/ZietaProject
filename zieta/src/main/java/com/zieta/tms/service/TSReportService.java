@@ -26,5 +26,8 @@ public interface TSReportService {
 	Page<TimeSheetReportDTO> getTsByDateRangeSum(long client_id, String startDate, String endDate, Integer pageNo,
 			Integer pageSize);
 
+	public ByteArrayInputStream downloadTimeSheetSumReport(HttpServletResponse response, long clientId, String startDate,
+			String endDate) throws IOException;
+
 	//public List<TimeSheetReportDTO> getTSReportEntriesFromSumProcedure(long clientId, String startDate, String endDate);
 }

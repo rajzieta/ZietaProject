@@ -68,7 +68,7 @@ public class TSReportServiceImpl implements TSReportService {
 		
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
 		
-		List<TimeSheetReportDTO> tsReportList = getTSReportEntriesFromProcedure(client_id, startDate, endDate);
+		List<TimeSheetReportDTO> tsReportList = getTSReportSumEntriesFromProcedure(client_id, startDate, endDate);
 		int start =(int) pageable.getOffset();
 		int end = (start + pageable.getPageSize()) > tsReportList.size() ? tsReportList.size() : (start + pageable.getPageSize());
 
@@ -102,5 +102,19 @@ public class TSReportServiceImpl implements TSReportService {
 		
 	}
 
+	
+	////////downoad for sum
+	
+	@Override
+	public ByteArrayInputStream downloadTimeSheetSumReport(HttpServletResponse response,long clientId,
+			String startDate, String endDate) throws IOException {
+		
+		List<TimeSheetReportDTO> timeSheetReportList = getTSReportSumEntriesFromProcedure(clientId, startDate, endDate);
+		return timeSheetReportHelper.downloadReport(response, timeSheetReportList);
+		
+	}
+
+	
+	
 }
 

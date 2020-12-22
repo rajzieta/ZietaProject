@@ -201,6 +201,8 @@ public class SkillsetMasterServiceImpl implements SkillsetMasterService {
 					skillbyclientList = modelMapper.map(skillmaster,SkillsetUserMappingDTO.class);
 					skillbyclientList.setClientCode(clientInfoRepository.findById(skillmaster.getClientId()).get().getClientCode());
 					skillbyclientList.setClientDescription(clientInfoRepository.findById(skillmaster.getClientId()).get().getClientName());
+					skillbyclientList.setSkillSetName(skillsetMasterRepository.findById(skillmaster.getSkillsetId()).get().getSkillName());
+				//	skillbyclientList.setSkillCatgoryDesc(skillsetCategoryMasterRepository.findById(skillmaster.getClientId()).get().getSkillCategory());
 
 					
 					skillsByClientList.add(skillbyclientList);

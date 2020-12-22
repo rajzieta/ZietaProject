@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zieta.tms.dto.TimeSheetReportDTO;
+import com.zieta.tms.dto.TimeSheetSumReportDTO;
 import com.zieta.tms.model.ProjectReport;
 import com.zieta.tms.model.TimeSheetReport;
 import com.zieta.tms.service.TSReportService;
@@ -152,10 +153,10 @@ public class TimeSheetReportController {
 	
 	//////////////////////////////
 	@RequestMapping(value = "getTsByDateRangeSum", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<TimeSheetReportDTO> getTsByDateRangeSum(@RequestParam Long clientId,
+	public List<TimeSheetSumReportDTO> getTsByDateRangeSum(@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
 			@RequestParam(required = true) String endDate) {
-		List<TimeSheetReportDTO> tsReport = null;
+		List<TimeSheetSumReportDTO> tsReport = null;
 		try {
 			tsReport = tsReportService.getTSReportSumEntriesFromProcedure(clientId, startDate, endDate);
 			LOGGER.info("Total number of TSReport entries: " + tsReport.size());

@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import org.springframework.data.domain.Page;
 
 import com.zieta.tms.dto.TimeSheetReportDTO;
+import com.zieta.tms.dto.TimeSheetSumReportDTO;
 
 @Transactional
 public interface TSReportService {
@@ -21,9 +22,9 @@ public interface TSReportService {
 	
 	public List<TimeSheetReportDTO> getTSReportEntriesFromProcedure(long client_id, String startDate, String endDate);
 
-	public List<TimeSheetReportDTO> getTSReportSumEntriesFromProcedure(long clientId, String startDate, String endDate);
+	public List<TimeSheetSumReportDTO> getTSReportSumEntriesFromProcedure(long clientId, String startDate, String endDate);
 
-	Page<TimeSheetReportDTO> getTsByDateRangeSum(long client_id, String startDate, String endDate, Integer pageNo,
+	Page<TimeSheetSumReportDTO> getTsByDateRangeSum(long client_id, String startDate, String endDate, Integer pageNo,
 			Integer pageSize);
 
 	public ByteArrayInputStream downloadTimeSheetSumReport(HttpServletResponse response, long clientId, String startDate,

@@ -190,4 +190,32 @@ public class TimeSheetReportController {
 		return ResponseEntity.ok().headers(header).body(file);
 	}
 	
+	
+	//////////////////////
+	@GetMapping("/download/timesheetSumReportSP")
+	public ResponseEntity<Resource> downloadTimeSheetSumReportSP(HttpServletResponse response,
+			@RequestParam Long clientId,
+			@RequestParam(required = true) String startDate,
+			@RequestParam(required = true) String endDate){
+		
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		String currentDateTime = dateFormatter.format(new Date());
+		String filename = "timesheet_" + currentDateTime + ".xlsx";
+		HttpHeaders header = new HttpHeaders();
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+filename);
+        ByteArrayInputStream bri = null;
+		try {
+			bri = tsReportService.downloadTimeSheetSumReport(
+					 response, clientId,startDate, endDate);
+		} catch (IOException e) {
+			LOGGER.error("Exception occured while downloading the report",e);
+		}
+        InputStreamResource file = new InputStreamResource(bri);
+        
+		return ResponseEntity.ok().headers(header).body(file);
+	}
+
+	
+	
+	
 }

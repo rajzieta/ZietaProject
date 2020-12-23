@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,11 +24,13 @@ import com.zieta.tms.repository.OrgInfoRepository;
 import com.zieta.tms.repository.UserInfoRepository;
 import com.zieta.tms.request.PasswordEditRequest;
 import com.zieta.tms.request.UserInfoEditRequest;
+import com.zieta.tms.response.ActivitiesByClientProjectTaskResponse;
 import com.zieta.tms.response.LoginResponse;
 import com.zieta.tms.response.UserDetailsResponse;
 import com.zieta.tms.service.AccessTypeMasterService;
 import com.zieta.tms.service.ScreensMasterService;
 import com.zieta.tms.service.UserInfoService;
+import com.zieta.tms.util.TSMUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -90,7 +93,19 @@ public class UserInfoServiceImpl implements UserInfoService {
 			if(userInfo.getOrgNode() !=null) {
 				userInfoDTO.setOrgNodeName(orgInfoRepository.findById(userInfo.getOrgNode()).get().getOrgNodeName());
 			}
-			
+		
+			String prjMgrName = StringUtils.EMPTY;
+			String rempId = StringUtils.EMPTY;
+			if(userInfo.getReportingMgr() !=null) {
+				Optional<UserInfo> userInfos = userInfoRepositoryRepository.findById(userInfo.getReportingMgr());
+				if (userInfos.isPresent()) {
+					prjMgrName = TSMUtil.getFullName(userInfos.get());
+					 rempId= userInfos.get().getEmpId();
+					// otherdetails
+					userInfoDTO.setReportingMgrName(prjMgrName);
+					userInfoDTO.setReportingMgrEmpId(rempId);
+				}
+			}
 			 userInfoDTOs.add(userInfoDTO);
 		}
 	}

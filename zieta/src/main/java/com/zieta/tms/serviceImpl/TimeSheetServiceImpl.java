@@ -35,6 +35,7 @@ import com.zieta.tms.repository.TSInfoRepository;
 import com.zieta.tms.repository.TSTimeEntriesRepository;
 import com.zieta.tms.repository.TaskInfoRepository;
 import com.zieta.tms.repository.TimeTypeRepository;
+import com.zieta.tms.repository.UserInfoRepository;
 import com.zieta.tms.repository.WorkflowRepository;
 import com.zieta.tms.repository.WorkflowRequestRepository;
 import com.zieta.tms.request.TimeEntriesByTsIdRequest;
@@ -83,6 +84,9 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	
 	@Autowired
 	StatusMasterRepository statusMasterRepository;
+	
+	@Autowired
+	UserInfoRepository userInfoRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -221,7 +225,14 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 
 							workflowRequest = new WorkflowRequest();
 							workflowRequest.setStepId(processStepsList.get(i).getStepId());
-							buildWFRForSubmission(workflowRequest, tsInfo, approverIds[j]);
+							String approverId = approverIds[j];
+							if(tsInfo.getUserId().toString() == approverIds[j]) {
+								Long rmId = userInfoRepository.findById(tsInfo.getUserId()).get().getReportingMgr();
+								if(rmId != null) {
+									approverId=  rmId.toString();
+								}
+							}
+							buildWFRForSubmission(workflowRequest, tsInfo, approverId);
 							if (processStepsList.get(i).getStepId() == 1) {
 								// considering this as the first step
 								workflowRequest.setCurrentStep(1L);

@@ -2,6 +2,9 @@ package com.zieta.tms.dto;
 
 import java.util.Date;
 
+import com.zieta.tms.response.ActivitiesByClientProjectTaskResponse;
+import com.zieta.tms.response.ActivitiesByClientProjectTaskResponse.AdditionalDetails;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,7 +38,10 @@ public class UserInfoDTO {
 	private Long clientStatus;
 	private String accessType;
 	private String orgNodeName;
+	
+	private String reportingMgrName;
+	private String reportingMgrEmpId;
 
 	
-
+	
 }

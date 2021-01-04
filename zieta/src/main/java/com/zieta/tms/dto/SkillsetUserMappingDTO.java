@@ -18,4 +18,7 @@ public class SkillsetUserMappingDTO {
     
     private String ClientCode;
     private String ClientDescription;
+    private String skillSetName;
+    private String skillCatgoryDesc;
+    
 }

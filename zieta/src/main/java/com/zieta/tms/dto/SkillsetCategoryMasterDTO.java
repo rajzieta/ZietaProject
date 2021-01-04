@@ -7,12 +7,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SkillsetMasterDTO {
+public class SkillsetCategoryMasterDTO {
 
 	 private Long id;
 	 private Long clientId;
-	 private String skillName;
-	 private Long skillCategory;
-	 private  String clientCode;
-	 private  String clientDescription;
+	 private String skillCategory;
+	
 }

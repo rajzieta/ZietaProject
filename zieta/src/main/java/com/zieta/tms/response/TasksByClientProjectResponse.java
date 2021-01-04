@@ -1,6 +1,7 @@
 package com.zieta.tms.response;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,6 +22,8 @@ public class TasksByClientProjectResponse {
 	Long sortKey;
 	Long taskParent;
 	Long taskStatus;
+	Date taskStartDate;
+	Date taskendDate;
 	String taskManagerName;
 	Long taskManager;
 	String taskStatusDescription;

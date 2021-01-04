@@ -8,8 +8,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -17,7 +19,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 @Entity
-@Table(name = "user_info", uniqueConstraints=@UniqueConstraint(columnNames= {"client_id", "emp_id"}))
+@Table(name = "user_info", uniqueConstraints = {@UniqueConstraint(columnNames = {"email_id"})})
+//@Unique(columns = { @UniqueColumn(fields= "email_id")})
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
         allowGetters = true)
@@ -43,7 +46,8 @@ public class UserInfo extends BaseEntity {
 	private String userLname;
 	
 	@NotBlank	
-	@Column(name = "EMAIL_ID", unique= true)
+	//@Email
+	@Column(name = "EMAIL_ID", unique=true)
 	private String email;
 	
 	@Column(name = "EMP_ID")

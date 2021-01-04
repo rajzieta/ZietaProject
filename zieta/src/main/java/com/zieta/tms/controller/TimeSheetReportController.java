@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zieta.tms.dto.TimeSheetReportDTO;
+import com.zieta.tms.dto.TimeSheetSumReportDTO;
 import com.zieta.tms.model.ProjectReport;
 import com.zieta.tms.model.TimeSheetReport;
 import com.zieta.tms.service.TSReportService;
@@ -152,10 +153,10 @@ public class TimeSheetReportController {
 	
 	//////////////////////////////
 	@RequestMapping(value = "getTsByDateRangeSum", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<TimeSheetReportDTO> getTsByDateRangeSum(@RequestParam Long clientId,
+	public List<TimeSheetSumReportDTO> getTsByDateRangeSum(@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
 			@RequestParam(required = true) String endDate) {
-		List<TimeSheetReportDTO> tsReport = null;
+		List<TimeSheetSumReportDTO> tsReport = null;
 		try {
 			tsReport = tsReportService.getTSReportSumEntriesFromProcedure(clientId, startDate, endDate);
 			LOGGER.info("Total number of TSReport entries: " + tsReport.size());
@@ -189,5 +190,33 @@ public class TimeSheetReportController {
         
 		return ResponseEntity.ok().headers(header).body(file);
 	}
+	
+	
+	//////////////////////
+	@GetMapping("/download/timesheetSumReportSP")
+	public ResponseEntity<Resource> downloadTimeSheetSumReportSP(HttpServletResponse response,
+			@RequestParam Long clientId,
+			@RequestParam(required = true) String startDate,
+			@RequestParam(required = true) String endDate){
+		
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		String currentDateTime = dateFormatter.format(new Date());
+		String filename = "timesheet_" + currentDateTime + ".xlsx";
+		HttpHeaders header = new HttpHeaders();
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+filename);
+        ByteArrayInputStream bri = null;
+		try {
+			bri = tsReportService.downloadTimeSheetSumReport(
+					 response, clientId,startDate, endDate);
+		} catch (IOException e) {
+			LOGGER.error("Exception occured while downloading the report",e);
+		}
+        InputStreamResource file = new InputStreamResource(bri);
+        
+		return ResponseEntity.ok().headers(header).body(file);
+	}
+
+	
+	
 	
 }

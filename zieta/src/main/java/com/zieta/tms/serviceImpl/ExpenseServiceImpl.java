@@ -135,11 +135,12 @@ public class ExpenseServiceImpl implements ExpenseService {
 				notDeleted);
 		ExpenseInfoDTO expenseInfoDTO = null;
 
-//			List<StatusMaster> statusId =  statusMasterRepository
-//					.findByClientIdAndStatusTypeAndStatusCodeNotAndIsDelete(clientId,
+//			Long statusIds =  statusMasterRepository
+//				.findByClientIdAndStatusTypeAndStatusCodeNotAndIsDelete(clientId,
 //							TMSConstants.EXPENSE, TMSConstants.EXPENSE_DRAFT, (short) 0);
 //		//	System.out.println(+statusId);
-//			List<ExpenseInfo> expenseInfos  = expenseInfoRepository.findByClientIdAndUserIdAndStatusIdInAndIsDelete(clientId, userId, statusId, notDeleted);
+//			for (Long statuses : statusIds) {
+//			List<ExpenseInfo> expenseInfos  = expenseInfoRepository.findByClientIdAndUserIdAndStatusId(clientId, userId, statuses);
 //			
 		for (ExpenseInfo expenses : expenseInfos) {
 			expenseInfoDTO = modelMapper.map(expenses, ExpenseInfoDTO.class);
@@ -181,7 +182,8 @@ public class ExpenseServiceImpl implements ExpenseService {
 			}
 
 			expenseInfoList.add(expenseInfoDTO);
-		}
+	//	}
+			}
 		return expenseInfoList;
 	}
 
@@ -464,13 +466,14 @@ public class ExpenseServiceImpl implements ExpenseService {
 				ExpenseWorkflowRequest expenseWorkflowRequest = expenseWorkflowRepository
 						.findByExpId(expenseInfo.getId());
 				ExpenseInfo expenseInfoEntitiy = expenseInfoRepository.findById(expenseInfo.getId()).get();
-				expenseInfoEntitiy.setExpPostingDate(new Date());
+			//	expenseInfoEntitiy.setExpPostingDate(new Date());
 
 				Long statusId = statusMasterRepository
 						.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(expenseInfo.getClientId(),
 								TMSConstants.EXPENSE, TMSConstants.EXPENSE_SUBMITTED, (short) 0)
 						.getId();
 				expenseInfo.setStatusId(statusId);
+				expenseInfo.setExpPostingDate(new Date());
 
 				if (expenseWorkflowRequest == null) {
 					log.info("Creating new expense WFR objects...");

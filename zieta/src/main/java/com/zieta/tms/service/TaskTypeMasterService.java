@@ -27,13 +27,13 @@ public interface TaskTypeMasterService {
 
 	public List<TaskTypesByClientResponse> getTasksByClient(Long clientId);
 	
-	public boolean saveTaskInfo(TaskInfo taskInfo);
+	public void saveTaskInfo(@Valid List<TaskInfo> taskInfo);
 
 	public void editTaskTypesByClient(@Valid TaskTypesByClientRequest tasktypesbyclientRequest) throws Exception;
 
 	public void addTaskTypesByClient(@Valid TaskTypeMaster taskmaster);
 
-	public void editTaskInfo(@Valid EditTasksByClientProjectRequest editasksByClientProjectRequest) throws Exception;
+	public void editTaskInfo(@Valid List<EditTasksByClientProjectRequest> editasksByClientProjectRequest) throws Exception;
 
 	public void deleteTaskTypeByClient(Long taskTypeId, String modifiedBy) throws Exception;
 	

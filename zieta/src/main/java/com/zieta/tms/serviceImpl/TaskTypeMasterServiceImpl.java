@@ -13,10 +13,12 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.zieta.tms.dto.SkillsetUserMappingDTO;
 import com.zieta.tms.dto.TaskMasterDTO;
 import com.zieta.tms.model.ProcessSteps;
 import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.StatusMaster;
+import com.zieta.tms.model.TSInfo;
 import com.zieta.tms.model.TaskInfo;
 import com.zieta.tms.model.TaskTypeMaster;
 import com.zieta.tms.model.TasksByUser;
@@ -211,10 +213,38 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 
 	@Override
 	@Transactional
-	public boolean saveTaskInfo(TaskInfo taskInfo) {
+	public void saveTaskInfo(List<TaskInfo> taskInfo) {
 		try {
-			TaskInfo taskInfoDB = taskInfoRepository.save(taskInfo);
-			ProjectInfo projectInfo = projectInfoRepository.findById(taskInfo.getProjectId()).get();
+			for (TaskInfo tskInfo : taskInfo) {
+				addTaskInfo(tskInfo);
+		}
+//			
+//			TaskInfo taskInfoDB = taskInfoRepository.save(tskInfo);
+//			
+//			ProjectInfo projectInfo = projectInfoRepository.findById(taskInfo.getProjectId()).get();
+//			
+//			List<ProcessSteps> processStepsList = processService.createProcessSteps(taskInfoDB, projectInfo);
+//			
+//			processStepsRepository.saveAll(processStepsList);
+//			
+	//		return true;
+		} 
+		catch (Exception ex) {
+			log.error("Exception occured during the save task information",ex);
+		//	return false;
+		}
+
+	}
+
+
+	
+	public boolean addTaskInfo(TaskInfo tskInfo)
+	{
+		try {
+			
+			TaskInfo taskInfoDB = taskInfoRepository.save(tskInfo);
+			
+			ProjectInfo projectInfo = projectInfoRepository.findById(tskInfo.getProjectId()).get();
 			
 			List<ProcessSteps> processStepsList = processService.createProcessSteps(taskInfoDB, projectInfo);
 			
@@ -227,10 +257,18 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 		}
 
 	}
-
-
 	
-	public void editTaskInfo(@Valid EditTasksByClientProjectRequest editasksByClientProjectRequest) throws Exception {
+	
+	
+	@Override
+	@Transactional
+	public void editTaskInfo(@Valid List<EditTasksByClientProjectRequest> editasksByClientProjectRequest) throws Exception {
+		for (EditTasksByClientProjectRequest updateRequest : editasksByClientProjectRequest) {
+			editTaskInfoById(updateRequest);
+		}
+	}
+	
+	public void editTaskInfoById(@Valid EditTasksByClientProjectRequest editasksByClientProjectRequest) throws Exception {
 		Optional<TaskInfo> taskInfoEntity = taskInfoRepository.findById(editasksByClientProjectRequest.getTaskInfoId());
 		if(taskInfoEntity.isPresent()) {
 			TaskInfo taskInfo = modelMapper.map(editasksByClientProjectRequest, TaskInfo.class);

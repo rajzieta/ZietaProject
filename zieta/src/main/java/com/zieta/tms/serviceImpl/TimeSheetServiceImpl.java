@@ -2,6 +2,7 @@ package com.zieta.tms.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,6 +36,7 @@ import com.zieta.tms.repository.TSInfoRepository;
 import com.zieta.tms.repository.TSTimeEntriesRepository;
 import com.zieta.tms.repository.TaskInfoRepository;
 import com.zieta.tms.repository.TimeTypeRepository;
+import com.zieta.tms.repository.UserInfoRepository;
 import com.zieta.tms.repository.WorkflowRepository;
 import com.zieta.tms.repository.WorkflowRequestRepository;
 import com.zieta.tms.request.TimeEntriesByTsIdRequest;
@@ -83,6 +85,9 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	
 	@Autowired
 	StatusMasterRepository statusMasterRepository;
+	
+	@Autowired
+	UserInfoRepository userInfoRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -194,7 +199,8 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 					List<ProcessSteps> processStepsList = processStepsRepository
 							.findByClientIdAndProjectIdAndProjectTaskIdOrderByStepId(tsInfo.getClientId(),
 									tsInfo.getProjectId(), tsInfo.getTaskId());
-
+					
+					// approver id will be null only incase of template-id=1(no approval)
 					if (processStepsList != null && processStepsList.size() == 1
 							&& processStepsList.get(0).getApproverId() == null) {
 
@@ -205,7 +211,22 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 						// set the status as approved and there are no actions on the workflow, so move
 						// to next TSInfo item.
 						tsInfo.setStatusId(statusId);
+						tsInfo.setTsTotalApprovedTime(tsInfo.getTsTotalSubmittedTime());
 						tSInfoRepository.save(tsInfo);
+						
+						//change the status of the ts entriess also, when ts is approved.
+						List<TSTimeEntries> tsEntiresList = tstimeentriesRepository.findByTsId(tsInfo.getId());
+						
+						Long tsEntryStatusId = statusMasterRepository
+								.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(tsInfo.getClientId(),
+										TMSConstants.TIMEENTRY, TMSConstants.TIMEENTRY_APPROVED, (short) 0)
+								.getId();
+						for (TSTimeEntries tsTimeEntries : tsEntiresList) {
+							tsTimeEntries.setStatusId(tsEntryStatusId);
+						}
+						tstimeentriesRepository.saveAll(tsEntiresList);
+						
+						
 						continue;
 					}
 
@@ -221,7 +242,14 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 
 							workflowRequest = new WorkflowRequest();
 							workflowRequest.setStepId(processStepsList.get(i).getStepId());
-							buildWFRForSubmission(workflowRequest, tsInfo, approverIds[j]);
+							String approverId = approverIds[j];
+							if(tsInfo.getUserId().toString().equals(approverIds[j])) {
+								Long rmId = userInfoRepository.findById(tsInfo.getUserId()).get().getReportingMgr();
+								if(rmId != null) {
+									approverId=  rmId.toString();
+								}
+							}
+							buildWFRForSubmission(workflowRequest, tsInfo, approverId);
 							if (processStepsList.get(i).getStepId() == 1) {
 								// considering this as the first step
 								workflowRequest.setCurrentStep(1L);

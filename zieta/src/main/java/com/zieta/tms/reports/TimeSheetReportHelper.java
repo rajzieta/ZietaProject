@@ -9,15 +9,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.stereotype.Component;
 
 import com.zieta.tms.dto.TimeSheetReportDTO;
 import com.zieta.tms.dto.TimeSheetSumReportDTO;
-import com.zieta.tms.model.TSReport;
 import com.zieta.tms.util.ReportUtil;
 
 
@@ -26,21 +26,21 @@ public class TimeSheetReportHelper {
 	
 	
 	
-	private XSSFWorkbook workbook;
-    private XSSFSheet sheet;
+	private Workbook workbook;
+    private Sheet sheet;
      
   
  
     private void writeHeaderLine() {
-    	workbook = new XSSFWorkbook();
+    	workbook = new SXSSFWorkbook();
         sheet = workbook.createSheet("TimeSheet");
          
         Row row = sheet.createRow(0);
          
         CellStyle style = workbook.createCellStyle();
-        XSSFFont font = workbook.createFont();
-        font.setBold(true);
-        font.setFontHeight(13);
+        Font font = workbook.createFont();
+//        font.setBold(true);
+        font.setFontHeightInPoints((short)13);
         style.setFont(font);
         
 
@@ -64,7 +64,6 @@ public class TimeSheetReportHelper {
     }
      
     public  void createCell(Row row, int columnCount, Object value, CellStyle style) {
-        sheet.autoSizeColumn(columnCount);
      //   DecimalFormat df = new DecimalFormat("#.00");
         Cell cell = row.createCell(columnCount);
         if (value instanceof Integer) {
@@ -83,12 +82,12 @@ public class TimeSheetReportHelper {
         int rowCount = 1;
  
         CellStyle style = workbook.createCellStyle();
-        XSSFFont font = workbook.createFont();
-        font.setFontHeight(10);
+        Font font = workbook.createFont();
+        font.setFontHeight((short)10);
         style.setFont(font);
                  
         CellStyle style2= ReportUtil.formatDecimalStyle(workbook);
-        font.setFontHeight(14);
+        font.setFontHeight((short)14);
         style2.setFont(font);
         
         for (TimeSheetReportDTO timeSheetReport : tsReportList) {
@@ -125,15 +124,15 @@ public class TimeSheetReportHelper {
     /////////////////////////////////////////////////////////////////////////////////
     
     private void writeSumHeaderLine() {
-    	workbook = new XSSFWorkbook();
+    	workbook = new SXSSFWorkbook(1000);
         sheet = workbook.createSheet("TimeSheet");
          
         Row row = sheet.createRow(0);
          
         CellStyle style = workbook.createCellStyle();
-        XSSFFont font = workbook.createFont();
+        Font font = workbook.createFont();
         font.setBold(true);
-        font.setFontHeight(13);
+        font.setFontHeightInPoints((short)13);
         style.setFont(font);
         
 
@@ -163,12 +162,12 @@ public class TimeSheetReportHelper {
         int rowCount = 1;
  
         CellStyle style = workbook.createCellStyle();
-        XSSFFont font = workbook.createFont();
-        font.setFontHeight(10);
+        Font font = workbook.createFont();
+        font.setFontHeightInPoints((short)5);
         style.setFont(font);
                  
         CellStyle style2= ReportUtil.formatDecimalStyle(workbook);
-        font.setFontHeight(14);
+        font.setFontHeightInPoints((short)14);
         style2.setFont(font);
         
         for (TimeSheetSumReportDTO timeSheetReport : tsReportList) {

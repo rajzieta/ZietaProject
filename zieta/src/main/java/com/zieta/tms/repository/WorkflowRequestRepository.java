@@ -44,6 +44,9 @@ public interface WorkflowRequestRepository extends JpaRepository<WorkflowRequest
 	public List<WorkflowRequest> findByRequestorIdAndCurrentStepAndActionDateBetween(long requestorId,
 			Long currentStep, Date startDate, Date endDate);
 
+	public List<WorkflowRequest> findByApproverIdAndRequestDateBetweenAndActionTypeIn(long approverId,
+			Date startRequestdate, Date endRequestDate, List<Long> actionTypes);
+
 
 
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.zieta.tms.model.ExpenseEntries;
 import com.zieta.tms.model.ExpenseInfo;
+import com.zieta.tms.model.StatusMaster;
 
 @Repository
 public interface ExpenseInfoRepository extends JpaRepository<ExpenseInfo, Long>{
@@ -20,6 +21,11 @@ public interface ExpenseInfoRepository extends JpaRepository<ExpenseInfo, Long>{
 
 	List<ExpenseInfo> findByClientIdAndUserIdAndStatusIdAndIsDelete(Long clientId, Long userId, long statusId,
 			short notDeleted);
+
+	List<ExpenseInfo> findByClientIdAndUserIdAndStatusIdInAndIsDelete(Long clientId, Long userId,
+			List<StatusMaster> statusIds, short notDeleted);
+
+	List<ExpenseInfo> findByClientIdAndUserIdAndStatusId(Long clientId, Long userId, Long statuses);
 
 	//List<ExpenseInfo> findByClientIdAndUserIdAndStatusIdAndIsDelete(Long clientId, Long userId, Long statusId,
 		//	short notDeleted);

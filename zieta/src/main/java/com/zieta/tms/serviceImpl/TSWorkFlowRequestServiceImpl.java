@@ -464,21 +464,21 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	}
 
 	@Override
-	public List<WFRDetailsForApprover> findWorkFlowRequestsByApproverId(long approverId, Date startActiondate, Date endActionDate) {
-		boolean isDatesValid = TSMUtil.validateDates(startActiondate,endActionDate);
+	public List<WFRDetailsForApprover> findWorkFlowRequestsByApproverId(long approverId, Date startRequestdate, Date endRequestDate) {
+		boolean isDatesValid = TSMUtil.validateDates(startRequestdate,endRequestDate);
 		
 		//defaulting to the current week date range, when there is no date range mentioned from front end.
 		if(!isDatesValid) {
 			CurrentWeekUtil currentWeek = new CurrentWeekUtil(new Locale("en","IN"));
-			startActiondate =currentWeek.getFirstDay();
-			endActionDate = currentWeek.getLastDay();
+			startRequestdate =currentWeek.getFirstDay();
+			endRequestDate = currentWeek.getLastDay();
 		}else {
-			startActiondate = TSMUtil.getFormattedDate(startActiondate);
-			endActionDate =  TSMUtil.getFormattedDate(endActionDate);
+			startRequestdate = TSMUtil.getFormattedDate(startRequestdate);
+			endRequestDate =  TSMUtil.getFormattedDate(endRequestDate);
 			Calendar c = Calendar.getInstance();
-			c.setTime(endActionDate);
+			c.setTime(endRequestDate);
 			c.add(Calendar.DATE, 1);
-			endActionDate = c.getTime();
+			endRequestDate = c.getTime();
 		}
 		
 		List<Long> actionTypes = new ArrayList<Long>();
@@ -486,8 +486,8 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REJECT));
 		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REVISE));
 		
-		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndActionDateBetweenAndActionTypeIn(
-				approverId, startActiondate, endActionDate,actionTypes);
+		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndRequestDateBetweenAndActionTypeIn(
+				approverId, startRequestdate, endRequestDate,actionTypes);
 		HashMap<Long,WorkflowRequest > tempWFRMap = new HashMap<>();
 		for (WorkflowRequest workflowRequest : workFlowRequestList) {
 			if (tempWFRMap.containsKey(workflowRequest.getTsId())) {

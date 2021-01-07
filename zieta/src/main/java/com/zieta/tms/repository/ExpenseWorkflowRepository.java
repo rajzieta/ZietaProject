@@ -21,4 +21,7 @@ public interface ExpenseWorkflowRepository extends JpaRepository<ExpenseWorkflow
 	
 	ExpenseWorkflowRequest findByExpId(long expId);
 
+	List<ExpenseWorkflowRequest> findByApproverIdAndRequestDateBetweenAndActionTypeIn(long approverId, Date startRequestDate,
+			Date endRequestDate, Collection<Long> actionType);
+
 }

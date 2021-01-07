@@ -56,11 +56,11 @@ public class ExpenseWorkFlowController {
 	
 	@RequestMapping(value = "getExpenseWorkFlowRequestsHistoryByApprover", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<ExpenseWFRDetailsForApprover> getExpenseWorkFlowRequestsHistoryByApprover(@RequestParam(required = true) Long approverId,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startActiondate, 
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endActionDate) {
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startRequestdate, 
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endRequestDate) {
 		List<ExpenseWFRDetailsForApprover> workFlowRequestList = null;
 		try {
-			workFlowRequestList = expenseWorkFlowRequestService.findWorkFlowRequestsByApproverId(approverId, startActiondate,endActionDate );
+			workFlowRequestList = expenseWorkFlowRequestService.findWorkFlowRequestsByApproverId(approverId, startRequestdate,endRequestDate );
 		} catch (Exception e) {
 
 			log.error("Error Occured in TSWorkFlowController#getActiveWorkFlowRequestsByApprover", e);

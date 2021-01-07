@@ -145,13 +145,13 @@ public class TaskController {
 	
 	@ApiOperation(value = "Persists the tasks related to client and its associated project", notes = "Table reference: task_info")
 	@RequestMapping(value = "addTasksByClientProject", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void addTasksByClientProject(@Valid @RequestBody TaskInfo taskInfo) {
+	public void addTasksByClientProject(@Valid @RequestBody List<TaskInfo> taskInfo) {
 		taskTypeMasterService.saveTaskInfo(taskInfo);
 	}
 	
 	@ApiOperation(value = "Persists the tasks related to client and its associated project", notes = "Table reference: task_info")
 	@RequestMapping(value = "editTasksByClientProject", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void editTasksByClientProject(@Valid @RequestBody EditTasksByClientProjectRequest ediTasksByClientProjectRequest) throws Exception {
+	public void editTasksByClientProject(@Valid @RequestBody List<EditTasksByClientProjectRequest> ediTasksByClientProjectRequest) throws Exception {
 		taskTypeMasterService.editTaskInfo(ediTasksByClientProjectRequest);
 	}
 	

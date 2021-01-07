@@ -19,7 +19,7 @@ public interface ExpenseWorkFlowRequestService {
 	
 	public void processExpenseWorkFlow(ExpenseWorkFlowRequestDTO expenseWorkFlowRequestDTO) throws Exception;
 	
-	public List<ExpenseWFRDetailsForApprover> findWorkFlowRequestsByApproverId(long approverId, Date startActiondate, Date endActionDate);
+	public List<ExpenseWFRDetailsForApprover> findWorkFlowRequestsByApproverId(long approverId, Date startRequestdate, Date endRequestDate);
 
 	public List<ExpenseWorkFlowComment> getWFRCommentsChain(long expId);
 

@@ -68,11 +68,11 @@ public class TSWorkFlowController {
 
 	@RequestMapping(value = "getWorkFlowRequestsByApprover", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<WFRDetailsForApprover> getWorkFlowRequestsByApprover(@RequestParam(required = true) Long approverId,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startActiondate, 
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endActionDate) {
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startRequestdate, 
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endRequestDate) {
 		List<WFRDetailsForApprover> workFlowRequestList = null;
 		try {
-			workFlowRequestList = workFlowRequestService.findWorkFlowRequestsByApproverId(approverId, startActiondate, endActionDate);
+			workFlowRequestList = workFlowRequestService.findWorkFlowRequestsByApproverId(approverId, startRequestdate, endRequestDate);
 		} catch (Exception e) {
 
 			log.error("Error Occured in TSWorkFlowController#getWorkFlowRequestsByApprover", e);

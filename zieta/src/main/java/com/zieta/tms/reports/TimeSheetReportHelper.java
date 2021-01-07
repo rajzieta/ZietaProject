@@ -39,7 +39,7 @@ public class TimeSheetReportHelper {
          
         CellStyle style = workbook.createCellStyle();
         Font font = workbook.createFont();
-//        font.setBold(true);
+        font.setBold(true);
         font.setFontHeightInPoints((short)13);
         style.setFont(font);
         
@@ -83,11 +83,11 @@ public class TimeSheetReportHelper {
  
         CellStyle style = workbook.createCellStyle();
         Font font = workbook.createFont();
-        font.setFontHeight((short)10);
+        font.setFontHeightInPoints((short)5);
         style.setFont(font);
                  
         CellStyle style2= ReportUtil.formatDecimalStyle(workbook);
-        font.setFontHeight((short)14);
+        font.setFontHeightInPoints((short)13);
         style2.setFont(font);
         
         for (TimeSheetReportDTO timeSheetReport : tsReportList) {

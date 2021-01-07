@@ -170,6 +170,11 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			ActivityMaster activityMaster = activityMasterRepository.findById(tsInfo.getActivityId()).get();
 			wFRDetailsForApprover.setActivityName(activityMaster.getActivityDesc());
 
+			TaskActivity taskactivity = activitiesTaskRepository.findById(tsInfo.getTaskActivityId()).get();
+			wFRDetailsForApprover.setPlannedHours(taskactivity.getPlannedHrs());
+			wFRDetailsForApprover.setActualHours(taskactivity.getActualHrs());
+			
+
 			wFRDetailsForApproverList.add(wFRDetailsForApprover);
 
 		}

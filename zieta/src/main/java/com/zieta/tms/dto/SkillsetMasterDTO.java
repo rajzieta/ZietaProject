@@ -15,4 +15,5 @@ public class SkillsetMasterDTO {
 	 private Long skillCategory;
 	 private  String clientCode;
 	 private  String clientDescription;
+	 private String skillCategoryDescription;
 }

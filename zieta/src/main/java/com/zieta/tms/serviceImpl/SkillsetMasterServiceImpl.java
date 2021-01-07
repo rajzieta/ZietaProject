@@ -63,6 +63,7 @@ public class SkillsetMasterServiceImpl implements SkillsetMasterService {
 			skillMasterDTO.setClientCode(clientInfoRepository.findById(skillMaster.getClientId()).get().getClientCode());
 			skillMasterDTO.setClientDescription(clientInfoRepository.findById(skillMaster.getClientId()).get().getClientName());
 			//staMasterDTO.setClientStatus(clientInfoRepository.findById(skillMaster.getClientId()).get().getClientStatus());
+			skillMasterDTO.setSkillCategoryDescription(skillsetCategoryMasterRepository.findById(skillMaster.getSkillCategory()).get().getSkillCategory());
 
 			skillMasterDTOs.add(skillMasterDTO);
 		}
@@ -118,6 +119,7 @@ public class SkillsetMasterServiceImpl implements SkillsetMasterService {
 				skillbyclientList = modelMapper.map(skillmaster,SkillsetMasterDTO.class);
 				skillbyclientList.setClientCode(clientInfoRepository.findById(skillmaster.getClientId()).get().getClientCode());
 				skillbyclientList.setClientDescription(clientInfoRepository.findById(skillmaster.getClientId()).get().getClientName());
+				skillbyclientList.setSkillCategoryDescription(skillsetCategoryMasterRepository.findById(skillmaster.getSkillCategory()).get().getSkillCategory());
 
 				
 				skillsByClientList.add(skillbyclientList);
@@ -229,5 +231,24 @@ public class SkillsetMasterServiceImpl implements SkillsetMasterService {
 			}
 		 
 		 
+		 
+		 @Override
+			public List<SkillsetCategoryMasterDTO> findSkillCategoryByClientId(Long clientId) {
+				List<SkillsetCategoryMaster> skillList = skillsetCategoryMasterRepository.findByClientId(clientId);
+				List<SkillsetCategoryMasterDTO> skillsByClientList = new ArrayList<>();
+				for(SkillsetCategoryMaster skillmaster: skillList) {
+					SkillsetCategoryMasterDTO skillbyclientList = null;
+					skillbyclientList = modelMapper.map(skillmaster,SkillsetCategoryMasterDTO.class);
+					skillbyclientList.setClientCode(clientInfoRepository.findById(skillmaster.getClientId()).get().getClientCode());
+					skillbyclientList.setClientDescription(clientInfoRepository.findById(skillmaster.getClientId()).get().getClientName());
+				//	skillbyclientList.setSkillCategoryDescription(skillsetCategoryMasterRepository.findById(skillmaster.getSkillCategory()).get().getSkillCategory());
+
+					
+					skillsByClientList.add(skillbyclientList);
+				}
+				
+				return skillsByClientList;
+
+	}
 		 
 }

@@ -1,5 +1,7 @@
 package com.zieta.tms.dto;
 
+import javax.persistence.Column;
+
 import com.zieta.tms.model.BaseEntity;
 
 import lombok.Getter;
@@ -18,4 +20,6 @@ public class ProjectMasterDTO extends BaseEntity {
     private String clientDescription;
  //  private String projectCode;
     private String typeName;
+    private short custMandatory;
+    private short isEditable;
 }

@@ -25,5 +25,7 @@ public class WFRDetailsForApprover {
 	String wfStateType;
 	String taskName;
 	String activityName;
+	Float PlannedHours;
+	Float ActualHours;
 	List<WorkFlowComment> workFlowCommentList;
 }

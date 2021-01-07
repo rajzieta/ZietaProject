@@ -38,5 +38,7 @@ public void editSkillUserMapping(@Valid List<SkillsetUserMappingDTO> skilluserma
 
 public List<SkillsetCategoryMasterDTO> getAllSkillsetCategoryMaster();
 
+public List<SkillsetCategoryMasterDTO> findSkillCategoryByClientId(Long clientId);
+
 	
 }

@@ -12,6 +12,8 @@ public class ProjectTypeByClientResponse {
     private String clientCode;
     private String clientDescription;
     private String typeName;
+    private Boolean custMandatory;
+    private Boolean isEditable;
     private String createdBy;
     private String modifiedBy;
     private boolean isDELETE;

@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 import lombok.Data;
 @Entity
-@Table(name = "orgunit_info")
+@Table(name = "leave_info")
 @Data
 public class LeaveInfo extends BaseEntity implements Serializable {
 

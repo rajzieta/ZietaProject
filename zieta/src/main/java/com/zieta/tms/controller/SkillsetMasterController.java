@@ -66,7 +66,7 @@ public class SkillsetMasterController {
 	
 	
 	@RequestMapping(value = "getSkillsetByClient", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ApiOperation(value = "List Status based on the  clientId", notes = "Table reference: Skillset_master")
+	@ApiOperation(value = "List Skillset based on the  clientId", notes = "Table reference: Skillset_master")
 	public ResponseEntity<List<SkillsetMasterDTO>> getSkillsetByClient(@RequestParam(required = true) Long clientId) {
 		try {
 			List<SkillsetMasterDTO> skillsByClientList = skillsetMasterService.findByClientId(clientId);
@@ -150,5 +150,15 @@ public class SkillsetMasterController {
 	}
 	
 	
+	@RequestMapping(value = "getSkillCategoryByClientId", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "List SkillCategory based on the  clientId", notes = "Table reference: SkillsetCategory_master")
+	public ResponseEntity<List<SkillsetCategoryMasterDTO>> getSkillCategoryByClientId(@RequestParam(required = true) Long clientId) {
+		try {
+			List<SkillsetCategoryMasterDTO> skillsByClientList = skillsetMasterService.findSkillCategoryByClientId(clientId);
+			return new ResponseEntity<List<SkillsetCategoryMasterDTO>>(skillsByClientList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<SkillsetCategoryMasterDTO>>(HttpStatus.NOT_FOUND);
+		}
+	}
 	
 }

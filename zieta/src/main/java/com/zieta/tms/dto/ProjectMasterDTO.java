@@ -20,6 +20,6 @@ public class ProjectMasterDTO extends BaseEntity {
     private String clientDescription;
  //  private String projectCode;
     private String typeName;
-    private short custMandatory;
-    private short isEditable;
+    private Boolean custMandatory;
+    private Boolean isEditable;
 }

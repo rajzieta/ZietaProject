@@ -13,4 +13,6 @@ public class ProjectTypeEditRequest extends BaseEntity {
 	private Long projectTypeId;
     private Long clientId;
     private String typeName;
+    private Boolean custMandatory;
+    private Boolean isEditable;
 }

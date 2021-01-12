@@ -24,6 +24,10 @@ public interface LeaveInfoService {
 
 	public List<LeaveTypeMasterDTO> getAllLeaveMaster();
 
+	public List<LeaveInfoDTO> getAllLeavesByClient(Long clientId);
+
+	public List<LeaveTypeMasterDTO> getAllLeaveTypesByClient(Long clientId);
+
 
 
 	

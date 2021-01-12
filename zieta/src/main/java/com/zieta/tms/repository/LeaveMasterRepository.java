@@ -12,4 +12,6 @@ public interface LeaveMasterRepository extends JpaRepository<LeaveTypeMaster, Lo
 
 	public List<LeaveTypeMaster> findByIsDelete(short notDeleted);
 
+	public List<LeaveTypeMaster> findByClientIdAndIsDelete(Long clientId, short notDeleted);
+
 }

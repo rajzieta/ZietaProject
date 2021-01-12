@@ -32,7 +32,7 @@ public class TimeSheetReportHelper {
   
  
     private void writeHeaderLine() {
-    	workbook = new SXSSFWorkbook();
+    	workbook = new SXSSFWorkbook(1000);
         sheet = workbook.createSheet("TimeSheet");
          
         Row row = sheet.createRow(0);

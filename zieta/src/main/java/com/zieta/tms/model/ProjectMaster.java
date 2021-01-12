@@ -51,10 +51,10 @@ public class ProjectMaster extends BaseEntity implements Serializable {
 	    private String typeName;
 	    
 	    @Column(name="cust_mandatory")
-	    private short custMandatory;
+	    private Boolean custMandatory;
 	    
 	    @Column(name="is_editable")
-	    private short isEditable;
+	    private Boolean isEditable;
 
 
 	

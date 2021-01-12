@@ -176,7 +176,7 @@ public class TimeSheetReportController {
 		
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 		String currentDateTime = dateFormatter.format(new Date());
-		String filename = "timesheet_" + currentDateTime + ".xlsx";
+		String filename = "timesheet_detailed" + currentDateTime + ".xlsx";
 		HttpHeaders header = new HttpHeaders();
         header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+filename);
         ByteArrayInputStream bri = null;
@@ -201,7 +201,7 @@ public class TimeSheetReportController {
 		
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 		String currentDateTime = dateFormatter.format(new Date());
-		String filename = "timesheet_" + currentDateTime + ".xlsx";
+		String filename = "timesheet_summary" + currentDateTime + ".xlsx";
 		HttpHeaders header = new HttpHeaders();
         header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+filename);
         ByteArrayInputStream bri = null;

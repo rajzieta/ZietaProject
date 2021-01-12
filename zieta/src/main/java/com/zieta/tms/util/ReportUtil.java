@@ -3,42 +3,39 @@ package com.zieta.tms.util;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.List;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.zieta.tms.model.ProjectReport;
 import com.zieta.tms.model.TimeSheetReport;
  
 public class ReportUtil {
-    private XSSFWorkbook workbook;
-    private XSSFSheet sheet;
+    private Workbook workbook;
+    private Sheet sheet;
      
   
  
     private void writeHeaderLine() {
-    	workbook = new XSSFWorkbook();
+    	workbook = new SXSSFWorkbook(1000);
         sheet = workbook.createSheet("TimeSheet");
          
         Row row = sheet.createRow(0);
          
         CellStyle style = workbook.createCellStyle();
-        XSSFFont font = workbook.createFont();
+        Font font = workbook.createFont();
         font.setBold(true);
-        font.setFontHeight(16);
+        font.setFontHeightInPoints((short)13);
         style.setFont(font);
         
 
@@ -85,12 +82,12 @@ public class ReportUtil {
         int rowCount = 1;
  
         CellStyle style = workbook.createCellStyle();
-        XSSFFont font = workbook.createFont();
-        font.setFontHeight(14);
+        Font font = workbook.createFont();
+        font.setFontHeightInPoints((short)13);
         style.setFont(font);
                  
         CellStyle style2= formatDecimalStyle(workbook);
-        font.setFontHeight(14);
+        font.setFontHeightInPoints((short)13);
         style2.setFont(font);
         
         for (TimeSheetReport timeSheetReport : timeSheetList) {
@@ -145,11 +142,11 @@ public class ReportUtil {
         int rowCount = 1;
  
         CellStyle style = workbook.createCellStyle();
-        XSSFFont font = workbook.createFont();
-        font.setFontHeight(14);
+        Font font = workbook.createFont();
+        font.setFontHeightInPoints((short)13);
         style.setFont(font);
        CellStyle style2= formatDecimalStyle(workbook);
-       font.setFontHeight(14);
+       font.setFontHeightInPoints((short)13);
        style2.setFont(font);
                  
         for (ProjectReport projectReport : projectList) {
@@ -214,9 +211,9 @@ public class ReportUtil {
         Row row = sheet.createRow(0);
          
         CellStyle style = workbook.createCellStyle();
-        XSSFFont font = workbook.createFont();
+        Font font = workbook.createFont();
         font.setBold(true);
-        font.setFontHeight(16);
+        font.setFontHeightInPoints((short)13);
         style.setFont(font);
          
       //  createCell(row, 0, "Client ID", style);     

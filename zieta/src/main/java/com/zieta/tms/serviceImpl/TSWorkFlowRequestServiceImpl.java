@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -170,10 +171,17 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			ActivityMaster activityMaster = activityMasterRepository.findById(tsInfo.getActivityId()).get();
 			wFRDetailsForApprover.setActivityName(activityMaster.getActivityDesc());
 
+			if(tsInfo.getTaskActivityId() != null && tsInfo.getTaskActivityId() !=0) {
 			TaskActivity taskactivity = activitiesTaskRepository.findById(tsInfo.getTaskActivityId()).get();
 			wFRDetailsForApprover.setPlannedHours(taskactivity.getPlannedHrs());
 			wFRDetailsForApprover.setActualHours(taskactivity.getActualHrs());
-			
+			}	
+			else {
+				log.info(" taskactivity record: taskactivityid {}, tsId {}",tsInfo.getTaskActivityId(),tsInfo.getId());
+		    	
+				wFRDetailsForApprover.setPlannedHours(0.0f);
+				wFRDetailsForApprover.setActualHours(0.0f);
+				}
 
 			wFRDetailsForApproverList.add(wFRDetailsForApprover);
 

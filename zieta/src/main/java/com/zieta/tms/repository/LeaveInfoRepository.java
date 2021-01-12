@@ -12,6 +12,8 @@ public interface LeaveInfoRepository extends JpaRepository<LeaveInfo, Long> {
 
 	public List<LeaveInfo> findByIsDelete(short notDeleted);
 
+	public List<LeaveInfo> findByClientIdAndIsDelete(Long clientId, short notDeleted);
+
 	
 	
 }

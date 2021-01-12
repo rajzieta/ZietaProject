@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,14 @@ import com.zieta.tms.dto.LeaveTypeMasterDTO;
 import com.zieta.tms.model.CustInfo;
 import com.zieta.tms.model.LeaveInfo;
 import com.zieta.tms.model.LeaveTypeMaster;
+import com.zieta.tms.model.OrgInfo;
+import com.zieta.tms.model.UserInfo;
 import com.zieta.tms.repository.LeaveInfoRepository;
 import com.zieta.tms.repository.LeaveMasterRepository;
 import com.zieta.tms.response.CustomerInformationModel;
+import com.zieta.tms.response.OrgNodesByClientResponse;
 import com.zieta.tms.service.LeaveInfoService;
+import com.zieta.tms.util.TSMUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -129,4 +134,50 @@ public List<LeaveTypeMasterDTO> getAllLeaveMaster() {
 	return leaveMasterInfoList;
 }
 	
+
+@Override
+public List<LeaveTypeMasterDTO> getAllLeaveTypesByClient(Long clientId) {
+	short notDeleted = 0;
+	List<LeaveTypeMaster> orgnodesByClientList = leaveMasterRepository.findByClientIdAndIsDelete(clientId, notDeleted);
+	List<LeaveTypeMasterDTO> orgnodesByClientResponseList = new ArrayList<>();
+	LeaveTypeMasterDTO orgnodesByClientResponse = null;
+	for (LeaveTypeMaster orgnodesByClient : orgnodesByClientList) {
+		orgnodesByClientResponse = modelMapper.map(orgnodesByClient, 
+				LeaveTypeMasterDTO.class);
+		//orgnodesByClientResponse.setOrgUnitTypeDescription(orgunitTypeRepository.findById(orgnodesByClient.getOrgType()).get().getTypeName());
+		//orgnodesByClientResponse.setClientCode(clientInfoRepository.findById(orgnodesByClient.getClientId()).get().getClientCode());
+		//orgnodesByClientResponse.setClientDescription(clientInfoRepository.findById(orgnodesByClient.getClientId()).get().getClientName());
+		
+//		orgnodesByClientResponse.setOrgManagerName(StringUtils.EMPTY);
+//		if(null != orgnodesByClient.getOrgManager()) {
+//			Optional <UserInfo> userInfo = userInfoRepository.findById(orgnodesByClient.getOrgManager());
+//			if(userInfo.isPresent()) {
+//				String userName = TSMUtil.getFullName(userInfo.get());
+//				orgnodesByClientResponse.setOrgManagerName(userName);
+//			}
+//		}
+		
+		orgnodesByClientResponseList.add(orgnodesByClientResponse);
+	}
+	return orgnodesByClientResponseList;
+}
+
+
+
+@Override
+public List<LeaveInfoDTO> getAllLeavesByClient(Long clientId) {
+	short notDeleted = 0;
+	List<LeaveInfo> orgnodesByClientList = leaveInfoRepository.findByClientIdAndIsDelete(clientId, notDeleted);
+	List<LeaveInfoDTO> orgnodesByClientResponseList = new ArrayList<>();
+	LeaveInfoDTO orgnodesByClientResponse = null;
+	for (LeaveInfo orgnodesByClient : orgnodesByClientList) {
+		orgnodesByClientResponse = modelMapper.map(orgnodesByClient, 
+				LeaveInfoDTO.class);
+		
+		orgnodesByClientResponseList.add(orgnodesByClientResponse);
+	}
+	return orgnodesByClientResponseList;
+}
+
+
 }

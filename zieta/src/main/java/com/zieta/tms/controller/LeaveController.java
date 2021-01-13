@@ -1,16 +1,20 @@
 package com.zieta.tms.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zieta.tms.dto.CustInfoDTO;
@@ -63,6 +67,18 @@ public class LeaveController {
 	}
 	
 	
+	@ApiOperation(value = "List leaves based on the clientId", notes = "Table reference: leave_info")
+	@RequestMapping(value = "getAllLeavesByClient", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<LeaveInfoDTO>> getAllLeavesByClient(@RequestParam(required = true) Long  clientId) {
+		try {
+			List<LeaveInfoDTO> cusInfoList = leaveInfoService.getAllLeavesByClient(clientId);
+
+			return new ResponseEntity<List<LeaveInfoDTO>>(cusInfoList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<LeaveInfoDTO>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
 	/////////////////////////////
 	
 	
@@ -92,5 +108,17 @@ public class LeaveController {
 			LOGGER.error("Error Occured in LeaveMasterController#getAllLeaveMaster",e);
 		}
 		return leaveInformationList;
+	}
+	
+	@ApiOperation(value = "List leaves based on the clientId", notes = "Table reference: leave_info")
+	@RequestMapping(value = "getAllLeaveTypesByClient", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<LeaveTypeMasterDTO>> getAllLeaveTypesByClient(@RequestParam(required = true) Long  clientId) {
+		try {
+			List<LeaveTypeMasterDTO> cusInfoList = leaveInfoService.getAllLeaveTypesByClient(clientId);
+
+			return new ResponseEntity<List<LeaveTypeMasterDTO>>(cusInfoList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<LeaveTypeMasterDTO>>(HttpStatus.NOT_FOUND);
+		}
 	}
 }

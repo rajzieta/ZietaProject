@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +34,8 @@ public class TimeSheetReportHelper {
  
     private void writeHeaderLine() {
     	workbook = new SXSSFWorkbook(1000);
-        sheet = workbook.createSheet("TimeSheet");
+        sheet = workbook.createSheet("TimeSheetDetails");
+//        ((SXSSFSheet)sheet).trackAllColumnsForAutoSizing();
          
         Row row = sheet.createRow(0);
          
@@ -64,7 +66,7 @@ public class TimeSheetReportHelper {
     }
      
     public  void createCell(Row row, int columnCount, Object value, CellStyle style) {
-    	 sheet.autoSizeColumn(columnCount);
+//    	  ((SXSSFSheet)sheet).trackAllColumnsForAutoSizing();
      //   DecimalFormat df = new DecimalFormat("#.00");
         Cell cell = row.createCell(columnCount);
         if (value instanceof Integer) {
@@ -126,7 +128,7 @@ public class TimeSheetReportHelper {
     
     private void writeSumHeaderLine() {
     	workbook = new SXSSFWorkbook(1000);
-        sheet = workbook.createSheet("TimeSheet");
+        sheet = workbook.createSheet("TimeSheetSummary");
          
         Row row = sheet.createRow(0);
          

@@ -64,6 +64,7 @@ public class TimeSheetReportHelper {
     }
      
     public  void createCell(Row row, int columnCount, Object value, CellStyle style) {
+    	 sheet.autoSizeColumn(columnCount);
      //   DecimalFormat df = new DecimalFormat("#.00");
         Cell cell = row.createCell(columnCount);
         if (value instanceof Integer) {

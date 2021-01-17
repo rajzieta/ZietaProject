@@ -17,22 +17,16 @@ public interface ExpenseInfoRepository extends JpaRepository<ExpenseInfo, Long>{
 
 	List<ExpenseInfo> findByClientIdAndUserIdAndIsDelete(Long clientId, Long userId, short notDeleted);
 
-	//List<ExpenseInfo> findByStatusIdAndIsDelete(long statusId, short notDeleted);
-
 	List<ExpenseInfo> findByClientIdAndUserIdAndStatusIdAndIsDelete(Long clientId, Long userId, long statusId,
 			short notDeleted);
 
 	List<ExpenseInfo> findByClientIdAndUserIdAndStatusIdInAndIsDelete(Long clientId, Long userId,
 			List<StatusMaster> statusIds, short notDeleted);
-
-	List<ExpenseInfo> findByClientIdAndUserIdAndStatusId(Long clientId, Long userId, Long statuses);
-
-	//List<ExpenseInfo> findByClientIdAndUserIdAndStatusIdAndIsDelete(Long clientId, Long userId, Long statusId,
-		//	short notDeleted);
-
-	//List<ExpenseInfo> findByClientIdAndUserIdAndActionTypeNotIn(Long clientId, Long userId, List<Long> actionTypes);
-
 	
+	List<ExpenseInfo> findByClientIdAndUserIdAndIsDeleteAndStatusIdNotIn(Long clientId, Long userId,
+			short notDeleted, List<Long> statusIds);
+	
+	List<ExpenseInfo> findByClientIdAndUserIdAndStatusId(Long clientId, Long userId, Long statuses);
 
 	
 }

@@ -28,6 +28,10 @@ public interface LeaveInfoService {
 
 	public List<LeaveTypeMasterDTO> getAllLeaveTypesByClient(Long clientId);
 
+	public List<LeaveInfoDTO> getAllLeavesByClientUser(Long clientId, Long userId);
+
+	public void deleteLeaveInfoById(Long id, String modifiedBy) throws Exception;
+
 
 
 	

@@ -235,6 +235,8 @@ public class ActivityServiceImpl implements ActivityService {
 		
 		short notDeleted = 0;
 		List<TaskActivity> taskActivityList = activitiesTaskRepository.findByClientIdAndUserIdAndIsDelete(clientId, userId, notDeleted);
+		List<ProjectInfo> projInfoList = projectInfoRepository.findByIsDelete(notDeleted);
+		List<TaskInfo> taskInfoList = taskInfoRepository.findByIsDelete(notDeleted);
 		
 		List<ActivitiesByClientUserModel> activitiesByClientUserModelList = new ArrayList<>();
 		
@@ -247,6 +249,7 @@ public class ActivityServiceImpl implements ActivityService {
 			activitiesByClientUserModel.setActivityDesc(activityMaster.getActivityDesc());
 			
 			ProjectInfo projectInfo  = projectInfoRepository.findById(taskActivity.getProjectId()).get();
+		//	 projectInfo = projectInfo.findByIsDelete(notDeleted).get();
 			activitiesByClientUserModel.setProjectId(taskActivity.getProjectId());
 		//	activitiesByClientUserModel.setProjectCode(projectInfo.getProjectCode());
 			activitiesByClientUserModel.setProjectName(projectInfo.getProjectName());

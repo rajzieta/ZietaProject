@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import com.zieta.tms.dto.SkillsetCategoryMasterDTO;
 import com.zieta.tms.dto.SkillsetMasterDTO;
 import com.zieta.tms.dto.SkillsetUserMappingDTO;
+import com.zieta.tms.model.SkillsetCategoryMaster;
 import com.zieta.tms.model.SkillsetMaster;
 import com.zieta.tms.model.SkillsetUserMapping;
 import com.zieta.tms.model.StatusMaster;
@@ -39,6 +40,12 @@ public void editSkillUserMapping(@Valid List<SkillsetUserMappingDTO> skilluserma
 public List<SkillsetCategoryMasterDTO> getAllSkillsetCategoryMaster();
 
 public List<SkillsetCategoryMasterDTO> findSkillCategoryByClientId(Long clientId);
+
+public void addSkillsetCategory(@Valid List<SkillsetCategoryMaster> skillCategory);
+
+public void editSkillsetCategoryById(@Valid SkillsetCategoryMasterDTO skillCategorydto) throws Exception;
+
+public void deleteSkillsetCategoryById(Long id) throws Exception;
 
 	
 }

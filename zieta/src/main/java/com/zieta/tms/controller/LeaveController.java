@@ -79,6 +79,25 @@ public class LeaveController {
 		}
 	}
 	
+	@ApiOperation(value = "List leaves based on the clientId", notes = "Table reference: leave_info")
+	@RequestMapping(value = "getAllLeavesByClientUser", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<LeaveInfoDTO>> getAllLeavesByClientUser(@RequestParam(required = true) Long  clientId, @RequestParam(required = true) Long  userId) {
+		try {
+			List<LeaveInfoDTO> leaveInfoList = leaveInfoService.getAllLeavesByClientUser(clientId, userId);
+
+			return new ResponseEntity<List<LeaveInfoDTO>>(leaveInfoList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<LeaveInfoDTO>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@ApiOperation(value = "Deletes entries from leave_info based on Id", notes = "Table reference: leave_info")
+	@RequestMapping(value = "deleteLeaveInfoById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteLeaveInfoById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		leaveInfoService.deleteLeaveInfoById(id, modifiedBy);
+	}
+	
+	
 	/////////////////////////////
 	
 	

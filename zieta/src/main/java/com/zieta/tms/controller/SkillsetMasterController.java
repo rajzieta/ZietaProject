@@ -21,6 +21,7 @@ import com.zieta.tms.dto.OrgInfoDTO;
 import com.zieta.tms.dto.SkillsetCategoryMasterDTO;
 import com.zieta.tms.dto.SkillsetMasterDTO;
 import com.zieta.tms.dto.SkillsetUserMappingDTO;
+import com.zieta.tms.model.SkillsetCategoryMaster;
 import com.zieta.tms.model.SkillsetMaster;
 import com.zieta.tms.model.SkillsetUserMapping;
 import com.zieta.tms.response.StatusByClienttypeResponse;
@@ -160,5 +161,28 @@ public class SkillsetMasterController {
 			return new ResponseEntity<List<SkillsetCategoryMasterDTO>>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@RequestMapping(value = "addSkillsetCategory", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addSkillsetCategory(@Valid @RequestBody List<SkillsetCategoryMaster> skillCategory) {
+		skillsetMasterService.addSkillsetCategory(skillCategory);
+	}
+
+	
+	@ApiOperation(value = "Updates the SkillsetUserMapping for the provided Id", notes = "Table reference: Skillset_user_mapping")
+	@RequestMapping(value = "editSkillsetCategoryById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editSkillsetCategoryById(@Valid @RequestBody SkillsetCategoryMasterDTO skillCategorydto) throws Exception {
+		skillsetMasterService.editSkillsetCategoryById(skillCategorydto);
+		
+		
+	}
+	
+	
+	@ApiOperation(value = "Deletes entries from status_master based on Id", notes = "Table reference: skillset_user_mapping")
+	@RequestMapping(value = "deleteSkillsetCategoryById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteSkillsetCategoryById(@RequestParam(required=true) Long id) throws Exception {
+		skillsetMasterService.deleteSkillsetCategoryById(id);
+	}
+	
+	
 	
 }

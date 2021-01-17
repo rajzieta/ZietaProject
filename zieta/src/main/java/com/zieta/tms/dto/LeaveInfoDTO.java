@@ -27,4 +27,6 @@ public class LeaveInfoDTO extends BaseEntity {
     private Long approverId;
     private String approverComments;
     private Long statusId;
+    //addiional deails
+    private String leaveTypeDescription;
 }

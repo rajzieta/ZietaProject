@@ -250,5 +250,43 @@ public class SkillsetMasterServiceImpl implements SkillsetMasterService {
 				return skillsByClientList;
 
 	}
+
+		 
+		 @Override 
+		  public void addSkillsetCategory(List<SkillsetCategoryMaster> skillsetUsermap) {
+			
+			 skillsetCategoryMasterRepository.saveAll(skillsetUsermap); 
+		  
+		  }
+		 
+		 
+		 
+		 public void editSkillsetCategoryById(@Valid SkillsetCategoryMasterDTO skillusermapDTO) throws Exception {
+
+				Optional<SkillsetCategoryMaster> expenseEntriesEntity = skillsetCategoryMasterRepository.findById(skillusermapDTO.getId());
+				if (expenseEntriesEntity.isPresent()) {
+					SkillsetCategoryMaster skilluserinfo = modelMapper.map(skillusermapDTO, SkillsetCategoryMaster.class);
+					skillsetCategoryMasterRepository.save(skilluserinfo);
+
+				} else {
+					throw new Exception("skilluserMapping Info not found with the provided ID : " + skillusermapDTO.getId());
+				}
+
+			}
+		 
+		 
+		 public void deleteSkillsetCategoryById(Long id) throws Exception {
+				
+				Optional<SkillsetCategoryMaster> skillmaster = skillsetCategoryMasterRepository.findById(id);
+				if (skillmaster.isPresent()) {
+					skillsetCategoryMasterRepository.deleteById(id);
+
+				}else {
+					log.info("No Skill found with the provided ID{} in the DB",id);
+					throw new Exception("No Skill found with the provided ID in the DB :"+id);
+				}
+				
+				
+			}
 		 
 }

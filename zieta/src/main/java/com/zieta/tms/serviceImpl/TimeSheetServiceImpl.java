@@ -25,6 +25,7 @@ import com.zieta.tms.model.TSInfo;
 import com.zieta.tms.model.TSTimeEntries;
 import com.zieta.tms.model.TSWorkflow;
 import com.zieta.tms.model.TaskInfo;
+import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.TimeType;
 import com.zieta.tms.model.WorkflowRequest;
 import com.zieta.tms.repository.ActivityMasterRepository;
@@ -129,15 +130,20 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 			
 			if(tsInfo.getActivityId() != null && tsInfo.getActivityId() !=0) {
 				ActivityMaster activityEntity = activityMasterRepository.findById(tsInfo.getActivityId()).get();
+		//		ActivityMaster activityEntity = activityMasterRepository.findByIsDelete(tsInfo.getActivityId()).get();
+
 			//	taskInfoModel.setActivityCode(activityEntity.getActivityCode());
 				taskInfoModel.setActivityDescription(activityEntity.getActivityDesc());
+				taskInfoModel.setIsDeleteActivity(activityEntity.getIsDelete());
 			}else {
 			//	taskInfoModel.setActivityCode(null);
 				taskInfoModel.setActivityDescription(StringUtils.EMPTY);
 			}
 			
 			if(tsInfo.getProjectId() !=null && tsInfo.getProjectId() !=0) {
-				taskInfoModel.setProjectDescription(projectInfoRepository.findById(tsInfo.getProjectId()).get().getProjectName());
+				ProjectInfo projectEntity = projectInfoRepository.findById(tsInfo.getProjectId()).get();
+				taskInfoModel.setProjectDescription(projectEntity.getProjectName());
+				taskInfoModel.setIsDeleteProject(projectEntity.getIsDelete());
 		}else {
 			taskInfoModel.setProjectDescription(StringUtils.EMPTY);
 			}
@@ -146,6 +152,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 				TaskInfo taskInfoEntity =taskInfoRepository.findById(tsInfo.getTaskId()).get();
 			//	taskInfoModel.setTaskCode(taskInfoEntity.getTaskCode());
 				taskInfoModel.setTaskDescription(taskInfoEntity.getTaskDescription());
+				taskInfoModel.setIsDeleteTask(taskInfoEntity.getIsDelete());
 			}else {
 			//	taskInfoModel.setTaskCode(null);
 				taskInfoModel.setTaskDescription(StringUtils.EMPTY);

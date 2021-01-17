@@ -179,5 +179,41 @@ public List<LeaveInfoDTO> getAllLeavesByClient(Long clientId) {
 	return orgnodesByClientResponseList;
 }
 
+@Override
+public List<LeaveInfoDTO> getAllLeavesByClientUser(Long clientId, Long userId) {
+	short notDeleted = 0;
+	List<LeaveInfo> orgnodesByClientList = leaveInfoRepository.findByClientIdAndUserIdAndIsDelete(clientId, userId, notDeleted);
+	List<LeaveInfoDTO> orgnodesByClientResponseList = new ArrayList<>();
+	LeaveInfoDTO orgnodesByClientResponse = null;
+	for (LeaveInfo orgnodesByClient : orgnodesByClientList) {
+		orgnodesByClientResponse = modelMapper.map(orgnodesByClient, 
+				LeaveInfoDTO.class);
+		orgnodesByClientResponse.setLeaveTypeDescription(leaveMasterRepository.findById(orgnodesByClient.getLeaveType()).get().getLeaveType());
+		
+		
+		orgnodesByClientResponseList.add(orgnodesByClientResponse);
+	}
+	return orgnodesByClientResponseList;
+}
+
+
+
+public void deleteLeaveInfoById(Long id, String modifiedBy) throws Exception {
+	
+	Optional<LeaveInfo> leaveinfo = leaveInfoRepository.findById(id);
+	if (leaveinfo.isPresent()) {
+		LeaveInfo leaveinfoEntity = leaveinfo.get();
+		short delete = 1;
+		leaveinfoEntity.setIsDelete(delete);
+		leaveinfoEntity.setModifiedBy(modifiedBy);
+		leaveInfoRepository.save(leaveinfoEntity);
+
+	}else {
+		log.info("No Leave Information found with the provided ID{} in the DB",id);
+		throw new Exception("No Leave Information found with the provided ID in the DB :"+id);
+	}
+	
+	
+}
 
 }

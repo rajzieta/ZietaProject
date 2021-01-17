@@ -16,9 +16,12 @@ public class TSInfoModel {
 	//String projectCode;
 	//String taskCode;
 	String taskDescription;
+	short isDeleteTask;
 	//String activityCode;
 	String activityDescription;
+	short isDeleteActivity;
 	String projectDescription;
+	short isDeleteProject;
 	
 	TSInfo tsInfo;
 	List<TSTimeEntries> timeEntries;
@@ -28,6 +31,7 @@ public class TSInfoModel {
 	String clientCode;
 
 	String clientDescription;
+
 	
 		
 	

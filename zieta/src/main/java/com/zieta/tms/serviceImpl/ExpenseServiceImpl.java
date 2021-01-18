@@ -130,9 +130,13 @@ public class ExpenseServiceImpl implements ExpenseService {
 	public List<ExpenseInfoDTO> findByClientIdAndUserId(Long clientId, Long userId) {
 
 		short notDeleted = 0;
+		StatusMaster statusDetails = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(clientId,
+				TMSConstants.EXPENSE, TMSConstants.EXPENSE_DRAFT,notDeleted);
+		List<Long> filterOnStatusId = new ArrayList<>();
+		filterOnStatusId.add(statusDetails.getId());
 		List<ExpenseInfoDTO> expenseInfoList = new ArrayList<>();
-		List<ExpenseInfo> expenseInfos = expenseInfoRepository.findByClientIdAndUserIdAndIsDelete(clientId, userId,
-				notDeleted);
+		List<ExpenseInfo> expenseInfos = expenseInfoRepository.findByClientIdAndUserIdAndIsDeleteAndStatusIdNotIn(clientId, userId,
+				notDeleted,filterOnStatusId);
 		ExpenseInfoDTO expenseInfoDTO = null;
 
 //			Long statusIds =  statusMasterRepository

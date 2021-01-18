@@ -237,36 +237,50 @@ public class ActivityServiceImpl implements ActivityService {
 		List<TaskActivity> taskActivityList = activitiesTaskRepository.findByClientIdAndUserIdAndIsDelete(clientId, userId, notDeleted);
 		List<ProjectInfo> projInfoList = projectInfoRepository.findByIsDelete(notDeleted);
 		List<TaskInfo> taskInfoList = taskInfoRepository.findByIsDelete(notDeleted);
+		List<ActivityMaster> activityInfoList = activityMasterRepository.findByIsDelete(notDeleted);
 		
+		//if(projInfoList!=null && taskInfoList!=null && activityInfoList!=null) {
 		List<ActivitiesByClientUserModel> activitiesByClientUserModelList = new ArrayList<>();
 		
 		for (TaskActivity taskActivity : taskActivityList) {
 			ActivitiesByClientUserModel activitiesByClientUserModel = new ActivitiesByClientUserModel();
 			
+		//	if(activityInfoList!=null) {
 			ActivityMaster activityMaster = activityMasterRepository.findById(taskActivity.getActivityId()).get();
+			if(activityMaster.getIsDelete()==0) {
 			activitiesByClientUserModel.setActivityId(taskActivity.getActivityId());
 		//	activitiesByClientUserModel.setActivityCode(activityMaster.getActivityCode());
 			activitiesByClientUserModel.setActivityDesc(activityMaster.getActivityDesc());
+			activitiesByClientUserModel.setActiveStatus(activityMaster.isActive());
+			}
 			
+			//if(projInfoList!=null) {
 			ProjectInfo projectInfo  = projectInfoRepository.findById(taskActivity.getProjectId()).get();
-		//	 projectInfo = projectInfo.findByIsDelete(notDeleted).get();
+			if(projectInfo.getIsDelete()==0) {
 			activitiesByClientUserModel.setProjectId(taskActivity.getProjectId());
 		//	activitiesByClientUserModel.setProjectCode(projectInfo.getProjectCode());
 			activitiesByClientUserModel.setProjectName(projectInfo.getProjectName());
 			activitiesByClientUserModel.setAllowUnplanned(projectInfo.getAllowUnplanned());
 			
+			}
+			//if(taskInfoList!=null) {
 			TaskInfo taskInfo = taskInfoRepository.findById(taskActivity.getTaskId()).get();
+			if(taskInfo.getIsDelete()==0) {
 			activitiesByClientUserModel.setTaskId(taskActivity.getTaskId());
 		//	activitiesByClientUserModel.setTaskCode(taskInfo.getTaskCode());
 			activitiesByClientUserModel.setTaskDescription(taskInfo.getTaskDescription());
 			activitiesByClientUserModel.setTaskActivityId(taskActivity.getTaskActivityId());
+			}
+		//	}
 			
 			ClientInfo clientInfo = clientInfoRepository.findById(taskActivity.getClientId()).get();
 			activitiesByClientUserModel.setClientCode(clientInfo.getClientCode());
 			activitiesByClientUserModel.setClientDescription(clientInfo.getClientName());
 			activitiesByClientUserModelList.add(activitiesByClientUserModel);
 		}
+		
 		return activitiesByClientUserModelList;
+	//	}
 	}
 	
 	

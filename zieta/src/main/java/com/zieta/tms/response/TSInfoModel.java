@@ -20,6 +20,8 @@ public class TSInfoModel {
 	//String activityCode;
 	String activityDescription;
 	short isDeleteActivity;
+	boolean activeStatus;
+	
 	String projectDescription;
 	short isDeleteProject;
 	

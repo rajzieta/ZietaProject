@@ -11,6 +11,7 @@ public class ActivitiesByClientUserModel {
 	private Long activityId;
 	private String activityDesc;
 //	private String activityCode;
+	private boolean activeStatus;
 	
 	private Long taskId;
 	private String taskDescription;

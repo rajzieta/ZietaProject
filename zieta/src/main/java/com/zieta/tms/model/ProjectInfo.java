@@ -55,7 +55,7 @@ public class ProjectInfo extends BaseEntity implements Serializable {
 	@Column( name = "allow_unplanned")
     private short allowUnplanned;
 	
-	@Column(name = "cust_id")
+	@Column(name = "cust_id", nullable = true)
 	private Long custId;
 
 	@Column( name = "project_status")

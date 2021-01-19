@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zieta.tms.dto.CustInfoDTO;
+import com.zieta.tms.dto.ExpenseInfoDTO;
 import com.zieta.tms.dto.LeaveInfoDTO;
 import com.zieta.tms.dto.LeaveTypeMasterDTO;
 import com.zieta.tms.model.CustInfo;
@@ -140,4 +142,21 @@ public class LeaveController {
 			return new ResponseEntity<List<LeaveTypeMasterDTO>>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	
+	
+	@GetMapping("/getAllLeavesByApproverId")
+	@ApiOperation(value = "List Submitted leaves based on the approverId and StatusId", notes = "Table reference:"
+			+ "leave_info")
+	public ResponseEntity<List<LeaveInfoDTO>> getAllLeavesByApproverId(@RequestParam(required = true) Long clientId, @RequestParam(required = true) Long approverId) {
+		try {
+			List<LeaveInfoDTO> leavesList = leaveInfoService.findActiveLeavesByClientIdAndApproverId(clientId, approverId);
+			return new ResponseEntity<List<LeaveInfoDTO>>(leavesList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<LeaveInfoDTO>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	
+	
 }

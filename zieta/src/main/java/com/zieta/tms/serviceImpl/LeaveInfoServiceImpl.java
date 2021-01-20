@@ -12,17 +12,22 @@ import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-
+import com.zieta.tms.common.TMSConstants;
+import com.zieta.tms.dto.ExpenseInfoDTO;
 import com.zieta.tms.dto.LeaveInfoDTO;
 import com.zieta.tms.dto.LeaveTypeMasterDTO;
 import com.zieta.tms.model.CustInfo;
+import com.zieta.tms.model.ExpenseInfo;
 import com.zieta.tms.model.LeaveInfo;
 import com.zieta.tms.model.LeaveTypeMaster;
 import com.zieta.tms.model.OrgInfo;
+import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.UserInfo;
 import com.zieta.tms.repository.LeaveInfoRepository;
 import com.zieta.tms.repository.LeaveMasterRepository;
+import com.zieta.tms.repository.StatusMasterRepository;
 import com.zieta.tms.response.CustomerInformationModel;
 import com.zieta.tms.response.OrgNodesByClientResponse;
 import com.zieta.tms.service.LeaveInfoService;
@@ -45,6 +50,10 @@ public class LeaveInfoServiceImpl implements LeaveInfoService {
 	
 	@Autowired
 	LeaveMasterRepository leaveMasterRepository;
+	
+	
+	@Autowired
+	StatusMasterRepository statusMasterRepository;
 	
 	@Override
 	public void addLeaveInfo(LeaveInfo leaveInfo){
@@ -215,5 +224,57 @@ public void deleteLeaveInfoById(Long id, String modifiedBy) throws Exception {
 	
 	
 }
+
+@Override
+@Transactional
+public List<LeaveInfoDTO> findActiveLeavesByClientIdAndApproverId(Long clientId, Long approverId) {
+
+	short notDeleted = 0;
+	List<LeaveInfoDTO> leaveInfoList = new ArrayList<>();
+	LeaveInfoDTO leaveInfoDTO = null;
+//long clientId = leaveInfoDTO.getClientId();
+	long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(clientId, 
+			TMSConstants.LEAVE, TMSConstants.LEAVE_SUBMITTED, (short) 0).getId();
+	System.out.println("...." +statusId);
+	List<LeaveInfo> levInfo = leaveInfoRepository.findByClientIdAndApproverIdAndStatusIdAndIsDelete(clientId, approverId, statusId, notDeleted);
+	for (LeaveInfo leaves : levInfo) {
+		leaveInfoDTO = modelMapper.map(leaves, LeaveInfoDTO.class);
+		leaveInfoDTO.setStatusId(leaves.getStatusId());
+
+		leaveInfoDTO.setLeaveTypeDescription(StringUtils.EMPTY);
+		if (null != leaves.getLeaveType()) {
+			Optional<LeaveTypeMaster> orgInfo = leaveMasterRepository.findById(leaves.getLeaveType());
+			if (orgInfo.isPresent()) {
+				leaveInfoDTO.setLeaveTypeDescription(orgInfo.get().getLeaveType());
+
+			}
+		}
+
+		leaveInfoList.add(leaveInfoDTO);
+	}
+	return leaveInfoList;
+}
+
+
+public void deleteLeaveTypeById(Long id, String modifiedBy) throws Exception {
+	
+	Optional<LeaveTypeMaster> leaveTypeMaster = leaveMasterRepository.findById(id);
+	if (leaveTypeMaster.isPresent()) {
+		LeaveTypeMaster leaveinfoEntity = leaveTypeMaster.get();
+		short delete = 1;
+		leaveinfoEntity.setIsDelete(delete);
+		leaveinfoEntity.setModifiedBy(modifiedBy);
+		leaveMasterRepository.save(leaveinfoEntity);
+
+	}else {
+		log.info("No Leave Information found with the provided ID{} in the DB",id);
+		throw new Exception("No Leave Information found with the provided ID in the DB :"+id);
+	}
+	
+	
+}
+
+
+
 
 }

@@ -161,9 +161,10 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 				}
 			}
 			
+			if(projectInfo.getCustId() != null && projectInfo.getCustId() !=0) {
 			CustInfo custoInfo = custInfoRepository.findById(projectInfo.getCustId()).get();
 			projectDetailsByUserModel.setCustInfo(custoInfo);
-			
+			}
 			projectDetailsByUserModel.setTemplateDesc(StringUtils.EMPTY);
 			if(null != projectInfo.getTemplateId()) {
 				Optional <ProcessMaster> processmaster = processMasterRepository.findById(projectInfo.getTemplateId());

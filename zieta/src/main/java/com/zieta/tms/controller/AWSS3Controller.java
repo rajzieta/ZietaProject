@@ -39,7 +39,7 @@ public class AWSS3Controller{
 			String attachmentPath = service.uploadFile(multipartFile, key);
 
 			final String response = "[" + attachmentPath + "] uploaded successfully.";
-			expenseService.updateFileDetails(key);
+			expenseService.updateFileDetails(attachmentPath);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} 
 		catch (final AmazonServiceException ex) {

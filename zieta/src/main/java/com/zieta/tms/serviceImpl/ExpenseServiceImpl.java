@@ -24,11 +24,12 @@ import com.zieta.tms.model.CountryMaster;
 import com.zieta.tms.model.CurrencyMaster;
 import com.zieta.tms.model.ExpenseEntries;
 import com.zieta.tms.model.ExpenseInfo;
-import com.zieta.tms.model.OrgInfo;
 import com.zieta.tms.model.ExpenseTypeMaster;
 import com.zieta.tms.model.ExpenseWorkflowRequest;
+import com.zieta.tms.model.OrgInfo;
 import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.StatusMaster;
+import com.zieta.tms.model.UserInfo;
 import com.zieta.tms.repository.CountryMasterRepository;
 import com.zieta.tms.repository.CurrencyMasterRepository;
 import com.zieta.tms.repository.ExpenseEntriesRepository;
@@ -38,8 +39,7 @@ import com.zieta.tms.repository.ExpenseWorkflowRepository;
 import com.zieta.tms.repository.OrgInfoRepository;
 import com.zieta.tms.repository.ProjectInfoRepository;
 import com.zieta.tms.repository.StatusMasterRepository;
-import com.zieta.tms.request.UpdateTimesheetByIdRequest;
-import com.zieta.tms.response.ExpenseWFRDetailsForApprover;
+import com.zieta.tms.repository.UserInfoRepository;
 import com.zieta.tms.service.ExpenseService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -72,6 +72,9 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Autowired
 	OrgInfoRepository orgInfoRepository;
+	
+	@Autowired
+	UserInfoRepository userInfoRepository;
 
 	@Autowired
 	StatusMasterRepository statusMasterRepository;
@@ -526,6 +529,18 @@ public class ExpenseServiceImpl implements ExpenseService {
 			} else if (expenseInfo.getOrgUnitId() != null && expenseInfo.getOrgUnitId() != 0) {
 				approverId = orgInfoRepository.findById(expenseInfo.getOrgUnitId()).get().getOrgManager();
 			}
+			
+			if(expenseInfo.getUserId().equals(approverId)) {
+				
+				UserInfo userInfo = userInfoRepository.findById(expenseInfo.getUserId()).get();
+				if(userInfo.getReportingMgr() != null) {
+					
+					log.info("SubmiterId {} is same as ApproverId {}, hence switiching to RM {}",
+							expenseInfo.getUserId(),approverId,userInfo.getReportingMgr());
+					approverId = userInfo.getReportingMgr();
+				}
+				
+			}
 		} catch (NoSuchElementException e) {
 			log.error("Exception occured while fetching approverId", e);
 		}
@@ -535,9 +550,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Override
 	public List<ExpenseTypeMaster> getAllExpenseMastersByClient(Long clientId) {
-		// TODO Auto-generated method stub
 		List<ExpenseTypeMaster> expenseTypeMasterDetails = expenseTypeMasterRepository.findByClientId(clientId);
-//.findExpenseDetailsByClient(clientId);
 		return expenseTypeMasterDetails;
 	}
 

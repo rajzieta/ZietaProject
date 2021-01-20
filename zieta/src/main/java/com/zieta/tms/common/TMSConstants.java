@@ -42,7 +42,7 @@ public class TMSConstants {
 	public final static String EXPENSEENTRY_REJECTED = "Rejected";
 	
 	
-	public final static String LEAVE = "Expense";
+	public final static String LEAVE = "Leave";
 //	public final static String EXPENSE_DRAFT = "Draft";
 	public final static String LEAVE_SUBMITTED = "Submitted";
 	public final static String LEAVE_APPROVED = "Approved";

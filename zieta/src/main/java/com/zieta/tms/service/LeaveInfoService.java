@@ -34,6 +34,8 @@ public interface LeaveInfoService {
 
 	public List<LeaveInfoDTO> findActiveLeavesByClientIdAndApproverId(Long clientId, Long approverId);
 
+	public void deleteLeaveTypeById(Long id, String modifiedBy) throws Exception;
+
 
 
 	

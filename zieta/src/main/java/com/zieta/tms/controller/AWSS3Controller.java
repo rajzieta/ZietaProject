@@ -1,5 +1,6 @@
 package com.zieta.tms.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.AmazonServiceException;
 import com.zieta.tms.service.AWSS3Service;
+import com.zieta.tms.service.ExpenseService;
 
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,9 @@ public class AWSS3Controller{
 
 	@Autowired
 	private AWSS3Service service;
+	
+	@Autowired
+	ExpenseService expenseService;
 
 	@PostMapping(value= "/s3/upload")
 	public ResponseEntity<String> uploadFile(@RequestPart(value= "multipartFile") MultipartFile multipartFile, @RequestParam("multipartFile-data")  String key) {
@@ -34,6 +39,7 @@ public class AWSS3Controller{
 			String attachmentPath = service.uploadFile(multipartFile, key);
 
 			final String response = "[" + attachmentPath + "] uploaded successfully.";
+			expenseService.updateFileDetails(key);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} 
 		catch (final AmazonServiceException ex) {
@@ -51,13 +57,21 @@ public class AWSS3Controller{
 
 	@GetMapping(value= "/s3/download")
 	public ResponseEntity<ByteArrayResource> downloadFile(@RequestParam(value= "fileName") final String keyName) {
-		final byte[] data = service.downloadFile(keyName);
+		final byte[] data = service.downloadFile(keyName.trim());
 		final ByteArrayResource resource = new ByteArrayResource(data);
+		
+		String tokens[] = keyName.split("/");
+		String fileName = StringUtils.EMPTY;
+		if (tokens != null && tokens.length > 0) {
+
+			fileName = tokens[tokens.length - 1];
+		}
 		return ResponseEntity
 				.ok()
 				.contentLength(data.length)
 				.header("Content-type", "application/octet-stream")
-				.header("Content-disposition", "attachment; filename=\"" + keyName + "\"")
+				.header("Content-disposition", "attachment; filename=\"" + fileName + "\"")
 				.body(resource);
 	}
+	
 }

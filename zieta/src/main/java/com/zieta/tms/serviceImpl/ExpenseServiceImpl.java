@@ -541,4 +541,37 @@ public class ExpenseServiceImpl implements ExpenseService {
 		return expenseTypeMasterDetails;
 	}
 
+	@Override
+	public boolean updateFileDetails(String key) throws Exception {
+		
+		String tokens[] = key.split("/");
+		Long expenseEntryId = null;
+		String fileName = StringUtils.EMPTY;
+		String filePath = StringUtils.EMPTY;
+		if (tokens != null && tokens.length > 0) {
+
+			fileName = tokens[tokens.length - 1];
+			expenseEntryId = Long.parseLong(tokens[tokens.length - 2]);
+			filePath= key.substring(0,key.lastIndexOf("/")+1);
+		}
+		
+		log.info("fileName: "+fileName);
+		log.info("expenseEntryId: "+expenseEntryId);
+		log.info("filePath: "+expenseEntryId);
+		
+		if(expenseEntryId != null) {
+			ExpenseEntries expenseEntries = expenseEntriesRepository.findById(expenseEntryId).get();
+			expenseEntries.setFileName(fileName);
+			expenseEntries.setFilePath(filePath);
+			expenseEntriesRepository.save(expenseEntries);
+		}else {
+			log.error("Invalid key-path with expense entryId: "+key);
+			throw new Exception ("Invalid key with expense entryId: "+key);
+		}
+		
+		log.info("Expense entry file details updated successfully !! {}",key);
+		
+		return true;
+	}
+
 }

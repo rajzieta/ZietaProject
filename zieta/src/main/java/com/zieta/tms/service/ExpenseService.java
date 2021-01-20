@@ -48,5 +48,7 @@ public interface ExpenseService {
 
 	public List<ExpenseTypeMaster> getAllExpenseMastersByClient(Long clientId);
 	
+	public boolean updateFileDetails(String key) throws Exception;
+	
 	
 }

@@ -117,6 +117,11 @@ public class LeaveController {
 		
 	}
 	
+	@ApiOperation(value = "Deletes entries from leave_type_master based on Id", notes = "Table reference: leave_type_master")
+	@RequestMapping(value = "deleteLeaveTypeById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteLeaveTypeById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		leaveInfoService.deleteLeaveTypeById(id, modifiedBy);
+	}
 	
 	
 	@ApiOperation(value = "List Leaves Info", notes = "Table reference:leave_type_master")

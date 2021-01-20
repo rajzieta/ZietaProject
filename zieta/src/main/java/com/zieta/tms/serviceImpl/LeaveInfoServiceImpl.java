@@ -235,23 +235,46 @@ public List<LeaveInfoDTO> findActiveLeavesByClientIdAndApproverId(Long clientId,
 //long clientId = leaveInfoDTO.getClientId();
 	long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(clientId, 
 			TMSConstants.LEAVE, TMSConstants.LEAVE_SUBMITTED, (short) 0).getId();
-	List<LeaveInfo> levInfo = leaveInfoRepository.findByApproverIdAndStatusIdAndIsDelete(approverId, statusId, notDeleted);
+	System.out.println("...." +statusId);
+	List<LeaveInfo> levInfo = leaveInfoRepository.findByClientIdAndApproverIdAndStatusIdAndIsDelete(clientId, approverId, statusId, notDeleted);
 	for (LeaveInfo leaves : levInfo) {
 		leaveInfoDTO = modelMapper.map(leaves, LeaveInfoDTO.class);
 		leaveInfoDTO.setStatusId(leaves.getStatusId());
 
-//		leaveInfoDTO.setOrgUnitDesc(StringUtils.EMPTY);
-//		if (null != expensess.getOrgUnitId()) {
-//			Optional<OrgInfo> orgInfo = orgInfoRepository.findById(expensess.getOrgUnitId());
-//			if (orgInfo.isPresent()) {
-//				expenseInfoDTO.setOrgUnitDesc(orgInfo.get().getOrgNodeName());
-//
-//			}
-//		}
+		leaveInfoDTO.setLeaveTypeDescription(StringUtils.EMPTY);
+		if (null != leaves.getLeaveType()) {
+			Optional<LeaveTypeMaster> orgInfo = leaveMasterRepository.findById(leaves.getLeaveType());
+			if (orgInfo.isPresent()) {
+				leaveInfoDTO.setLeaveTypeDescription(orgInfo.get().getLeaveType());
+
+			}
+		}
 
 		leaveInfoList.add(leaveInfoDTO);
 	}
 	return leaveInfoList;
 }
+
+
+public void deleteLeaveTypeById(Long id, String modifiedBy) throws Exception {
+	
+	Optional<LeaveTypeMaster> leaveTypeMaster = leaveMasterRepository.findById(id);
+	if (leaveTypeMaster.isPresent()) {
+		LeaveTypeMaster leaveinfoEntity = leaveTypeMaster.get();
+		short delete = 1;
+		leaveinfoEntity.setIsDelete(delete);
+		leaveinfoEntity.setModifiedBy(modifiedBy);
+		leaveMasterRepository.save(leaveinfoEntity);
+
+	}else {
+		log.info("No Leave Information found with the provided ID{} in the DB",id);
+		throw new Exception("No Leave Information found with the provided ID in the DB :"+id);
+	}
+	
+	
+}
+
+
+
 
 }

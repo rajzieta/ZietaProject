@@ -221,8 +221,8 @@ public class SkillsetMasterServiceImpl implements SkillsetMasterService {
 				SkillsetCategoryMasterDTO skillMasterDTO = null;
 				for (SkillsetCategoryMaster skillMaster : skillMasters) {
 					skillMasterDTO = modelMapper.map(skillMaster,SkillsetCategoryMasterDTO.class);
-				//	skillMasterDTO.setClientCode(clientInfoRepository.findById(skillMaster.getClientId()).get().getClientCode());
-				//	skillMasterDTO.setClientDescription(clientInfoRepository.findById(skillMaster.getClientId()).get().getClientName());
+					skillMasterDTO.setClientCode(clientInfoRepository.findById(skillMaster.getClientId()).get().getClientCode());
+					skillMasterDTO.setClientDescription(clientInfoRepository.findById(skillMaster.getClientId()).get().getClientName());
 					//staMasterDTO.setClientStatus(clientInfoRepository.findById(skillMaster.getClientId()).get().getClientStatus());
 
 					skillMasterDTOs.add(skillMasterDTO);

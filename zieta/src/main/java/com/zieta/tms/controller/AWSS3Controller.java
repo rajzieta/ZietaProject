@@ -28,7 +28,7 @@ public class AWSS3Controller{
 	private AWSS3Service service;
 
 	@PostMapping(value= "/s3/upload")
-	public ResponseEntity<String> uploadFile(@RequestPart(value= "multipartFile") MultipartFile multipartFile, @RequestParam("key-data")  String key) {
+	public ResponseEntity<String> uploadFile(@RequestPart(value= "multipartFile") MultipartFile multipartFile, @RequestParam("multipartFile-data")  String key) {
 	
 		try {
 			String attachmentPath = service.uploadFile(multipartFile, key);

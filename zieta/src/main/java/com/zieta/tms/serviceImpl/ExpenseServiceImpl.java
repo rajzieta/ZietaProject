@@ -570,8 +570,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 		
 		log.info("fileName: "+fileName);
 		log.info("expenseEntryId: "+expenseEntryId);
-		log.info("filePath: "+expenseEntryId);
-		
+		log.info("filePath: "+filePath);
 		if(expenseEntryId != null) {
 			ExpenseEntries expenseEntries = expenseEntriesRepository.findById(expenseEntryId).get();
 			expenseEntries.setFileName(fileName);
@@ -586,5 +585,5 @@ public class ExpenseServiceImpl implements ExpenseService {
 		
 		return true;
 	}
-
+	
 }

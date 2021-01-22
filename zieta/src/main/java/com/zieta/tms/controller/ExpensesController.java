@@ -1,5 +1,6 @@
 package com.zieta.tms.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.lang.*;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -63,9 +65,11 @@ public class ExpensesController {
 	@ApiOperation(value = "List expenses based on the  clientId and userId", notes = "Table reference:"
 			+ "expense_info")
 	public ResponseEntity<List<ExpenseInfoDTO>> getAllExpensesHistoryByClientUser(
-			@RequestParam(required = true) Long clientId, @RequestParam(required = true) Long userId) {
+			@RequestParam(required = true) Long clientId, @RequestParam(required = true) Long userId,
+			@RequestParam(required = true)  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+			@RequestParam(required = true)  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
 		try {
-			List<ExpenseInfoDTO> expensesList = expenseService.findByClientIdAndUserId(clientId, userId);
+			List<ExpenseInfoDTO> expensesList = expenseService.findByClientIdAndUserId(clientId, userId, startDate, endDate);
 			return new ResponseEntity<List<ExpenseInfoDTO>>(expensesList, HttpStatus.OK);
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<List<ExpenseInfoDTO>>(HttpStatus.NOT_FOUND);

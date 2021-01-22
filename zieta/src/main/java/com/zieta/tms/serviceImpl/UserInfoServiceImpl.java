@@ -125,12 +125,19 @@ public class UserInfoServiceImpl implements UserInfoService {
 	@Override
 	public UserDetailsResponse getUserData(String emailId) {
 		UserInfo userInfo = userInfoRepositoryRepository.findByEmail(emailId);
+		String reportingManager = StringUtils.EMPTY;
+		
+		if(userInfo.getReportingMgr() != null) {
+			UserInfo rmInfo = userInfoRepositoryRepository.findById(userInfo.getReportingMgr()).get();
+			reportingManager = TSMUtil.getFullName(rmInfo);
+		}
 		
 		 List<Long> accessControlConfigList = accessControlConfigRepository.
 				 findByClientIdANDAccessTypeId(userInfo.getClientId(), userInfo.getAccessTypeId());
 		 List<ScreensMaster> screensListByClientId = screensMasterService.getScreensByIds(accessControlConfigList);
 		 List<String> accessTypes = accessTypeMasterService.findByClientIdANDAccessTypeId(userInfo.getClientId(), userInfo.getAccessTypeId());
 		 UserDetailsResponse userDetails = fillUserData(userInfo);
+		 userDetails.setReportingManagerName(reportingManager);
 		 userDetails.setClientCode(clientInfoRepo.findById(userInfo.getClientId()).get().getClientCode());
 		 userDetails.setClientDescription(clientInfoRepo.findById(userInfo.getClientId()).get().getClientName());
 		 if(userInfo.getOrgNode() !=null) {

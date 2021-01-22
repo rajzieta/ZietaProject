@@ -1,5 +1,6 @@
 package com.zieta.tms.service;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -19,7 +20,7 @@ public interface ExpenseService {
 
 	public List<ExpenseEntriesDTO> getAllExpenseEntries();
 
-	public List<ExpenseInfoDTO> findByClientIdAndUserId(Long clientId, Long userId);
+	public List<ExpenseInfoDTO> findByClientIdAndUserId(Long clientId, Long userId, Date startDate, Date endDate);
 
 	public List<ExpenseEntriesDTO> findByExpId(Long expId);
 

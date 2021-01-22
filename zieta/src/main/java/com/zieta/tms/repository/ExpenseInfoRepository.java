@@ -1,5 +1,6 @@
 package com.zieta.tms.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,8 +24,8 @@ public interface ExpenseInfoRepository extends JpaRepository<ExpenseInfo, Long>{
 	List<ExpenseInfo> findByClientIdAndUserIdAndStatusIdInAndIsDelete(Long clientId, Long userId,
 			List<StatusMaster> statusIds, short notDeleted);
 	
-	List<ExpenseInfo> findByClientIdAndUserIdAndIsDeleteAndStatusIdNotIn(Long clientId, Long userId,
-			short notDeleted, List<Long> statusIds);
+	List<ExpenseInfo> findByClientIdAndUserIdAndIsDeleteAndStatusIdNotInAndExpStartDateBetween(Long clientId, Long userId,
+			short notDeleted, List<Long> statusIds,Date startDate, Date endDate);
 	
 	List<ExpenseInfo> findByClientIdAndUserIdAndStatusId(Long clientId, Long userId, Long statuses);
 

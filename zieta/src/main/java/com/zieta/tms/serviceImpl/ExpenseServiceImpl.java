@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zieta.tms.common.TMSConstants;
+import com.zieta.tms.dto.DateRange;
 import com.zieta.tms.dto.ExpenseEntriesDTO;
 import com.zieta.tms.dto.ExpenseInfoDTO;
 import com.zieta.tms.dto.ExpenseMasterDTO;
@@ -41,6 +42,7 @@ import com.zieta.tms.repository.ProjectInfoRepository;
 import com.zieta.tms.repository.StatusMasterRepository;
 import com.zieta.tms.repository.UserInfoRepository;
 import com.zieta.tms.service.ExpenseService;
+import com.zieta.tms.util.TSMUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -130,16 +132,17 @@ public class ExpenseServiceImpl implements ExpenseService {
 	}
 
 	@Override
-	public List<ExpenseInfoDTO> findByClientIdAndUserId(Long clientId, Long userId) {
+	public List<ExpenseInfoDTO> findByClientIdAndUserId(Long clientId, Long userId, Date startDate, Date endDate) {
 
 		short notDeleted = 0;
+		DateRange dateRange = TSMUtil.getFilledDateRange(startDate, endDate, true);
 		StatusMaster statusDetails = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(clientId,
 				TMSConstants.EXPENSE, TMSConstants.EXPENSE_DRAFT,notDeleted);
 		List<Long> filterOnStatusId = new ArrayList<>();
 		filterOnStatusId.add(statusDetails.getId());
 		List<ExpenseInfoDTO> expenseInfoList = new ArrayList<>();
-		List<ExpenseInfo> expenseInfos = expenseInfoRepository.findByClientIdAndUserIdAndIsDeleteAndStatusIdNotIn(clientId, userId,
-				notDeleted,filterOnStatusId);
+		List<ExpenseInfo> expenseInfos = expenseInfoRepository.findByClientIdAndUserIdAndIsDeleteAndStatusIdNotInAndExpStartDateBetween(clientId, userId,
+				notDeleted,filterOnStatusId, dateRange.getStartDate(), dateRange.getEndDate());
 		ExpenseInfoDTO expenseInfoDTO = null;
 
 //			Long statusIds =  statusMasterRepository

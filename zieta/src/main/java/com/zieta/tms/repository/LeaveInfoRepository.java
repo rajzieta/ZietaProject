@@ -19,9 +19,9 @@ public interface LeaveInfoRepository extends JpaRepository<LeaveInfo, Long> {
 
 	public List<LeaveInfo> findByClientIdAndUserIdAndIsDelete(Long clientId, Long userId, short notDeleted);
 
-	public List<LeaveInfo> findByUserIdAndIsDeleteAndLeaveStartDateBetween(Long userId,short notDeleted, Date startDate, Date endDate);
+	public List<LeaveInfo> findByClientIdAndIsDeleteAndLeaveStartDateBetween(Long clientId,short notDeleted, Date startDate, Date endDate);
 	
-	public Page<LeaveInfo> findByUserIdAndIsDeleteAndLeaveStartDateBetween(Long userId,short notDeleted, Date startDate, Date endDate,Pageable paging);
+	public Page<LeaveInfo> findByClientIdAndIsDeleteAndLeaveStartDateBetween(Long clientId,short notDeleted, Date startDate, Date endDate,Pageable paging);
 
 	public List<LeaveInfo> findByClientIdAndApproverIdAndStatusIdAndIsDelete(Long clientId, Long approverId,
 			long statusId, short notDeleted);

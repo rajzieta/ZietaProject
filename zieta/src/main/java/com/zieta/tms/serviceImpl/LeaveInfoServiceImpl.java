@@ -38,243 +38,209 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class LeaveInfoServiceImpl implements LeaveInfoService {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(LeaveInfoServiceImpl.class);
-	
-	
+
 	@Autowired
 	ModelMapper modelMapper;
-	
+
 	@Autowired
 	LeaveInfoRepository leaveInfoRepository;
-	
+
 	@Autowired
 	LeaveMasterRepository leaveMasterRepository;
-	
-	
+
 	@Autowired
 	StatusMasterRepository statusMasterRepository;
-	
+
 	@Override
-	public void addLeaveInfo(LeaveInfo leaveInfo){
-		
+	public void addLeaveInfo(LeaveInfo leaveInfo) {
+
 		try {
-		leaveInfoRepository.save(leaveInfo);
+			leaveInfoRepository.save(leaveInfo);
+		} catch (Exception ex) {
+			log.error("Exception occured during the save Leave information", ex);
 		}
-		catch(Exception ex) {
-			log.error("Exception occured during the save Leave information",ex);
-			}
-		}
-	
+	}
+
 	@Override
-public void editleaveInfoById(LeaveInfoDTO leaveinfoDTO) throws Exception {
-		
+	public void editleaveInfoById(LeaveInfoDTO leaveinfoDTO) throws Exception {
+
 		Optional<LeaveInfo> leaveinfoEntity = leaveInfoRepository.findById(leaveinfoDTO.getId());
-		if(leaveinfoEntity.isPresent()) {
+		if (leaveinfoEntity.isPresent()) {
 			LeaveInfo leaveinfo = modelMapper.map(leaveinfoDTO, LeaveInfo.class);
 			leaveInfoRepository.save(leaveinfo);
-			
-		}else {
-			throw new Exception("Leave Information not found with the provided ID : "+leaveinfoDTO.getId());
+
+		} else {
+			throw new Exception("Leave Information not found with the provided ID : " + leaveinfoDTO.getId());
 		}
-		
-		
+
 	}
-	
-	
+
 	@Override
 	public List<LeaveInfoDTO> getAllLeaveInfo() {
 		short notDeleted = 0;
 		List<LeaveInfo> leaveInfos = leaveInfoRepository.findByIsDelete(notDeleted);
-		List<LeaveInfoDTO>  leaveInfoList = new ArrayList<>();
-		
+		List<LeaveInfoDTO> leaveInfoList = new ArrayList<>();
+
 		for (LeaveInfo leaveInfo : leaveInfos) {
-			LeaveInfoDTO leaveInformationModel = modelMapper.map(
-					leaveInfo, LeaveInfoDTO.class);
-			
+			LeaveInfoDTO leaveInformationModel = modelMapper.map(leaveInfo, LeaveInfoDTO.class);
+
 			leaveInfoList.add(leaveInformationModel);
-			
+
 		}
 		return leaveInfoList;
 	}
 
-	/////////////////////
 
+	@Override
+	public void addLeaveTypeMaster(@Valid LeaveTypeMaster leavemaster) {
 
-@Override
-public void addLeaveTypeMaster(@Valid LeaveTypeMaster leavemaster) {
-	
-	try {
-		leaveMasterRepository.save(leavemaster);
-	}
-	catch(Exception ex) {
-		log.error("Exception occured during the save Leave information",ex);
+		try {
+			leaveMasterRepository.save(leavemaster);
+		} catch (Exception ex) {
+			log.error("Exception occured during the save Leave information", ex);
 		}
 	}
 
-@Override
-public void editLeaveMasterById(@Valid LeaveTypeMasterDTO leavemasterDTO) throws Exception {
-	
-	Optional<LeaveTypeMaster> leavemasterEntity = leaveMasterRepository.findById(leavemasterDTO.getId());
-	if(leavemasterEntity.isPresent()) {
-		LeaveTypeMaster leavemaster = modelMapper.map(leavemasterDTO, LeaveTypeMaster.class);
-		leaveMasterRepository.save(leavemaster);
-		
-	}else {
-		throw new Exception("Leave Information not found with the provided ID : "+leavemasterDTO.getId());
+	@Override
+	public void editLeaveMasterById(@Valid LeaveTypeMasterDTO leavemasterDTO) throws Exception {
+
+		Optional<LeaveTypeMaster> leavemasterEntity = leaveMasterRepository.findById(leavemasterDTO.getId());
+		if (leavemasterEntity.isPresent()) {
+			LeaveTypeMaster leavemaster = modelMapper.map(leavemasterDTO, LeaveTypeMaster.class);
+			leaveMasterRepository.save(leavemaster);
+
+		} else {
+			throw new Exception("Leave Information not found with the provided ID : " + leavemasterDTO.getId());
+		}
+
 	}
-	
-	
-}
 
-@Override
-public List<LeaveTypeMasterDTO> getAllLeaveMaster() {
-	short notDeleted = 0;
-	List<LeaveTypeMaster> leaveInfoList = leaveMasterRepository.findByIsDelete(notDeleted);
-	List<LeaveTypeMasterDTO>  leaveMasterInfoList = new ArrayList<>();
-	
-	for (LeaveTypeMaster leaveMasterInfo : leaveInfoList) {
-		LeaveTypeMasterDTO leaveInformationModel = modelMapper.map(
-				leaveMasterInfo, LeaveTypeMasterDTO.class);
-		
-		leaveMasterInfoList.add(leaveInformationModel);
-		
+	@Override
+	public List<LeaveTypeMasterDTO> getAllLeaveMaster() {
+		short notDeleted = 0;
+		List<LeaveTypeMaster> leaveInfoList = leaveMasterRepository.findByIsDelete(notDeleted);
+		List<LeaveTypeMasterDTO> leaveMasterInfoList = new ArrayList<>();
+
+		for (LeaveTypeMaster leaveMasterInfo : leaveInfoList) {
+			LeaveTypeMasterDTO leaveInformationModel = modelMapper.map(leaveMasterInfo, LeaveTypeMasterDTO.class);
+
+			leaveMasterInfoList.add(leaveInformationModel);
+
+		}
+		return leaveMasterInfoList;
 	}
-	return leaveMasterInfoList;
-}
-	
 
-@Override
-public List<LeaveTypeMasterDTO> getAllLeaveTypesByClient(Long clientId) {
-	short notDeleted = 0;
-	List<LeaveTypeMaster> orgnodesByClientList = leaveMasterRepository.findByClientIdAndIsDelete(clientId, notDeleted);
-	List<LeaveTypeMasterDTO> orgnodesByClientResponseList = new ArrayList<>();
-	LeaveTypeMasterDTO orgnodesByClientResponse = null;
-	for (LeaveTypeMaster orgnodesByClient : orgnodesByClientList) {
-		orgnodesByClientResponse = modelMapper.map(orgnodesByClient, 
-				LeaveTypeMasterDTO.class);
-		//orgnodesByClientResponse.setOrgUnitTypeDescription(orgunitTypeRepository.findById(orgnodesByClient.getOrgType()).get().getTypeName());
-		//orgnodesByClientResponse.setClientCode(clientInfoRepository.findById(orgnodesByClient.getClientId()).get().getClientCode());
-		//orgnodesByClientResponse.setClientDescription(clientInfoRepository.findById(orgnodesByClient.getClientId()).get().getClientName());
-		
-//		orgnodesByClientResponse.setOrgManagerName(StringUtils.EMPTY);
-//		if(null != orgnodesByClient.getOrgManager()) {
-//			Optional <UserInfo> userInfo = userInfoRepository.findById(orgnodesByClient.getOrgManager());
-//			if(userInfo.isPresent()) {
-//				String userName = TSMUtil.getFullName(userInfo.get());
-//				orgnodesByClientResponse.setOrgManagerName(userName);
-//			}
-//		}
-		
-		orgnodesByClientResponseList.add(orgnodesByClientResponse);
+	@Override
+	public List<LeaveTypeMasterDTO> getAllLeaveTypesByClient(Long clientId) {
+		short notDeleted = 0;
+		List<LeaveTypeMaster> orgnodesByClientList = leaveMasterRepository.findByClientIdAndIsDelete(clientId,
+				notDeleted);
+		List<LeaveTypeMasterDTO> orgnodesByClientResponseList = new ArrayList<>();
+		LeaveTypeMasterDTO orgnodesByClientResponse = null;
+		for (LeaveTypeMaster orgnodesByClient : orgnodesByClientList) {
+			orgnodesByClientResponse = modelMapper.map(orgnodesByClient, LeaveTypeMasterDTO.class);
+
+			orgnodesByClientResponseList.add(orgnodesByClientResponse);
+		}
+		return orgnodesByClientResponseList;
 	}
-	return orgnodesByClientResponseList;
-}
 
+	@Override
+	public List<LeaveInfoDTO> getAllLeavesByClient(Long clientId) {
+		short notDeleted = 0;
+		List<LeaveInfo> orgnodesByClientList = leaveInfoRepository.findByClientIdAndIsDelete(clientId, notDeleted);
+		List<LeaveInfoDTO> orgnodesByClientResponseList = new ArrayList<>();
+		LeaveInfoDTO orgnodesByClientResponse = null;
+		for (LeaveInfo orgnodesByClient : orgnodesByClientList) {
+			orgnodesByClientResponse = modelMapper.map(orgnodesByClient, LeaveInfoDTO.class);
 
-
-@Override
-public List<LeaveInfoDTO> getAllLeavesByClient(Long clientId) {
-	short notDeleted = 0;
-	List<LeaveInfo> orgnodesByClientList = leaveInfoRepository.findByClientIdAndIsDelete(clientId, notDeleted);
-	List<LeaveInfoDTO> orgnodesByClientResponseList = new ArrayList<>();
-	LeaveInfoDTO orgnodesByClientResponse = null;
-	for (LeaveInfo orgnodesByClient : orgnodesByClientList) {
-		orgnodesByClientResponse = modelMapper.map(orgnodesByClient, 
-				LeaveInfoDTO.class);
-		
-		orgnodesByClientResponseList.add(orgnodesByClientResponse);
+			orgnodesByClientResponseList.add(orgnodesByClientResponse);
+		}
+		return orgnodesByClientResponseList;
 	}
-	return orgnodesByClientResponseList;
-}
 
-@Override
-public List<LeaveInfoDTO> getAllLeavesByClientUser(Long clientId, Long userId) {
-	short notDeleted = 0;
-	List<LeaveInfo> orgnodesByClientList = leaveInfoRepository.findByClientIdAndUserIdAndIsDelete(clientId, userId, notDeleted);
-	List<LeaveInfoDTO> orgnodesByClientResponseList = new ArrayList<>();
-	LeaveInfoDTO orgnodesByClientResponse = null;
-	for (LeaveInfo orgnodesByClient : orgnodesByClientList) {
-		orgnodesByClientResponse = modelMapper.map(orgnodesByClient, 
-				LeaveInfoDTO.class);
-		orgnodesByClientResponse.setLeaveTypeDescription(leaveMasterRepository.findById(orgnodesByClient.getLeaveType()).get().getLeaveType());
-		
-		
-		orgnodesByClientResponseList.add(orgnodesByClientResponse);
+	@Override
+	public List<LeaveInfoDTO> getAllLeavesByClientUser(Long clientId, Long userId) {
+		short notDeleted = 0;
+		List<LeaveInfo> orgnodesByClientList = leaveInfoRepository.findByClientIdAndUserIdAndIsDelete(clientId, userId,
+				notDeleted);
+		List<LeaveInfoDTO> orgnodesByClientResponseList = new ArrayList<>();
+		LeaveInfoDTO orgnodesByClientResponse = null;
+		for (LeaveInfo orgnodesByClient : orgnodesByClientList) {
+			orgnodesByClientResponse = modelMapper.map(orgnodesByClient, LeaveInfoDTO.class);
+			orgnodesByClientResponse.setLeaveTypeDescription(
+					leaveMasterRepository.findById(orgnodesByClient.getLeaveType()).get().getLeaveType());
+
+			orgnodesByClientResponseList.add(orgnodesByClientResponse);
+		}
+		return orgnodesByClientResponseList;
 	}
-	return orgnodesByClientResponseList;
-}
 
+	public void deleteLeaveInfoById(Long id, String modifiedBy) throws Exception {
 
+		Optional<LeaveInfo> leaveinfo = leaveInfoRepository.findById(id);
+		if (leaveinfo.isPresent()) {
+			LeaveInfo leaveinfoEntity = leaveinfo.get();
+			short delete = 1;
+			leaveinfoEntity.setIsDelete(delete);
+			leaveinfoEntity.setModifiedBy(modifiedBy);
+			leaveInfoRepository.save(leaveinfoEntity);
 
-public void deleteLeaveInfoById(Long id, String modifiedBy) throws Exception {
-	
-	Optional<LeaveInfo> leaveinfo = leaveInfoRepository.findById(id);
-	if (leaveinfo.isPresent()) {
-		LeaveInfo leaveinfoEntity = leaveinfo.get();
-		short delete = 1;
-		leaveinfoEntity.setIsDelete(delete);
-		leaveinfoEntity.setModifiedBy(modifiedBy);
-		leaveInfoRepository.save(leaveinfoEntity);
+		} else {
+			log.info("No Leave Information found with the provided ID{} in the DB", id);
+			throw new Exception("No Leave Information found with the provided ID in the DB :" + id);
+		}
 
-	}else {
-		log.info("No Leave Information found with the provided ID{} in the DB",id);
-		throw new Exception("No Leave Information found with the provided ID in the DB :"+id);
 	}
-	
-	
-}
 
-@Override
-@Transactional
-public List<LeaveInfoDTO> findActiveLeavesByClientIdAndApproverId(Long clientId, Long approverId) {
+	@Override
+	@Transactional
+	public List<LeaveInfoDTO> findActiveLeavesByClientIdAndApproverId(Long clientId, Long approverId) {
 
-	short notDeleted = 0;
-	List<LeaveInfoDTO> leaveInfoList = new ArrayList<>();
-	LeaveInfoDTO leaveInfoDTO = null;
-//long clientId = leaveInfoDTO.getClientId();
-	long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(clientId, 
-			TMSConstants.LEAVE, TMSConstants.LEAVE_SUBMITTED, (short) 0).getId();
-	System.out.println("...." +statusId);
-	List<LeaveInfo> levInfo = leaveInfoRepository.findByClientIdAndApproverIdAndStatusIdAndIsDelete(clientId, approverId, statusId, notDeleted);
-	for (LeaveInfo leaves : levInfo) {
-		leaveInfoDTO = modelMapper.map(leaves, LeaveInfoDTO.class);
-		leaveInfoDTO.setStatusId(leaves.getStatusId());
+		short notDeleted = 0;
+		List<LeaveInfoDTO> leaveInfoList = new ArrayList<>();
+		LeaveInfoDTO leaveInfoDTO = null;
+		// long clientId = leaveInfoDTO.getClientId();
+		long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(clientId,
+				TMSConstants.LEAVE, TMSConstants.LEAVE_SUBMITTED, (short) 0).getId();
+		System.out.println("...." + statusId);
+		List<LeaveInfo> levInfo = leaveInfoRepository.findByClientIdAndApproverIdAndStatusIdAndIsDelete(clientId,
+				approverId, statusId, notDeleted);
+		for (LeaveInfo leaves : levInfo) {
+			leaveInfoDTO = modelMapper.map(leaves, LeaveInfoDTO.class);
+			leaveInfoDTO.setStatusId(leaves.getStatusId());
 
-		leaveInfoDTO.setLeaveTypeDescription(StringUtils.EMPTY);
-		if (null != leaves.getLeaveType()) {
-			Optional<LeaveTypeMaster> orgInfo = leaveMasterRepository.findById(leaves.getLeaveType());
-			if (orgInfo.isPresent()) {
-				leaveInfoDTO.setLeaveTypeDescription(orgInfo.get().getLeaveType());
+			leaveInfoDTO.setLeaveTypeDescription(StringUtils.EMPTY);
+			if (null != leaves.getLeaveType()) {
+				Optional<LeaveTypeMaster> orgInfo = leaveMasterRepository.findById(leaves.getLeaveType());
+				if (orgInfo.isPresent()) {
+					leaveInfoDTO.setLeaveTypeDescription(orgInfo.get().getLeaveType());
 
+				}
 			}
+
+			leaveInfoList.add(leaveInfoDTO);
+		}
+		return leaveInfoList;
+	}
+
+	public void deleteLeaveTypeById(Long id, String modifiedBy) throws Exception {
+
+		Optional<LeaveTypeMaster> leaveTypeMaster = leaveMasterRepository.findById(id);
+		if (leaveTypeMaster.isPresent()) {
+			LeaveTypeMaster leaveinfoEntity = leaveTypeMaster.get();
+			short delete = 1;
+			leaveinfoEntity.setIsDelete(delete);
+			leaveinfoEntity.setModifiedBy(modifiedBy);
+			leaveMasterRepository.save(leaveinfoEntity);
+
+		} else {
+			log.info("No Leave Information found with the provided ID{} in the DB", id);
+			throw new Exception("No Leave Information found with the provided ID in the DB :" + id);
 		}
 
-		leaveInfoList.add(leaveInfoDTO);
 	}
-	return leaveInfoList;
-}
-
-
-public void deleteLeaveTypeById(Long id, String modifiedBy) throws Exception {
-	
-	Optional<LeaveTypeMaster> leaveTypeMaster = leaveMasterRepository.findById(id);
-	if (leaveTypeMaster.isPresent()) {
-		LeaveTypeMaster leaveinfoEntity = leaveTypeMaster.get();
-		short delete = 1;
-		leaveinfoEntity.setIsDelete(delete);
-		leaveinfoEntity.setModifiedBy(modifiedBy);
-		leaveMasterRepository.save(leaveinfoEntity);
-
-	}else {
-		log.info("No Leave Information found with the provided ID{} in the DB",id);
-		throw new Exception("No Leave Information found with the provided ID in the DB :"+id);
-	}
-	
-	
-}
-
-
-
 
 }

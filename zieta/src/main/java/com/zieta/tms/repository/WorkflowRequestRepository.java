@@ -17,9 +17,9 @@ public interface WorkflowRequestRepository extends JpaRepository<WorkflowRequest
 	public List<WorkflowRequest> findByApproverIdAndActionDateBetweenAndActionTypeIn(long approverId, 
 									Date startActiondate, Date endActionDate, Collection<Long> actionType);
 	
-	/*@Query("select wfr from WorkflowRequest wfr where wfr.approverId =?1 and CAST(wfr.actionDate as DATE) between ?2 and ?3 and wfr.actionType not in ?4")
-	public List<WorkflowRequest> findByApproverIdAndActionDateGreaterThanEqualAndActionDateLessThanEqualAndActionTypeIn(long approverId, 
-			Date startActiondate, Date endActionDate, Collection<Long> actionType);*/
+	@Query("select wfr from WorkflowRequest wfr, TSInfo ts where ts.id= wfr.tsId and wfr.approverId =?1 and ts.tsDate between ?2 and ?3 and wfr.actionType in ?4")
+	public List<WorkflowRequest> findByApproverIdByTsDate(long approverId, 
+			Date startActiondate, Date endActionDate, Collection<Long> actionType);
 	
 	public List<WorkflowRequest> findByApproverId(long approverId);
 	

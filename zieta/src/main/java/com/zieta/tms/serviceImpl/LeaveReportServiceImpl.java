@@ -112,6 +112,8 @@ public class LeaveReportServiceImpl implements LeaveReportService {
 				leaveReportDTO.setApproverComments(leaveInfo.getApproverComments());
 				String status = statusMasterRepository.findById(leaveInfo.getStatusId()).get().getStatusDesc();
 				leaveReportDTO.setStatus(status);
+				leaveReportDTO.setStatusId(leaveInfo.getStatusId().toString());
+				leaveReportDTO.setLeaveId(leaveInfo.getId().toString());
 				leaveReportDTOList.add(leaveReportDTO);
 			}catch(Exception e) {
 				log.error("Exception occured while tranforming the leave data",e);

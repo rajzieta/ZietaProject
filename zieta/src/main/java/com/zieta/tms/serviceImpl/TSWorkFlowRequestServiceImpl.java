@@ -503,7 +503,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			endRequestDate =  TSMUtil.getFormattedDate(endRequestDate);
 			Calendar c = Calendar.getInstance();
 			c.setTime(endRequestDate);
-			c.add(Calendar.DATE, 1);
+//			c.add(Calendar.DATE, 1);
 			endRequestDate = c.getTime();
 		}
 		
@@ -512,7 +512,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REJECT));
 		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REVISE));
 		
-		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndRequestDateBetweenAndActionTypeIn(
+		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdByTsDate(
 				approverId, startRequestdate, endRequestDate,actionTypes);
 		HashMap<Long,WorkflowRequest > tempWFRMap = new HashMap<>();
 		for (WorkflowRequest workflowRequest : workFlowRequestList) {

@@ -35,18 +35,18 @@ public class LeaveReportHelper {
 		font.setBold(true);
 		font.setFontHeightInPoints((short) 13);
 		style.setFont(font);
-
-		createCell(row, 0, "CLIENT NAME", style);
-		createCell(row, 1, "USER NAME", style);
-		createCell(row, 2, "LEAVE DESC", style);
-		createCell(row, 3, "LEAVE TYPE", style);
-		createCell(row, 4, "LEAVE START DATE", style);
-		createCell(row, 5, "START SESSION", style);
-		createCell(row, 6, "LEAVE END DATE", style);
-		createCell(row, 7, "END SESSION", style);
-		createCell(row, 8, "APPROVER NAME", style);
-		createCell(row, 9, "APPROVER COMMENTS", style);
-		createCell(row, 10, "STATUS", style);
+		createCell(row, 0, "LEAVE ID", style);
+		createCell(row, 1, "CLIENT NAME", style);
+		createCell(row, 2, "USER NAME", style);
+		createCell(row, 3, "LEAVE DESC", style);
+		createCell(row, 4, "LEAVE TYPE", style);
+		createCell(row, 5, "LEAVE START DATE", style);
+		createCell(row, 6, "START SESSION", style);
+		createCell(row, 7, "LEAVE END DATE", style);
+		createCell(row, 8, "END SESSION", style);
+		createCell(row, 9, "APPROVER NAME", style);
+		createCell(row, 10, "APPROVER COMMENTS", style);
+		createCell(row, 11, "STATUS", style);
 
 	}
 
@@ -73,7 +73,8 @@ public class LeaveReportHelper {
 		for (LeaveReportDTO leaveReport : leaveInfoList) {
 			Row row = sheet.createRow(rowCount++);
 			int columnCount = 0;
-
+			
+			createCell(row, columnCount++, leaveReport.getLeaveId(), style);
 			createCell(row, columnCount++, leaveReport.getClientName(), style);
 			createCell(row, columnCount++, leaveReport.getUserName(), style);
 			createCell(row, columnCount++, leaveReport.getLeaveDesc(), style);

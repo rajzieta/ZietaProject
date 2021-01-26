@@ -8,8 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LeaveReportDTO {
-		private String leaveId;
-		private String statusId;
+	
 	    private String clientName;
 	    private String userName;
 	    private String leaveDesc;

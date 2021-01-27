@@ -298,7 +298,7 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 		 float totalRejectAmount = 0.0f;
 		 for (ExpenseEntries expenseEntries : rejectedExpenseEntriesList) {
 			 
-			 totalRejectAmount += expenseEntries.getExpAmount();
+			 totalRejectAmount += expenseEntries.getExpAmtInr();
 		}
 		return totalRejectAmount;
 	}

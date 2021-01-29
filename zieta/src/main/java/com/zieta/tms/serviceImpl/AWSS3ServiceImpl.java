@@ -41,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 		// but not consume the main thread.
 		@Async
 		public String uploadFile(final MultipartFile multipartFile, String objectId) {
-			log.info("File upload in progress.");
+			log.info("File upload in progress to the bucket ...{}",bucketName);
 			File file = null;
 			String attachmentPath = StringUtils.EMPTY;
 			try {

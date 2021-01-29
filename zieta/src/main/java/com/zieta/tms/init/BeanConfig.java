@@ -89,7 +89,6 @@ public class BeanConfig {
 //	}
 
 	@Bean
-	@Profile("!dev")
 	public AmazonS3Client amazonS3Client() {
 		AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withForceGlobalBucketAccessEnabled(true)
 				.withRegion(Strings.isNullOrEmpty("ap-south-1") ? Regions.DEFAULT_REGION : Regions.fromName("ap-south-1")).build();

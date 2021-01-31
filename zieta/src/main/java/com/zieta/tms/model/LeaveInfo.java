@@ -37,7 +37,7 @@ public class LeaveInfo extends BaseEntity implements Serializable {
 	    private Long leaveType;
 	    
 	    @Column(name = "leave_start_Date")
-	    private java.sql.Date  leaveStartDate;	
+	    private Date leaveStartDate;	
 	    
 	    @Column(name="start_session")
 	    private Long startSession;

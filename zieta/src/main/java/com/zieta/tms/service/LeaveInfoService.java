@@ -1,10 +1,10 @@
 package com.zieta.tms.service;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 
-import com.zieta.tms.dto.CustInfoDTO;
 import com.zieta.tms.dto.LeaveInfoDTO;
 import com.zieta.tms.dto.LeaveTypeMasterDTO;
 import com.zieta.tms.model.LeaveInfo;
@@ -35,6 +35,8 @@ public interface LeaveInfoService {
 	public List<LeaveInfoDTO> findActiveLeavesByClientIdAndApproverId(Long clientId, Long approverId);
 
 	public void deleteLeaveTypeById(Long id, String modifiedBy) throws Exception;
+	
+	public List<LeaveInfoDTO> getLeaveHistoryByApprover(Long clientId, Long approverId, String startDate, String endDate);
 
 
 

@@ -1,14 +1,11 @@
 package com.zieta.tms.repository;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.zieta.tms.dto.ExpenseEntriesDTO;
-import com.zieta.tms.dto.ExpenseInfoDTO;
-import com.zieta.tms.dto.LeaveInfoDTO;
 import com.zieta.tms.model.StatusMaster;
 
 
@@ -29,9 +26,10 @@ public interface StatusMasterRepository extends JpaRepository<StatusMaster, Long
 
 	List<Long> findByClientIdAndStatusTypeAndStatusCodeNotAndIsDelete(Long clientId, String statusType,
 			String statusCode, short notDeleted);
-
-//	StatusMaster findByApproverIdAndStatusTypeAndStatusCodeAndIsDelete(Long approverId, String statusType,
-//			String statusCode, short notDeleted);
+	
+	
+	@Query("select id from StatusMaster where clientId=?1 and statusCode in ?2 and statusType=?3 ")
+	List<Long> getStatusIdByClientByCodeByType(Long clientId, List<String> statusCode, String statustype);
 
 
 

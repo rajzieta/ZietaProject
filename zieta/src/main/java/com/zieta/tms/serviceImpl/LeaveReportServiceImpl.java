@@ -51,15 +51,14 @@ public class LeaveReportServiceImpl implements LeaveReportService {
 	
 
 	@Override
-	public List<LeaveInfo> getLeaveData(Long clientId, Date startDate, Date endDate) {
+	public List<LeaveInfo> getLeaveData(Long clientId, String startDate, String endDate) {
 
 		List<LeaveInfo> leaveInfo = null;
 		try {
-			DateRange dateRange = TSMUtil.getFilledDateRange(startDate, endDate, true);
 			short notDeleted = 0;
 
 			leaveInfo = leaveInfoRepository.findByClientIdAndIsDeleteAndLeaveStartDateBetween(clientId, notDeleted,
-					dateRange.getStartDate(), dateRange.getEndDate());
+					startDate, endDate);
 		} catch (Exception e) {
 
 			log.info("Exception occured while fetching leaveInfo", e);
@@ -69,8 +68,8 @@ public class LeaveReportServiceImpl implements LeaveReportService {
 	}
 	
 	@Override
-	public ByteArrayInputStream  getDownloadableLeaveReport(HttpServletResponse response, Long clientId, Date startDate,
-			Date endDate) {
+	public ByteArrayInputStream  getDownloadableLeaveReport(HttpServletResponse response, Long clientId, String startDate,
+			String endDate) {
 		
 		ByteArrayInputStream reportStream = null;
 
@@ -123,17 +122,16 @@ public class LeaveReportServiceImpl implements LeaveReportService {
 	}
 
 	@Override
-	public List<LeaveReportDTO> getLeaveData(Long clientId, Date startDate, Date endDate, Integer pageNo, Integer pageSize) {
+	public List<LeaveReportDTO> getLeaveData(Long clientId, String startDate, String endDate, Integer pageNo, Integer pageSize) {
 
 		Page<LeaveInfo> leaveInfo = null;
 		List<LeaveInfo> leaveInfoList = null;
 		try {
-			DateRange dateRange = TSMUtil.getFilledDateRange(startDate, endDate, true);
 			short notDeleted = 0;
 			Pageable paging = PageRequest.of(pageNo, pageSize);
 
 			leaveInfo = leaveInfoRepository.findByClientIdAndIsDeleteAndLeaveStartDateBetween(clientId, notDeleted,
-					dateRange.getStartDate(), dateRange.getEndDate(), paging);
+					startDate, endDate, paging);
 			
 			leaveInfoList = leaveInfo.getContent();
 			

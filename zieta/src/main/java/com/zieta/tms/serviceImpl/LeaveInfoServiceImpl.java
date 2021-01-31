@@ -6,32 +6,23 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zieta.tms.common.TMSConstants;
-import com.zieta.tms.dto.ExpenseInfoDTO;
 import com.zieta.tms.dto.LeaveInfoDTO;
 import com.zieta.tms.dto.LeaveTypeMasterDTO;
-import com.zieta.tms.model.CustInfo;
-import com.zieta.tms.model.ExpenseInfo;
 import com.zieta.tms.model.LeaveInfo;
 import com.zieta.tms.model.LeaveTypeMaster;
-import com.zieta.tms.model.OrgInfo;
-import com.zieta.tms.model.ProjectInfo;
-import com.zieta.tms.model.UserInfo;
 import com.zieta.tms.repository.LeaveInfoRepository;
 import com.zieta.tms.repository.LeaveMasterRepository;
 import com.zieta.tms.repository.StatusMasterRepository;
-import com.zieta.tms.response.CustomerInformationModel;
-import com.zieta.tms.response.OrgNodesByClientResponse;
 import com.zieta.tms.service.LeaveInfoService;
-import com.zieta.tms.util.TSMUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -200,14 +191,18 @@ public class LeaveInfoServiceImpl implements LeaveInfoService {
 	public List<LeaveInfoDTO> findActiveLeavesByClientIdAndApproverId(Long clientId, Long approverId) {
 
 		short notDeleted = 0;
-		List<LeaveInfoDTO> leaveInfoList = new ArrayList<>();
-		LeaveInfoDTO leaveInfoDTO = null;
-		// long clientId = leaveInfoDTO.getClientId();
 		long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(clientId,
 				TMSConstants.LEAVE, TMSConstants.LEAVE_SUBMITTED, (short) 0).getId();
-		System.out.println("...." + statusId);
+		log.info("StatusId {}",statusId);
 		List<LeaveInfo> levInfo = leaveInfoRepository.findByClientIdAndApproverIdAndStatusIdAndIsDelete(clientId,
 				approverId, statusId, notDeleted);
+		 
+		return transfromLeaveData(levInfo);
+	}
+
+	private List<LeaveInfoDTO> transfromLeaveData(List<LeaveInfo> levInfo) {
+		List<LeaveInfoDTO> leaveInfoList = new ArrayList<>();
+		LeaveInfoDTO leaveInfoDTO;
 		for (LeaveInfo leaves : levInfo) {
 			leaveInfoDTO = modelMapper.map(leaves, LeaveInfoDTO.class);
 			leaveInfoDTO.setStatusId(leaves.getStatusId());
@@ -241,6 +236,19 @@ public class LeaveInfoServiceImpl implements LeaveInfoService {
 			throw new Exception("No Leave Information found with the provided ID in the DB :" + id);
 		}
 
+	}
+
+	@Override
+	public List<LeaveInfoDTO> getLeaveHistoryByApprover(Long clientId, Long approverId, String startDate, String endDate) {
+		
+		List<String> statusCode = new ArrayList<>();
+			statusCode.add(TMSConstants.LEAVE_APPROVED);
+			statusCode.add(TMSConstants.LEAVE_REJECTED);
+		
+		List<Long> statusList = statusMasterRepository.getStatusIdByClientByCodeByType(clientId, statusCode, TMSConstants.LEAVE);
+		List<LeaveInfo> leaveList = leaveInfoRepository.findByApproverIdAndStatusIdInAndLeaveStartDateBetween
+																		(approverId, statusList, startDate, endDate);
+		return transfromLeaveData(leaveList);
 	}
 
 }

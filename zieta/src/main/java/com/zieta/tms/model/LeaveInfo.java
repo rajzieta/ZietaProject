@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import lombok.Data;
 @Entity
@@ -34,8 +36,8 @@ public class LeaveInfo extends BaseEntity implements Serializable {
 	    @Column(name="leave_type")
 	    private Long leaveType;
 	    
-	    @Column(name="leave_start_Date")
-	    private Date leaveStartDate;
+	    @Column(name = "leave_start_Date")
+	    private java.sql.Date  leaveStartDate;	
 	    
 	    @Column(name="start_session")
 	    private Long startSession;

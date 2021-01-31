@@ -44,8 +44,8 @@ public class LeaveReportController {
 
 	@RequestMapping(value = "getLeaveReports", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<LeaveReportDTO> getReports(@RequestParam Long clientId,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
+			@RequestParam(required = true) String startDate,
+			@RequestParam(required = true) String endDate,
 			@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
 		List<LeaveReportDTO> leaveReport = null;
 		try {
@@ -60,8 +60,8 @@ public class LeaveReportController {
 	@GetMapping("/download/leaveReport")
 	public ResponseEntity<Resource> downloadLeaveReport(HttpServletResponse response,
 			@RequestParam Long clientId,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) throws IOException {
+			@RequestParam(required = true) String startDate,
+			@RequestParam(required = true) String endDate) throws IOException {
 
 		
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");

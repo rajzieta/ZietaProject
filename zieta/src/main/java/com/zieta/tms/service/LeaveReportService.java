@@ -13,11 +13,11 @@ import com.zieta.tms.model.LeaveInfo;
 
 public interface LeaveReportService {
 	
-	public ByteArrayInputStream getDownloadableLeaveReport(HttpServletResponse response, Long clientId, Date startDate, Date endDate);
+	public ByteArrayInputStream getDownloadableLeaveReport(HttpServletResponse response, Long clientId, String startDate, String endDate);
 	
-	public List<LeaveInfo> getLeaveData(Long clientId, Date startDate, Date endDate);
+	public List<LeaveInfo> getLeaveData(Long clientId, String startDate, String endDate);
 	
-	public List<LeaveReportDTO> getLeaveData(Long clientId, Date startDate, Date endDate, Integer pageNo, Integer pageSize);
+	public List<LeaveReportDTO> getLeaveData(Long clientId, String startDate, String endDate, Integer pageNo, Integer pageSize);
 	
 	
 

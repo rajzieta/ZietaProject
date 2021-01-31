@@ -1,5 +1,6 @@
 package com.zieta.tms.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -8,6 +9,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -161,6 +163,22 @@ public class LeaveController {
 			return new ResponseEntity<List<LeaveInfoDTO>>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@GetMapping("/getLeaveHistoryByApprover")
+	@ApiOperation(value = "Returns leave history based on approver", notes = "Table reference:"
+			+ "leave_info")
+	public ResponseEntity<List<LeaveInfoDTO>> getLeaveHistoryByApprover(@RequestParam(required = true) Long clientId,
+			@RequestParam(required = true) Long approverId,
+			@RequestParam(required = true) String startDate,
+			@RequestParam(required = true) String endDate) {
+		try {
+			List<LeaveInfoDTO> leavesList = leaveInfoService.getLeaveHistoryByApprover(clientId, approverId, startDate, endDate);
+			return new ResponseEntity<List<LeaveInfoDTO>>(leavesList, HttpStatus.OK);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<List<LeaveInfoDTO>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
 	
 	
 	

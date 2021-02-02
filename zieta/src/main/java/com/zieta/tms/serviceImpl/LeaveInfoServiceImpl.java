@@ -17,8 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.zieta.tms.common.TMSConstants;
 import com.zieta.tms.dto.LeaveInfoDTO;
 import com.zieta.tms.dto.LeaveTypeMasterDTO;
+import com.zieta.tms.model.ClientInfo;
 import com.zieta.tms.model.LeaveInfo;
 import com.zieta.tms.model.LeaveTypeMaster;
+import com.zieta.tms.repository.ClientInfoRepository;
 import com.zieta.tms.repository.LeaveInfoRepository;
 import com.zieta.tms.repository.LeaveMasterRepository;
 import com.zieta.tms.repository.StatusMasterRepository;
@@ -43,6 +45,9 @@ public class LeaveInfoServiceImpl implements LeaveInfoService {
 
 	@Autowired
 	StatusMasterRepository statusMasterRepository;
+	
+	@Autowired
+	ClientInfoRepository clientInfoRepository;
 
 	@Override
 	public void addLeaveInfo(LeaveInfo leaveInfo) {
@@ -116,6 +121,12 @@ public class LeaveInfoServiceImpl implements LeaveInfoService {
 
 		for (LeaveTypeMaster leaveMasterInfo : leaveInfoList) {
 			LeaveTypeMasterDTO leaveInformationModel = modelMapper.map(leaveMasterInfo, LeaveTypeMasterDTO.class);
+			ClientInfo clientInfo =clientInfoRepository.findById(leaveMasterInfo.getClientId()).get();
+			if(clientInfo != null) {
+				leaveInformationModel.setClientCode(clientInfo.getClientCode());
+				leaveInformationModel.setClientName(clientInfo.getClientName());
+			}
+			
 
 			leaveMasterInfoList.add(leaveInformationModel);
 
@@ -132,6 +143,11 @@ public class LeaveInfoServiceImpl implements LeaveInfoService {
 		LeaveTypeMasterDTO orgnodesByClientResponse = null;
 		for (LeaveTypeMaster orgnodesByClient : orgnodesByClientList) {
 			orgnodesByClientResponse = modelMapper.map(orgnodesByClient, LeaveTypeMasterDTO.class);
+			ClientInfo clientInfo =clientInfoRepository.findById(clientId).get();
+			if(clientInfo != null) {
+				orgnodesByClientResponse.setClientCode(clientInfo.getClientCode());
+				orgnodesByClientResponse.setClientName(clientInfo.getClientName());
+			}
 
 			orgnodesByClientResponseList.add(orgnodesByClientResponse);
 		}

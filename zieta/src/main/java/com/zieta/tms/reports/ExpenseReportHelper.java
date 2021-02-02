@@ -99,6 +99,15 @@ public class ExpenseReportHelper {
             createCell(row, columnCount++, expenseDetail.getStatus_desc(), style);
             createCell(row, columnCount++, expenseDetail.getFile_name(), style);
             createCell(row, columnCount++, expenseDetail.getFile_path(), style);
+            createCell(row, columnCount++, expenseDetail.getUser_id(), style);
+            createCell(row, columnCount++, expenseDetail.getEmp_id(), style);
+            createCell(row, columnCount++, expenseDetail.getEmp_name(), style);
+            createCell(row, columnCount++, expenseDetail.getExp_category(), style);
+            createCell(row, columnCount++, expenseDetail.getProject_id(), style);
+            createCell(row, columnCount++, expenseDetail.getProject_name(), style);
+            createCell(row, columnCount++, expenseDetail.getOrgunit_id(), style);
+            createCell(row, columnCount++, expenseDetail.getOrg_node_name(), style);
+            createCell(row, columnCount++, expenseDetail.getExp_heading(), style);
              
         }
     }
@@ -106,7 +115,8 @@ public class ExpenseReportHelper {
     public ByteArrayInputStream downloadReport(HttpServletResponse response, List<ExpenseDetailsReport> expenseDetailsList) throws IOException {
         String[] columnNames = {"EXP_ID","EXP_ENTRY_ID","EXP_DATE","EXP_TYPE","EXPENSE_TYPE","EXP_CURRENCY",
         		"CURRENCY_CODE","EXP_AMOUNT","EXP_COUNTRY","COUNTRY_NAME"," EXP_CITY","EXCHANGE_RAT","EXP_AMT_INR",
-        		"EXP_DESC","STATUS_ID","STATUS_DESC","FILE_NAME","FILE_PATH"};
+        		"EXP_DESC","STATUS_ID","STATUS_DESC","FILE_NAME","FILE_PATH","USER_ID","EMP_ID","EMP_NAME","EXP_CATEGORY","PROJECT_ID",
+        		"PROJECT_NAME","ORGUNIT_ID","ORG_NODE_NAME","EXP_HEADING"};
     	
     	writeHeaderLine("Expense details", columnNames);
         

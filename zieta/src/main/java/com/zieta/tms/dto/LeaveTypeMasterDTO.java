@@ -15,5 +15,7 @@ public class LeaveTypeMasterDTO extends BaseEntity {
 	  private Long id;
 	   private Long clientId;
 	    private String leaveType;
+	    private String clientCode;
+	    private String clientName;
 	    
 }

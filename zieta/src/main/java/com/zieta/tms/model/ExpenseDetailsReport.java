@@ -31,6 +31,14 @@ public class ExpenseDetailsReport {
 	 public String status_desc;
 	 public String file_name;
 	 public String file_path ;
-	
+	 public String user_id;
+	 public String emp_id;
+	 public String emp_name;
+	 public String exp_category;
+	 public String project_id;
+	 public String project_name;
+	 public String orgunit_id;
+	 public String org_node_name;
+	 public String exp_heading;
 	
 }

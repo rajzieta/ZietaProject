@@ -31,4 +31,8 @@ public class LeaveInfoDTO extends BaseEntity {
     private String approverComments;
     private Long statusId;
     private String leaveTypeDescription;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+    private Date createdDate;;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+    private Date modifiedDate;
 }

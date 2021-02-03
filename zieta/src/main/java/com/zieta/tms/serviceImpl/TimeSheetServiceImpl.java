@@ -116,51 +116,63 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		List<TSInfo> tsInfoList = tSInfoRepository.findByClientIdAndUserIdAndIsDeleteAndTsDateBetweenOrderByTaskActivityIdAscIdAsc(clientId, 
 				userId, notDeleted, dateRange.getStartDate(), dateRange.getEndDate());
 		for (TSInfo tsInfo : tsInfoList) {
+			boolean isProjectTaskActivityDeleted = false;
 			TSInfoModel taskInfoModel = new TSInfoModel();
 			taskInfoModel.setTsInfo(tsInfo);
 			List<TSTimeEntries> timeEntries = tstimeentriesRepository.findByTsIdAndIsDelete(tsInfo.getId(), notDeleted);
 			
 			for (TSTimeEntries timetp : timeEntries) {
 				taskInfoModel.setTimeTypeDesc(timeTypeRepository.findById(timetp.getTimeType()).get().getTimeType());
-				//List<TimeType> timeTypes = timeTypeRepository.findByIdAndIsDelete(timetp.getTimeType(), notDeleted);
-				//taskInfoModel.setTimeTypes(timeTypes);
 			}
 			taskInfoModel.setTimeEntries(timeEntries);
 			
 			
 			if(tsInfo.getActivityId() != null && tsInfo.getActivityId() !=0) {
 				ActivityMaster activityEntity = activityMasterRepository.findById(tsInfo.getActivityId()).get();
-		//		ActivityMaster activityEntity = activityMasterRepository.findByIsDelete(tsInfo.getActivityId()).get();
-
-			//	taskInfoModel.setActivityCode(activityEntity.getActivityCode());
-				taskInfoModel.setActivityDescription(activityEntity.getActivityDesc());
-				taskInfoModel.setIsDeleteActivity(activityEntity.getIsDelete());
+				if (activityEntity != null) {
+					taskInfoModel.setActivityDescription(activityEntity.getActivityDesc());
+					taskInfoModel.setIsDeleteActivity(activityEntity.getIsDelete());
+					if (activityEntity.getIsDelete() != 0) {
+						isProjectTaskActivityDeleted = Boolean.TRUE;
+					}
+				}
 			}else {
-			//	taskInfoModel.setActivityCode(null);
 				taskInfoModel.setActivityDescription(StringUtils.EMPTY);
 			}
 			
 			if(tsInfo.getProjectId() !=null && tsInfo.getProjectId() !=0) {
 				ProjectInfo projectEntity = projectInfoRepository.findById(tsInfo.getProjectId()).get();
-				taskInfoModel.setProjectDescription(projectEntity.getProjectName());
-				taskInfoModel.setIsDeleteProject(projectEntity.getIsDelete());
+				if (projectEntity != null) {
+					taskInfoModel.setProjectDescription(projectEntity.getProjectName());
+					taskInfoModel.setIsDeleteProject(projectEntity.getIsDelete());
+					if (projectEntity.getIsDelete() != 0) {
+						isProjectTaskActivityDeleted = Boolean.TRUE;
+					}
+				}
 		}else {
 			taskInfoModel.setProjectDescription(StringUtils.EMPTY);
 			}
 			
 			if(tsInfo.getTaskId() !=null && tsInfo.getTaskId() !=0) {
 				TaskInfo taskInfoEntity =taskInfoRepository.findById(tsInfo.getTaskId()).get();
-			//	taskInfoModel.setTaskCode(taskInfoEntity.getTaskCode());
-				taskInfoModel.setTaskDescription(taskInfoEntity.getTaskDescription());
-				taskInfoModel.setIsDeleteTask(taskInfoEntity.getIsDelete());
+				if (taskInfoEntity != null) {
+					taskInfoModel.setTaskDescription(taskInfoEntity.getTaskDescription());
+					taskInfoModel.setIsDeleteTask(taskInfoEntity.getIsDelete());
+					if (taskInfoEntity.getIsDelete() != 0) {
+						isProjectTaskActivityDeleted = Boolean.TRUE;
+					}
+				}
 			}else {
-			//	taskInfoModel.setTaskCode(null);
 				taskInfoModel.setTaskDescription(StringUtils.EMPTY);
 			}
 			
 			taskInfoModel.setClientCode(clientInfoRepository.findById(tsInfo.getClientId()).get().getClientCode());
 			taskInfoModel.setClientDescription(clientInfoRepository.findById(tsInfo.getClientId()).get().getClientName());
-			tsInfoModelList.add(taskInfoModel);
+			
+			if(!isProjectTaskActivityDeleted) {
+				// isProjectTaskActivityDeleted either project,task or activity is soft deleted then TS entries are not considered.
+				tsInfoModelList.add(taskInfoModel);
+			}
 			
 		}
 

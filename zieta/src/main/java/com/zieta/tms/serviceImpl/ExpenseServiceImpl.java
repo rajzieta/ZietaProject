@@ -132,17 +132,16 @@ public class ExpenseServiceImpl implements ExpenseService {
 	}
 
 	@Override
-	public List<ExpenseInfoDTO> findByClientIdAndUserId(Long clientId, Long userId, Date startDate, Date endDate) {
+	public List<ExpenseInfoDTO> findByClientIdAndUserId(Long clientId, Long userId, String startDate, String endDate) {
 
 		short notDeleted = 0;
-		DateRange dateRange = TSMUtil.getFilledDateRange(startDate, endDate, true);
 		StatusMaster statusDetails = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(clientId,
 				TMSConstants.EXPENSE, TMSConstants.EXPENSE_DRAFT,notDeleted);
 		List<Long> filterOnStatusId = new ArrayList<>();
 		filterOnStatusId.add(statusDetails.getId());
 		List<ExpenseInfoDTO> expenseInfoList = new ArrayList<>();
 		List<ExpenseInfo> expenseInfos = expenseInfoRepository.findByClientIdAndUserIdAndIsDeleteAndStatusIdNotInAndExpStartDateBetween(clientId, userId,
-				notDeleted,filterOnStatusId, dateRange.getStartDate(), dateRange.getEndDate());
+				notDeleted,filterOnStatusId, startDate, endDate);
 		ExpenseInfoDTO expenseInfoDTO = null;
 
 //			Long statusIds =  statusMasterRepository

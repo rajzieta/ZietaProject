@@ -26,6 +26,7 @@ public class ExpenseSummaryReport {
 	 public String approver_name;
 	 public String status_id;
 	 public String status_desc;
+	 public String emp_id;
 	 
 	 
 	 

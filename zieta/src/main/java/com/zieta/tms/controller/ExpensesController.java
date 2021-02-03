@@ -66,8 +66,8 @@ public class ExpensesController {
 			+ "expense_info")
 	public ResponseEntity<List<ExpenseInfoDTO>> getAllExpensesHistoryByClientUser(
 			@RequestParam(required = true) Long clientId, @RequestParam(required = true) Long userId,
-			@RequestParam(required = true)  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-			@RequestParam(required = true)  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+			@RequestParam(required = true) String startDate,
+			@RequestParam(required = true) String endDate) {
 		try {
 			List<ExpenseInfoDTO> expensesList = expenseService.findByClientIdAndUserId(clientId, userId, startDate, endDate);
 			return new ResponseEntity<List<ExpenseInfoDTO>>(expensesList, HttpStatus.OK);

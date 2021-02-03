@@ -163,6 +163,7 @@ public class ExpenseReportHelper {
             createCell(row, columnCount++, expenseSummaryReport.getApprover_name(), style);
             createCell(row, columnCount++, expenseSummaryReport.getStatus_id(), style);
             createCell(row, columnCount++, expenseSummaryReport.getStatus_desc(), style);
+            createCell(row, columnCount++, expenseSummaryReport.getEmp_id(), style);
              
         }
     }
@@ -170,7 +171,7 @@ public class ExpenseReportHelper {
     public ByteArrayInputStream downloadSumReport(HttpServletResponse response, List<ExpenseSummaryReport> expenseSummaryReportList) throws IOException {
         String[] columNames = {"EXP_ID","USER_ID","EMPLOYEE_NAME","EXP_CATEGORY","PROJECT_ID","PROJECT_NAME","ORGUNIT_ID","ORG_NODE_NAME","EXP_HEADING",
         		"EXP_START_DATE","EXP_END_DATE","EXP_POSTING_DATE","EXP_AMOUNT","APPROVED_AMT","APPROVER_ID","APPROVER_NAME","STATUS_ID",
-        		"STATUS_DESC"};
+        		"STATUS_DESC", "EMP_ID"};
     	writeHeaderLine("Expense Summary",columNames);
     	writeExpenseSummaryLines(expenseSummaryReportList);
         ByteArrayOutputStream out = new ByteArrayOutputStream();

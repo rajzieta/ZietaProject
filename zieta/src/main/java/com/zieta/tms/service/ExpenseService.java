@@ -20,7 +20,7 @@ public interface ExpenseService {
 
 	public List<ExpenseEntriesDTO> getAllExpenseEntries();
 
-	public List<ExpenseInfoDTO> findByClientIdAndUserId(Long clientId, Long userId, Date startDate, Date endDate);
+	public List<ExpenseInfoDTO> findByClientIdAndUserId(Long clientId, Long userId, String startDate, String endDate);
 
 	public List<ExpenseEntriesDTO> findByExpId(Long expId);
 

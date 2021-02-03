@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.zieta.tms.model.ExpenseEntries;
@@ -24,8 +25,9 @@ public interface ExpenseInfoRepository extends JpaRepository<ExpenseInfo, Long>{
 	List<ExpenseInfo> findByClientIdAndUserIdAndStatusIdInAndIsDelete(Long clientId, Long userId,
 			List<StatusMaster> statusIds, short notDeleted);
 	
+	@Query(value ="select * from expense_info ei where ei.client_id=?1 and ei.user_id= ?2 and ei.is_delete=?3 and ei.status_id not in ?4 and ei.exp_start_date >= ?5 and ei.exp_start_date <= ?6", nativeQuery=true)
 	List<ExpenseInfo> findByClientIdAndUserIdAndIsDeleteAndStatusIdNotInAndExpStartDateBetween(Long clientId, Long userId,
-			short notDeleted, List<Long> statusIds,Date startDate, Date endDate);
+			short notDeleted, List<Long> statusIds,String startDate, String endDate);
 	
 	List<ExpenseInfo> findByClientIdAndUserIdAndStatusId(Long clientId, Long userId, Long statuses);
 

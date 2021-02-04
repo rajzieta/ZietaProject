@@ -17,7 +17,7 @@ public class TSInfoModel {
 	short isDeleteTask;
 	String activityDescription;
 	short isDeleteActivity;
-	boolean activeStatus;
+	boolean activityStatus;
 	String projectDescription;
 	short isDeleteProject;
 	TSInfo tsInfo;

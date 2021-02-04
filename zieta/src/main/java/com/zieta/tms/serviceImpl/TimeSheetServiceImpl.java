@@ -131,7 +131,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 				ActivityMaster activityEntity = activityMasterRepository.findById(tsInfo.getActivityId()).get();
 					taskInfoModel.setActivityDescription(activityEntity.getActivityDesc());
 					taskInfoModel.setIsDeleteActivity(activityEntity.getIsDelete());
-					taskInfoModel.setActiveStatus(activityEntity.isActive());
+					taskInfoModel.setActivityStatus(activityEntity.isActive());
 					
 			}else {
 				taskInfoModel.setActivityDescription(StringUtils.EMPTY);

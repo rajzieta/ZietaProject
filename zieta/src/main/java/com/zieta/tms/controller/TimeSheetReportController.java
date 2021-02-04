@@ -136,14 +136,13 @@ public class TimeSheetReportController {
 	//TODO need to check with Santosh on the clearence of previous reports based on the "views"
 	
 	@RequestMapping(value = "getTsByDateRange", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Page<TimeSheetReportDTO> getTsByDateRange(@RequestParam Long clientId,
+	public List<TimeSheetReportDTO> getTsByDateRange(@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
-			@RequestParam(required = true) String endDate,
-			@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
-		Page<TimeSheetReportDTO> tsReport = null;
+			@RequestParam(required = true) String endDate) {
+		List<TimeSheetReportDTO> tsReport = null;
 		try {
-			tsReport = tsReportService.getTsByDateRange(clientId, startDate, endDate,pageNo,pageSize);
-			LOGGER.info("Total number of TSReport entries: " + tsReport.getSize());
+			tsReport = tsReportService.getTSReportEntriesFromProcedure(clientId, startDate, endDate);
+			LOGGER.info("Total number of TSReport entries: " + tsReport.size());
 		} catch (Exception e) {
 			LOGGER.error("Error Occured in getTsByDateRange", e);
 		}
@@ -154,14 +153,13 @@ public class TimeSheetReportController {
 	
 	//////////////////////////////
 	@RequestMapping(value = "getTsByDateRangeSum", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Page<TimeSheetSumReportDTO> getTsByDateRangeSum(@RequestParam Long clientId,
+	public List<TimeSheetSumReportDTO> getTsByDateRangeSum(@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
-			@RequestParam(required = true) String endDate,
-			@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
-		Page<TimeSheetSumReportDTO> tsReport = null;
+			@RequestParam(required = true) String endDate) {
+		List<TimeSheetSumReportDTO> tsReport = null;
 		try {
-			tsReport = tsReportService.getTsByDateRangeSum(clientId, startDate, endDate,pageNo, pageSize);
-			LOGGER.info("Total number of TSReport entries: " + tsReport.getSize());
+			tsReport = tsReportService.getTSReportSumEntriesFromProcedure(clientId, startDate, endDate);
+			LOGGER.info("Total number of TSReport entries: " + tsReport.size());
 		} catch (Exception e) {
 			LOGGER.error("Error Occured in getTsByDateRangeSum", e);
 		}

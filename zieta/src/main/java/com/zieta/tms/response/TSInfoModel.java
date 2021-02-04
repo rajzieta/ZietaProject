@@ -13,25 +13,17 @@ import lombok.Setter;
 @Setter
 public class TSInfoModel {
 	
-	//String projectCode;
-	//String taskCode;
 	String taskDescription;
 	short isDeleteTask;
-	//String activityCode;
 	String activityDescription;
 	short isDeleteActivity;
 	boolean activeStatus;
-	
 	String projectDescription;
 	short isDeleteProject;
-	
 	TSInfo tsInfo;
 	List<TSTimeEntries> timeEntries;
-	
 	String timeTypeDesc;
-	
 	String clientCode;
-
 	String clientDescription;
 
 	

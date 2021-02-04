@@ -129,39 +129,27 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 			
 			if(tsInfo.getActivityId() != null && tsInfo.getActivityId() !=0) {
 				ActivityMaster activityEntity = activityMasterRepository.findById(tsInfo.getActivityId()).get();
-				if (activityEntity != null) {
 					taskInfoModel.setActivityDescription(activityEntity.getActivityDesc());
 					taskInfoModel.setIsDeleteActivity(activityEntity.getIsDelete());
-					if (activityEntity.getIsDelete() != 0) {
-						isProjectTaskActivityDeleted = Boolean.TRUE;
-					}
-				}
+					taskInfoModel.setActiveStatus(activityEntity.isActive());
+					
 			}else {
 				taskInfoModel.setActivityDescription(StringUtils.EMPTY);
 			}
 			
-			if(tsInfo.getProjectId() !=null && tsInfo.getProjectId() !=0) {
+			if (tsInfo.getProjectId() != null && tsInfo.getProjectId() != 0) {
 				ProjectInfo projectEntity = projectInfoRepository.findById(tsInfo.getProjectId()).get();
-				if (projectEntity != null) {
-					taskInfoModel.setProjectDescription(projectEntity.getProjectName());
-					taskInfoModel.setIsDeleteProject(projectEntity.getIsDelete());
-					if (projectEntity.getIsDelete() != 0) {
-						isProjectTaskActivityDeleted = Boolean.TRUE;
-					}
-				}
-		}else {
+				taskInfoModel.setProjectDescription(projectEntity.getProjectName());
+				taskInfoModel.setIsDeleteProject(projectEntity.getIsDelete());
+			}else {
 			taskInfoModel.setProjectDescription(StringUtils.EMPTY);
 			}
 			
 			if(tsInfo.getTaskId() !=null && tsInfo.getTaskId() !=0) {
 				TaskInfo taskInfoEntity =taskInfoRepository.findById(tsInfo.getTaskId()).get();
-				if (taskInfoEntity != null) {
 					taskInfoModel.setTaskDescription(taskInfoEntity.getTaskDescription());
 					taskInfoModel.setIsDeleteTask(taskInfoEntity.getIsDelete());
-					if (taskInfoEntity.getIsDelete() != 0) {
-						isProjectTaskActivityDeleted = Boolean.TRUE;
-					}
-				}
+					
 			}else {
 				taskInfoModel.setTaskDescription(StringUtils.EMPTY);
 			}
@@ -169,10 +157,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 			taskInfoModel.setClientCode(clientInfoRepository.findById(tsInfo.getClientId()).get().getClientCode());
 			taskInfoModel.setClientDescription(clientInfoRepository.findById(tsInfo.getClientId()).get().getClientName());
 			
-			if(!isProjectTaskActivityDeleted) {
-				// isProjectTaskActivityDeleted either project,task or activity is soft deleted then TS entries are not considered.
-				tsInfoModelList.add(taskInfoModel);
-			}
+			tsInfoModelList.add(taskInfoModel);
 			
 		}
 

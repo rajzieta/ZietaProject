@@ -43,14 +43,14 @@ public class LeaveReportController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LeaveReportController.class);
 
 	@RequestMapping(value = "getLeaveReports", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<LeaveReportDTO> getReports(@RequestParam Long clientId,
+	public Page<LeaveReportDTO> getReports(@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
 			@RequestParam(required = true) String endDate,
 			@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
-		List<LeaveReportDTO> leaveReport = null;
+		Page<LeaveReportDTO> leaveReport = null;
 		try {
 			leaveReport = leaveReportService.getLeaveData(clientId, startDate, endDate, pageNo, pageSize);
-			LOGGER.info("Total number of timesheet entries: " + leaveReport.size());
+			LOGGER.info("Total number of timesheet entries: " + leaveReport.getSize());
 		} catch (Exception e) {
 			LOGGER.error("Error Occured in getLeaveReports", e);
 		}

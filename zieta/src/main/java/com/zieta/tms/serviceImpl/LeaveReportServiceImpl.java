@@ -2,18 +2,17 @@ package com.zieta.tms.serviceImpl;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.zieta.tms.dto.DateRange;
 import com.zieta.tms.dto.LeaveReportDTO;
 import com.zieta.tms.model.LeaveInfo;
 import com.zieta.tms.reports.LeaveReportHelper;
@@ -122,24 +121,27 @@ public class LeaveReportServiceImpl implements LeaveReportService {
 	}
 
 	@Override
-	public List<LeaveReportDTO> getLeaveData(Long clientId, String startDate, String endDate, Integer pageNo, Integer pageSize) {
+	public Page<LeaveReportDTO> getLeaveData(Long clientId, String startDate, String endDate, Integer pageNo, Integer pageSize) {
 
 		Page<LeaveInfo> leaveInfo = null;
 		List<LeaveInfo> leaveInfoList = null;
+		Pageable paging = PageRequest.of(pageNo, pageSize);
 		try {
 			short notDeleted = 0;
-			Pageable paging = PageRequest.of(pageNo, pageSize);
-
 			leaveInfo = leaveInfoRepository.findByClientIdAndIsDeleteAndLeaveStartDateBetween(clientId, notDeleted,
 					startDate, endDate, paging);
 			
 			leaveInfoList = leaveInfo.getContent();
+		
 			
 		} catch (Exception e) {
 
 			log.info("Exception occured while fetching leaveInfo", e);
 		}
-		return transformLeaveData(leaveInfoList);
+		
+		List<LeaveReportDTO> leaveReportPage = transformLeaveData(leaveInfoList);
+		Page<LeaveReportDTO> pageData = new PageImpl<LeaveReportDTO>(leaveReportPage,paging,leaveInfo.getTotalElements());
+		return pageData;
 	}
 
 }

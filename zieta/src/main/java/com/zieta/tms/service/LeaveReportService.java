@@ -17,7 +17,7 @@ public interface LeaveReportService {
 	
 	public List<LeaveInfo> getLeaveData(Long clientId, String startDate, String endDate);
 	
-	public List<LeaveReportDTO> getLeaveData(Long clientId, String startDate, String endDate, Integer pageNo, Integer pageSize);
+	public Page<LeaveReportDTO> getLeaveData(Long clientId, String startDate, String endDate, Integer pageNo, Integer pageSize);
 	
 	
 

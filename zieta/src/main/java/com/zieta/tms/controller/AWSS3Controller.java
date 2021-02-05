@@ -33,24 +33,16 @@ public class AWSS3Controller{
 	ExpenseService expenseService;
 
 	@PostMapping(value= "/s3/upload")
-	public ResponseEntity<String> uploadFile(@RequestPart(value= "multipartFile") MultipartFile multipartFile, @RequestParam("multipartFile-data")  String key) {
-	
+	public ResponseEntity<String> uploadFile(@RequestPart(value = "multipartFile") MultipartFile multipartFile,
+			@RequestParam("multipartFile-data") String key) {
+
 		try {
 			String attachmentPath = service.uploadFile(multipartFile, key);
 
 			final String response = "[" + attachmentPath + "] uploaded successfully.";
 			expenseService.updateFileDetails(attachmentPath);
 			return new ResponseEntity<>(response, HttpStatus.OK);
-		} 
-		catch (final AmazonServiceException ex) {
-			if (ex.getStatusCode() == HttpStatus.FORBIDDEN.value()) {
-				return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
-			}
-			log.info("File upload is failed.");
-			log.error("Error= {} while uploading file.", ex.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

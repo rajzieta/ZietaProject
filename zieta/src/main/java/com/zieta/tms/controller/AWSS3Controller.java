@@ -43,6 +43,7 @@ public class AWSS3Controller{
 			expenseService.updateFileDetails(attachmentPath);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
+			log.error("Exception from uploadFile: ",e);
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

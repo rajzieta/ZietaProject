@@ -118,9 +118,8 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 	
 
 	@Override
-	public List<ExpenseWFRDetailsForApprover> findWorkFlowRequestsByApproverId(long approverId, Date startRequestdate, Date endRequestDate) {
+	public List<ExpenseWFRDetailsForApprover> findWorkFlowRequestsByApproverId(long approverId, String startRequestdate, String endRequestDate) {
 		
-		DateRange dateRange = TSMUtil.getFilledDateRange(startRequestdate, endRequestDate, true);
 		
 		List<Long> actionTypes = new ArrayList<>();
 		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
@@ -129,7 +128,7 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 
 		
 		List<ExpenseWorkflowRequest> expenseWorkflowRequestList = expenseWorkflowRepository.findByApproverIdAndRequestDateBetweenAndActionTypeIn(
-																		approverId, dateRange.getStartDate(), dateRange.getEndDate(),actionTypes);
+																		approverId, startRequestdate, endRequestDate,actionTypes);
 		return getWorkFlowRequestDetails(expenseWorkflowRequestList);
 	}
 

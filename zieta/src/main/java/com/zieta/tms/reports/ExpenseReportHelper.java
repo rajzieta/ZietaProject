@@ -16,54 +16,13 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.stereotype.Component;
 
-import com.zieta.tms.dto.TimeSheetSumReportDTO;
 import com.zieta.tms.model.ExpenseDetailsReport;
 import com.zieta.tms.model.ExpenseSummaryReport;
-import com.zieta.tms.util.ReportUtil;
 
 
 @Component
-public class ExpenseReportHelper {
+public class ExpenseReportHelper extends BaseHelper{
 	
-	
-	
-	private Workbook workbook;
-    private Sheet sheet;
-     
-  
-    /**
-     * This method generate the header row for the Expense Details
-     */
-    private void writeHeaderLine(String sheetTitle, String[] columnNames) {
-    	workbook = new SXSSFWorkbook(1000);
-        sheet = workbook.createSheet(sheetTitle);
-        Row row = sheet.createRow(0);
-         
-        CellStyle style = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        font.setBold(true);
-        font.setFontHeightInPoints((short)13);
-        style.setFont(font);
-        
-        for (int i = 0; i < columnNames.length; i++) {
-        	createCell(row, i, columnNames[i], style);
-		}
-    }
-     
-    public  void createCell(Row row, int columnCount, Object value, CellStyle style) {
-
-        Cell cell = row.createCell(columnCount);
-        if (value instanceof Integer) {
-            cell.setCellValue((Integer) value);
-        } else if (value instanceof Boolean) {
-            cell.setCellValue((Boolean) value);
-        } else if (value instanceof Float) {
-            cell.setCellValue((Float) value);
-        }else {
-            cell.setCellValue((String) value);
-        }
-        cell.setCellStyle(style);
-    }
      
     private void writeDataLines(List<ExpenseDetailsReport> expenseDetailsList) {
         int rowCount = 1;
@@ -72,10 +31,7 @@ public class ExpenseReportHelper {
         Font font = workbook.createFont();
         font.setFontHeightInPoints((short)5);
         style.setFont(font);
-                 
-        CellStyle style2= ReportUtil.formatDecimalStyle(workbook);
         font.setFontHeightInPoints((short)13);
-        style2.setFont(font);
         
         for (ExpenseDetailsReport expenseDetail : expenseDetailsList) {
             Row row = sheet.createRow(rowCount++);
@@ -137,9 +93,7 @@ public class ExpenseReportHelper {
         font.setFontHeightInPoints((short)5);
         style.setFont(font);
                  
-        CellStyle style2= ReportUtil.formatDecimalStyle(workbook);
         font.setFontHeightInPoints((short)14);
-        style2.setFont(font);
         
         for (ExpenseSummaryReport expenseSummaryReport : expenseSummaryReportList) {
             Row row = sheet.createRow(rowCount++);

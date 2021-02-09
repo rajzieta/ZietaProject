@@ -17,46 +17,11 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.stereotype.Component;
 
 import com.zieta.tms.dto.LeaveReportDTO;
-import com.zieta.tms.util.ReportUtil;
 
 @Component
-public class LeaveReportHelper {
+public class LeaveReportHelper extends BaseHelper{
 
-	private Workbook workbook;
-	private Sheet sheet;
-
-	private void writeHeaderLine() {
-		workbook = new SXSSFWorkbook(1000);
-		sheet = workbook.createSheet("Leave Report");
-		Row row = sheet.createRow(0);
-
-		CellStyle style = workbook.createCellStyle();
-		Font font = workbook.createFont();
-		font.setBold(true);
-		font.setFontHeightInPoints((short) 13);
-		style.setFont(font);
-		createCell(row, 0, "LEAVE ID", style);
-		createCell(row, 1, "CLIENT NAME", style);
-		createCell(row, 2, "USER NAME", style);
-		createCell(row, 3, "LEAVE DESC", style);
-		createCell(row, 4, "LEAVE TYPE", style);
-		createCell(row, 5, "LEAVE START DATE", style);
-		createCell(row, 6, "START SESSION", style);
-		createCell(row, 7, "LEAVE END DATE", style);
-		createCell(row, 8, "END SESSION", style);
-		createCell(row, 9, "APPROVER NAME", style);
-		createCell(row, 10, "APPROVER COMMENTS", style);
-		createCell(row, 11, "STATUS", style);
-
-	}
-
-	public void createCell(Row row, int columnCount, Object value, CellStyle style) {
-
-		Cell cell = row.createCell(columnCount);
-
-		cell.setCellValue((String) value);
-		cell.setCellStyle(style);
-	}
+	
 
 	private void writeDataLines(List<LeaveReportDTO> leaveInfoList) {
 		int rowCount = 1;
@@ -66,9 +31,7 @@ public class LeaveReportHelper {
 		font.setFontHeightInPoints((short) 5);
 		style.setFont(font);
 
-		CellStyle style2 = ReportUtil.formatDecimalStyle(workbook);
 		font.setFontHeightInPoints((short) 13);
-		style2.setFont(font);
 
 		for (LeaveReportDTO leaveReport : leaveInfoList) {
 			Row row = sheet.createRow(rowCount++);
@@ -92,7 +55,10 @@ public class LeaveReportHelper {
 
 	public ByteArrayInputStream downloadReport(HttpServletResponse response, List<LeaveReportDTO> leaveInfoList)
 			throws IOException {
-		writeHeaderLine();
+		
+		String [] columNames = {"LEAVE ID", "CLIENT NAME","USER NAME","LEAVE DESC",
+				"LEAVE START DATE","LEAVE END DATE","END SESSION", "APPROVER NAME",  "APPROVER COMMENTS", "STATUS"};
+		writeHeaderLine("Leave Report",columNames);
 		writeDataLines(leaveInfoList);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		workbook.write(out);

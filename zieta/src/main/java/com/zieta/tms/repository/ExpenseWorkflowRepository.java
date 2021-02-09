@@ -1,7 +1,6 @@
 package com.zieta.tms.repository;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,5 +21,6 @@ public interface ExpenseWorkflowRepository extends JpaRepository<ExpenseWorkflow
 	@Query(value ="SELECT * FROM expwf_request ewfr, expense_info einfo WHERE einfo.ID=ewfr.EXP_ID AND ewfr.APPROVER_ID=?1 AND einfo.EXP_START_DATE >=?2 AND einfo.EXP_START_DATE <=?3 AND ewfr.ACTION_TYPE IN ?4", nativeQuery=true)
 	List<ExpenseWorkflowRequest> findByApproverIdAndRequestDateBetweenAndActionTypeIn(long approverId, String startRequestDate,
 			String endRequestDate, Collection<Long> actionType);
+
 
 }

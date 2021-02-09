@@ -14,8 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zieta.tms.dto.TimeSheetReportDTO;
 import com.zieta.tms.dto.TimeSheetSumReportDTO;
-import com.zieta.tms.model.ProjectReport;
-import com.zieta.tms.model.TimeSheetReport;
 import com.zieta.tms.service.TSReportService;
-import com.zieta.tms.service.TimeSheetReportService;
 
 import io.swagger.annotations.Api;
 
@@ -39,104 +34,14 @@ import io.swagger.annotations.Api;
 @Api(tags = "TimeSheet reports  API")
 public class TimeSheetReportController {
 
-	@Autowired
-	TimeSheetReportService timeSheetReportService;
 	
 	@Autowired
 	TSReportService tsReportService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TimeSheetReportController.class);
 
-	@RequestMapping(value = "getReports", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Page<TimeSheetReport> getReports(@RequestParam Long clientId,@RequestParam(defaultValue = "0", required = false) Long projectId,
-			@RequestParam(required = false) String empId, @RequestParam(required = false) String stateName,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
-			@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
-		Page<TimeSheetReport> timeSheetReport = null;
-		try {
-			timeSheetReport = timeSheetReportService.findAll(
-					clientId, projectId, empId, stateName, startDate, endDate, pageNo, pageSize);
-			LOGGER.info("Total number of timesheet entries: " + timeSheetReport.getSize());
-		} catch (Exception e) {
-			LOGGER.error("Error Occured in getByClientIdAndProjectIdAndStateNameAndRequestDateBetween", e);
-		}
-		return timeSheetReport;
-	}
-	
-	@GetMapping("/download/timesheetReport")
-	public ResponseEntity<Resource> downloadTimeSheet(HttpServletResponse response,
-			@RequestParam Long clientId,
-			@RequestParam(defaultValue = "0", required = false) Long projectId, 
-			@RequestParam(required = false) String stateName,
-			@RequestParam(required = false) String empId,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) throws IOException {
-
-		
-		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-		String currentDateTime = dateFormatter.format(new Date());
-		String filename = "timesheet_" + currentDateTime + ".xlsx";
-		HttpHeaders header = new HttpHeaders();
-        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+filename);
-        ByteArrayInputStream bri = timeSheetReportService.downloadTimeSheetReport(
-				 response, clientId, projectId, stateName, empId, startDate, endDate);
-        InputStreamResource file = new InputStreamResource(bri);
-        
-		return ResponseEntity.ok().headers(header).body(file);
-	}
-
-	
-	
-	
-	@RequestMapping(value = "getProjReports", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Page<ProjectReport> getProjReports(@RequestParam Long clientCode,@RequestParam(defaultValue = "0", required = false) Long projectCode,
-			@RequestParam(required = false) String empId,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
-			@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
-		Page<ProjectReport> projectReport = null;
-		try {
-			projectReport = timeSheetReportService.findAll(
-					clientCode, projectCode, empId, startDate, endDate, pageNo, pageSize);
-			LOGGER.info("Total number of projectReport entries: " + projectReport.getSize());
-		} catch (Exception e) {
-			LOGGER.error("Error Occured in getByClientIdAndProjectIdAndEmpId", e);
-		}
-		return projectReport;
-	}
-	
-	
-	
-	
-	@GetMapping("/download/projectReport")
-	public ResponseEntity<Resource> downloadProject(HttpServletResponse response,
-			@RequestParam Long clientCode,
-			@RequestParam(defaultValue = "0", required = false) Long projectCode, 
-			//@RequestParam(required = false) String stateName,
-			@RequestParam(required = false) String empId,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) throws IOException {
-
-		
-		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-		String currentDateTime = dateFormatter.format(new Date());
-		String filename = "projectReport_" + currentDateTime + ".xlsx";
-		HttpHeaders header = new HttpHeaders();
-        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+filename);
-        ByteArrayInputStream bri = timeSheetReportService.downloadProjectReport(
-				 response, clientCode, projectCode, empId, startDate, endDate);
-        InputStreamResource file = new InputStreamResource(bri);
-        
-		return ResponseEntity.ok().headers(header).body(file);
-	}
-	
-	
-	// Reports from Stored procedure
-	//TODO need to check with Santosh on the clearence of previous reports based on the "views"
-	
-	@RequestMapping(value = "getTsByDateRange", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<TimeSheetReportDTO> getTsByDateRange(@RequestParam Long clientId,
+	@RequestMapping(value = "getTimeSheetDetails", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<TimeSheetReportDTO> getTimeSheetDetails(@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
 			@RequestParam(required = true) String endDate) {
 		List<TimeSheetReportDTO> tsReport = null;
@@ -144,16 +49,13 @@ public class TimeSheetReportController {
 			tsReport = tsReportService.getTSReportEntriesFromProcedure(clientId, startDate, endDate);
 			LOGGER.info("Total number of TSReport entries: " + tsReport.size());
 		} catch (Exception e) {
-			LOGGER.error("Error Occured in getTsByDateRange", e);
+			LOGGER.error("Error Occured in getTimeSheetDetails", e);
 		}
 		return tsReport;
 	}
 	
-	
-	
-	//////////////////////////////
-	@RequestMapping(value = "getTsByDateRangeSum", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<TimeSheetSumReportDTO> getTsByDateRangeSum(@RequestParam Long clientId,
+	@RequestMapping(value = "getTimeSheetSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<TimeSheetSumReportDTO> getTimeSheetSummary(@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
 			@RequestParam(required = true) String endDate) {
 		List<TimeSheetSumReportDTO> tsReport = null;
@@ -161,22 +63,22 @@ public class TimeSheetReportController {
 			tsReport = tsReportService.getTSReportSumEntriesFromProcedure(clientId, startDate, endDate);
 			LOGGER.info("Total number of TSReport entries: " + tsReport.size());
 		} catch (Exception e) {
-			LOGGER.error("Error Occured in getTsByDateRangeSum", e);
+			LOGGER.error("Error Occured in getTimeSheetSummary", e);
 		}
 		return tsReport;
 	}
 	
 	
 	
-	@GetMapping("/download/timesheetReportSP")
-	public ResponseEntity<Resource> downloadTimeSheetReportSP(HttpServletResponse response,
+	@GetMapping("/download/timesheetDetailsReport")
+	public ResponseEntity<Resource> downloadTimeSheetReportDetails(HttpServletResponse response,
 			@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
 			@RequestParam(required = true) String endDate){
 		
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 		String currentDateTime = dateFormatter.format(new Date());
-		String filename = "timesheet_detailed" + currentDateTime + ".xlsx";
+		String filename = "timesheet_detailed_" + currentDateTime + ".xlsx";
 		HttpHeaders header = new HttpHeaders();
         header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+filename);
         ByteArrayInputStream bri = null;
@@ -192,16 +94,15 @@ public class TimeSheetReportController {
 	}
 	
 	
-	//////////////////////
-	@GetMapping("/download/timesheetSumReportSP")
-	public ResponseEntity<Resource> downloadTimeSheetSumReportSP(HttpServletResponse response,
+	@GetMapping("/download/timesheetSummaryReport")
+	public ResponseEntity<Resource> downloadTimeSheetSummaryReport(HttpServletResponse response,
 			@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
 			@RequestParam(required = true) String endDate){
 		
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 		String currentDateTime = dateFormatter.format(new Date());
-		String filename = "timesheet_summary" + currentDateTime + ".xlsx";
+		String filename = "timesheet_summary_" + currentDateTime + ".xlsx";
 		HttpHeaders header = new HttpHeaders();
         header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+filename);
         ByteArrayInputStream bri = null;

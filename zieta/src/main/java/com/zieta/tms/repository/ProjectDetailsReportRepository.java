@@ -7,14 +7,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.zieta.tms.model.ProjectDetailsReport;
 import com.zieta.tms.model.TSReport;
-import com.zieta.tms.model.TSSumReport;
 
 @Repository
-public interface TSReportRepository extends JpaRepository<TSReport, Integer> {
+public interface ProjectDetailsReportRepository extends JpaRepository<ProjectDetailsReport, Long> {
 
-	@Query(value = "CALL SP_ts_details(:clientId,:start_date,:end_date)", nativeQuery = true)
-	List<TSReport> getTsByDateRangeSP(@Param("clientId") Long year_in, @Param("start_date") String start_date,
+	@Query(value = "CALL SP_proj_details(:clientId,:start_date,:end_date)", nativeQuery = true)
+	List<ProjectDetailsReport> getProjectDetailsReport(@Param("clientId") Long clientId, @Param("start_date") String start_date,
 			@Param("end_date") String end_date);
 
+	
 }

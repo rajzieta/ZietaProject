@@ -19,70 +19,11 @@ import org.springframework.stereotype.Component;
 
 import com.zieta.tms.dto.TimeSheetReportDTO;
 import com.zieta.tms.dto.TimeSheetSumReportDTO;
-import com.zieta.tms.util.ReportUtil;
 
 
 @Component
-public class TimeSheetReportHelper {
+public class TimeSheetReportHelper extends BaseHelper {
 	
-	
-	
-	private Workbook workbook;
-    private Sheet sheet;
-     
-  
- 
-    private void writeHeaderLine() {
-    	workbook = new SXSSFWorkbook(1000);
-        sheet = workbook.createSheet("TimeSheetDetails");
-//        ((SXSSFSheet)sheet).trackAllColumnsForAutoSizing();
-         
-        Row row = sheet.createRow(0);
-         
-        CellStyle style = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        font.setBold(true);
-        font.setFontHeightInPoints((short)13);
-        style.setFont(font);
-        
-
-         
-        createCell(row, 0, "EMP_ID", style);    
-        createCell(row, 1, "TEAM_ID", style); 
-        createCell(row, 2, "TEAM", style);       
-        createCell(row, 3, "EMP_NAME", style);    
-        createCell(row, 4, "PROJECT_ID", style); 
-        createCell(row, 5, "PROJECT_NAME", style);
-        createCell(row, 6, "TASK_NAME", style);
-        createCell(row, 7, "ACTIVITY_DESC", style);
-        createCell(row, 8, "PLANNED_HOURS", style);
-        createCell(row, 9, "ACTUAL_HOURS", style);
-        createCell(row, 10, "TS_DATE", style);
-        createCell(row, 11, "SUBMIT_DATE", style);
-        createCell(row, 12, "SUBMITTED_HOURS", style);
-        createCell(row, 13, "APPROVED_HOURS", style);
-        
-         
-    }
-     
-    public  void createCell(Row row, int columnCount, Object value, CellStyle style) {
-
-//    	  ((SXSSFSheet)sheet).trackAllColumnsForAutoSizing();
-
-     //   DecimalFormat df = new DecimalFormat("#.00");
-        Cell cell = row.createCell(columnCount);
-        if (value instanceof Integer) {
-            cell.setCellValue((Integer) value);
-        } else if (value instanceof Boolean) {
-            cell.setCellValue((Boolean) value);
-        } else if (value instanceof Float) {
-            cell.setCellValue((Float) value);
-        }else {
-            cell.setCellValue((String) value);
-        }
-        cell.setCellStyle(style);
-    }
-     
     private void writeDataLines(List<TimeSheetReportDTO> tsReportList) {
         int rowCount = 1;
  
@@ -91,9 +32,7 @@ public class TimeSheetReportHelper {
         font.setFontHeightInPoints((short)5);
         style.setFont(font);
                  
-        CellStyle style2= ReportUtil.formatDecimalStyle(workbook);
         font.setFontHeightInPoints((short)13);
-        style2.setFont(font);
         
         for (TimeSheetReportDTO timeSheetReport : tsReportList) {
             Row row = sheet.createRow(rowCount++);
@@ -118,7 +57,9 @@ public class TimeSheetReportHelper {
     }
      
     public ByteArrayInputStream downloadReport(HttpServletResponse response, List<TimeSheetReportDTO> tsReportList) throws IOException {
-        writeHeaderLine();
+        String[] columNames = {"EMP_ID", "TEAM_ID","TEAM","EMP_NAME","PROJECT_ID","PROJECT_NAME","TASK_NAME","ACTIVITY_DESC",
+        		"PLANNED_HOURS","ACTUAL_HOURS","TS_DATE","SUBMIT_DATE","SUBMITTED_HOURS","APPROVED_HOURS"};
+    	writeHeaderLine("TimeSheet Details",columNames);
         writeDataLines(tsReportList);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         workbook.write(out);
@@ -126,40 +67,6 @@ public class TimeSheetReportHelper {
         return new ByteArrayInputStream(out.toByteArray());
          
     } 
-    /////////////////////////////////////////////////////////////////////////////////
-    
-    private void writeSumHeaderLine() {
-    	workbook = new SXSSFWorkbook(1000);
-        sheet = workbook.createSheet("TimeSheetSummary");
-         
-        Row row = sheet.createRow(0);
-         
-        CellStyle style = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        font.setBold(true);
-        font.setFontHeightInPoints((short)13);
-        style.setFont(font);
-        
-
-         
-        createCell(row, 0, "EMP_ID", style);    
-        createCell(row, 1, "TEAM_ID", style); 
-        createCell(row, 2, "TEAM", style);       
-        createCell(row, 3, "EMP_NAME", style);    
-        createCell(row, 4, "PROJECT_ID", style); 
-        createCell(row, 5, "PROJECT_NAME", style);
-        createCell(row, 6, "TID", style);
-        createCell(row, 7, "TASK_NAME", style);
-        createCell(row, 8, "ACTIVITY", style);
-        createCell(row, 9, "SUBMITTED_HOURS", style);
-        createCell(row, 10, "APPROVED_HOURS", style);
-        createCell(row, 11, "TOTAL PLANNED HOURS", style);
-        createCell(row, 12, "TOTAL ACTUAL HOURS", style);
-     //   createCell(row, 12, "SUBMITTED_HOURS", style);
-     //   createCell(row, 13, "APPROVED_HOURS", style);
-        
-         
-    }
     
     
     
@@ -171,9 +78,7 @@ public class TimeSheetReportHelper {
         font.setFontHeightInPoints((short)5);
         style.setFont(font);
                  
-        CellStyle style2= ReportUtil.formatDecimalStyle(workbook);
         font.setFontHeightInPoints((short)14);
-        style2.setFont(font);
         
         for (TimeSheetSumReportDTO timeSheetReport : tsReportList) {
             Row row = sheet.createRow(rowCount++);
@@ -190,8 +95,6 @@ public class TimeSheetReportHelper {
             createCell(row, columnCount++, timeSheetReport.getActivity(), style);
             createCell(row, columnCount++, timeSheetReport.getSubmitted_hrs(), style);
             createCell(row, columnCount++, timeSheetReport.getApproved_hrs(), style);
-          //  createCell(row, columnCount++, timeSheetReport.getTs_date(), style);
-          //  createCell(row, columnCount++, timeSheetReport.getSubmit_date(), style);
             createCell(row, columnCount++, timeSheetReport.getTotal_planned_hrs(), style);
             createCell(row, columnCount++, timeSheetReport.getTotal_actual_hrs(), style);
              
@@ -199,7 +102,9 @@ public class TimeSheetReportHelper {
     }
      
     public ByteArrayInputStream downloadSumReport(HttpServletResponse response, List<TimeSheetSumReportDTO> tsReportList) throws IOException {
-        writeSumHeaderLine();
+        String[] columNames = {"EMP_ID", "TEAM_ID","TEAM","EMP_NAME","PROJECT_ID","PROJECT_NAME","TID","TASK_NAME",
+        		"ACTIVITY","SUBMITTED_HOURS","APPROVED_HOURS","TOTAL_PLANNED_HOURS","TOTAL_ACTUAL_HOURS"};
+    	writeHeaderLine("TimeSheetSummary",columNames);
         writeSumDataLines(tsReportList);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         workbook.write(out);

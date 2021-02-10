@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.zieta.tms.dto.TimeSheetReportDTO;
-import com.zieta.tms.dto.TimeSheetSumReportDTO;
+import com.zieta.tms.model.TSReport;
+import com.zieta.tms.model.TSSumReport;
 import com.zieta.tms.service.TSReportService;
 
 import io.swagger.annotations.Api;
@@ -41,10 +41,10 @@ public class TimeSheetReportController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TimeSheetReportController.class);
 
 	@RequestMapping(value = "getTimeSheetDetails", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<TimeSheetReportDTO> getTimeSheetDetails(@RequestParam Long clientId,
+	public List<TSReport> getTimeSheetDetails(@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
 			@RequestParam(required = true) String endDate) {
-		List<TimeSheetReportDTO> tsReport = null;
+		List<TSReport> tsReport = null;
 		try {
 			tsReport = tsReportService.getTSReportEntriesFromProcedure(clientId, startDate, endDate);
 			LOGGER.info("Total number of TSReport entries: " + tsReport.size());
@@ -55,10 +55,10 @@ public class TimeSheetReportController {
 	}
 	
 	@RequestMapping(value = "getTimeSheetSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<TimeSheetSumReportDTO> getTimeSheetSummary(@RequestParam Long clientId,
+	public List<TSSumReport> getTimeSheetSummary(@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
 			@RequestParam(required = true) String endDate) {
-		List<TimeSheetSumReportDTO> tsReport = null;
+		List<TSSumReport> tsReport = null;
 		try {
 			tsReport = tsReportService.getTSReportSumEntriesFromProcedure(clientId, startDate, endDate);
 			LOGGER.info("Total number of TSReport entries: " + tsReport.size());

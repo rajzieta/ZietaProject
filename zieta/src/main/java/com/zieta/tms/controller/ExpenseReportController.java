@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -50,14 +51,13 @@ public class ExpenseReportController {
 	  * @return
 	  */
 	@RequestMapping(value = "getExpesneDetailsReport", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Page<ExpenseDetailsReport> getExpenseDetailsReport(@RequestParam Long clientId,
+	public List<ExpenseDetailsReport> getExpenseDetailsReport(@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
-			@RequestParam(required = true) String endDate,
-			@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
-		Page<ExpenseDetailsReport> expenseDetailsReport = null;
+			@RequestParam(required = true) String endDate) {
+		List<ExpenseDetailsReport> expenseDetailsReport = null;
 		try {
-			expenseDetailsReport = expenseReportService.getExpenseDetailsReport(clientId, startDate, endDate, pageNo, pageSize);
-			LOGGER.info("Total number of expense details entries: " + expenseDetailsReport.getSize());
+			expenseDetailsReport = expenseReportService.getExpenseDetailsReport(clientId, startDate, endDate);
+			LOGGER.info("Total number of expense details entries: " + expenseDetailsReport.size());
 		} catch (Exception e) {
 			LOGGER.error("Error Occured in getExpesneDetailsReport", e);
 		}
@@ -93,15 +93,14 @@ public class ExpenseReportController {
 	}
 
 	
-	@RequestMapping(value = "getExpesneSummarReport", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Page<ExpenseSummaryReport> getExpesneSummarReport(@RequestParam Long clientId,
+	@RequestMapping(value = "getExpenseSummaryReport", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<ExpenseSummaryReport> getExpesneSummarReport(@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
-			@RequestParam(required = true) String endDate,
-			@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
-		Page<ExpenseSummaryReport> expenseDetailsReport = null;
+			@RequestParam(required = true) String endDate) {
+		List<ExpenseSummaryReport> expenseDetailsReport = null;
 		try {
-			expenseDetailsReport = expenseReportService.getExpenseSummaryReport(clientId, startDate, endDate, pageNo, pageSize);
-			LOGGER.info("Total number of ExpesneSummarReport entries: " + expenseDetailsReport.getSize());
+			expenseDetailsReport = expenseReportService.getExpenseSummaryReport(clientId, startDate, endDate);
+			LOGGER.info("Total number of ExpesneSummarReport entries: " + expenseDetailsReport.size());
 		} catch (Exception e) {
 			LOGGER.error("Error Occured in getExpesneSummarReport", e);
 		}

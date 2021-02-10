@@ -15,9 +15,8 @@ public interface LeaveReportService {
 	
 	public ByteArrayInputStream getDownloadableLeaveReport(HttpServletResponse response, Long clientId, String startDate, String endDate);
 	
-	public List<LeaveInfo> getLeaveData(Long clientId, String startDate, String endDate);
 	
-	public Page<LeaveReportDTO> getLeaveData(Long clientId, String startDate, String endDate, Integer pageNo, Integer pageSize);
+	public List<LeaveReportDTO> getLeaveData(Long clientId, String startDate, String endDate);
 	
 	
 

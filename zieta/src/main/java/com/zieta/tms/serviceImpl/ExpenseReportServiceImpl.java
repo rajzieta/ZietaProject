@@ -39,26 +39,12 @@ public class ExpenseReportServiceImpl implements ExpenseReportService {
 	ModelMapper modelMapper;
     
 	@Override
-	public Page<ExpenseDetailsReport> getExpenseDetailsReport(long clientId, String startDate, String endDate, Integer pageNo, Integer pageSize) {
+	public List<ExpenseDetailsReport> getExpenseDetailsReport(long clientId, String startDate, String endDate) {
 		
-		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		
-		List<ExpenseDetailsReport> expenseDetailsList = getExpenseDetailsReport(clientId, startDate, endDate);
-		int start =(int) pageable.getOffset();
-		int end = (start + pageable.getPageSize()) > expenseDetailsList.size() ? expenseDetailsList.size() : (start + pageable.getPageSize());
-
-		Page<ExpenseDetailsReport> page = new PageImpl<ExpenseDetailsReport>(expenseDetailsList.subList(start, end), pageable, expenseDetailsList.size());
-		
-		
-		return page;
-	}
-	
-	
-	private List<ExpenseDetailsReport> getExpenseDetailsReport(long client_id, String startDate, String endDate) {
 		
 		List<ExpenseDetailsReport> expenseDetailsList = null;
 		try {
-			expenseDetailsList = expenseDetailsRepository.getExpenseDetailsReport(client_id, startDate, endDate);
+			expenseDetailsList = expenseDetailsRepository.getExpenseDetailsReport(clientId, startDate, endDate);
 		} catch (Exception e) {
 			log.error("Exception occured while fetching ExpenseDetailsReport: ",e);
 		}
@@ -66,34 +52,22 @@ public class ExpenseReportServiceImpl implements ExpenseReportService {
 		return expenseDetailsList;
 	}
 	
+	
 	 @Override
-	 public Page<ExpenseSummaryReport> getExpenseSummaryReport(long clientId, String startDate, String endDate, Integer pageNo,
-			Integer pageSize) {
-		
-		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		
-		List<ExpenseSummaryReport> expenseSummaryList = getExpenseSummaryReportData(clientId, startDate, endDate);
-		int start =(int) pageable.getOffset();
-		int end = (start + pageable.getPageSize()) > expenseSummaryList.size() ? expenseSummaryList.size() : (start + pageable.getPageSize());
-
-		Page<ExpenseSummaryReport> page = new PageImpl<ExpenseSummaryReport>(expenseSummaryList.subList(start, end), pageable, expenseSummaryList.size());
+	 public List<ExpenseSummaryReport> getExpenseSummaryReport(long clientId, String startDate, String endDate) {
 		
 		
-		return page;
+		 List<ExpenseSummaryReport> expenseSummaryData = null;
+			try {
+				expenseSummaryData = expenseSummaryReportRepository.getExpenseSummaryReport(clientId, startDate, endDate);
+			} catch (Exception e) {
+				log.error("Exception occured while fetching ExpenseSummaryReport: ",e);
+			}
+			
+			return expenseSummaryData;
 	}
 	
 	
-	private List<ExpenseSummaryReport> getExpenseSummaryReportData(long client_id, String startDate, String endDate) {
-		
-		List<ExpenseSummaryReport> expenseSummaryData = null;
-		try {
-			expenseSummaryData = expenseSummaryReportRepository.getExpenseSummaryReport(client_id, startDate, endDate);
-		} catch (Exception e) {
-			log.error("Exception occured while fetching ExpenseSummaryReport: ",e);
-		}
-		
-		return expenseSummaryData;
-	}
 	
 	@Override
 	public ByteArrayInputStream downloadExpenseDetailsReport(HttpServletResponse response,long clientId,
@@ -110,7 +84,7 @@ public class ExpenseReportServiceImpl implements ExpenseReportService {
 	public ByteArrayInputStream downloadExpenseSummaryReport(HttpServletResponse response,long clientId,
 			String startDate, String endDate) throws IOException {
 		
-		List<ExpenseSummaryReport> expenseSummaryList = getExpenseSummaryReportData(clientId, startDate, endDate);
+		List<ExpenseSummaryReport> expenseSummaryList = getExpenseSummaryReport(clientId, startDate, endDate);
 		return expenseReportHelper.downloadSumReport(response, expenseSummaryList);
 		
 	}

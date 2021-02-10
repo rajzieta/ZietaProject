@@ -7,10 +7,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.zieta.tms.dto.LeaveReportDTO;
@@ -48,23 +44,6 @@ public class LeaveReportServiceImpl implements LeaveReportService {
 	@Autowired
 	StatusMasterRepository statusMasterRepository;
 	
-
-	@Override
-	public List<LeaveInfo> getLeaveData(Long clientId, String startDate, String endDate) {
-
-		List<LeaveInfo> leaveInfo = null;
-		try {
-			short notDeleted = 0;
-
-			leaveInfo = leaveInfoRepository.findByClientIdAndIsDeleteAndLeaveStartDateBetween(clientId, notDeleted,
-					startDate, endDate);
-		} catch (Exception e) {
-
-			log.info("Exception occured while fetching leaveInfo", e);
-		}
-		return leaveInfo;
-
-	}
 	
 	@Override
 	public ByteArrayInputStream  getDownloadableLeaveReport(HttpServletResponse response, Long clientId, String startDate,
@@ -73,10 +52,8 @@ public class LeaveReportServiceImpl implements LeaveReportService {
 		ByteArrayInputStream reportStream = null;
 
 		try {
-			List<LeaveInfo> leaveInfoDetails = getLeaveData(clientId, startDate, endDate);
-			List<LeaveReportDTO> leaveReportDTOList = transformLeaveData(leaveInfoDetails);
-
-			reportStream = leaveReportHelper.downloadReport(response, leaveReportDTOList);
+			List<LeaveReportDTO>  leaveInfoDetails = getLeaveData(clientId, startDate, endDate);
+			reportStream = leaveReportHelper.downloadReport(response, leaveInfoDetails);
 		} catch (Exception ex) {
 			log.error("Exception occured while construction the report !!", ex);
 		}
@@ -121,18 +98,13 @@ public class LeaveReportServiceImpl implements LeaveReportService {
 	}
 
 	@Override
-	public Page<LeaveReportDTO> getLeaveData(Long clientId, String startDate, String endDate, Integer pageNo, Integer pageSize) {
+	public List<LeaveReportDTO> getLeaveData(Long clientId, String startDate, String endDate) {
 
-		Page<LeaveInfo> leaveInfo = null;
 		List<LeaveInfo> leaveInfoList = null;
-		Pageable paging = PageRequest.of(pageNo, pageSize);
 		try {
 			short notDeleted = 0;
-			leaveInfo = leaveInfoRepository.findByClientIdAndIsDeleteAndLeaveStartDateBetween(clientId, notDeleted,
-					startDate, endDate, paging);
-			
-			leaveInfoList = leaveInfo.getContent();
-		
+			leaveInfoList = leaveInfoRepository.findByClientIdAndIsDeleteAndLeaveStartDateBetween(clientId, notDeleted,
+					startDate, endDate);
 			
 		} catch (Exception e) {
 
@@ -140,8 +112,8 @@ public class LeaveReportServiceImpl implements LeaveReportService {
 		}
 		
 		List<LeaveReportDTO> leaveReportPage = transformLeaveData(leaveInfoList);
-		Page<LeaveReportDTO> pageData = new PageImpl<LeaveReportDTO>(leaveReportPage,paging,leaveInfo.getTotalElements());
-		return pageData;
+		
+		return leaveReportPage;
 	}
 
 }

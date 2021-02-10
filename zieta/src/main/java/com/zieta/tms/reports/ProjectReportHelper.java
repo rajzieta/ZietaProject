@@ -39,12 +39,12 @@ public class ProjectReportHelper extends BaseHelper {
             
             createCell(row, columnCount++, projectReport.getClient_code(), style);
             createCell(row, columnCount++, projectReport.getClient_name(), style);
-            createCell(row, columnCount++, projectReport.getProject_code(), style);
+            createCell(row, columnCount++, projectReport.getProj_id(), style);
             createCell(row, columnCount++, projectReport.getProject_name(), style);
             createCell(row, columnCount++, projectReport.getProject_manager(), style);
             createCell(row, columnCount++, projectReport.getPm_name(), style);
             createCell(row, columnCount++, projectReport.getUser_id(), style);
-            createCell(row, columnCount++, projectReport.getUser_name(), style);
+            createCell(row, columnCount++, projectReport.getEmployee_name(), style);
             createCell(row, columnCount++, projectReport.getEmp_id(), style);
             createCell(row, columnCount++, projectReport.getTs_id(), style);
             createCell(row, columnCount++, projectReport.getTs_date().toString(), style);
@@ -63,6 +63,8 @@ public class ProjectReportHelper extends BaseHelper {
             createCell(row, columnCount++, projectReport.getTime_type(), style);
             createCell(row, columnCount++, projectReport.getTimeentry_status(), style);
             createCell(row, columnCount++, projectReport.getTimeentry_status_desc(), style);
+            createCell(row, columnCount++, projectReport.getTeam_id(), style);
+            createCell(row, columnCount++, projectReport.getTeam(), style);
             
             
         }
@@ -70,10 +72,10 @@ public class ProjectReportHelper extends BaseHelper {
      
     public ByteArrayInputStream downloadProjectDetailsReport(HttpServletResponse response, List<ProjectDetailsReport> projectList) throws IOException {
     	
-    	String [] columnNames = {"Client Code","Client Name","Project Code","Project Name","Project Manager","PM Name","User ID",
-    			"User Name","Emp Id","TS ID", "TS Date", "Submit Date", "Task Name", "Task Code", "Activity Code", "Activity Desc", 
-    			"Timesheet Status", "TimesheetStatus Desc",  "Ts Start Time", "TS End Time", "TimeEntry Duration",  "TimeEntry Desc", 
-    			"TimeType Id", "TimeType", "TimeEntry Status", "TimeEntry Status Desc"};
+    	String [] columnNames = {"Client Code","Client Name","Proj_Id","Project_Name","Project_Manager","PM_Name","User_ID",
+    			"Employee_Name","Emp_Id","TS_ID", "TS_Date", "Submit_Date", "Task_Name", "Task_Code", "Activity_Code", "Activity_Desc", 
+    			"Timesheet_Status", "TimesheetStatus_Desc",  "Ts_Start_Time", "TS_End_Time", "TimeEntry_Duration",  "TimeEntry_Desc", 
+    			"TimeType_Id", "Time_Type", "TimeEntry_Status", "TimeEntry_Status_Desc", "TEAM_ID","TEAM"};
         writeHeaderLine( "ProjectDetailsReport",columnNames);
         writeProjectDetailsData(projectList);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -110,13 +112,14 @@ public class ProjectReportHelper extends BaseHelper {
             createCell(row, columnCount++, projectSummaryReport.getApproved_hrs(), style);
             createCell(row, columnCount++, projectSummaryReport.getTotal_planned_hrs(), style);
             createCell(row, columnCount++, projectSummaryReport.getTotal_actual_hrs(), style);
+            createCell(row, columnCount++, projectSummaryReport.getPm_name(), style);
         }
     }
      
     public ByteArrayInputStream downloadProjectSummaryReport(HttpServletResponse response, List<ProjectSummaryReport> projectSummaryList) throws IOException {
     	
     	String [] columnNames = {"EMP_ID","TEAM_ID","TEAM","EMPLOYEE_NAME","PROJ_ID","PROJECT_NAME","SUBMITTED_HRS",
-    			"APPROVED_HRS","TOTAL_PLANNED_HRS","TOTAL_ACTUAL_HRS"};
+    			"APPROVED_HRS","TOTAL_PLANNED_HRS","TOTAL_ACTUAL_HRS","PM_NAME"};
         writeHeaderLine( "ProjectSummaryReport",columnNames);
         writeProjectSummaryData(projectSummaryList);
         ByteArrayOutputStream out = new ByteArrayOutputStream();

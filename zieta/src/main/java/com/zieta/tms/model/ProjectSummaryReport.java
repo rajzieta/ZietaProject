@@ -23,7 +23,9 @@ public class ProjectSummaryReport {
 	private String proj_id;
 
 	private String project_name;
-
+	
+	private String pm_name;
+	
 	private String submitted_hrs;
 
 	private String approved_hrs;

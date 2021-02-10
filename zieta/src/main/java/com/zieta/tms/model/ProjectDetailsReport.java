@@ -16,7 +16,7 @@ public class ProjectDetailsReport {
 
 	private String client_name;
 
-	private String project_code;
+	private String proj_id;
 
 	private String project_name;
 
@@ -26,9 +26,13 @@ public class ProjectDetailsReport {
 
 	private String user_id;
 
-	private String user_name;
+	private String employee_name;
 
 	private String emp_id;
+	
+	private String team_id;
+	
+	private String team;
 
 	private String ts_id;
 

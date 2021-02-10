@@ -7,28 +7,22 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
-import org.springframework.data.domain.Page;
-
-import com.zieta.tms.dto.TimeSheetReportDTO;
-import com.zieta.tms.dto.TimeSheetSumReportDTO;
+import com.zieta.tms.model.TSReport;
+import com.zieta.tms.model.TSSumReport;
 
 @Transactional
 public interface TSReportService {
 
-	Page<TimeSheetReportDTO> getTsByDateRange(long client_id, String startDate, String endDate, Integer pageNo, Integer pageSize);
+	
+	public List<TSReport> getTSReportEntriesFromProcedure(long clientId, String startDate, String endDate);
 	
 	public ByteArrayInputStream downloadTimeSheetReport(HttpServletResponse response,long clientId,
 			String startDate, String endDate) throws IOException ;
 	
-	public List<TimeSheetReportDTO> getTSReportEntriesFromProcedure(long client_id, String startDate, String endDate);
 
-	public List<TimeSheetSumReportDTO> getTSReportSumEntriesFromProcedure(long clientId, String startDate, String endDate);
-
-	Page<TimeSheetSumReportDTO> getTsByDateRangeSum(long client_id, String startDate, String endDate, Integer pageNo,
-			Integer pageSize);
+	public List<TSSumReport> getTSReportSumEntriesFromProcedure(long clientId, String startDate, String endDate);
 
 	public ByteArrayInputStream downloadTimeSheetSumReport(HttpServletResponse response, long clientId, String startDate,
 			String endDate) throws IOException;
 
-	//public List<TimeSheetReportDTO> getTSReportEntriesFromSumProcedure(long clientId, String startDate, String endDate);
 }

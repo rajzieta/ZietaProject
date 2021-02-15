@@ -18,6 +18,8 @@ public interface UserInfoService {
 
 	public UserInfoDTO findByEmail(String email);
 	
+	public UserInfoDTO findByUserId(long userId);
+	
 	public List<UserInfoDTO> findByClientId(Long client_id);
 	
 	public LoginResponse authenticateUser(String email, String password);

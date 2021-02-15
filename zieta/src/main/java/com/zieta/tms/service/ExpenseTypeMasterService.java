@@ -5,19 +5,22 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zieta.tms.model.ExpenseTypeMaster;
+import com.zieta.tms.response.ExpenseTypeMasterResponse;
 
 @Transactional
 public interface ExpenseTypeMasterService {
 	
-	List<ExpenseTypeMaster> findExpenseTypeByClientId(long clientId);
+	List<ExpenseTypeMasterResponse> findExpenseTypeByClientId(long clientId);
 	
-	List<ExpenseTypeMaster> getAllExpenseTypes();
+	List<ExpenseTypeMasterResponse> getAllExpenseTypes();
 	
 	void addExpenseType(ExpenseTypeMaster expenseTypeMaster);
 	
 	void deleteExpenseType(String expenseType);
 	
 	void editExpenseType(ExpenseTypeMaster expenseTypeMaster);
+	
+	void deleteByExpenseTypeId(long expesneId);
 	
 	
 	

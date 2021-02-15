@@ -67,6 +67,16 @@ public class UserController {
 		return userDetails;
 	}
 	
+
+	@RequestMapping(value = "getUserDataById", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "provides user data based on userId",notes="Table reference: user_info, client_info, org_info")
+	public UserInfoDTO getUserDataById(@RequestParam(required = true) Long userId) {
+		UserInfoDTO userDetails = userInfoService.findByUserId(userId);
+		
+		return userDetails;
+	}
+	
+	
 	
 	@RequestMapping(value = "getAllUsersByClient", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "lists userdetails based on the provided clientId",notes="Table reference: user_info,"

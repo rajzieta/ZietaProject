@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zieta.tms.model.ExpenseTypeMaster;
+import com.zieta.tms.response.ExpenseTypeMasterResponse;
 import com.zieta.tms.service.ExpenseTypeMasterService;
 
 import io.swagger.annotations.Api;
@@ -30,12 +31,25 @@ public class ExpenseTypeMasterController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExpenseTypeMasterController.class);
 
 	@RequestMapping(value = "getAllExpenseTypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<ExpenseTypeMaster> getAllExpenseTypes() {
-		List<ExpenseTypeMaster> msgList = null;
+	public List<ExpenseTypeMasterResponse> getAllExpenseTypes() {
+		List<ExpenseTypeMasterResponse> msgList = null;
 		try {
 			msgList = expenseTypeMasterService.getAllExpenseTypes();
 		} catch (Exception e) {
-			LOGGER.error("Error Occured in ExpenseTypeMasterController#ExpenseTypeMasterController",e);
+			LOGGER.error("Error Occured in ExpenseTypeMasterController#getAllExpenseTypes",e);
+
+		}
+		return msgList;
+	}
+	
+	
+	@RequestMapping(value = "getExpensesByClientId", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<ExpenseTypeMasterResponse> getExpensesByClientId(@RequestParam(required = true) Long clientId) {
+		List<ExpenseTypeMasterResponse> msgList = null;
+		try {
+			msgList = expenseTypeMasterService.findExpenseTypeByClientId(clientId);
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in ExpenseTypeMasterController#getExpensesByClientId",e);
 
 		}
 		return msgList;
@@ -57,6 +71,12 @@ public class ExpenseTypeMasterController {
 	@RequestMapping(value = "deleteExpenseType", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void deleteExpenseType(@RequestParam(required = true) String expenseType) {
 		expenseTypeMasterService.deleteExpenseType(expenseType);
+
+	}
+	
+	@RequestMapping(value = "deleteExpenseTypeById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deleteExpenseTypeById(@RequestParam(required = true) Long expenseTypeId) {
+		expenseTypeMasterService.deleteByExpenseTypeId(expenseTypeId);
 
 	}
 	

@@ -338,5 +338,31 @@ public class UserInfoServiceImpl implements UserInfoService {
 		return userInfoRepositoryRepository.findAllById(teamList);
 		
 	}
+
+	@Override
+	public UserInfoDTO findByUserId(long userId) {
+		UserInfoDTO userInfoDTO = null;
+		UserInfo userInfo = userInfoRepositoryRepository.findById(userId).get();
+		if(userInfo !=null) {
+			userInfoDTO =  modelMapper.map(userInfo, UserInfoDTO.class);
+			String reportingManager = StringUtils.EMPTY;
+			userInfoDTO.setPassword(StringUtils.EMPTY);
+			
+			if(userInfo.getReportingMgr() != null) {
+				UserInfo rmInfo = userInfoRepositoryRepository.findById(userInfo.getReportingMgr()).get();
+				reportingManager = TSMUtil.getFullName(rmInfo);
+				userInfoDTO.setReportingMgrEmpId(rmInfo.getEmpId());
+			}
+			userInfoDTO.setReportingMgrName(reportingManager);
+			ClientInfo clientInfo = clientInfoRepo.findById(userInfo.getClientId()).get();
+			userInfoDTO.setClientCode(clientInfo.getClientCode());
+			userInfoDTO.setClientDescription(clientInfo.getClientName());
+			userInfoDTO.setClientStatus(clientInfo.getClientStatus());
+			 if(userInfo.getOrgNode() !=null) {
+				 userInfoDTO.setOrgNodeName(orgInfoRepository.findById(userInfo.getOrgNode()).get().getOrgNodeName());
+			 }
+		}
+		return userInfoDTO;
+	}
 	
 }

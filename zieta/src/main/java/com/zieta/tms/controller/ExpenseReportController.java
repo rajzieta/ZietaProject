@@ -78,7 +78,8 @@ public class ExpenseReportController {
 	public ResponseEntity<Resource> downloadExpenseDetailsReport(HttpServletResponse response,
 			@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
-			@RequestParam(required = true) String endDate) throws IOException {
+			@RequestParam(required = true) String endDate,
+			@RequestParam(required = false) String empId) throws IOException {
 
 		
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
@@ -86,7 +87,7 @@ public class ExpenseReportController {
 		String filename = "expense_details_report_" + currentDateTime + ".xlsx";
 		HttpHeaders header = new HttpHeaders();
         header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+filename);
-        ByteArrayInputStream bri = expenseReportService.downloadExpenseDetailsReport(response, clientId, startDate, endDate);
+        ByteArrayInputStream bri = expenseReportService.downloadExpenseDetailsReport(response, clientId, startDate, endDate, empId);
         InputStreamResource file = new InputStreamResource(bri);
         
 		return ResponseEntity.ok().headers(header).body(file);
@@ -111,7 +112,8 @@ public class ExpenseReportController {
 	public ResponseEntity<Resource> downloadExpenseSummaryReport(HttpServletResponse response,
 			@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
-			@RequestParam(required = true) String endDate) throws IOException {
+			@RequestParam(required = true) String endDate,
+			@RequestParam(required = false) String empId) throws IOException {
 
 		
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
@@ -119,7 +121,7 @@ public class ExpenseReportController {
 		String filename = "expense_summary_report_" + currentDateTime + ".xlsx";
 		HttpHeaders header = new HttpHeaders();
         header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+filename);
-        ByteArrayInputStream bri = expenseReportService.downloadExpenseSummaryReport(response, clientId, startDate, endDate);
+        ByteArrayInputStream bri = expenseReportService.downloadExpenseSummaryReport(response, clientId, startDate, endDate, empId);
         InputStreamResource file = new InputStreamResource(bri);
         
 		return ResponseEntity.ok().headers(header).body(file);

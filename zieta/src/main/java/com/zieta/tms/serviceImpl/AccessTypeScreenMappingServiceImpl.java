@@ -6,16 +6,14 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zieta.tms.dto.AccessTypeScreenMappingDTO;
-import com.zieta.tms.dto.ClientInfoDTO;
-import com.zieta.tms.dto.OrgInfoDTO;
 import com.zieta.tms.model.AccessTypeScreenMapping;
-import com.zieta.tms.model.ClientInfo;
-import com.zieta.tms.model.OrgInfo;
 import com.zieta.tms.model.ScreensMaster;
 import com.zieta.tms.repository.AccessTypeMasterRepository;
 import com.zieta.tms.repository.AccessTypeScreenMappingRepository;
@@ -156,12 +154,15 @@ public class AccessTypeScreenMappingServiceImpl implements AccessTypeScreenMappi
 	
 	
 	@Override
-	public void editAccessScreenMapping(AccessTypeScreenMappingDTO accessScreenmapdto) throws Exception {
+	public void editAccessScreenMapping(AccessTypeScreenMapping accessScreenmapdto) throws Exception {
 		
 		Optional<AccessTypeScreenMapping> accessscreenmapEntity = accessTypeScreenMappingRepository.findById(accessScreenmapdto.getId());
 		if(accessscreenmapEntity.isPresent()) {
-			AccessTypeScreenMapping accessScreenInfos = modelMapper.map(accessScreenmapdto, AccessTypeScreenMapping.class);
-			accessTypeScreenMappingRepository.save(accessScreenInfos);
+			AccessTypeScreenMapping accessTypeScreenMapping = accessscreenmapEntity.get();
+			modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
+			modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+			modelMapper.map(accessScreenmapdto, accessTypeScreenMapping);
+			accessTypeScreenMappingRepository.save(accessTypeScreenMapping);
 			
 		}else {
 			throw new Exception("AccessTypeScreenMapping not found with the provided ID : "+accessScreenmapdto.getId());

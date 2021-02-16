@@ -21,9 +21,9 @@ public class UserInfoEditRequest {
 		private Long reportingMgr;
 		private Long accessTypeId;
 		private String phoneNo;
-		private short isActive;
+		private Short isActive;
 		private String modifiedBy;
 		private Date modifiedDate;
-		private short isDelete;
+		private Short isDelete;
 		//private String password;
 }

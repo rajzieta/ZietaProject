@@ -11,5 +11,6 @@ public class ExpenseTypeMasterResponse extends ExpenseTypeMaster {
 
 	private String clientCode;
 	private String clientDescription;
+	private Long clientStatus;
 	
 }

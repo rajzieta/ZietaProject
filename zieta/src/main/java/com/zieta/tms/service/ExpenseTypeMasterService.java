@@ -20,7 +20,7 @@ public interface ExpenseTypeMasterService {
 	
 	void editExpenseType(ExpenseTypeMaster expenseTypeMaster);
 	
-	void deleteByExpenseTypeId(long expesneId);
+	void deleteByExpenseTypeId(long expesneId,String modifiedBy);
 	
 	
 	

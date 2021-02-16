@@ -84,6 +84,7 @@ public class ExpenseTypeMasterServiceImpl implements ExpenseTypeMasterService {
 		}else {
 			log.error("ExpenseTypeMaster entity not found with id {}",expenseTypeId);
 		}
+
 	}
 
 	

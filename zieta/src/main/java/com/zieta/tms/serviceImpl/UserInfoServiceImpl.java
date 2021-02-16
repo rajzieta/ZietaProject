@@ -7,11 +7,12 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.amazonaws.services.cognitosync.model.DuplicateRequestException;
 import com.zieta.tms.common.MessagesConstants;
 import com.zieta.tms.dto.UserInfoDTO;
 import com.zieta.tms.model.ClientInfo;
@@ -25,7 +26,6 @@ import com.zieta.tms.repository.OrgInfoRepository;
 import com.zieta.tms.repository.UserInfoRepository;
 import com.zieta.tms.request.PasswordEditRequest;
 import com.zieta.tms.request.UserInfoEditRequest;
-import com.zieta.tms.response.ActivitiesByClientProjectTaskResponse;
 import com.zieta.tms.response.LoginResponse;
 import com.zieta.tms.response.UserDetailsResponse;
 import com.zieta.tms.service.AccessTypeMasterService;
@@ -249,22 +249,11 @@ public class UserInfoServiceImpl implements UserInfoService {
 		
 		Optional<UserInfo> userinfoEntity = userInfoRepositoryRepository.findById(userinfoeditRequest.getId());
 		if(userinfoEntity.isPresent()) {
-			UserInfo userinfosave = userinfoEntity.get();
-			userinfosave.setClientId(userinfoeditRequest.getClientId());
-			userinfosave.setUserFname(userinfoeditRequest.getUserFname());
-			userinfosave.setUserMname(userinfoeditRequest.getUserMname());
-			userinfosave.setUserLname(userinfoeditRequest.getUserLname());
-			userinfosave.setEmail(userinfoeditRequest.getEmail());
-			userinfosave.setEmpId(userinfoeditRequest.getEmpId());
-			userinfosave.setOrgNode(userinfoeditRequest.getOrgNode());
-			userinfosave.setReportingMgr(userinfoeditRequest.getReportingMgr());
-			userinfosave.setAccessTypeId(userinfoeditRequest.getAccessTypeId());
-			userinfosave.setPhoneNo(userinfoeditRequest.getPhoneNo());
-			userinfosave.setIsActive(userinfoeditRequest.getIsActive());
-			userinfosave.setModifiedBy(userinfoeditRequest.getModifiedBy());
-			userinfosave.setModifiedDate(userinfoeditRequest.getModifiedDate());
-			userinfosave.setIsDelete(userinfoeditRequest.getIsDelete());
-			userInfoRepositoryRepository.save(userinfosave);
+			UserInfo userInfo = userinfoEntity.get();
+			 modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
+			 modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+			 modelMapper.map(userinfoeditRequest,userInfo );
+			userInfoRepositoryRepository.save(userInfo);
 			
 		}else {
 			throw new Exception("User not found with the provided ID : "+userinfoeditRequest.getId());

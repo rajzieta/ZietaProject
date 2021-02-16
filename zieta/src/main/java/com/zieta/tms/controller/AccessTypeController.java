@@ -118,7 +118,7 @@ public class AccessTypeController {
 	
 	@ApiOperation(value = "Updates the accesstype_screen_mapping for the provided Id", notes = "Table reference: accesstype_screen_mapping")
 	@RequestMapping(value = "editAccessTypeScreenMapping", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void editAccessTypeScreenMapping(@Valid @RequestBody AccessTypeScreenMappingDTO accessscreenMappingdto) throws Exception {
+	public void editAccessTypeScreenMapping(@Valid @RequestBody AccessTypeScreenMapping accessscreenMappingdto) throws Exception {
 		accessTypeScreenMappingService.editAccessScreenMapping(accessscreenMappingdto);
 		
 		

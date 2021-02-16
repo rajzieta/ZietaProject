@@ -15,7 +15,7 @@ public interface AccessTypeScreenMappingService {
 
 	public List<AccessTypeScreenMappingDTO> getAllAccesstypeScreensMapping();
 
-	public void editAccessScreenMapping(AccessTypeScreenMappingDTO accessScreenmapdto) throws Exception;
+	public void editAccessScreenMapping(AccessTypeScreenMapping accessScreenmapdto) throws Exception;
 
 	public void deleteAccessScreensMappingById(Long id, String modifiedBy) throws Exception;
 	

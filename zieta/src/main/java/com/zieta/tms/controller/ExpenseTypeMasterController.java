@@ -75,8 +75,8 @@ public class ExpenseTypeMasterController {
 	}
 	
 	@RequestMapping(value = "deleteExpenseTypeById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void deleteExpenseTypeById(@RequestParam(required = true) Long expenseTypeId) {
-		expenseTypeMasterService.deleteByExpenseTypeId(expenseTypeId);
+	public void deleteExpenseTypeById(@RequestParam(required = true) Long expenseTypeId, @RequestParam(required = true) String modifiedBy) {
+		expenseTypeMasterService.deleteByExpenseTypeId(expenseTypeId, modifiedBy);
 
 	}
 	

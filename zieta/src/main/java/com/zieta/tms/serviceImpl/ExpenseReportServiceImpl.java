@@ -3,6 +3,7 @@ package com.zieta.tms.serviceImpl;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -71,20 +72,29 @@ public class ExpenseReportServiceImpl implements ExpenseReportService {
 	
 	@Override
 	public ByteArrayInputStream downloadExpenseDetailsReport(HttpServletResponse response,long clientId,
-			String startDate, String endDate) throws IOException {
-		
+			String startDate, String endDate, String empId) throws IOException {
+
 		List<ExpenseDetailsReport> expenseDetailsReportList = getExpenseDetailsReport(clientId, startDate, endDate);
+		if (empId != null) {
+			expenseDetailsReportList = expenseDetailsReportList.stream()
+					.filter(criteria -> criteria.getEmp_id().equals(empId)).collect(Collectors.toList());
+		}
+
 		return expenseReportHelper.downloadReport(response, expenseDetailsReportList);
-		
+
 	}
 
 	
 	
 	@Override
 	public ByteArrayInputStream downloadExpenseSummaryReport(HttpServletResponse response,long clientId,
-			String startDate, String endDate) throws IOException {
+			String startDate, String endDate,  String empId) throws IOException {
 		
 		List<ExpenseSummaryReport> expenseSummaryList = getExpenseSummaryReport(clientId, startDate, endDate);
+		if (empId != null) {
+			expenseSummaryList = expenseSummaryList.stream()
+					.filter(criteria -> criteria.getEmp_id().equals(empId)).collect(Collectors.toList());
+		}
 		return expenseReportHelper.downloadSumReport(response, expenseSummaryList);
 		
 	}

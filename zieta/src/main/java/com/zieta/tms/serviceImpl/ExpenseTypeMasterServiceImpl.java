@@ -14,7 +14,10 @@ import com.zieta.tms.repository.ExpenseTypeMasterRepository;
 import com.zieta.tms.response.ExpenseTypeMasterResponse;
 import com.zieta.tms.service.ExpenseTypeMasterService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class ExpenseTypeMasterServiceImpl implements ExpenseTypeMasterService {
 	
 	@Autowired
@@ -42,6 +45,7 @@ public class ExpenseTypeMasterServiceImpl implements ExpenseTypeMasterService {
 			ClientInfo clientInfo = clientInfoRepo.findById(expenseTypeMaster.getClientId()).get();
 			expenseTypeMasterResponse.setClientCode(clientInfo.getClientCode());
 			expenseTypeMasterResponse.setClientDescription(clientInfo.getClientName());
+			expenseTypeMasterResponse.setClientStatus(clientInfo.getClientStatus());
 			expenseTypeMasterResponseList.add(expenseTypeMasterResponse);
 		}
 		return expenseTypeMasterResponseList;
@@ -71,9 +75,16 @@ public class ExpenseTypeMasterServiceImpl implements ExpenseTypeMasterService {
 	}
 
 	@Override
-	public void deleteByExpenseTypeId(long expesneId) {
+	public void deleteByExpenseTypeId(long expenseTypeId, String modifiedBy) {
 
-		expenseTypeMasterRepository.deleteById(expesneId);
+		ExpenseTypeMaster expenseTypeMaster = expenseTypeMasterRepository.findById(expenseTypeId).get();
+		if (expenseTypeMaster !=null) {
+			expenseTypeMaster.setIsDelete((short)1);
+			expenseTypeMaster.setModifiedBy(modifiedBy);
+		}else {
+			log.error("ExpenseTypeMaster entity not found with id {}",expenseTypeId);
+		}
+
 	}
 
 	

@@ -43,6 +43,6 @@ public class BaseEntity {
 	private Date modifiedDate;
 	
 	@Column(name = "IS_DELETE")
-	private Short isDelete;
+	private Short isDelete =0;
 
 }

@@ -17,12 +17,12 @@ public interface TSReportService {
 	public List<TSReport> getTSReportEntriesFromProcedure(long clientId, String startDate, String endDate);
 	
 	public ByteArrayInputStream downloadTimeSheetReport(HttpServletResponse response,long clientId,
-			String startDate, String endDate) throws IOException ;
+			String startDate, String endDate,String projectId, String teamId, String empId) throws IOException ;
 	
 
 	public List<TSSumReport> getTSReportSumEntriesFromProcedure(long clientId, String startDate, String endDate);
 
 	public ByteArrayInputStream downloadTimeSheetSumReport(HttpServletResponse response, long clientId, String startDate,
-			String endDate) throws IOException;
+			String endDate,String projectId, String teamId, String empId) throws IOException;
 
 }

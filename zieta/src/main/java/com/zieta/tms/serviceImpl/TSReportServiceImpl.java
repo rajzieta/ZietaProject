@@ -3,6 +3,7 @@ package com.zieta.tms.serviceImpl;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -51,20 +52,56 @@ public class TSReportServiceImpl implements TSReportService {
 	
 	@Override
 	public ByteArrayInputStream downloadTimeSheetReport(HttpServletResponse response,long clientId,
-			String startDate, String endDate) throws IOException {
-		
+			String startDate, String endDate, String projectId, String teamId, String empId) throws IOException {
+
 		List<TSReport> timeSheetReportList = getTSReportEntriesFromProcedure(clientId, startDate, endDate);
+
+		if (projectId != null) {
+			timeSheetReportList = timeSheetReportList.stream().parallel()
+					.filter(criteria -> criteria.getProj_id() != null && criteria.getProj_id().equals(projectId))
+					.collect(Collectors.toList());
+		}
+
+		if (empId != null) {
+			timeSheetReportList = timeSheetReportList.stream().parallel()
+					.filter(criteria -> criteria.getEmp_id() != null && criteria.getEmp_id().equals(empId))
+					.collect(Collectors.toList());
+		}
+
+		if (teamId != null) {
+			timeSheetReportList = timeSheetReportList.stream().parallel()
+					.filter(criteria -> criteria.getTeam_id() != null && criteria.getTeam_id().equals(teamId))
+					.collect(Collectors.toList());
+		}
+
 		return timeSheetReportHelper.downloadReport(response, timeSheetReportList);
-		
+
 	}
 
 	
 	
 	@Override
 	public ByteArrayInputStream downloadTimeSheetSumReport(HttpServletResponse response,long clientId,
-			String startDate, String endDate) throws IOException {
+			String startDate, String endDate, String projectId, String teamId, String empId) throws IOException {
 		
 		List<TSSumReport> timeSheetReportList = getTSReportSumEntriesFromProcedure(clientId, startDate, endDate);
+		if (projectId != null) {
+			timeSheetReportList = timeSheetReportList.stream().parallel()
+					.filter(criteria -> criteria.getProj_id() != null && criteria.getProj_id().equals(projectId))
+					.collect(Collectors.toList());
+		}
+
+		if (empId != null) {
+			timeSheetReportList = timeSheetReportList.stream().parallel()
+					.filter(criteria -> criteria.getEmp_id() != null && criteria.getEmp_id().equals(empId))
+					.collect(Collectors.toList());
+		}
+
+		if (teamId != null) {
+			timeSheetReportList = timeSheetReportList.stream().parallel()
+					.filter(criteria -> criteria.getTeam_id() != null && criteria.getTeam_id().equals(teamId))
+					.collect(Collectors.toList());
+		}
 		return timeSheetReportHelper.downloadSumReport(response, timeSheetReportList);
 		
 	}

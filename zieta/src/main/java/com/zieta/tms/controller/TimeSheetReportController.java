@@ -74,7 +74,10 @@ public class TimeSheetReportController {
 	public ResponseEntity<Resource> downloadTimeSheetReportDetails(HttpServletResponse response,
 			@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
-			@RequestParam(required = true) String endDate){
+			@RequestParam(required = true) String endDate,
+			@RequestParam(required = false) String projectId, 
+			@RequestParam(required = false) String teamId, 
+			@RequestParam(required = false) String empId){
 		
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 		String currentDateTime = dateFormatter.format(new Date());
@@ -84,7 +87,7 @@ public class TimeSheetReportController {
         ByteArrayInputStream bri = null;
 		try {
 			bri = tsReportService.downloadTimeSheetReport(
-					 response, clientId,startDate, endDate);
+					 response, clientId,startDate, endDate, projectId, teamId, empId);
 		} catch (IOException e) {
 			LOGGER.error("Exception occured while downloading the report",e);
 		}
@@ -98,7 +101,10 @@ public class TimeSheetReportController {
 	public ResponseEntity<Resource> downloadTimeSheetSummaryReport(HttpServletResponse response,
 			@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
-			@RequestParam(required = true) String endDate){
+			@RequestParam(required = true) String endDate,
+			@RequestParam(required = false) String projectId, 
+			@RequestParam(required = false) String teamId, 
+			@RequestParam(required = false) String empId){
 		
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 		String currentDateTime = dateFormatter.format(new Date());
@@ -108,7 +114,7 @@ public class TimeSheetReportController {
         ByteArrayInputStream bri = null;
 		try {
 			bri = tsReportService.downloadTimeSheetSumReport(
-					 response, clientId,startDate, endDate);
+					 response, clientId,startDate, endDate, projectId, teamId, empId);
 		} catch (IOException e) {
 			LOGGER.error("Exception occured while downloading the report",e);
 		}

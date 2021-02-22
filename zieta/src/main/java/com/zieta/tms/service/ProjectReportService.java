@@ -16,12 +16,12 @@ public interface ProjectReportService {
 	public List<ProjectDetailsReport> getProjectDetailsReport(long clientId, String startDate, String endDate);
 
 	public ByteArrayInputStream downloadProjectDetailsReport(HttpServletResponse response,long clientId,
-			String startDate, String endDate) throws IOException ;
+			String startDate, String endDate, String projectId, String teamId, String empId) throws IOException ;
 	
 	public List<ProjectSummaryReport> getProjectSummaryReport(long clientId, String startDate, String endDate);
 
 	public ByteArrayInputStream downloadProjectSummaryReport(HttpServletResponse response,long clientId,
-			String startDate, String endDate) throws IOException ;
+			String startDate, String endDate, String projectId, String teamId, String empId) throws IOException ;
 	
 	
 }

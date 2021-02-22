@@ -3,6 +3,7 @@ package com.zieta.tms.serviceImpl;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -46,9 +47,28 @@ public class ProjectDetailsReportServiceImpl implements ProjectReportService {
 	
 	@Override
 	public ByteArrayInputStream downloadProjectDetailsReport(HttpServletResponse response,long clientId,
-			String startDate, String endDate) throws IOException {
+			String startDate, String endDate, String projectId, String teamId, String empId) throws IOException {
 		
 		List<ProjectDetailsReport> projectDetailsReportList = projectDetailsReportRepository.getProjectDetailsReport(clientId, startDate, endDate);
+		
+		if (projectId != null) {
+			projectDetailsReportList = projectDetailsReportList.stream().parallel()
+					.filter(criteria -> criteria.getProj_id() != null && criteria.getProj_id().equals(projectId))
+					.collect(Collectors.toList());
+		}
+
+		if (empId != null) {
+			projectDetailsReportList = projectDetailsReportList.stream().parallel()
+					.filter(criteria -> criteria.getEmp_id() != null && criteria.getEmp_id().equals(empId))
+					.collect(Collectors.toList());
+		}
+
+		if (teamId != null) {
+			projectDetailsReportList = projectDetailsReportList.stream().parallel()
+					.filter(criteria -> criteria.getTeam_id() != null && criteria.getTeam_id().equals(teamId))
+					.collect(Collectors.toList());
+		}
+		
 		return projectReportHelper.downloadProjectDetailsReport(response, projectDetailsReportList);
 		
 	}
@@ -63,9 +83,28 @@ public class ProjectDetailsReportServiceImpl implements ProjectReportService {
 
 	@Override
 	public ByteArrayInputStream downloadProjectSummaryReport(HttpServletResponse response, long clientId,
-			String startDate, String endDate) throws IOException {
+			String startDate, String endDate, String projectId, String teamId, String empId) throws IOException {
 		List<ProjectSummaryReport> projectSummaryReportList = projectSummaryReportRepository
 				.getProjectSummaryReport(clientId, startDate, endDate);
+		
+		if (projectId != null) {
+			projectSummaryReportList = projectSummaryReportList.stream().parallel()
+					.filter(criteria -> criteria.getProj_id() != null && criteria.getProj_id().equals(projectId))
+					.collect(Collectors.toList());
+		}
+
+		if (empId != null) {
+			projectSummaryReportList = projectSummaryReportList.stream().parallel()
+					.filter(criteria -> criteria.getEmp_id() != null && criteria.getEmp_id().equals(empId))
+					.collect(Collectors.toList());
+		}
+
+		if (teamId != null) {
+			projectSummaryReportList = projectSummaryReportList.stream().parallel()
+					.filter(criteria -> criteria.getTeam_id() != null && criteria.getTeam_id().equals(teamId))
+					.collect(Collectors.toList());
+		}
+		
 		return projectReportHelper.downloadProjectSummaryReport(response, projectSummaryReportList);
 	}
 

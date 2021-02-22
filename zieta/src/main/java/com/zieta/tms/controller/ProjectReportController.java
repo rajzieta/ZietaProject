@@ -79,7 +79,10 @@ public class ProjectReportController {
 	public ResponseEntity<Resource> downloadProjectDetailsReport(HttpServletResponse response,
 			@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
-			@RequestParam(required = true) String endDate) throws IOException {
+			@RequestParam(required = true) String endDate,
+			@RequestParam(required = false) String projectId, 
+			@RequestParam(required = false) String teamId, 
+			@RequestParam(required = false) String empId) throws IOException {
 
 		
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
@@ -87,7 +90,7 @@ public class ProjectReportController {
 		String filename = "project_details_report_" + currentDateTime + ".xlsx";
 		HttpHeaders header = new HttpHeaders();
         header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+filename);
-        ByteArrayInputStream bri = projectReportService.downloadProjectDetailsReport(response, clientId, startDate, endDate);
+        ByteArrayInputStream bri = projectReportService.downloadProjectDetailsReport(response, clientId, startDate, endDate, projectId, teamId, empId);
         InputStreamResource file = new InputStreamResource(bri);
         
 		return ResponseEntity.ok().headers(header).body(file);
@@ -131,7 +134,10 @@ public class ProjectReportController {
 	public ResponseEntity<Resource> downloadProjectSummaryReport(HttpServletResponse response,
 			@RequestParam Long clientId,
 			@RequestParam(required = true) String startDate,
-			@RequestParam(required = true) String endDate) throws IOException {
+			@RequestParam(required = true) String endDate,
+			@RequestParam(required = false) String projectId, 
+			@RequestParam(required = false) String teamId, 
+			@RequestParam(required = false) String empId) throws IOException {
 
 		
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
@@ -139,7 +145,7 @@ public class ProjectReportController {
 		String filename = "project_summary_report_" + currentDateTime + ".xlsx";
 		HttpHeaders header = new HttpHeaders();
         header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+filename);
-        ByteArrayInputStream bri = projectReportService.downloadProjectSummaryReport(response, clientId, startDate, endDate);
+        ByteArrayInputStream bri = projectReportService.downloadProjectSummaryReport(response, clientId, startDate, endDate, projectId, teamId, empId);
         InputStreamResource file = new InputStreamResource(bri);
         
 		return ResponseEntity.ok().headers(header).body(file);

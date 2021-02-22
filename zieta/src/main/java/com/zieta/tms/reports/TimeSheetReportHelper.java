@@ -35,10 +35,8 @@ public class TimeSheetReportHelper extends BaseHelper {
             int columnCount = 0;
              
             createCell(row, columnCount++, timeSheetReport.getEmp_id(), style);
-            createCell(row, columnCount++, timeSheetReport.getTeam_id(), style);
             createCell(row, columnCount++, timeSheetReport.getTeam(), style);
             createCell(row, columnCount++, timeSheetReport.getEmployee_name(), style);
-            createCell(row, columnCount++, timeSheetReport.getProj_id(), style);
             createCell(row, columnCount++, timeSheetReport.getProject_name(), style);
             createCell(row, columnCount++, timeSheetReport.getTask_name(), style);
             createCell(row, columnCount++, timeSheetReport.getActivity_desc(), style);
@@ -53,7 +51,7 @@ public class TimeSheetReportHelper extends BaseHelper {
     }
      
     public ByteArrayInputStream downloadReport(HttpServletResponse response, List<TSReport> tsReportList) throws IOException {
-        String[] columNames = {"EMP_ID", "TEAM_ID","TEAM","EMPLOYEE_NAME","PROJ_ID","PROJECT_NAME","TASK_NAME","ACTIVITY_DESC",
+        String[] columNames = {"EMP_ID", "TEAM","EMPLOYEE_NAME","PROJECT_NAME","TASK_NAME","ACTIVITY_DESC",
         		"PLANNED_HOURS","ACTUAL_HOURS","TS_DATE","SUBMIT_DATE","SUBMITTED_HRS","APPROVED_HRS"};
     	writeHeaderLine("TimeSheet Details",columNames);
         writeDataLines(tsReportList);
@@ -81,10 +79,8 @@ public class TimeSheetReportHelper extends BaseHelper {
             int columnCount = 0;
              
             createCell(row, columnCount++, timeSheetReport.getEmp_id(), style);
-            createCell(row, columnCount++, timeSheetReport.getTeam_id(), style);
             createCell(row, columnCount++, timeSheetReport.getTeam(), style);
             createCell(row, columnCount++, timeSheetReport.getEmployee_name(), style);
-            createCell(row, columnCount++, timeSheetReport.getProj_id(), style);
             createCell(row, columnCount++, timeSheetReport.getProject_name(), style);
             createCell(row, columnCount++, timeSheetReport.getTid(), style);
             createCell(row, columnCount++, timeSheetReport.getTask_name(), style);
@@ -98,7 +94,7 @@ public class TimeSheetReportHelper extends BaseHelper {
     }
      
     public ByteArrayInputStream downloadSumReport(HttpServletResponse response, List<TSSumReport> tsReportList) throws IOException {
-        String[] columNames = {"EMP_ID", "TEAM_ID","TEAM","EMP_NAME","PROJECT_ID","PROJECT_NAME","TID","TASK_NAME",
+        String[] columNames = {"EMP_ID","TEAM","EMP_NAME", "PROJECT_NAME","TID","TASK_NAME",
         		"ACTIVITY_DESC","SUBMITTED_HOURS","APPROVED_HOURS","TOTAL_PLANNED_HOURS","TOTAL_ACTUAL_HOURS"};
     	writeHeaderLine("TimeSheetSummary",columNames);
         writeSumDataLines(tsReportList);

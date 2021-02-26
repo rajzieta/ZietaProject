@@ -46,7 +46,7 @@ public class UserController {
 			allUserData = userInfoService.getAllUserInfoDetails();
 			LOGGER.info("Total number of users: "+allUserData.size());
 		} catch (Exception e) {
-			LOGGER.error("Error Occured in getting all user details test",e);
+			LOGGER.error("Error Occured in getting all user details",e);
 		}
 		return allUserData;
 	}

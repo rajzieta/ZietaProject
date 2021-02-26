@@ -229,7 +229,8 @@ public class UserInfoServiceImpl implements UserInfoService {
 		UserInfo userinfoEntities = userInfoRepositoryRepository.findByEmail(userinfo.getEmail());
 		
 		if(userinfoEntities !=null) {
-			throw new DuplicateRequestException("emailid is already in use");
+			log.info("Emailid is already in use ",userinfoEntities.getEmail());
+			throw new DuplicateRequestException("Emailid is already in use " +userinfoEntities.getEmail());
 		}
 	else {
 		userInfoRepositoryRepository.save(userinfo);

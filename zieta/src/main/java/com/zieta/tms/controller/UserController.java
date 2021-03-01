@@ -95,7 +95,7 @@ public class UserController {
 
 	@ApiOperation(value = "creates entries in the user_info table", notes = "Table reference: user_info")
 	@RequestMapping(value = "addUsersInfo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void addUsersInfo(@Valid @RequestBody UserInfo userinfo) {
+	public void addUsersInfo(@Valid @RequestBody UserInfo userinfo) throws Exception {
 		userInfoService.addUsersInfo(userinfo);
 	}
 

@@ -26,7 +26,7 @@ public interface UserInfoService {
 	
 	public UserDetailsResponse getUserData(String emailId);
 
-	public void addUsersInfo(@Valid UserInfo userinfo);
+	public void addUsersInfo(@Valid UserInfo userinfo) throws Exception;
 
 	public void editUsersById(@Valid UserInfoEditRequest userinfoeditRequest) throws Exception;
 

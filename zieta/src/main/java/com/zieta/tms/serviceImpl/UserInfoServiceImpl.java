@@ -13,7 +13,6 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.amazonaws.services.cognitosync.model.DuplicateRequestException;
 import com.zieta.tms.common.MessagesConstants;
 import com.zieta.tms.dto.UserInfoDTO;
 import com.zieta.tms.model.ClientInfo;
@@ -225,12 +224,12 @@ public class UserInfoServiceImpl implements UserInfoService {
 	
 	
 	@Override
-	public void addUsersInfo(UserInfo userinfo) {
+	public void addUsersInfo(UserInfo userinfo) throws Exception {
 		UserInfo userinfoEntities = userInfoRepositoryRepository.findByEmail(userinfo.getEmail());
 		
 		if(userinfoEntities !=null) {
 			log.info("Emailid is already in use ",userinfoEntities.getEmail());
-			throw new DuplicateRequestException("Emailid is already in use " +userinfoEntities.getEmail());
+			throw new Exception("Emailid is already in use " +userinfoEntities.getEmail());
 		}
 	else {
 		userInfoRepositoryRepository.save(userinfo);

@@ -53,7 +53,8 @@ public class ExpenseTypeMasterServiceImpl implements ExpenseTypeMasterService {
 
 	@Override
 	public List<ExpenseTypeMasterResponse> getAllExpenseTypes() {
-		return transformExpenseData(expenseTypeMasterRepository.findAll());
+		short notDeleted = 0;		
+		return transformExpenseData(expenseTypeMasterRepository.findByIsDelete(notDeleted));
 	}
 
 	@Override

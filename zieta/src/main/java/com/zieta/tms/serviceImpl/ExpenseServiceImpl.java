@@ -552,7 +552,9 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Override
 	public List<ExpenseTypeMaster> getAllExpenseMastersByClient(Long clientId) {
-		List<ExpenseTypeMaster> expenseTypeMasterDetails = expenseTypeMasterRepository.findByClientId(clientId);
+		
+		short notDeleted = 0;
+		List<ExpenseTypeMaster> expenseTypeMasterDetails = expenseTypeMasterRepository.findByClientIdAndIsDelete(clientId, notDeleted);
 		return expenseTypeMasterDetails;
 	}
 

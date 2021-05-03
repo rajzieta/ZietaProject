@@ -31,8 +31,7 @@ public class ExpenseTypeMasterServiceImpl implements ExpenseTypeMasterService {
 	
 	@Override
 	public List<ExpenseTypeMasterResponse> findExpenseTypeByClientId(long clientId) {
-		short notDeleted = 0;
-		List<ExpenseTypeMaster> expenseTypeMasterList = expenseTypeMasterRepository.findByClientIdAndIsDelete(clientId,notDeleted);
+		List<ExpenseTypeMaster> expenseTypeMasterList = expenseTypeMasterRepository.findByClientId(clientId);
 		return transformExpenseData(expenseTypeMasterList);
 		
 	}

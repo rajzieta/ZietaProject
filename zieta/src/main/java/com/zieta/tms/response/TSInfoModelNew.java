@@ -12,24 +12,18 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TSInfoModel {
-	
+public class TSInfoModelNew{	
 	String taskDescription;
 	short isDeleteTask;
 	String activityDescription;
 	short isDeleteActivity;
 	boolean activityStatus;
 	String projectDescription;
-	short isDeleteProject;
-	//TSInfo tsInfo;
+	short isDeleteProject;	
 	TSInfoDTO tsInfo;
 	List<TSTimeEntries> timeEntries;
 	String timeTypeDesc;
 	String clientCode;
 	String clientDescription;
-
-	
-		
-	
 
 }

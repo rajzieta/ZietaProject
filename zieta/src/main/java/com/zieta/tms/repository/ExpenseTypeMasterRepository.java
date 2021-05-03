@@ -16,11 +16,10 @@ public interface ExpenseTypeMasterRepository extends JpaRepository<ExpenseTypeMa
 
 
 	List<ExpenseTypeMaster> findByClientId(long clientId);
+	
+	List<ExpenseTypeMaster> findByClientIdAndIsDelete(Long clientId, short notDeleted);
 
 	long deleteByExpenseType(String expenseType);
-
-
-	List<ExpenseTypeMaster> findByClientIdAndIsDelete(long clientId, short notDeleted);
 
 
 }

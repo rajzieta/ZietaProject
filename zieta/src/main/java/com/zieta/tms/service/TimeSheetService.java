@@ -14,7 +14,7 @@ import com.zieta.tms.response.TimeEntriesByTimesheetIDResponse;
 
 public interface TimeSheetService {
 
-	public List<TSInfoModel> getTimeEntriesByUserDates(Long clientId, Long userId, Date startDate, Date endDate);
+	public List<TSInfoModel> getTimeEntriesByUserDates(Long clientId, Long userId, Date startDate, Date endDate);	
 
 	public List<TSInfo> addTimeSheet(@Valid List<TSInfo> tsinfo);
 

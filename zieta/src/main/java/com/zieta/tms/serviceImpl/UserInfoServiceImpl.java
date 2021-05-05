@@ -27,6 +27,7 @@ import com.zieta.tms.repository.UserInfoRepository;
 import com.zieta.tms.request.PasswordEditRequest;
 import com.zieta.tms.request.UserInfoEditRequest;
 import com.zieta.tms.response.LoginResponse;
+import com.zieta.tms.response.AddUserResponse;
 import com.zieta.tms.response.UserDetailsResponse;
 import com.zieta.tms.service.AccessTypeMasterService;
 import com.zieta.tms.service.ScreensMasterService;
@@ -224,15 +225,22 @@ public class UserInfoServiceImpl implements UserInfoService {
 	
 	
 	@Override
-	public void addUsersInfo(UserInfo userinfo) throws Exception {
-		UserInfo userinfoEntities = userInfoRepositoryRepository.findByEmail(userinfo.getEmail());
+	public AddUserResponse addUsersInfo(UserInfo userinfo) throws Exception {
 		
+		short notDeleted = 0;
+		AddUserResponse addUserResponse = new AddUserResponse();		
+		UserInfo userinfoEntities = userInfoRepositoryRepository.findByEmailAndIsDelete(userinfo.getEmail(),notDeleted);		
 		if(userinfoEntities !=null) {
-			log.info("Emailid is already in use ",userinfoEntities.getEmail());
-			throw new Exception("Emailid is already in use " +userinfoEntities.getEmail());
-		}
-	else {
-		userInfoRepositoryRepository.save(userinfo);
+			//set email id already exist validation
+			addUserResponse.setInfoMessage("EmailId "+userinfoEntities.getEmail()+" already in use ");
+			log.info("EmailId is already in use ",userinfoEntities.getEmail());
+			return addUserResponse;
+			//throw new Exception("Emailid is already in use " +userinfoEntities.getEmail());
+		}else{
+			
+			 addUserResponse.setInfoMessage("User Information Saved successfully ");
+			 userInfoRepositoryRepository.save(userinfo);	
+			 return addUserResponse;
 		}
 	}
 	

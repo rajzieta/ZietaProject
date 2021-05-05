@@ -14,6 +14,8 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, Long>{
 	
 	UserInfo findByEmail(String email);
 	
+	UserInfo findByEmailAndIsDelete(String email, short notDeleted);
+	
 	List<UserInfo> findByClientIdAndIsDelete(Long client_id, short notDeleted);
 
 	List<UserInfo> findByIsDelete(short notDeleted);

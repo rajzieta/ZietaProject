@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.zieta.tms.request.QuestionAnswerMasterEditRequest;
+import com.zieta.tms.request.QuestionAnswerMasterBulkEditRequest;
 import com.zieta.tms.request.QuestionMasterEditRequest;
 import com.zieta.tms.dto.QuestionMasterDTO;
 import com.zieta.tms.dto.CurrencyMasterDTO;
@@ -93,6 +94,20 @@ public class QuestionAnswerMasterController {
 		
 		
 	}
+	
+	
+	//BULK QUESTION ANSWER MASTER UPDATE
+	@ApiOperation(value = "Bulk Update the Question Answer Master Information for the provided Id", notes = "Table reference: config_question_answer")
+	@RequestMapping(value = "editBulkQuestionAnswerMasterById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void editBulkQuestionAnswerMasterById(@Valid @RequestBody List<QuestionAnswerMasterBulkEditRequest> questionAnswerMasterBulkEditRequest) throws Exception {
+		questionAnswerMasterService.editBulkQuestionAnswerMasterById(questionAnswerMasterBulkEditRequest);
+		
+		
+	}
+	
+	
+	
+	
 	
 	@ApiOperation(value = "Updates the Question  Master Information for the provided Id", notes = "Table reference: config_question_master")
 	@RequestMapping(value = "editQuestionMasterById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)

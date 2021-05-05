@@ -10,6 +10,7 @@ import com.zieta.tms.model.UserInfo;
 import com.zieta.tms.request.PasswordEditRequest;
 import com.zieta.tms.request.UserInfoEditRequest;
 import com.zieta.tms.response.LoginResponse;
+import com.zieta.tms.response.AddUserResponse;
 import com.zieta.tms.response.UserDetailsResponse;
 
 public interface UserInfoService {
@@ -26,7 +27,8 @@ public interface UserInfoService {
 	
 	public UserDetailsResponse getUserData(String emailId);
 
-	public void addUsersInfo(@Valid UserInfo userinfo) throws Exception;
+	//public void addUsersInfo(@Valid UserInfo userinfo) throws Exception;
+	public AddUserResponse addUsersInfo(@Valid UserInfo userinfo) throws Exception;
 
 	public void editUsersById(@Valid UserInfoEditRequest userinfoeditRequest) throws Exception;
 

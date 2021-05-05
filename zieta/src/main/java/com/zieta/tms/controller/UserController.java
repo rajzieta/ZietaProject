@@ -22,6 +22,7 @@ import com.zieta.tms.request.LoginRequest;
 import com.zieta.tms.request.PasswordEditRequest;
 import com.zieta.tms.request.UserInfoEditRequest;
 import com.zieta.tms.response.LoginResponse;
+import com.zieta.tms.response.AddUserResponse;
 import com.zieta.tms.response.UserDetailsResponse;
 import com.zieta.tms.service.UserInfoService;
 
@@ -93,11 +94,16 @@ public class UserController {
 
 
 
-	/*@ApiOperation(value = "creates entries in the user_info table", notes = "Table reference: user_info")
+	@ApiOperation(value = "creates entries in the user_info table", notes = "Table reference: user_info")
 	@RequestMapping(value = "addUsersInfo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void addUsersInfo(@Valid @RequestBody UserInfo userinfo) {
-		userInfoService.addUsersInfo(userinfo);
-	}*/
+	public AddUserResponse addUsersInfo(@Valid @RequestBody UserInfo userinfo) {
+		try {
+			return userInfoService.addUsersInfo(userinfo);
+		}catch(Exception e) {
+			
+		}
+		return null;
+	}
 
 	
 	

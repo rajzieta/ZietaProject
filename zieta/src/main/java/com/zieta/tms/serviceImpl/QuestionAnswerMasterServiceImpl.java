@@ -27,10 +27,13 @@ import com.zieta.tms.repository.QuestionAnswerMasterRepository;
 import com.zieta.tms.repository.QuestionMasterRepository;
 import com.zieta.tms.repository.ClientInfoRepository;
 import com.zieta.tms.service.QuestionAnswerMasterService;
+import com.zieta.tms.request.QuestionAnswerMasterBulkEditRequest;
+import com.zieta.tms.request.QuestionAnswerMasterEditRequest;
+
 import com.zieta.tms.util.TSMUtil;
 
 import lombok.extern.slf4j.Slf4j;
-import com.zieta.tms.request.QuestionAnswerMasterEditRequest;
+
 @Service
 @Slf4j
 public class QuestionAnswerMasterServiceImpl implements QuestionAnswerMasterService {	
@@ -122,6 +125,39 @@ public void editQuestionAnswerMasterById(@Valid QuestionAnswerMasterEditRequest 
 		}
 		
 	}
+
+//Bulk edit question answer master
+
+public void editBulkQuestionAnswerMasterById(List<QuestionAnswerMasterBulkEditRequest> questionAnswerMasterList) throws Exception {
+	
+	
+	try {
+		for (QuestionAnswerMasterBulkEditRequest questionAnswerMasterEditRequest : questionAnswerMasterList) {
+		
+			Optional<QuestionAnswerMaster> questionAnswerMasterEntity = questionAnswerMasterRepository.findById(questionAnswerMasterEditRequest.getId());
+			if(questionAnswerMasterEntity.isPresent()) {
+				
+				QuestionAnswerMaster questionAnswerMaster = questionAnswerMasterEntity.get();
+				
+				 modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
+				 modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+				 modelMapper.map(questionAnswerMasterEditRequest,questionAnswerMaster );
+				 questionAnswerMasterRepository.save(questionAnswerMaster);
+				
+				
+			}else {
+				throw new Exception("Question Answer Master not found with the provided ID : "+questionAnswerMasterEditRequest.getId());
+			}
+		
+		
+		}
+	}catch(Exception e) {
+		log.info("Error in bulk question answer master edit "+e);
+	}
+	
+	
+	
+}
 
 	
 public void deleteQuestionAnswerMasterById(Long id, String modifiedBy) throws Exception {

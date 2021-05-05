@@ -55,9 +55,8 @@ public class LeaveReportHelper extends BaseHelper{
 
 	public ByteArrayInputStream downloadReport(HttpServletResponse response, List<LeaveReportDTO> leaveInfoList)
 			throws IOException {
-		
-		String [] columNames = {"LEAVE ID", "CLIENT NAME","USER NAME","LEAVE DESC",
-				"LEAVE START DATE","LEAVE END DATE","END SESSION", "APPROVER NAME",  "APPROVER COMMENTS", "STATUS"};
+		String [] columNames = {"LEAVE ID", "CLIENT NAME","USER NAME","LEAVE DESC","LEAVE TYPE",
+				"LEAVE START DATE","START SESSION","LEAVE END DATE","END SESSION", "APPROVER NAME",  "APPROVER COMMENTS", "STATUS"};
 		writeHeaderLine("Leave Report",columNames);
 		writeDataLines(leaveInfoList);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();

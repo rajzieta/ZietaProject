@@ -11,8 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class AddUserResponse {
-	
+public class AddUserResponse {	
 	String infoMessage;
 	
 

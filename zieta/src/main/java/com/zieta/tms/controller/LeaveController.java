@@ -85,9 +85,14 @@ public class LeaveController {
 	
 	@ApiOperation(value = "List leaves based on the clientId", notes = "Table reference: leave_info")
 	@RequestMapping(value = "getAllLeavesByClientUser", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<LeaveInfoDTO>> getAllLeavesByClientUser(@RequestParam(required = true) Long  clientId, @RequestParam(required = true) Long  userId) {
+	public ResponseEntity<List<LeaveInfoDTO>> getAllLeavesByClientUser(@RequestParam(required = true) Long  clientId,
+			@RequestParam(required = true) Long  userId,
+			@RequestParam(required = true) String startDate,
+			@RequestParam(required = true) String endDate
+			
+			) {
 		try {
-			List<LeaveInfoDTO> leaveInfoList = leaveInfoService.getAllLeavesByClientUser(clientId, userId);
+				List<LeaveInfoDTO> leaveInfoList = leaveInfoService.getAllLeavesByClientUser(clientId, userId);
 
 			return new ResponseEntity<List<LeaveInfoDTO>>(leaveInfoList, HttpStatus.OK);
 		} catch (NoSuchElementException e) {

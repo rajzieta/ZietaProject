@@ -26,7 +26,7 @@ public class TSInfoDTO {
 	
 	
 	private String tsDate;
-	private Date submitDate;
+	private String submitDate;
 	private float tsTotalSubmittedTime;
 	private float tsTotalApprovedTime;
 	

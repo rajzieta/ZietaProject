@@ -266,5 +266,28 @@ public class LeaveInfoServiceImpl implements LeaveInfoService {
 																		(approverId, statusList, startDate, endDate);
 		return transfromLeaveData(leaveList);
 	}
+	
+	
+	@Override
+	public List<LeaveInfoDTO> getAllLeavesByClientUserAndDateRange(Long clientId, Long userId, String startDate, String endDate) {
+		short notDeleted = 0;
+		//List<LeaveInfo> orgnodesByClientList = leaveInfoRepository.findByClientIdAndUserIdAndIsDelete(clientId, userId, notDeleted);
+		
+		List<LeaveInfo> orgnodesByClientList = leaveInfoRepository.findByClientIdAndUserIdAndLeaveStartDateBetweenAndIsDelete(clientId, userId, notDeleted, startDate, endDate);
+		List<LeaveInfoDTO> orgnodesByClientResponseList = new ArrayList<>();
+		LeaveInfoDTO orgnodesByClientResponse = null;
+		for (LeaveInfo orgnodesByClient : orgnodesByClientList) {
+			orgnodesByClientResponse = modelMapper.map(orgnodesByClient, LeaveInfoDTO.class);
+			orgnodesByClientResponse.setLeaveTypeDescription(
+					leaveMasterRepository.findById(orgnodesByClient.getLeaveType()).get().getLeaveType());
+
+			orgnodesByClientResponseList.add(orgnodesByClientResponse);
+		}
+		return orgnodesByClientResponseList;
+	}
+	
+	
+	
+	
 
 }

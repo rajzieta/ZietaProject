@@ -30,6 +30,8 @@ public class UserInfoDTO {
 	private String modifiedBy;
 	private Date modifiedDate;
 	private short isDelete;
+	private short isTsOpen;
+	private short isExpOpen;
 	private String password;
 	
 	//additional values

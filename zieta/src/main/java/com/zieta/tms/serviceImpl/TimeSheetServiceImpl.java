@@ -129,7 +129,9 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 			TSInfoModel taskInfoModel = new TSInfoModel();	
 			
 			//NEW IMPLEMENTION TO SET DIFFERENT DATE TYPE
-			String strDate = new SimpleDateFormat("yyyy-MM-dd").format(tsInfo.getTsDate());			
+			String strDate = new SimpleDateFormat("yyyy-MM-dd").format(tsInfo.getTsDate());	
+			String sbmtDate = new SimpleDateFormat("yyyy-MM-dd").format(tsInfo.getSubmitDate());	
+			
 			tsInfoDTO.setCreatedBy(tsInfo.getCreatedBy());
 			tsInfoDTO.setModifiedBy(tsInfo.getModifiedBy());
 			tsInfoDTO.setIsDelete(tsInfo.getIsDelete());
@@ -143,7 +145,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 			tsInfoDTO.setStatusId(tsInfo.getStatusId());
 			tsInfoDTO.setPlannedActivity(tsInfo.isPlannedActivity());
 			tsInfoDTO.setTsDate(strDate);//Change the format
-			tsInfoDTO.setSubmitDate(tsInfo.getSubmitDate());
+			tsInfoDTO.setSubmitDate(sbmtDate);
 			if(tsInfo.getTsTotalSubmittedTime()!=null)
 				tsInfoDTO.setTsTotalSubmittedTime(tsInfo.getTsTotalSubmittedTime());
 			

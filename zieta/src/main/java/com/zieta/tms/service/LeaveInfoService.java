@@ -37,6 +37,8 @@ public interface LeaveInfoService {
 	public void deleteLeaveTypeById(Long id, String modifiedBy) throws Exception;
 	
 	public List<LeaveInfoDTO> getLeaveHistoryByApprover(Long clientId, Long approverId, String startDate, String endDate);
+	
+	public List<LeaveInfoDTO> getAllLeavesByClientUserAndDateRange(Long clientId, Long userId, String startDate, String endDate);
 
 
 

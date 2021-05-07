@@ -68,4 +68,5 @@ public class TSInfo extends BaseEntity implements Serializable {
 	@Column(name="ts_total_approved_time")
     private  Float tsTotalApprovedTime;
 	
+	
 }

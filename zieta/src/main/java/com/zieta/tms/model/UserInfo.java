@@ -71,4 +71,10 @@ public class UserInfo extends BaseEntity {
 	@Column(nullable = false)
 	private String password;
 
+	@Column(name = "TS_OPEN")
+	private Short isTsOpen =0;
+	
+	@Column(name = "EXP_OPEN")
+	private Short isExpOpen =0;
+
 }

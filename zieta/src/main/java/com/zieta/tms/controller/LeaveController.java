@@ -90,8 +90,7 @@ public class LeaveController {
 			@RequestParam(required = true) String startDate,
 			@RequestParam(required = true) String endDate
 			
-			) {
-		
+			) {		
 		
 		try {
 				List<LeaveInfoDTO> leaveInfoList = leaveInfoService.getAllLeavesByClientUser(clientId, userId);

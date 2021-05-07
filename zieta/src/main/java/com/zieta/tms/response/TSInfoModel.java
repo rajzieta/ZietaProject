@@ -22,6 +22,7 @@ public class TSInfoModel {
 	String projectDescription;
 	short isDeleteProject;
 	//TSInfo tsInfo;
+	
 	TSInfoDTO tsInfo;
 	List<TSTimeEntries> timeEntries;
 	String timeTypeDesc;

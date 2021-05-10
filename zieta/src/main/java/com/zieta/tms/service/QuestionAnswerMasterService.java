@@ -11,9 +11,11 @@ import com.zieta.tms.request.QuestionAnswerMasterBulkEditRequest;
 
 public interface QuestionAnswerMasterService {
 
-	public List<QuestionAnswerMasterDTO> getAllQuestionAnswerMasterDetails();//editBulkQuestionAnswerMasterById
+	public List<QuestionAnswerMasterDTO> getAllQuestionAnswerMasterDetails();//getAllQuestionAnswerMasterByMasterIAndClientId
 	
 	public List<QuestionAnswerMasterDTO> getAllQuestionAnswerMasterByClientId(long clientId);
+	
+	public List<QuestionAnswerMasterDTO> getAllQuestionAnswerMasterByQuestionMasterIdAndClientId(long qMastreId, long clientId);
 	
 	public QuestionAnswerMasterDTO findByQuestionAnswerMasterId(long questionanswerMasterId);
 	

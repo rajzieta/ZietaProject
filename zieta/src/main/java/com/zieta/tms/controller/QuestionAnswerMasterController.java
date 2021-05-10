@@ -68,6 +68,19 @@ public class QuestionAnswerMasterController {
 		return questionAnswerMasterInfos;		
 	}
 	
+	@ApiOperation(value = "List Question Answer Info with respect to MastreId and ClientId", notes = "Table reference:config_question_answer,config_question_master")
+	@RequestMapping(value = "getAllQuestionAnswerByQuestionMasterIdAndClientId", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<QuestionAnswerMasterDTO> getAllQuestionAnswerByQuestionMasterIdAndClientId(@RequestParam(required = true) Long questionMasterId, @RequestParam(required=true) Long clientId) {
+		List<QuestionAnswerMasterDTO> questionAnswerMasterInfos = null;
+		try {
+				questionAnswerMasterInfos = questionAnswerMasterService.getAllQuestionAnswerMasterByQuestionMasterIdAndClientId(questionMasterId, clientId);
+
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in CurrencyMasterController#getAllCurrencyMaster", e);
+		}
+		return questionAnswerMasterInfos;		
+	}
+	
 	
 	@RequestMapping(value = "getQuestionAnswerMasterById", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "provides question answer data based on questionAnswerMasterId",notes="Table reference: config_question_answer,config_question_master")

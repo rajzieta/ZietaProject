@@ -13,7 +13,12 @@ import com.zieta.tms.model.QuestionAnswerMaster;
 public interface QuestionAnswerMasterRepository extends JpaRepository<QuestionAnswerMaster, Long>{
 
 	List<QuestionAnswerMaster> findByIsDelete(short notDeleted);
+	
 	List<QuestionAnswerMaster> findByClientId(long clientId);
+	
+    List<QuestionAnswerMaster> findByQuestionIdAndClientId(long qMsterId,long clientId);
+	
+	
 
 	
 

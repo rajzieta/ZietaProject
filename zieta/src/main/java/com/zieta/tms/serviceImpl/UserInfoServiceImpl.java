@@ -160,6 +160,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 		userDetailsResponse.setLastName(userInfo.getUserLname());
 		userDetailsResponse.setUserEmailId(userInfo.getEmail());
 		userDetailsResponse.setEmpId(userInfo.getEmpId());
+		userDetailsResponse.setEmpId(userInfo.getExtId());
 		if(userInfo.getOrgNode() !=null) {
 			userDetailsResponse.setOrgNode(userInfo.getOrgNode());
 		}

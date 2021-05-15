@@ -15,7 +15,7 @@ public interface QuestionAnswerMasterService {
 	
 	public List<QuestionAnswerMasterDTO> getAllQuestionAnswerMasterByClientId(long clientId);
 	
-	public List<QuestionAnswerMasterDTO> getAllQuestionAnswerMasterByQuestionMasterIdAndClientId(long qMastreId, long clientId);
+	public QuestionAnswerMasterDTO getAllQuestionAnswerMasterByQuestionMasterIdAndClientId(long qMastreId, long clientId);
 	
 	public QuestionAnswerMasterDTO findByQuestionAnswerMasterId(long questionanswerMasterId);
 	

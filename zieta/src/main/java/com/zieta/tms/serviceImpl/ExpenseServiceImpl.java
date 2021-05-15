@@ -21,6 +21,7 @@ import com.zieta.tms.dto.DateRange;
 import com.zieta.tms.dto.ExpenseEntriesDTO;
 import com.zieta.tms.dto.ExpenseInfoDTO;
 import com.zieta.tms.dto.ExpenseMasterDTO;
+import com.zieta.tms.model.QuestionAnswerMaster;
 import com.zieta.tms.model.CountryMaster;
 import com.zieta.tms.model.CurrencyMaster;
 import com.zieta.tms.model.ExpenseEntries;
@@ -41,6 +42,7 @@ import com.zieta.tms.repository.OrgInfoRepository;
 import com.zieta.tms.repository.ProjectInfoRepository;
 import com.zieta.tms.repository.StatusMasterRepository;
 import com.zieta.tms.repository.UserInfoRepository;
+import com.zieta.tms.repository.QuestionAnswerMasterRepository;
 import com.zieta.tms.service.ExpenseService;
 import com.zieta.tms.util.TSMUtil;
 
@@ -71,6 +73,9 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Autowired
 	ExpenseWorkflowRepository expenseWorkflowRepository;
+	
+	@Autowired
+	QuestionAnswerMasterRepository questionAnswerMasterRepository;
 
 	@Autowired
 	OrgInfoRepository orgInfoRepository;
@@ -474,6 +479,13 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 				ExpenseWorkflowRequest expenseWorkflowRequest = expenseWorkflowRepository
 						.findByExpId(expenseInfo.getId());
+				
+				//impl being
+				
+				
+				
+				//impl end
+				
 				ExpenseInfo expenseInfoEntitiy = expenseInfoRepository.findById(expenseInfo.getId()).get();
 			//	expenseInfoEntitiy.setExpPostingDate(new Date());
 
@@ -485,7 +497,21 @@ public class ExpenseServiceImpl implements ExpenseService {
 				expenseInfo.setExpPostingDate(new Date());
 
 				if (expenseWorkflowRequest == null) {
-					log.info("Creating new expense WFR objects...");
+					log.info("Creating new expense WFR objects...");					
+					
+					
+					/*
+					 * NEED TO GET RECORD FROM QUESTION ANSWERMASTER TABLE ACCORDIND TO THE EXPENSE AMOUNT
+					 * RECORD MAY BE MULTIPLE FOR SINGLE EXPINFO
+					 */
+					
+					log.error("expenseInfo "+expenseInfo);
+					//GET ALL QUESTION ANSWER MASTER DATA BETWEEN ANSWER(EXPAMOUNT)
+					List<QuestionAnswerMaster> qstnAnsDataList = questionAnswerMasterRepository.findByAmountAndClientId("1000", expenseInfo.getClientId());
+					
+					//iterate the loop
+					
+					log.info("question answer ::====>"+qstnAnsDataList);
 					expenseWorkflowRequest = new ExpenseWorkflowRequest();
 					expenseWorkflowRequest.setClientId(expenseInfo.getClientId());
 					expenseWorkflowRequest.setProjectId(expenseInfo.getProjectId());
@@ -496,18 +522,31 @@ public class ExpenseServiceImpl implements ExpenseService {
 					long approverId = getApproverId(expenseInfo);
 					expenseWorkflowRequest.setApproverId(approverId);
 					expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_START));
-					expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_NULL));
+					expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_NULL));		
+					
 					expenseWorkflowRequestList.add(expenseWorkflowRequest);
+					
+					
+					//LOOP END
+					
+					
+					
+					log.info(" expenseWorkflowRequest ::"+expenseWorkflowRequest);
 				} else {
 					// existing records came for revision
 					log.info("Existing wfrequests came for revision..");
 					expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_START));
 					expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_NULL));
 				}
-				expenseInfoRepository.save(expenseInfo);
+				
+				//SAVE EXPENSE INFO
+				log.info("SAVE EXPENSE INFO DATA====> "+expenseInfo.getId());
+				//expenseInfoRepository.save(expenseInfo);
 
 			}
-
+			
+			//MULTIROW LOGIC SHOILD HERE
+			log.info("Test "+expenseWorkflowRequestList);
 			expenseWorkflowRepository.saveAll(expenseWorkflowRequestList);
 
 			log.info("Expense WFRequests are submited...");
@@ -566,14 +605,12 @@ public class ExpenseServiceImpl implements ExpenseService {
 		String fileName = StringUtils.EMPTY;
 		String filePath = StringUtils.EMPTY;
 		if (tokens != null && tokens.length > 0) {
-
+			
 			fileName = tokens[tokens.length - 1];
 			expenseEntryId = Long.parseLong(tokens[tokens.length - 2]);
 			filePath= key.substring(0,key.lastIndexOf("/")+1);
-		}
+		}		
 		
-		log.info("fileName: "+fileName);
-		log.info("expenseEntryId: "+expenseEntryId);
 		log.info("filePath: "+filePath);
 		if(expenseEntryId != null) {
 			ExpenseEntries expenseEntries = expenseEntriesRepository.findById(expenseEntryId).get();

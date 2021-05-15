@@ -77,11 +77,13 @@ public class QuestionAnswerMasterServiceImpl implements QuestionAnswerMasterServ
 	
 	//getAllQuestionAnswerMasterByMasterIAndClientId
 	@Override
-	public List<QuestionAnswerMasterDTO> getAllQuestionAnswerMasterByQuestionMasterIdAndClientId(long questionMasterId, long clientId) {
+	public QuestionAnswerMasterDTO getAllQuestionAnswerMasterByQuestionMasterIdAndClientId(long questionMasterId, long clientId) {
 		short notDeleted = 0;
-		List<QuestionAnswerMaster> questionAnswerMasterList= questionAnswerMasterRepository.findByQuestionIdAndClientId(questionMasterId, clientId);
-		List<QuestionAnswerMasterDTO> questionAnswerMasterDTOs = new ArrayList<QuestionAnswerMasterDTO>();
-		mapQuestionAnswerMasterModelToDTO(questionAnswerMasterList, questionAnswerMasterDTOs);
+		QuestionAnswerMaster questionAnswerMaster= questionAnswerMasterRepository.findByQuestionIdAndClientId(questionMasterId, clientId);
+		QuestionAnswerMasterDTO questionAnswerMasterDTOs = null;
+		
+		if(questionAnswerMaster!=null)		
+			questionAnswerMasterDTOs =  modelMapper.map(questionAnswerMaster, QuestionAnswerMasterDTO.class);
 		
 		return questionAnswerMasterDTOs;		
 	}

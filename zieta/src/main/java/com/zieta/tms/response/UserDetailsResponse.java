@@ -26,6 +26,7 @@ public class UserDetailsResponse implements Serializable {
 	private String lastName;
 	private String userEmailId;
 	private String empId;
+	private String extId;
 	private long orgNode;
 	private Long reportingMgr;
 	private Long accessTypeId;

@@ -20,6 +20,7 @@ public class UserInfoDTO {
 	private String userLname;
 	private String email;
 	private String empId;
+	private String extId;
 	private Long orgNode;
 	private Long reportingMgr;
 	private Long accessTypeId;

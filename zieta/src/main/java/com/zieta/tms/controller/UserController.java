@@ -17,13 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zieta.tms.dto.ProcessStepsDTO;
 import com.zieta.tms.dto.UserInfoDTO;
+import com.zieta.tms.dto.UserDetailsDTO;
 import com.zieta.tms.model.UserInfo;
+import com.zieta.tms.model.UserDetails;
 import com.zieta.tms.request.LoginRequest;
 import com.zieta.tms.request.PasswordEditRequest;
 import com.zieta.tms.request.UserInfoEditRequest;
+import com.zieta.tms.request.UserDetailsEditRequest;
 import com.zieta.tms.response.LoginResponse;
 import com.zieta.tms.response.AddUserResponse;
 import com.zieta.tms.response.UserDetailsResponse;
+import com.zieta.tms.response.ResponseMessage;
 import com.zieta.tms.service.UserInfoService;
 
 import io.swagger.annotations.Api;
@@ -92,8 +96,6 @@ public class UserController {
 		return userDataList;
 	}
 
-
-
 	@ApiOperation(value = "creates entries in the user_info table", notes = "Table reference: user_info")
 	@RequestMapping(value = "addUsersInfo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public AddUserResponse addUsersInfo(@Valid @RequestBody UserInfo userinfo) {
@@ -104,13 +106,48 @@ public class UserController {
 		}
 		return null;
 	}
+	/*
+	 * ADD USER DETAILS DATA WITH RESPECT OT USER ID
+	 */
+	@ApiOperation(value = "creates user details entries in the user_details table", notes = "Table reference: user_details")
+	@RequestMapping(value = "addUserDetails", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public UserDetails addUserDetails(@Valid @RequestBody UserDetails userDetails) {
+		try {
+			 userInfoService.addUserDetails(userDetails);
+			 
+			// userDetails = userInfoService.getUserDetailsByUserId(userDetails.getUserId());
+		}catch(Exception e) {
+			
+		}
+		return userDetails;
+	}
 
-	
+	/*
+	 * GET USER DETAILS FORM user_details TABLE USING USER ID
+	 */
+	@RequestMapping(value = "getUserDetailsByUserId", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "provides user details based on userId",notes="Table reference: user_details")
+	public UserDetailsDTO getUserDetailsByUserId(@RequestParam(required = true) Long userId) {
+		UserDetailsDTO userDetails = userInfoService.findUserDetailsByUserId(userId);
+		
+		return userDetails;
+	}
 	
 	@ApiOperation(value = "Updates the Users Information for the provided Id", notes = "Table reference: user_info")
 	@RequestMapping(value = "editUsersById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void editUsersById(@Valid @RequestBody UserInfoEditRequest userinfoeditRequest) throws Exception {
 		userInfoService.editUsersById(userinfoeditRequest);
+		
+		
+	}
+	/*
+	 * UPDATE USERDETAILS
+	 * 
+	 */
+	@ApiOperation(value = "Updates the User Details Information for the provided User Id", notes = "Table reference: user_details")
+	@RequestMapping(value = "editUserDetailsByUserId", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseMessage editUserDetailsByUserId(@Valid @RequestBody UserDetailsEditRequest userDetailsEditRequest) throws Exception {
+		return userInfoService.editUserDetailsByUserId(userDetailsEditRequest);
 		
 		
 	}
@@ -122,8 +159,7 @@ public class UserController {
 		userInfoService.deleteUsersById(id, modifiedBy);
 	}
 	
-	///change password
-	
+	///change password	
 	@ApiOperation(value = "Change the password for the provided emailId", notes = "Table reference: user_info")
 	@RequestMapping(value = "EditPasswordByEmailId", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void EditPasswordByEmailId(@Valid @RequestBody PasswordEditRequest passwordeditRequest) throws Exception {

@@ -82,7 +82,9 @@ public class LeaveController {
 			return new ResponseEntity<List<LeaveInfoDTO>>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
+	/*
+	 * GET LEAVE BY CLIENT USER WITH DATE RANGE
+	 */
 	@ApiOperation(value = "List leaves based on the clientId", notes = "Table reference: leave_info")
 	@RequestMapping(value = "getAllLeavesByClientUser", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<LeaveInfoDTO>> getAllLeavesByClientUser(@RequestParam(required = true) Long  clientId,
@@ -95,7 +97,9 @@ public class LeaveController {
 		
 		
 		try {
-				List<LeaveInfoDTO> leaveInfoList = leaveInfoService.getAllLeavesByClientUser(clientId, userId);
+				//List<LeaveInfoDTO> leaveInfoList = leaveInfoService.getAllLeavesByClientUser(clientId, userId);
+				List<LeaveInfoDTO> leaveInfoList = leaveInfoService.getAllLeavesByClientUserAndDateRange(clientId, userId,startDate,endDate);
+				
 
 			return new ResponseEntity<List<LeaveInfoDTO>>(leaveInfoList, HttpStatus.OK);
 		} catch (NoSuchElementException e) {
@@ -108,11 +112,7 @@ public class LeaveController {
 	public void deleteLeaveInfoById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
 		leaveInfoService.deleteLeaveInfoById(id, modifiedBy);
 	}
-	
-	
-	/////////////////////////////
-	
-	
+		
 	@RequestMapping(value = "addLeaveTypeMaster", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void addLeaveTypeMaster(@Valid @RequestBody LeaveTypeMaster leavemaster) {
 		leaveInfoService.addLeaveTypeMaster(leavemaster);

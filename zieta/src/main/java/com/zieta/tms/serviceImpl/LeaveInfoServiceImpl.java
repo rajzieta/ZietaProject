@@ -274,6 +274,7 @@ public class LeaveInfoServiceImpl implements LeaveInfoService {
 		//List<LeaveInfo> orgnodesByClientList = leaveInfoRepository.findByClientIdAndUserIdAndIsDelete(clientId, userId, notDeleted);
 		
 		List<LeaveInfo> orgnodesByClientList = leaveInfoRepository.findByClientIdAndUserIdAndLeaveStartDateBetweenAndIsDelete(clientId, userId, notDeleted, startDate, endDate);
+				
 		List<LeaveInfoDTO> orgnodesByClientResponseList = new ArrayList<>();
 		LeaveInfoDTO orgnodesByClientResponse = null;
 		for (LeaveInfo orgnodesByClient : orgnodesByClientList) {

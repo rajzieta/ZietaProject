@@ -132,12 +132,32 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
 		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REJECT));
 		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REVISE));
-		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndCurrentStepAndActionTypeNotIn(
-															approverId,currentStepPointer,actionTypes);
+		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndCurrentStepAndActionTypeNotIn(	approverId,currentStepPointer,actionTypes);
 		List<WFRDetailsForApprover> wFRDetailsForApproverList = getWorkFlowRequestDetails(workFlowRequestList);
 
 		return wFRDetailsForApproverList;
 	}
+	
+	
+	//TO IMPLEMENT FILTER WITH RESPECT TO USERID AND TSDATE
+	@Override
+	public List<WFRDetailsForApprover> findActiveWorkFlowRequestsByApproverIdAndTsDate(long approverId, long uId, Date startDate, Date endDate) {
+		Long currentStepPointer = 1L;
+		List<Long> actionTypes = new ArrayList<Long>();
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REJECT));
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REVISE));
+		
+		
+		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndCurrentStepAndActionTypeNotInAndTsDateAndUserId(approverId,currentStepPointer,actionTypes,startDate,endDate,uId);
+		
+		List<WFRDetailsForApprover> wFRDetailsForApproverList = getWorkFlowRequestDetails(workFlowRequestList);
+
+		return wFRDetailsForApproverList;
+	}
+	
+	
+	
 
 	private List<WFRDetailsForApprover> getWorkFlowRequestDetails(List<WorkflowRequest> workFlowRequestList) {
 		List<WFRDetailsForApprover> wFRDetailsForApproverList = new ArrayList<WFRDetailsForApprover>();
@@ -149,6 +169,10 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			List<WorkFlowComment> workFlowCommentList = getWFRCommentsChain(workflowRequest.getTsId());
 			wFRDetailsForApprover.setWorkFlowCommentList(workFlowCommentList);
 			TSInfo tsInfo = tsInfoRepository.findById(workflowRequest.getTsId()).get();
+			
+			
+			//TSInfo tsInfo2 = tsInfoRepository.findByIdAndTsDate(workflowRequest.getTsId(),"2020-12-14","2020-12-14").get();
+			//log.info("184 "+tsInfo2);
 			wFRDetailsForApprover.setTsinfo(tsInfo);
 			
 			short delFlag = 0;

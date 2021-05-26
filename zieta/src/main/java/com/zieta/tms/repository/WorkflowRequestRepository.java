@@ -28,6 +28,10 @@ public interface WorkflowRequestRepository extends JpaRepository<WorkflowRequest
 	
 	public List<WorkflowRequest> findByApproverIdAndCurrentStepAndActionTypeNotIn(long approverId, long currentStep, Collection<Long> actionType);
 
+	//IMPLEMENT DUE TO NEED FILTER WITH RESPECT TO TSDATE
+	@Query("select wfr from WorkflowRequest wfr, TSInfo ts where ts.id= wfr.tsId and wfr.approverId =?1 and wfr.currentStep =?2 and wfr.actionType in ?3 and ts.tsDate>=?4 and ts.tsDate<=?5 and ts.userId=?6")
+	public List<WorkflowRequest> findByApproverIdAndCurrentStepAndActionTypeNotInAndTsDateAndUserId(long approverId, long currentStep, Collection<Long> actionType,Date startDate, Date endDate,long uId);
+		
 	public List<WorkflowRequest> findByRequestorIdAndCurrentStep(long requestorId, long currentStep);
 	
 	public WorkflowRequest findByTsIdAndApproverId(long tsId, long approverId);

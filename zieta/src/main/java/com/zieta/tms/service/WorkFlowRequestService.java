@@ -18,9 +18,11 @@ public interface WorkFlowRequestService {
 
 	public List<WFRDetailsForApprover> findActiveWorkFlowRequestsByApproverId(long approverId);
 	
+	//UPDATED DUE TO IMPLEMENT DATE RANGE
+	public List<WFRDetailsForApprover> findActiveWorkFlowRequestsByApproverIdAndTsDate(long approverId,long userId, Date startActiondate, Date endActionDate);
+		
 	public List<WFRDetailsForApprover> findWorkFlowRequestsByApproverId(long approverId, Date startActiondate, Date endActionDate);
 	
-
 	public List<WorkFlowRequestorData> findByRequestorId(long requestorId);
 
 	public WorkflowRequest findByTsIdAndApproverId(long tsId, long approverId);

@@ -165,7 +165,7 @@ public class LeaveController {
 			+ "leave_info")
 	public ResponseEntity<List<LeaveInfoDTO>> getAllLeavesByApproverId(@RequestParam(required = true) Long clientId, @RequestParam(required = true) Long approverId) {
 		try {
-			List<LeaveInfoDTO> leavesList = leaveInfoService.findActiveLeavesByClientIdAndApproverId(clientId, approverId);
+			List<LeaveInfoDTO> leavesList = leaveInfoService.findActiveLeavesByClientIdAndApproverId(clientId, approverId);			
 			return new ResponseEntity<List<LeaveInfoDTO>>(leavesList, HttpStatus.OK);
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<List<LeaveInfoDTO>>(HttpStatus.NOT_FOUND);

@@ -207,9 +207,7 @@ public class LeaveInfoServiceImpl implements LeaveInfoService {
 	public List<LeaveInfoDTO> findActiveLeavesByClientIdAndApproverId(Long clientId, Long approverId) {
 
 		short notDeleted = 0;
-		long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(clientId,
-				TMSConstants.LEAVE, TMSConstants.LEAVE_SUBMITTED, (short) 0).getId();
-		log.info("StatusId {}",statusId);
+		long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(clientId,TMSConstants.LEAVE, TMSConstants.LEAVE_SUBMITTED, (short) 0).getId();		
 		List<LeaveInfo> levInfo = leaveInfoRepository.findByClientIdAndApproverIdAndStatusIdAndIsDelete(clientId,
 				approverId, statusId, notDeleted);
 		 

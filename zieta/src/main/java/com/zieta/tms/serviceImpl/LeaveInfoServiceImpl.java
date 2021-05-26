@@ -25,6 +25,7 @@ import com.zieta.tms.repository.LeaveInfoRepository;
 import com.zieta.tms.repository.LeaveMasterRepository;
 import com.zieta.tms.repository.StatusMasterRepository;
 import com.zieta.tms.service.LeaveInfoService;
+import com.zieta.tms.model.StatusMaster;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -207,8 +208,16 @@ public class LeaveInfoServiceImpl implements LeaveInfoService {
 	public List<LeaveInfoDTO> findActiveLeavesByClientIdAndApproverId(Long clientId, Long approverId) {
 
 		short notDeleted = 0;
-		log.info("210 "+clientId+" =="+TMSConstants.LEAVE+"=="+TMSConstants.LEAVE_SUBMITTED);
-		long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(clientId,TMSConstants.LEAVE, TMSConstants.LEAVE_SUBMITTED, (short)0).getId();		
+		
+		log.info(clientId +" == "+TMSConstants.LEAVE+"=="+TMSConstants.LEAVE_SUBMITTED);
+		//COMMENT PREV CONCEPT BCOZ IT PROVIDE NULL POINTER EXCEPTION IN CASE CLIENT ID NOT EXIT IN STATUS MASTER TABLE
+		//long statusId = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(clientId,TMSConstants.LEAVE, TMSConstants.LEAVE_SUBMITTED, (short) 0).getId();		
+		
+		StatusMaster sm = statusMasterRepository.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(clientId,TMSConstants.LEAVE, TMSConstants.LEAVE_SUBMITTED, (short) 0);
+		long statusId =0;
+		if(sm!=null) {
+			statusId = sm.getId();
+		}		
 		List<LeaveInfo> levInfo = leaveInfoRepository.findByClientIdAndApproverIdAndStatusIdAndIsDelete(clientId,
 				approverId, statusId, notDeleted);
 		 
@@ -273,6 +282,26 @@ public class LeaveInfoServiceImpl implements LeaveInfoService {
 		//List<LeaveInfo> orgnodesByClientList = leaveInfoRepository.findByClientIdAndUserIdAndIsDelete(clientId, userId, notDeleted);
 		
 		List<LeaveInfo> orgnodesByClientList = leaveInfoRepository.findByClientIdAndUserIdAndLeaveStartDateBetweenAndIsDelete(clientId, userId, notDeleted, startDate, endDate);
+				
+		List<LeaveInfoDTO> orgnodesByClientResponseList = new ArrayList<>();
+		LeaveInfoDTO orgnodesByClientResponse = null;
+		for (LeaveInfo orgnodesByClient : orgnodesByClientList) {
+			orgnodesByClientResponse = modelMapper.map(orgnodesByClient, LeaveInfoDTO.class);
+			orgnodesByClientResponse.setLeaveTypeDescription(
+					leaveMasterRepository.findById(orgnodesByClient.getLeaveType()).get().getLeaveType());
+
+			orgnodesByClientResponseList.add(orgnodesByClientResponse);
+		}
+		return orgnodesByClientResponseList;
+	}
+	
+	
+	@Override
+	public List<LeaveInfoDTO> getAllLeavesByClientAndDateRange(Long clientId, String startDate, String endDate) {
+		short notDeleted = 0;
+		//List<LeaveInfo> orgnodesByClientList = leaveInfoRepository.findByClientIdAndUserIdAndIsDelete(clientId, userId, notDeleted);
+		
+		List<LeaveInfo> orgnodesByClientList = leaveInfoRepository.findByClientIdAndLeaveStartDateBetweenAndIsDelete(clientId, notDeleted, startDate, endDate);
 				
 		List<LeaveInfoDTO> orgnodesByClientResponseList = new ArrayList<>();
 		LeaveInfoDTO orgnodesByClientResponse = null;

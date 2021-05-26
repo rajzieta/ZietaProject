@@ -141,7 +141,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	
 	//TO IMPLEMENT FILTER WITH RESPECT TO USERID AND TSDATE
 	@Override
-	public List<WFRDetailsForApprover> findActiveWorkFlowRequestsByApproverIdAndTsDate(long approverId, long uId, Date startDate, Date endDate) {
+	public List<WFRDetailsForApprover> findActiveWorkFlowRequestsByApproverIdAndEmployeeIdAndTsDate(long approverId, long uId, Date startDate, Date endDate) {
 		Long currentStepPointer = 1L;
 		List<Long> actionTypes = new ArrayList<Long>();
 		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
@@ -155,6 +155,44 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
 		return wFRDetailsForApproverList;
 	}
+	
+	
+	//findActiveWorkFlowRequestsByApproverIdAndEmployeeId
+	@Override
+	public List<WFRDetailsForApprover> findActiveWorkFlowRequestsByApproverIdAndEmployeeId(long approverId, long uId) {
+		Long currentStepPointer = 1L;
+		List<Long> actionTypes = new ArrayList<Long>();
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REJECT));
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REVISE));
+		
+		
+		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndCurrentStepAndActionTypeNotInAndUserId(approverId,currentStepPointer,actionTypes,uId);
+		
+		List<WFRDetailsForApprover> wFRDetailsForApproverList = getWorkFlowRequestDetails(workFlowRequestList);
+
+		return wFRDetailsForApproverList;
+	}
+	
+	@Override
+	public List<WFRDetailsForApprover> findActiveWorkFlowRequestsByApproverIdAndTsDate(long approverId, Date startDate, Date endDate) {
+		Long currentStepPointer = 1L;
+		List<Long> actionTypes = new ArrayList<Long>();
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REJECT));
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REVISE));
+		
+		
+		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndCurrentStepAndActionTypeNotInAndTsDate(approverId,currentStepPointer,actionTypes,startDate,endDate);
+		
+		List<WFRDetailsForApprover> wFRDetailsForApproverList = getWorkFlowRequestDetails(workFlowRequestList);
+
+		return wFRDetailsForApproverList;
+	}
+
+	
+	
+	
 	
 	
 	

@@ -46,6 +46,30 @@ public class ExpenseWorkFlowController {
 
 	}
 	
+	
+	
+	
+	
+	/*
+	 * GET THE EXPENSE APPROVAL SIZE
+	 */
+	@RequestMapping(value = "getSizeExpenseWorkFlowRequestsByApprover", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public int getSizeExpenseWorkFlowRequestsByApprover(@RequestParam(required = true) Long approverId) {
+		List<ExpenseWFRDetailsForApprover> workFlowRequestList = null;
+		int approvalSize =0;
+		try {
+			workFlowRequestList = expenseWorkFlowRequestService.findActiveWorkFlowRequestsByApproverId(approverId);
+			if(workFlowRequestList!=null)
+				approvalSize = workFlowRequestList.size();
+		} catch (Exception e) {
+
+			log.error("Error Occured in TSWorkFlowController#getActiveWorkFlowRequestsByApprover", e);
+		}
+		return approvalSize;
+
+	}
+	
+	
 
 	@RequestMapping(value = "processExpenseWorkFlow", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void processExpenseWorkFlow(@Valid @RequestBody ExpenseWorkFlowRequestDTO expenseWorkFlowRequestDTO) throws Exception {

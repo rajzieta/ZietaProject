@@ -35,6 +35,9 @@ public interface LeaveInfoRepository extends JpaRepository<LeaveInfo, Long> {
 	
 	@Query(value ="select * from leave_info ln where ln.client_id=?1 and ln.user_id=?2 and ln.is_delete= ?3 and ln.leave_start_date >= ?4 and ln.leave_start_date <= ?5", nativeQuery=true)
 	public List<LeaveInfo> findByClientIdAndUserIdAndLeaveStartDateBetweenAndIsDelete(Long clientId, Long userId, short notDeleted, String startDate, String endDate);
+	//
+	@Query(value ="select * from leave_info ln where ln.client_id=?1 and ln.is_delete= ?2 and ln.leave_start_date >= ?3 and ln.leave_start_date <= ?4", nativeQuery=true)
+	public List<LeaveInfo> findByClientIdAndLeaveStartDateBetweenAndIsDelete(Long clientId, short notDeleted, String startDate, String endDate);
 
 	
 	

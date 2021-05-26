@@ -88,18 +88,37 @@ public class LeaveController {
 	@ApiOperation(value = "List leaves based on the clientId", notes = "Table reference: leave_info")
 	@RequestMapping(value = "getAllLeavesByClientUser", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<LeaveInfoDTO>> getAllLeavesByClientUser(@RequestParam(required = true) Long  clientId,
-			@RequestParam(required = true) Long  userId,
-			@RequestParam(required = true) String startDate,
-			@RequestParam(required = true) String endDate
+			@RequestParam(required = false) Long  userId,
+			@RequestParam(required = false) String startDate,
+			@RequestParam(required = false) String endDate
 			
 			) {		
-		
-		
+		List<LeaveInfoDTO> leaveInfoList = null;
 		
 		try {
-				//List<LeaveInfoDTO> leaveInfoList = leaveInfoService.getAllLeavesByClientUser(clientId, userId);
-				List<LeaveInfoDTO> leaveInfoList = leaveInfoService.getAllLeavesByClientUserAndDateRange(clientId, userId,startDate,endDate);
+			
+			if(startDate!=null && endDate==null) {
+				endDate = startDate;
+			}else if(endDate!=null && startDate ==null ){
+				startDate = endDate;
+			}
+	
+			
+				if(userId==null && startDate==null && endDate==null) {
+					leaveInfoList = leaveInfoService.getAllLeavesByClient(clientId);				
+					
+				}else if(userId!=null && startDate==null) {
+					
+					leaveInfoList = leaveInfoService.getAllLeavesByClientUser(clientId, userId);
 				
+				}else if(startDate!=null && userId ==null) {
+					leaveInfoList = leaveInfoService.getAllLeavesByClientAndDateRange(clientId,startDate,endDate);
+					
+				}else if(userId!=null && startDate!=null) {
+					
+					leaveInfoList = leaveInfoService.getAllLeavesByClientUserAndDateRange(clientId, userId,startDate,endDate);
+						
+				}
 
 			return new ResponseEntity<List<LeaveInfoDTO>>(leaveInfoList, HttpStatus.OK);
 		} catch (NoSuchElementException e) {
@@ -171,6 +190,24 @@ public class LeaveController {
 			return new ResponseEntity<List<LeaveInfoDTO>>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@GetMapping("/getSizeOfLeavesByApproverId")
+	@ApiOperation(value = "Size of Submitted leaves based on the approverId and StatusId", notes = "Table reference:"
+			+ "leave_info")
+	public int getSizeOfLeavesByApproverId(@RequestParam(required = true) Long clientId, @RequestParam(required = true) Long approverId) {
+		int approveableSize=0;
+		try {
+			List<LeaveInfoDTO> leavesList = leaveInfoService.findActiveLeavesByClientIdAndApproverId(clientId, approverId);	
+			if(leavesList!=null) {
+				approveableSize = leavesList.size();
+			}
+			return approveableSize;
+		} catch (NoSuchElementException e) {
+			return approveableSize;
+		}
+	}
+	
+	
 	
 	@GetMapping("/getLeaveHistoryByApprover")
 	@ApiOperation(value = "Returns leave history based on approver", notes = "Table reference:"

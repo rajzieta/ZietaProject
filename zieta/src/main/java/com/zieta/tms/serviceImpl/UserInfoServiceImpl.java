@@ -242,12 +242,14 @@ public class UserInfoServiceImpl implements UserInfoService {
 		if(userinfoEntities !=null) {
 			//set email id already exist validation
 			addUserResponse.setInfoMessage("EmailId "+userinfoEntities.getEmail()+" already in use ");
-			log.info("EmailId is already in use ",userinfoEntities.getEmail());
+			addUserResponse.setStatus("501");
+			//log.info("EmailId is already in use ",userinfoEntities.getEmail());
 			return addUserResponse;
 			//throw new Exception("Emailid is already in use " +userinfoEntities.getEmail());
 		}else{
 			
 			 addUserResponse.setInfoMessage("User Information Saved successfully ");
+			 addUserResponse.setStatus("201");
 			 userInfoRepositoryRepository.save(userinfo);	
 			 return addUserResponse;
 		}

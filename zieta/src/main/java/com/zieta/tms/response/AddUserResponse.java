@@ -13,6 +13,7 @@ import lombok.Setter;
 @Setter
 public class AddUserResponse {	
 	String infoMessage;
+	String status;
 	
 
 }

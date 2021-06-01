@@ -23,7 +23,7 @@ public class UserDetailsDTO {
 	private Date dob;
 	private Date doj;
 	private Date lwd;
-	private String reasonLeaving;
+	private String reaosnLeaving;
 	private String meritalStatus;
 	private String fatherName;
 	private String motherName;
@@ -33,11 +33,11 @@ public class UserDetailsDTO {
 	private String bankAccNum;
 	private String bankIfsc;	
 	private String qualification;
-	private String resumeFilename;
+	private String resumeFileName;
 	private String resumeFilepath;
 	private String panNumber;
 	private String panFilepath;
-	private String adharNumebr;
+	private String adharNumber;
 	private String adharFilename;
 	private String adharFilepath;
 	private String passportNumber;
@@ -46,12 +46,12 @@ public class UserDetailsDTO {
 	private String drivingLicense;
 	private String DlFileName;
 	private String dlFilepath;	
-	private String permAddr;
-	private String contactAdr;	
+	private String permAddress;
+	private String contactAddress;	
 	private String emergencyNumber;
 	private String emergencyName;
 	private String emergencyRelationship;	
-	private String bloodGroup;
+	private String bloodGrp;
 	
 	
 	

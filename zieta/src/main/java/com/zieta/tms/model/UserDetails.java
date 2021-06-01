@@ -76,7 +76,7 @@ public class UserDetails extends BaseEntity {
 	private String motherName;
 	
 	@Column(name = "SPOUSE_NAME")
-	private String spouse;
+	private String spouseName;
 	
 	@Column(name = "BANK_NAME")
 	private String bankName;
@@ -92,6 +92,9 @@ public class UserDetails extends BaseEntity {
 	
 	@Column(name = "QUALIFICATION")
 	private String qualification;
+	
+	@Column(name = "RESUME_FILENAME")
+	private String resumeFileName;
 	
 	@Column(name = "RESUME_FILEPATH")
 	private String resumeFilePath;

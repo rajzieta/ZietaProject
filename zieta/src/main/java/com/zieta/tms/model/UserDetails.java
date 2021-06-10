@@ -90,8 +90,8 @@ public class UserDetails extends BaseEntity {
 	@Column(name = "BANK_IFSC")
 	private String bankIfsc;
 	
-	@Column(name = "QUALIFICATION")
-	private String qualification;
+	//@Column(name = "QUALIFICATION")
+	//private String qualification;
 	
 	@Column(name = "RESUME_FILENAME")
 	private String resumeFileName;

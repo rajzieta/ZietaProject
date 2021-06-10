@@ -29,7 +29,7 @@ public class UserDetailsEditRequest {
 	private String bankAccName;
 	private String bankAccNum;
 	private String bankIfsc;	
-	private String qualification;
+	// private String qualification;
 	private String resumeFilename;
 	private String resumeFilepath;
 	private String panNumber;

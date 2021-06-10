@@ -32,7 +32,7 @@ public class UserDetailsDTO {
 	private String bankAccName;
 	private String bankAccNum;
 	private String bankIfsc;	
-	private String qualification;
+	//private String qualification;
 	private String resumeFileName;
 	private String resumeFilepath;
 	private String panNumber;

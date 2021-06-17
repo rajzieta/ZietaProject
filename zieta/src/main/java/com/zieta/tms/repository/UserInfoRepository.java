@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.zieta.tms.model.OrgUnitUserMapping;
@@ -22,7 +23,10 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, Long>{
 
 	List<Long> findByClientId(Long clientId);
 
-	//UserInfo findByEmailId(String email);
+	@Query(value="select * from user_info where id=?1", nativeQuery=true)
+	UserInfo findByUserId(long userId);
+	
+	UserInfo findByExpTemplateId(Long expTemplateId);
 
 	
 

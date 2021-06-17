@@ -488,7 +488,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 		List<ExpenseWorkflowRequest> expenseWorkflowRequestList = new ArrayList<>();
 		try {
 			for (ExpenseInfo expenseInfo : expenseInfoList) {
-				log.info(" expenseInfo ==>"+expenseInfo.getProjectId());
+				///log.info(" expenseInfo ==>"+expenseInfo.getProjectId());
 				if(expenseInfo.getOrgUnitId()!=null && expenseInfo.getOrgUnitId()==0) {
 					expenseInfo.setOrgUnitId(null);
 				}

@@ -19,6 +19,8 @@ import com.zieta.tms.model.ExpenseEntries;
 import com.zieta.tms.model.ExpenseInfo;
 import com.zieta.tms.model.ExpenseWFRComments;
 import com.zieta.tms.model.ExpenseWorkflowRequest;
+import com.zieta.tms.model.TSInfo;
+import com.zieta.tms.model.WorkflowRequest;
 import com.zieta.tms.repository.ClientInfoRepository;
 import com.zieta.tms.repository.CountryMasterRepository;
 import com.zieta.tms.repository.CurrencyMasterRepository;
@@ -185,7 +187,7 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 
 	@Override
 	public void processWorkFlow(WorkflowRequestProcessModel workflowRequestProcessModel) throws Exception {
-
+		
 		ExpenseWorkflowRequest expenseWorkflowRequest = null;
 		if (expenseWorkflowRepository.findById(workflowRequestProcessModel.getWorkFlowRequestId()).isPresent()) {
 			
@@ -193,10 +195,18 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 			expenseWorkflowRequest = expenseWorkflowRepository
 					.findById(workflowRequestProcessModel.getWorkFlowRequestId()).get();
 			
+			int workFlowDepth = expenseWorkflowRepository.countStepIdByExpId(expenseWorkflowRequest.getExpId());//added					
 			long expenseId = expenseWorkflowRequest.getExpId();
 			ExpenseInfo  expenseInfo = expenseInfoRepository.findById(expenseId).get();
+			long nextStep = expenseWorkflowRequest.getStepId() +1;//addedd
+			//METHOD CALL TO SET MULTILEVEL APPROVAL SETUP
+			workFlowInAction(workflowRequestProcessModel, expenseWorkflowRequest,workFlowDepth,expenseInfo);
 
-			if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_APPROVE)) {
+			/*if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_APPROVE)) {
+				
+				
+				
+				
 
 				expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
 				expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_COMPLETE));
@@ -210,6 +220,14 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 				float totalRejectAmount = getTotalRejectedAmount(expenseInfo);
 				float totalApprovedAmount = expenseInfo.getExpAmount() - totalRejectAmount;
 				expenseInfo.setApprovedAmt(totalApprovedAmount);
+				
+				
+				
+				
+				
+				
+				
+				
 
 			} else if (workflowRequestProcessModel.getActionType() == actionTypeByName
 					.get(TMSConstants.ACTION_REJECT)) {
@@ -244,7 +262,7 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 
 			expenseWFRCommentRepository.save(workFlowRequestComment);
 			expenseInfoRepository.save(expenseInfo);
-			log.info("Workflow process completed for the expense id: {}",expenseInfo.getId());
+			log.info("Workflow process completed for the expense id: {}",expenseInfo.getId());*/
 
 		} else {
 			log.error("Expense entry not found in the DB {}", workflowRequestProcessModel.getWorkFlowRequestId());
@@ -253,6 +271,106 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 		}
 
 	}
+	
+	//FOR MULTISTEP APPROVAL	
+	private void workFlowInAction(WorkflowRequestProcessModel workflowRequestProcessModel, ExpenseWorkflowRequest expenseWorkflowRequest,
+			 int workFlowDepth, ExpenseInfo expenseInfo) {
+		
+		
+		expenseWorkflowRequest.setActionDate(new Date());
+		if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_APPROVE)) {
+			
+			//impl
+			long currentStep = expenseWorkflowRequest.getStepId();			
+			if (currentStep != workFlowDepth) {
+				long nextStep = currentStep + 1;
+				// Promoting to next level approval
+				expenseWorkflowRequest.setCurrentStep(0L);
+				expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_INPROCESS));
+				// approved from the current step point of view
+				expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
+				
+				///prepare the workflow object for the next step
+				List<ExpenseWorkflowRequest> nextStepExpenseWorkFlowRequestList = expenseWorkflowRepository.findByExpIdAndStepId(expenseWorkflowRequest.getExpId(), nextStep);
+				
+				for (ExpenseWorkflowRequest nextStepExpenseWorkFlowRequest : nextStepExpenseWorkFlowRequestList) {
+					nextStepExpenseWorkFlowRequest.setCurrentStep(1L);
+					nextStepExpenseWorkFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_INPROCESS));
+
+				}
+				
+				//
+//				float totalRejectTime = getTotalRejectedTime(tsInfo);
+				// reduce the total rejected timeentries time from the total submitted time
+//				float totalApprovedTime = tsInfo.getTsTotalSubmittedTime() - totalRejectTime;
+//				tsInfo.setTsTotalApprovedTime(totalApprovedTime);
+				log.info("Process inprogress with multistep...");
+				
+			}else {
+				
+				expenseWorkflowRequest.setCurrentStep(0L);///ADDEDD FOR FINAL APPROVAL	
+				///prevBeing							
+				expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
+				expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_COMPLETE));
+
+				long statusId = statusMasterRepository
+						.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(expenseInfo.getClientId(),
+								TMSConstants.EXPENSE, TMSConstants.EXPENSE_APPROVED, (short) 0)
+						.getId();
+				expenseInfo.setStatusId(statusId);
+				
+				float totalRejectAmount = getTotalRejectedAmount(expenseInfo);
+				float totalApprovedAmount = expenseInfo.getExpAmount() - totalRejectAmount;
+				expenseInfo.setApprovedAmt(totalApprovedAmount);
+				
+				//prevEnd
+				
+			}
+			
+
+		} else if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_REJECT)) {
+
+			long statusId = statusMasterRepository
+					.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(expenseInfo.getClientId(),
+							TMSConstants.EXPENSE, TMSConstants.EXPENSE_REJECTED, (short) 0)
+					.getId();
+			expenseInfo.setStatusId(statusId);
+			expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_REJECT));
+			expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_REJECT));
+			
+			
+			expenseWorkflowRequest.setCurrentStep(1L);
+			
+			
+			
+
+		} else if (workflowRequestProcessModel.getActionType() == actionTypeByName
+				.get(TMSConstants.ACTION_REVISE)) {
+
+			Long statuId = statusMasterRepository.findByClientIdAndStatusTypeAndIsDefaultAndIsDelete(
+					expenseInfo.getClientId(), TMSConstants.EXPENSE, Boolean.TRUE, (short) 0).getId();
+			expenseInfo.setStatusId(statuId);
+
+			expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_REVISE));
+			expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_OPEN));
+			expenseWorkflowRequest.setCurrentStep(1L);
+
+		}
+		expenseWorkflowRequest.setActionDate(new Date());
+
+		ExpenseWFRComments workFlowRequestComment = new ExpenseWFRComments();
+		workFlowRequestComment.setActionDate(expenseWorkflowRequest.getActionDate());
+		workFlowRequestComment.setComments(workflowRequestProcessModel.getComments());
+		workFlowRequestComment.setApproverId(expenseWorkflowRequest.getApproverId());
+		workFlowRequestComment.setExpId(expenseWorkflowRequest.getExpId());
+		workFlowRequestComment.setExpWrId(expenseWorkflowRequest.getId());
+		
+		
+		expenseWFRCommentRepository.save(workFlowRequestComment);
+		expenseInfoRepository.save(expenseInfo);
+		log.info("Workflow process completed for the expense id: {}",expenseInfo.getId());
+		
+	}	
 	
 	
 	@Override

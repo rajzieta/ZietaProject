@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zieta.tms.dto.ExpTemplateStepsDTO;
 import com.zieta.tms.dto.ExpenseTemplateDTO;
 import com.zieta.tms.model.ExpTemplateSteps;
 import com.zieta.tms.model.ExpenseTemplate;
@@ -56,6 +57,21 @@ public class ExpenseTemplateController {
 		}
 		return expenseTemplates;
 	}
+	
+	@ApiOperation(value = "List Expense Template Step", notes = "Table reference:expense_Template_steps")
+	@RequestMapping(value = "getAllActiveExpenseTemplateStepByTemplateId", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<ExpTemplateStepsDTO> getAllActiveExpenseTemplateStepByTemplateId(@RequestParam(required = true) Long expTemplateId) {
+		
+		Short notDeleted =0;		
+		List<ExpTemplateStepsDTO> expenseTemplateSteps = null;
+		try {
+			expenseTemplateSteps = expenseTemplateService.getAllActiveExpenseTemplateSteps(expTemplateId,notDeleted);
+
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in ExpenseInfoController#getAllExpensetesmplatesteps", e);
+		}
+		return expenseTemplateSteps;
+	}
 
 	@RequestMapping(value = "addExpenseTemplate", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Adds list of rows in expenseInfo", notes = "Table reference:" + "expense_template")
@@ -74,12 +90,12 @@ public class ExpenseTemplateController {
 
 	}
 
-	@ApiOperation(value = "Updates the ExpenseTemplate for the provided Id", notes = "Table reference: expense_template")
+	/*@ApiOperation(value = "Updates the ExpenseTemplate for the provided Id", notes = "Table reference: expense_template")
 	@RequestMapping(value = "editExpenseTemplateById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void editExpenseTemplateById(@Valid @RequestBody ExpenseTemplateEditRequest expenseTemplateEditRequest) throws Exception {
-		expenseTemplateService.editExpenseTemplateById(expenseTemplateEditRequest);
+	public void editExpenseTemplateById(@Valid @RequestBody List<ExpenseTemplateEditRequest> expenseTemplateEditRequestList) throws Exception {
+		expenseTemplateService.editExpenseTemplateStepById(expenseTemplateEditRequestList);
 
-	}
+	}*/
 
 	
 }

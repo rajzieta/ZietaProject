@@ -14,6 +14,7 @@ import com.zieta.tms.model.ProcessSteps;
 public interface ExpTemplateStepsRepository extends JpaRepository<ExpTemplateSteps, Long> {
 
 	public List<ExpTemplateSteps> findByTemplateIdOrderByStepId(long expTemplateId);
+	public List<ExpTemplateSteps> findByTemplateIdAndIsDelete(long expTemplateId, Short notDeleted);
 	
 	//public List<ExpTemplateSteps> findByProjectId(long projectId);
 	

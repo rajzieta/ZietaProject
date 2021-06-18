@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.zieta.tms.dto.ExpTemplateStepsDTO;
 import com.zieta.tms.dto.ExpenseTemplateDTO;
 import com.zieta.tms.model.ExpTemplateSteps;
 import com.zieta.tms.model.ExpenseTemplate;
@@ -13,9 +14,11 @@ import com.zieta.tms.request.ExpenseTemplateEditRequest;
 
 public interface ExpenseTemplateService {
 
-	public List<ExpenseTemplateDTO> getAllExpenseTemplate();
+	public List<ExpenseTemplateDTO> getAllExpenseTemplate();//
 	
 	public List<ExpenseTemplateDTO> getAllActiveExpenseTemplate(Long clientId, Short isDelete);
+	
+	public List<ExpTemplateStepsDTO> getAllActiveExpenseTemplateSteps(Long expTemplateId, Short isDelete);
 
 	public ExpenseTemplate addExpenseTemplate(ExpenseTemplate expTemplate) throws Exception;
 

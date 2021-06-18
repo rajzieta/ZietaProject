@@ -1,11 +1,13 @@
 package com.zieta.tms.dto;
 
+import com.zieta.tms.model.BaseEntity;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ExpTemplateStepsDTO {
+public class ExpTemplateStepsDTO extends BaseEntity {
 
 	private Long id;
 

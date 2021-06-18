@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
 @Table(name = "expense_template_steps")
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class ExpTemplateSteps implements Serializable {
+public class ExpTemplateSteps extends BaseEntity implements Serializable {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

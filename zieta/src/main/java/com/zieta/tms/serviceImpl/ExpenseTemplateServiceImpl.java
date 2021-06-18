@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.zieta.tms.common.TMSConstants;
 import com.zieta.tms.dto.DateRange;
+import com.zieta.tms.dto.ExpTemplateStepsDTO;
 import com.zieta.tms.dto.ExpenseEntriesDTO;
 import com.zieta.tms.dto.ExpenseInfoDTO;
 import com.zieta.tms.dto.ExpenseMasterDTO;
@@ -132,8 +133,23 @@ public class ExpenseTemplateServiceImpl implements ExpenseTemplateService {
 
 	@Override
 	public List<ExpTemplateSteps> addExpenseTemplateSteps(List<ExpTemplateSteps> expTemplateStepList) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		List<ExpTemplateSteps> exptmpltlst = expTemplateStepsRepository.saveAll(expTemplateStepList);
+		return exptmpltlst;
+	}
+
+	@Override
+	public List<ExpTemplateStepsDTO> getAllActiveExpenseTemplateSteps(Long expTemplateId, Short notDeleted) {
+		
+		List<ExpTemplateSteps> expenseTemplateStepsList = expTemplateStepsRepository.findByTemplateIdAndIsDelete(expTemplateId,notDeleted);
+		List<ExpTemplateStepsDTO> expenseTemplateStepDTOs = new ArrayList<ExpTemplateStepsDTO>();
+		
+		ExpTemplateStepsDTO expenseTemplateStepDTO = null;
+		for (ExpTemplateSteps expTemplateSteps : expenseTemplateStepsList) {
+			expenseTemplateStepDTO = modelMapper.map(expTemplateSteps, ExpTemplateStepsDTO.class);
+			expenseTemplateStepDTOs.add(expenseTemplateStepDTO);
+		}
+		return expenseTemplateStepDTOs;
+		
 	}
 	
 }

@@ -413,8 +413,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 	@Override
 	public List<ExpenseInfo> addExpenseInfo(List<ExpenseInfo> expenseInfo) throws Exception {
 
-		//List<ExpenseInfo> expenseInfoList = expenseInfoRepository.saveAll(expenseInfo); //prev concept
-		
+		//List<ExpenseInfo> expenseInfoList = expenseInfoRepository.saveAll(expenseInfo); //prev concept		
 		// BEING TO RESOLVE ORGUINTID ISSUE WITH ZERO VALUE
 		List<ExpenseInfo> expenseInfoLst = new ArrayList<ExpenseInfo>();
 		for(ExpenseInfo expenseInfoData:expenseInfo) {

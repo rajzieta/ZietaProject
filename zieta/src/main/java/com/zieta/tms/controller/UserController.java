@@ -7,7 +7,9 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,9 +35,11 @@ import com.zieta.tms.response.UserDetailsResponse;
 import com.zieta.tms.response.ResponseMessage;
 import com.zieta.tms.service.UserInfoService;
 import com.zieta.tms.service.UserQualificationService;
+import com.zieta.tms.serviceImpl.UserInfoServiceImpl;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api")
@@ -120,12 +124,20 @@ public class UserController {
 	}
 	
 	
-
+	
 	@ApiOperation(value = "creates entries in the user_info table", notes = "Table reference: user_info")
 	@RequestMapping(value = "addUsersInfo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public AddUserResponse addUsersInfo(@Valid @RequestBody UserInfo userinfo) {
+	public ResponseEntity<String> addUsersInfo(@Valid @RequestBody UserInfo userinfo) {
 		try {
-			return userInfoService.addUsersInfo(userinfo);
+			AddUserResponse response =userInfoService.addUsersInfo(userinfo);
+			if(response.getStatus()=="501") {				
+				 return new ResponseEntity<>("EmailId already exist", 
+						   HttpStatus.INTERNAL_SERVER_ERROR);
+			}else {
+				return new ResponseEntity<>("result successful result", 
+						   HttpStatus.OK);
+			}
+			//return userInfoService.addUsersInfo(userinfo);
 		}catch(Exception e) {
 			
 		}

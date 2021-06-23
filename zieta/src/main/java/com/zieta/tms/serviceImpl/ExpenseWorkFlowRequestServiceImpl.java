@@ -136,6 +136,7 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 
 	private List<ExpenseWFRDetailsForApprover> getWorkFlowRequestDetails(List<ExpenseWorkflowRequest> expenseWorkflowRequestList) {
 		
+		log.info("Test  ==>"+expenseWorkflowRequestList);
 		List<ExpenseWFRDetailsForApprover> expenseWFRDetailsForApproverList = new ArrayList<>();
 		
 		for (ExpenseWorkflowRequest expenseWorkflowRequest : expenseWorkflowRequestList) {
@@ -179,7 +180,7 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 				expenseWFRDetailsForApprover
 				.setOrgName(orgInfoRepository.findById(expenseWorkflowRequest.getOrgUnitId()).get().getOrgNodeName());
 			}
-			
+			log.info(" test ==>"+expenseWFRDetailsForApprover);
 			expenseWFRDetailsForApproverList.add(expenseWFRDetailsForApprover);
 		}
 		return expenseWFRDetailsForApproverList;
@@ -296,6 +297,7 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 				for (ExpenseWorkflowRequest nextStepExpenseWorkFlowRequest : nextStepExpenseWorkFlowRequestList) {
 					nextStepExpenseWorkFlowRequest.setCurrentStep(1L);
 					nextStepExpenseWorkFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_INPROCESS));
+					expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
 
 				}
 				

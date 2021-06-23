@@ -136,7 +136,6 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 
 	private List<ExpenseWFRDetailsForApprover> getWorkFlowRequestDetails(List<ExpenseWorkflowRequest> expenseWorkflowRequestList) {
 		
-		log.info("Test  ==>"+expenseWorkflowRequestList);
 		List<ExpenseWFRDetailsForApprover> expenseWFRDetailsForApproverList = new ArrayList<>();
 		
 		for (ExpenseWorkflowRequest expenseWorkflowRequest : expenseWorkflowRequestList) {
@@ -180,7 +179,7 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 				expenseWFRDetailsForApprover
 				.setOrgName(orgInfoRepository.findById(expenseWorkflowRequest.getOrgUnitId()).get().getOrgNodeName());
 			}
-			log.info(" test ==>"+expenseWFRDetailsForApprover);
+			
 			expenseWFRDetailsForApproverList.add(expenseWFRDetailsForApprover);
 		}
 		return expenseWFRDetailsForApproverList;
@@ -294,10 +293,10 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 				///prepare the workflow object for the next step
 				List<ExpenseWorkflowRequest> nextStepExpenseWorkFlowRequestList = expenseWorkflowRepository.findByExpIdAndStepId(expenseWorkflowRequest.getExpId(), nextStep);
 				
-				for (ExpenseWorkflowRequest nextStepExpenseWorkFlowRequest : nextStepExpenseWorkFlowRequestList) {
+				for (ExpenseWorkflowRequest nextStepExpenseWorkFlowRequest : nextStepExpenseWorkFlowRequestList) {					
 					nextStepExpenseWorkFlowRequest.setCurrentStep(1L);
 					nextStepExpenseWorkFlowRequest.setStateType(stateByName.get(TMSConstants.STATE_INPROCESS));
-					expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
+					nextStepExpenseWorkFlowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_NULL));
 
 				}
 				
@@ -310,6 +309,7 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 				
 			}else {
 				
+								
 				expenseWorkflowRequest.setCurrentStep(0L);///ADDEDD FOR FINAL APPROVAL	
 				///prevBeing							
 				expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
@@ -331,7 +331,6 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 			
 
 		} else if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_REJECT)) {
-
 			long statusId = statusMasterRepository
 					.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(expenseInfo.getClientId(),
 							TMSConstants.EXPENSE, TMSConstants.EXPENSE_REJECTED, (short) 0)

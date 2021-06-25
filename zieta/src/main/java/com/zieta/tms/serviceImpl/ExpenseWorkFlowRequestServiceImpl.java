@@ -139,48 +139,53 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 		List<ExpenseWFRDetailsForApprover> expenseWFRDetailsForApproverList = new ArrayList<>();
 		
 		for (ExpenseWorkflowRequest expenseWorkflowRequest : expenseWorkflowRequestList) {
-			ExpenseEntryMetaData expenseEntryMetaData = null;
-			List<ExpenseEntryMetaData> expenseEntries = new ArrayList<>();
-			ExpenseWFRDetailsForApprover expenseWFRDetailsForApprover = new ExpenseWFRDetailsForApprover();
-			expenseWFRDetailsForApprover.setClientName(
-					clientInfoRepository.findById(expenseWorkflowRequest.getClientId()).get().getClientName());
-			List<ExpenseWorkFlowComment> commentList = getWFRCommentsChain(expenseWorkflowRequest.getExpId());
-			expenseWFRDetailsForApprover.setExpenseWorkFlowComment(commentList);
-			expenseWFRDetailsForApprover
-					.setExpenseInfo(expenseInfoRepository.findById(expenseWorkflowRequest.getExpId()).get());
 			
-			//fill expenseEntries data for the corresponding expenseInfo entry
 			
-			List<ExpenseEntries> expenseEntryList = expenseEntriesRepository.findByExpIdAndIsDelete(expenseWorkflowRequest.getExpId(), (short) 0);
-			for (ExpenseEntries expenseEntry : expenseEntryList) {
-				expenseEntryMetaData = new  ExpenseEntryMetaData();
-				expenseEntryMetaData.setExpenseEntriesList(expenseEntry);
-				expenseEntryMetaData.setExpCountry(countryMasterRepository.findById(expenseEntry.getExpCountry()).get().getCountryName());
-				expenseEntryMetaData.setExpCurrency(currencyMasterRepository.findById(expenseEntry.getExpCurrency()).get().getCurrencyName());
-				expenseEntryMetaData.setExpType(expenseTypeMasterRepository.findById(expenseEntry.getExpType()).get().getExpenseType());
-				expenseEntries.add(expenseEntryMetaData);
-			}
-			
-			expenseWFRDetailsForApprover.setExpenseEntries(expenseEntries);
-			// end of expenseEntries
-			
-			expenseWFRDetailsForApprover.setWfActionType(actionTypeById.get(expenseWorkflowRequest.getActionType()));
-			expenseWFRDetailsForApprover.setWfStateType(stateById.get(expenseWorkflowRequest.getStateType()));
-			expenseWFRDetailsForApprover.setRequestorName(
-					TSMUtil.getFullName(userInfoRepository.findById(expenseWorkflowRequest.getRequestorId()).get()));
-			expenseWFRDetailsForApprover.setExpenseWorkflowRequest(expenseWorkflowRequest);
-			
-			if(expenseWorkflowRequest.getProjectId() != null && expenseWorkflowRequest.getProjectId() != 0) {
+			//only active current step data
+				if(expenseWorkflowRequest.getCurrentStep()==null || expenseWorkflowRequest.getCurrentStep()==1L) {			
+				ExpenseEntryMetaData expenseEntryMetaData = null;
+				List<ExpenseEntryMetaData> expenseEntries = new ArrayList<>();
+				ExpenseWFRDetailsForApprover expenseWFRDetailsForApprover = new ExpenseWFRDetailsForApprover();
+				expenseWFRDetailsForApprover.setClientName(
+						clientInfoRepository.findById(expenseWorkflowRequest.getClientId()).get().getClientName());
+				List<ExpenseWorkFlowComment> commentList = getWFRCommentsChain(expenseWorkflowRequest.getExpId());
+				expenseWFRDetailsForApprover.setExpenseWorkFlowComment(commentList);
 				expenseWFRDetailsForApprover
-				.setProjectName(projectInfoRepository.findById(expenseWorkflowRequest.getProjectId()).get().getProjectName());
-			}
-			
-			if(expenseWorkflowRequest.getOrgUnitId() != null && expenseWorkflowRequest.getOrgUnitId() != 0) {
-				expenseWFRDetailsForApprover
-				.setOrgName(orgInfoRepository.findById(expenseWorkflowRequest.getOrgUnitId()).get().getOrgNodeName());
-			}
-			
-			expenseWFRDetailsForApproverList.add(expenseWFRDetailsForApprover);
+						.setExpenseInfo(expenseInfoRepository.findById(expenseWorkflowRequest.getExpId()).get());
+				
+				//fill expenseEntries data for the corresponding expenseInfo entry
+				
+				List<ExpenseEntries> expenseEntryList = expenseEntriesRepository.findByExpIdAndIsDelete(expenseWorkflowRequest.getExpId(), (short) 0);
+				for (ExpenseEntries expenseEntry : expenseEntryList) {
+					expenseEntryMetaData = new  ExpenseEntryMetaData();
+					expenseEntryMetaData.setExpenseEntriesList(expenseEntry);
+					expenseEntryMetaData.setExpCountry(countryMasterRepository.findById(expenseEntry.getExpCountry()).get().getCountryName());
+					expenseEntryMetaData.setExpCurrency(currencyMasterRepository.findById(expenseEntry.getExpCurrency()).get().getCurrencyName());
+					expenseEntryMetaData.setExpType(expenseTypeMasterRepository.findById(expenseEntry.getExpType()).get().getExpenseType());
+					expenseEntries.add(expenseEntryMetaData);
+				}
+				
+				expenseWFRDetailsForApprover.setExpenseEntries(expenseEntries);
+				// end of expenseEntries
+				
+				expenseWFRDetailsForApprover.setWfActionType(actionTypeById.get(expenseWorkflowRequest.getActionType()));
+				expenseWFRDetailsForApprover.setWfStateType(stateById.get(expenseWorkflowRequest.getStateType()));
+				expenseWFRDetailsForApprover.setRequestorName(
+						TSMUtil.getFullName(userInfoRepository.findById(expenseWorkflowRequest.getRequestorId()).get()));
+				expenseWFRDetailsForApprover.setExpenseWorkflowRequest(expenseWorkflowRequest);
+				
+				if(expenseWorkflowRequest.getProjectId() != null && expenseWorkflowRequest.getProjectId() != 0) {
+					expenseWFRDetailsForApprover
+					.setProjectName(projectInfoRepository.findById(expenseWorkflowRequest.getProjectId()).get().getProjectName());
+				}
+				
+				if(expenseWorkflowRequest.getOrgUnitId() != null && expenseWorkflowRequest.getOrgUnitId() != 0) {
+					expenseWFRDetailsForApprover
+					.setOrgName(orgInfoRepository.findById(expenseWorkflowRequest.getOrgUnitId()).get().getOrgNodeName());
+				}
+				
+				expenseWFRDetailsForApproverList.add(expenseWFRDetailsForApprover);
+			}//end active current step validation 
 		}
 		return expenseWFRDetailsForApproverList;
 	}
@@ -308,9 +313,8 @@ public class ExpenseWorkFlowRequestServiceImpl implements ExpenseWorkFlowRequest
 				log.info("Process inprogress with multistep...");
 				
 			}else {
-				
-								
-				expenseWorkflowRequest.setCurrentStep(0L);///ADDEDD FOR FINAL APPROVAL	
+												
+				//expenseWorkflowRequest.setCurrentStep(0L);///ADDEDD FOR FINAL APPROVAL	
 				///prevBeing							
 				expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
 				expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_COMPLETE));

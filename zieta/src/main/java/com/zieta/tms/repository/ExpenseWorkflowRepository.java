@@ -18,6 +18,7 @@ public interface ExpenseWorkflowRepository extends JpaRepository<ExpenseWorkflow
 	List<ExpenseWorkflowRequest> findByApproverIdAndActionTypeNotIn(long approverId, Collection<Long> actionType);
 
 	ExpenseWorkflowRequest findByExpId(long expId);
+	List<ExpenseWorkflowRequest> findByExpIdOrderByStepId(long expId);
 	
 	@Query(value ="SELECT * FROM expwf_request ewfr, expense_info einfo WHERE einfo.ID=ewfr.EXP_ID AND ewfr.APPROVER_ID=?1 AND einfo.EXP_START_DATE >=?2 AND einfo.EXP_START_DATE <=?3 AND ewfr.ACTION_TYPE IN ?4", nativeQuery=true)
 	List<ExpenseWorkflowRequest> findByApproverIdAndRequestDateBetweenAndActionTypeIn(long approverId, String startRequestDate,

@@ -49,6 +49,7 @@ import com.zieta.tms.service.ExpenseService;
 import com.zieta.tms.util.TSMUtil;
 
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.build.Plugin.Engine.Source.Empty;
 
 @Service
 @Transactional
@@ -489,16 +490,15 @@ public class ExpenseServiceImpl implements ExpenseService {
 		try {
 			ExpenseWorkflowRequest expenseWorkflowRequest = null;
 			for (ExpenseInfo expenseInfo : expenseInfoList) {
-				log.info(" expenseInfo ==>"+expenseInfo);
+				
 				if(expenseInfo.getOrgUnitId()!=null && expenseInfo.getOrgUnitId()==0) {
 					expenseInfo.setOrgUnitId(null);
 				}
-				log.info("-------------------------------494");
+				
 				/*
 				 * ExpenseWorkflowRequest expenseWorkflowRequest = expenseWorkflowRepository
 				 * .findByExpId(expenseInfo.getId());
-				 */
-				
+				 */				
 				expenseWorkflowRequestList = expenseWorkflowRepository
 						.findByExpIdOrderByStepId(expenseInfo.getId());					
 				ExpenseInfo expenseInfoEntitiy = expenseInfoRepository.findById(expenseInfo.getId()).get();
@@ -540,7 +540,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 					expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_START));
 					expenseWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_NULL));
 					
-					log.info("===>542 "+actionTypeByName.get(TMSConstants.ACTION_NULL));
+					
 					//SET STEPID AND CURRENT STEP
 					expenseWorkflowRequest.setStepId(1L);
 					expenseWorkflowRequest.setCurrentStep(1L);					
@@ -555,11 +555,10 @@ public class ExpenseServiceImpl implements ExpenseService {
 						expenseWorkflowRequest = new ExpenseWorkflowRequest();					
 						expenseWorkflowRequest.setClientId(expenseInfo.getClientId());
 						expenseWorkflowRequest.setProjectId(expenseInfo.getProjectId());
-						///expenseWorkflowRequest.setOrgUnitId(expenseInfo.getOrgUnitId());
+						expenseWorkflowRequest.setOrgUnitId(expenseInfo.getOrgUnitId());
 						expenseWorkflowRequest.setExpId(expenseInfo.getId());
 						expenseWorkflowRequest.setRequestorId(expenseInfo.getUserId());
-						expenseWorkflowRequest.setRequestDate(new Date());		
-						
+						expenseWorkflowRequest.setRequestDate(new Date());						
 						expenseWorkflowRequest.setStepId(expTemplateStep.getStepId()+1);
 						expenseWorkflowRequest.setCurrentStep(0L);						
 						expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_OPEN));
@@ -568,14 +567,13 @@ public class ExpenseServiceImpl implements ExpenseService {
 							expenseWorkflowRequest.setApproverId(userInfo.getReportingMgr());
 						}else {
 							expenseWorkflowRequest.setApproverId(expTemplateStep.getApproverId());
-						}
-						
-						expenseWorkflowRequestList.add(expenseWorkflowRequest);						
-						if(chkAmt ==1 && (expAmt <= approvalAmt)) {
+						}						
+						expenseWorkflowRequestList.add(expenseWorkflowRequest);							
+						if((chkAmt ==1 || chkAmt ==1.0) &&( (approvalAmt!=null && (expAmt <= approvalAmt)) || approvalAmt ==null) ) {
 							///STOP MULTILEVEL APPROVAL  IN CASE EXP AMOUNT IS LESSER THEN APPROVER'S APPROVAL AMOUNT
 							break;
 						}
-						
+												
 					}					
 					///END ITERATION		
 					
@@ -592,8 +590,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 						oldWorkflowRequest.setActionType(actionTypeByName.get(TMSConstants.ACTION_NULL));
 						oldWorkflowRequest.setRequestDate(new Date());
 						oldWorkflowRequest.setActionDate(null);
-					}
-					
+					}		
 					
 				}
 				///PREV END					
@@ -615,9 +612,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 	}
 
 	private long getApproverId(ExpenseInfo expenseInfo) {
-
 		Long approverId = 0L;
-
 		try {
 			if (expenseInfo.getProjectId() != null && expenseInfo.getProjectId() != 0) {
 				approverId = projectInfoRepository.findById(expenseInfo.getProjectId()).get().getProjectManager();

@@ -555,6 +555,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 						expenseWorkflowRequest = new ExpenseWorkflowRequest();					
 						expenseWorkflowRequest.setClientId(expenseInfo.getClientId());
 						expenseWorkflowRequest.setProjectId(expenseInfo.getProjectId());
+						//to set cost center id
 						expenseWorkflowRequest.setOrgUnitId(expenseInfo.getOrgUnitId());
 						expenseWorkflowRequest.setExpId(expenseInfo.getId());
 						expenseWorkflowRequest.setRequestorId(expenseInfo.getUserId());

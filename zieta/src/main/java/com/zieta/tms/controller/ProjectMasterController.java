@@ -80,7 +80,7 @@ public class ProjectMasterController {
 		}
 	}
 	
-	@GetMapping("/getAllProjectsByClient")
+	/*@GetMapping("/getAllProjectsByClient")
 	@ApiOperation(value = "List Projects based on the clientId", notes = "Table reference: project_type_master,user_info,project_info,org_info,cust_info")
 	public ResponseEntity<List<ProjectDetailsByUserModel>> getAllProjectsByClient(@RequestParam(required = true) Long clientId) {
 		try {
@@ -89,7 +89,25 @@ public class ProjectMasterController {
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<List<ProjectDetailsByUserModel>>(HttpStatus.NOT_FOUND);
 		}
-	}
+	}*/
+	//impl being	
+	@GetMapping("/getAllProjectsByClient")
+	@ApiOperation(value = "List Projects based on the clientId", notes = "Table reference: project_type_master,user_info,project_info,org_info,cust_info")
+	public List<ProjectDetailsByUserModel> getAllProjectsByClient(@RequestParam(required = true) Long clientId) {
+		try {
+			List<ProjectDetailsByUserModel> projectsbyclientList = projectmasterService.getProjectsByClient(clientId);
+			return projectsbyclientList;
+		} catch (NoSuchElementException e) {
+			return null;
+		}
+	}	
+	
+	//impl end
+	
+	
+	
+	
+	
 	
 	@RequestMapping(value = "getAllProjectTypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<ProjectMasterDTO> getAllProjectTypes() {

@@ -37,7 +37,8 @@ public class AWSS3Controller{
 	@PostMapping(value= "/s3/upload")
 	public ResponseEntity<String> uploadFile(@RequestPart(value = "multipartFile") MultipartFile multipartFile,
 			@RequestParam("multipartFile-data") String key) {
-		key = key.replace("+", " ");
+		
+		key = key.replace("+", " ");//IMPLEMENT FOR FILENAME FORMAT ISSUE
 		
 		try {
 			String attachmentPath = service.uploadFile(multipartFile, key);

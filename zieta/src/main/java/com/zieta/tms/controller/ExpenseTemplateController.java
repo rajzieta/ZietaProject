@@ -96,6 +96,25 @@ public class ExpenseTemplateController {
 		expenseTemplateService.editExpenseTemplateStepById(expenseTemplateEditRequestList);
 
 	}*/
+	
+	
+	//DELETE EXPENSE TEMPLATE BY TEMPLATE ID	
+	@ApiOperation(value = "Deletes TEMLATE from expense_template based on Id", notes = "Table reference: expense_template")
+	@RequestMapping(value = "deletetTemplateById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deletetTemplateById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		 expenseTemplateService.deletetTemplateById(id, modifiedBy);
+	} 
+	 
+	 //DELETE EXPENSE TEMPLATE STEPS
+	@ApiOperation(value = "Delete Expense Tempalte Steps from expense_template_steps based on Id", notes = "Table reference: expense_template_steps")
+	@RequestMapping(value = "deletetTemplateStepById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deletetTemplateStepById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		 
+		expenseTemplateService.deletetTemplateStepsById(id, modifiedBy);
+	}
+	 
+	 
+	 
 
 	
 }

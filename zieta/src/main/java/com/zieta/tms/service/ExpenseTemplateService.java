@@ -26,4 +26,8 @@ public interface ExpenseTemplateService {
 	
 	public List<ExpTemplateSteps> addExpenseTemplateSteps(List<ExpTemplateSteps> expTemplateStepList) throws Exception;
 	
+	public void deletetTemplateById(Long id, String modifiedBy) throws Exception;
+	
+	public void deletetTemplateStepsById(Long id, String modifiedBy) throws Exception;
+	
 }

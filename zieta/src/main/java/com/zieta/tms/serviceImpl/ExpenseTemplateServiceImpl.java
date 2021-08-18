@@ -152,4 +152,41 @@ public class ExpenseTemplateServiceImpl implements ExpenseTemplateService {
 		
 	}
 	
+	public void deletetTemplateById(Long id, String modifiedBy) throws Exception {
+		Optional<ExpenseTemplate> expenseTemplate = expenseTemplateRepository.findById(id);
+		if (expenseTemplate.isPresent()) {
+			ExpenseTemplate expenseTemplateEntitiy = expenseTemplate.get();
+			short delete = 1;
+			expenseTemplateEntitiy.setIsDelete(delete);
+			expenseTemplateEntitiy.setModifiedBy(modifiedBy);
+			expenseTemplateRepository.save(expenseTemplateEntitiy);
+
+		}else {
+			log.info("No Expense Template found with the provided ID{} in the DB",id);
+			throw new Exception("No ExpenseTemplate found with the provided ID in the DB :"+id);
+		}
+		
+		
+	}
+
+	public void deletetTemplateStepsById(Long id, String modifiedBy) throws Exception {
+		Optional<ExpTemplateSteps> expTemplateSteps = expTemplateStepsRepository.findById(id);
+		if (expTemplateSteps.isPresent()) {
+			ExpTemplateSteps expenseTemplateStepEntitiy = expTemplateSteps.get();
+			short delete = 1;
+			expenseTemplateStepEntitiy.setIsDelete(delete);
+			expenseTemplateStepEntitiy.setModifiedBy(modifiedBy);
+			expTemplateStepsRepository.save(expenseTemplateStepEntitiy);
+
+		}else {
+			log.info("No Expense Template Steps found with the provided ID{} in the DB",id);
+			throw new Exception("No ExpenseTemplateSteps found with the provided ID in the DB :"+id);
+		}
+		
+		
+	}
+	
+	
+	
+	
 }

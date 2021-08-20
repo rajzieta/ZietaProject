@@ -57,6 +57,24 @@ public class ExpenseTemplateController {
 		}
 		return expenseTemplates;
 	}
+	//GET ALL ACTIVE EXPENSE TEMPLATE WITHOUT CLIENT ID
+	@ApiOperation(value = "List Expense Template ", notes = "Table reference:expense_Template")
+	@RequestMapping(value = "getAllExpenseTemplate", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<ExpenseTemplateDTO> getAllExpenseTemplate() {
+		
+		Short notDeleted =0;		
+		List<ExpenseTemplateDTO> expenseTemplates = null;
+		try {
+				expenseTemplates = expenseTemplateService.getAllExpenseTemplate(notDeleted);
+
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in ExpenseInfoController#getAllExpenses", e);
+		}
+		return expenseTemplates;
+	}
+	
+	
+	
 	
 	@ApiOperation(value = "List Expense Template Step", notes = "Table reference:expense_Template_steps")
 	@RequestMapping(value = "getAllActiveExpenseTemplateStepByTemplateId", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

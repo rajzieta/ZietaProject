@@ -30,4 +30,6 @@ public interface ExpenseTemplateService {
 	
 	public void deletetTemplateStepsById(Long id, String modifiedBy) throws Exception;
 	
+	public List<ExpenseTemplateDTO> getAllExpenseTemplate(Short isDelete);
+	
 }

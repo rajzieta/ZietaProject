@@ -17,6 +17,8 @@ import com.zieta.tms.model.StatusMaster;
 public interface ExpenseTemplateRepository extends JpaRepository<ExpenseTemplate, Long>{
 
 	List<ExpenseTemplate> findByClientIdAndIsDelete(Long clientId,Short notDeleted);
+	
+	List<ExpenseTemplate> findByIsDelete(Short notDeleted);
 
 	/*List<ExpenseInfo> findByClientIdAndUserIdAndIsDelete(Long clientId, Long userId, short notDeleted);
 

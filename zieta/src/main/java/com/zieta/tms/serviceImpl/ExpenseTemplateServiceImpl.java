@@ -98,6 +98,21 @@ public class ExpenseTemplateServiceImpl implements ExpenseTemplateService {
 		}
 		return expenseTemplateDTOs;
 	}
+	
+	@Override
+	public List<ExpenseTemplateDTO> getAllExpenseTemplate(Short notDeleted) {
+		
+		List<ExpenseTemplate> expenseTemplateList = expenseTemplateRepository.findByIsDelete(notDeleted);
+		List<ExpenseTemplateDTO> expenseTemplateDTOs = new ArrayList<ExpenseTemplateDTO>();
+		
+		ExpenseTemplateDTO expenseTemplateDTO = null;
+		for (ExpenseTemplate expenseTemplate : expenseTemplateList) {
+			expenseTemplateDTO = modelMapper.map(expenseTemplate, ExpenseTemplateDTO.class);
+			expenseTemplateDTOs.add(expenseTemplateDTO);
+		}
+		return expenseTemplateDTOs;
+	}
+	
 
 	@Override
 	public ExpenseTemplate addExpenseTemplate(ExpenseTemplate expTemplate) throws Exception {

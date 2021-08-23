@@ -168,8 +168,11 @@ public class ExpenseTemplateServiceImpl implements ExpenseTemplateService {
 	}
 	
 	public void deletetTemplateById(Long id, String modifiedBy) throws Exception {
+		
+		log.info("Id ===>re"+id);
 		Optional<ExpenseTemplate> expenseTemplate = expenseTemplateRepository.findById(id);
 		if (expenseTemplate.isPresent()) {
+			log.info("Id 111111"+id);
 			ExpenseTemplate expenseTemplateEntitiy = expenseTemplate.get();
 			short delete = 1;
 			expenseTemplateEntitiy.setIsDelete(delete);
@@ -177,6 +180,7 @@ public class ExpenseTemplateServiceImpl implements ExpenseTemplateService {
 			expenseTemplateRepository.save(expenseTemplateEntitiy);
 
 		}else {
+			log.info("Id2222222==> "+id);
 			log.info("No Expense Template found with the provided ID{} in the DB",id);
 			throw new Exception("No ExpenseTemplate found with the provided ID in the DB :"+id);
 		}

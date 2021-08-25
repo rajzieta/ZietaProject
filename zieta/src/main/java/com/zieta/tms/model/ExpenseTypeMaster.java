@@ -28,4 +28,10 @@ public class ExpenseTypeMaster extends BaseEntity implements Serializable {
 
     @Column(name="expense_type")
     private String expenseType;
+    
+    @Column(name="gl_code")
+    private String glCode;
+    
+    @Column(name="gl_type")
+    private String glType;
 }

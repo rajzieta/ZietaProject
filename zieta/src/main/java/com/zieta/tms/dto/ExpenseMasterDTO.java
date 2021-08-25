@@ -12,5 +12,7 @@ public class ExpenseMasterDTO extends BaseEntity {
 	private Long id;
 	private Long clientId;
 	private String expenseType;
+	private String glCode;
+	private String glType;
 	
 }

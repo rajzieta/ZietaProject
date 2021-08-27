@@ -28,7 +28,7 @@ public interface ExpenseTemplateService {
 	
 	public void deletetTemplateById(Long id, String modifiedBy) throws Exception;
 	
-	public void deletetTemplateStepsById(Long id, String modifiedBy) throws Exception;
+	public void deletetTemplateStepsById(Long[] id, String modifiedBy) throws Exception;
 	
 	public List<ExpenseTemplateDTO> getAllExpenseTemplate(Short isDelete);
 	

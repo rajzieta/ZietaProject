@@ -28,6 +28,9 @@ public class ExpenseTemplate extends BaseEntity implements Serializable{
     
     @Column(name="template_name")
     private String templateName;
+    
+    @Column(name = "IS_DEFAULT")
+	private Short isDefault =0;
    
    
     

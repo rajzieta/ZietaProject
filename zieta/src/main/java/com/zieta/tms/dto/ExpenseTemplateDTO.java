@@ -13,6 +13,7 @@ public class ExpenseTemplateDTO extends BaseEntity{
 	private Long id;
 	private Long clientId;
 	private String templateName;
+	private Short isDefault;
 	
 	
 }

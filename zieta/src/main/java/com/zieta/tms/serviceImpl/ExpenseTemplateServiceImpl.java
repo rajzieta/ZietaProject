@@ -116,6 +116,11 @@ public class ExpenseTemplateServiceImpl implements ExpenseTemplateService {
 
 	@Override
 	public ExpenseTemplate addExpenseTemplate(ExpenseTemplate expTemplate) throws Exception {
+				if(expTemplate.getTemplateName().toString().equalsIgnoreCase("default")) {
+			Short d = 1;
+			expTemplate.setIsDefault(d);			
+		}
+		
 		ExpenseTemplate expTmplt = expenseTemplateRepository.save(expTemplate);
 		return expTmplt;
 	}

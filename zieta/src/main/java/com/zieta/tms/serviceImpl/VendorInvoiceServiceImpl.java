@@ -104,7 +104,6 @@ public class VendorInvoiceServiceImpl implements VendorInvoiceService {
 		
 		Optional<VendorInvoice> vendorInvoice = vendorInvoiceRepository.findById(id);
 		if (vendorInvoice.isPresent()) {
-			
 			VendorInvoice vendorInvoiceEntitiy = vendorInvoice.get();
 			short delete = 1;
 			vendorInvoiceEntitiy.setIsDelete(delete);
@@ -118,17 +117,19 @@ public class VendorInvoiceServiceImpl implements VendorInvoiceService {
 		}		
 	}
 
+	/*
+	 * FIND VENDOR INVOICE BY ID 
+	 *  
+	 */
 	@Override
 	public VendorInvoiceDTO findVendorInvoiceById(long id) throws Exception {
 		VendorInvoiceDTO vendorInvoiceDTO = null;
 		VendorInvoice vendorInvoice = vendorInvoiceRepository.findVendorInvoiceById(id);
 		if(vendorInvoice !=null) {
 			vendorInvoiceDTO =  modelMapper.map(vendorInvoice, VendorInvoiceDTO.class);
-		}
-		
+		}		
 		return vendorInvoiceDTO;
 	}
-
 
 	
 	

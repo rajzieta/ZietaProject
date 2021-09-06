@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hpsf.Decimal;
 import org.modelmapper.Conditions;
@@ -36,6 +38,7 @@ import com.zieta.tms.model.OrgInfo;
 import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.ScreenCategoryMaster;
 import com.zieta.tms.model.StatusMaster;
+import com.zieta.tms.model.TSTimeEntries;
 import com.zieta.tms.model.UserInfo;
 import com.zieta.tms.model.VendorInvoice;
 import com.zieta.tms.model.VendorInvoicelineItems;
@@ -54,6 +57,8 @@ import com.zieta.tms.repository.UserInfoRepository;
 import com.zieta.tms.repository.VendorInvoiceLineItemsRepository;
 import com.zieta.tms.repository.VendorInvoiceRepository;
 import com.zieta.tms.request.ExpenseTemplateEditRequest;
+import com.zieta.tms.request.TimeEntriesByTsIdRequest;
+import com.zieta.tms.request.VendorInvoiceLineItemsByVendorInvoiceIdRequest;
 import com.zieta.tms.service.ExpenseService;
 import com.zieta.tms.service.ExpenseTemplateService;
 import com.zieta.tms.service.VendorInvoiceLineItemsService;
@@ -80,8 +85,7 @@ public class VendorInvoiceLineItemsServiceImpl implements VendorInvoiceLineItems
 	 * GET ALL ACTIVE VENDOR INVOICE
 	 */
 	@Override
-	public List<VendorInvoiceLineItemsDTO> getAllActiveVendorInvoiceLineItems(Long clientId, Short notDeleted) {
-		
+	public List<VendorInvoiceLineItemsDTO> getAllActiveVendorInvoiceLineItems(Long clientId, Short notDeleted) {		
 		List<VendorInvoicelineItems> vendorInvoiceLineItemsList = vendorInvoiceLineItemsRepository.findByIsDelete(notDeleted);
 		List<VendorInvoiceLineItemsDTO> vendorInvoiceLineItemsDTOs = new ArrayList<VendorInvoiceLineItemsDTO>();		
 		VendorInvoiceLineItemsDTO vendorInvoiceLineItemsDTO = null;
@@ -95,15 +99,23 @@ public class VendorInvoiceLineItemsServiceImpl implements VendorInvoiceLineItems
 		
 	/*
 	 * TO SAVE VENDOR INVOICE DATA 
+	 * 
 	 */
 	@Override
-	public VendorInvoicelineItems addVendorInvoiceLineItems(VendorInvoicelineItems vendorInvoicelineItems) throws Exception {		
-		VendorInvoicelineItems vndrInvoiceLineItems = vendorInvoiceLineItemsRepository.save(vendorInvoicelineItems);
-		return vndrInvoiceLineItems;
+	@Transactional
+	public void addVendorInvoiceLineItems(@Valid List<VendorInvoiceLineItemsByVendorInvoiceIdRequest> vendorInvoicelineItemsList) {			
+		for (VendorInvoiceLineItemsByVendorInvoiceIdRequest vendorInvoiceLineItemsByVendorInvoiceIdRequest : vendorInvoicelineItemsList) {
+
+			VendorInvoicelineItems tstimeentries = modelMapper.map(vendorInvoiceLineItemsByVendorInvoiceIdRequest, VendorInvoicelineItems.class);
+			vendorInvoiceLineItemsRepository.save(tstimeentries);
+		}			
 	}
 	
-	public void deleteByVendorInvoiceLineItemsId(Long id, String modifiedBy) throws Exception {
-		
+	/*
+	 * DELETE VENDOR INVIOCE LINEITEMS
+	 * 
+	 */
+	public void deleteByVendorInvoiceLineItemsId(Long id, String modifiedBy) throws Exception {		
 		Optional<VendorInvoicelineItems> vendorInvoiceLnItem = vendorInvoiceLineItemsRepository.findById(id);
 		if (vendorInvoiceLnItem.isPresent()){
 			VendorInvoicelineItems vendorInvoiceLinItemsEntitiy = vendorInvoiceLnItem.get();
@@ -120,12 +132,10 @@ public class VendorInvoiceLineItemsServiceImpl implements VendorInvoiceLineItems
 	}
 
 	/*
-	 * FIND VENDOR INVOICE BY ID 
-	 *  
+	 * FIND VENDOR INVOICE BY ID  
 	 */
 	
-	  @Override public VendorInvoiceLineItemsDTO findVendorInvoiceById(long id) throws Exception {
-		  
+	  @Override public VendorInvoiceLineItemsDTO findVendorInvoiceById(long id) throws Exception {		  
 		 VendorInvoiceLineItemsDTO vendorInvoiceLineItemsDTO = null; 
 		 VendorInvoicelineItems vendorInvoicelineItems = vendorInvoiceLineItemsRepository.findVendorInvoiceLineItemsById(id);
 		 if(vendorInvoicelineItems !=null) { 
@@ -133,20 +143,12 @@ public class VendorInvoiceLineItemsServiceImpl implements VendorInvoiceLineItems
 			 }
 		 return vendorInvoiceLineItemsDTO;
 	 }
-	 
-
-
-
-
-	
-
-
+	  
 	@Override
 	public VendorInvoiceLineItemsDTO findVendorInvoiceLineItemsById(long id) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 	@Override
 	public List<VendorInvoiceLineItemsDTO> getAllActiveVendorInvoiceLineItemsByVindorInvoiceId(Long vendorInvId,
@@ -154,21 +156,20 @@ public class VendorInvoiceLineItemsServiceImpl implements VendorInvoiceLineItems
 		VendorInvoiceLineItemsDTO vendorInvoiceLineItemsDTO = null; 
 		List<VendorInvoiceLineItemsDTO> vendorInvoiceLineItemsDTOs = new ArrayList<VendorInvoiceLineItemsDTO>();
 		List<VendorInvoicelineItems> vendorInvoicelineItemsList = vendorInvoiceLineItemsRepository.findVendorInvoiceLineItemsByVendorInvoiceId(vendorInvId,isDelete);
+		
 		for (VendorInvoicelineItems vendorInvoicelineItems : vendorInvoicelineItemsList) {
 			vendorInvoiceLineItemsDTO = modelMapper.map(vendorInvoicelineItems, VendorInvoiceLineItemsDTO.class);
 			vendorInvoiceLineItemsDTOs.add(vendorInvoiceLineItemsDTO);
 		}
-		 return vendorInvoiceLineItemsDTOs;	 
-		//return null;
+		return vendorInvoiceLineItemsDTOs;			
 	}
 	
 	
 	@Override
-	public List<VendorInvoiceLineItemsDTO> getAllVendorLineItemsByVendorInvoiceId(Long InvoiceId) {
+	public List<VendorInvoiceLineItemsDTO> getAllVendorLineItemsByVendorInvoiceId(Long InvoiceId) {		
 		
 		List<VendorInvoicelineItems>vendorInvoiceLineItemsList = vendorInvoiceLineItemsRepository.findByVendorInvoiceId(InvoiceId);
-		List<VendorInvoiceLineItemsDTO> vendorInvoiceLineItemsDTOs = new ArrayList<VendorInvoiceLineItemsDTO>();
-		
+		List<VendorInvoiceLineItemsDTO> vendorInvoiceLineItemsDTOs = new ArrayList<VendorInvoiceLineItemsDTO>();		
 		VendorInvoiceLineItemsDTO vendorInvoiceLineItemsDTO = null;
 		for (VendorInvoicelineItems invLineItems : vendorInvoiceLineItemsList) {
 			vendorInvoiceLineItemsDTO = modelMapper.map(invLineItems, VendorInvoiceLineItemsDTO.class);

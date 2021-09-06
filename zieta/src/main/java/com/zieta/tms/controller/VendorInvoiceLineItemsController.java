@@ -31,6 +31,8 @@ import com.zieta.tms.model.ExpenseTemplate;
 import com.zieta.tms.model.VendorInvoice;
 import com.zieta.tms.model.VendorInvoicelineItems;
 import com.zieta.tms.request.ExpenseTemplateEditRequest;
+import com.zieta.tms.request.TimeEntriesByTsIdRequest;
+import com.zieta.tms.request.VendorInvoiceLineItemsByVendorInvoiceIdRequest;
 import com.zieta.tms.service.ExpenseTemplateService;
 import com.zieta.tms.service.VendorInvoiceLineItemsService;
 import com.zieta.tms.service.VendorInvoiceService;
@@ -45,7 +47,6 @@ public class VendorInvoiceLineItemsController {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(VendorInvoiceLineItemsController.class);
 
-	
 	@Autowired
 	VendorInvoiceService vendorInvoiceService;
 	
@@ -67,20 +68,24 @@ public class VendorInvoiceLineItemsController {
 		return vendorInvoiceLineItemsDTO;
 		//return null;
 	}
-
+	
+	/*
+	 * ADD VENDOR INVOICE LINEITEMS
+	 */
+	
 	@RequestMapping(value = "addVendorInvoiceLineItems", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Add vendor invoice line Item to vendor_invoice_lineitems", notes = "Table reference:" + "vendor_invoice_lineitems")
-	public VendorInvoicelineItems addVendorInvoiceLineItems(@Valid @RequestBody VendorInvoicelineItems vendorInvoicelineItems) throws Exception {
-		return vendorInvoiceLineItemsService.addVendorInvoiceLineItems(vendorInvoicelineItems);
+	public void addVendorInvoiceLineItems(@Valid @RequestBody List<VendorInvoiceLineItemsByVendorInvoiceIdRequest> vendorInvoicelineItems) throws Exception {
+		vendorInvoiceLineItemsService.addVendorInvoiceLineItems(vendorInvoicelineItems);
+		
 	}
 	
-	//DELETE VENDOR INVOICE BY ID	
+	//DELETE VENDOR INVOICE LINEITEMS BY ID	
 	@ApiOperation(value = "Deletes VENDOR INVOICE LINEITEMS from vendor_invoice_lineitems based on Id", notes = "Table reference: vendor_invoice_lineitems")
 	@RequestMapping(value = "deletetVendorInvoiceLineItemsById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void deleteVendorInvoiceLineItemsById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
 		vendorInvoiceLineItemsService.deleteByVendorInvoiceLineItemsId(id, modifiedBy);
-	} 
-	 
+	} 	 
 	
 	//GET ALL VENDOR INVOICE LINEITEMS BY VENDOR INVOICE ID
 	@ApiOperation(value = "List vendor invoice lineitems ", notes = "Table reference:vendor_invoice_lineitems")

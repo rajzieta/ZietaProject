@@ -95,8 +95,8 @@ public class ConnectionMasterInfoServiceImpl implements ConnectionMasterInfoServ
 
 	
 	
-	@Override
-	public AddResponse addConnectionMasterInfo(ConnectionMasterInfo connectionMasterInfo) throws Exception {
+	/*@Override
+	public AddResponse addConnectionMasterInfo02(ConnectionMasterInfo connectionMasterInfo) throws Exception {
 		
 		short notDeleted = 0;
 		AddResponse addResponse = new AddResponse();		
@@ -116,14 +116,21 @@ public class ConnectionMasterInfoServiceImpl implements ConnectionMasterInfoServ
 			connectionMasterInfoRepository.save(connectionMasterInfo);	
 			 return addResponse;
 		}
+	}*/
+	
+	
+	@Override
+	public ConnectionMasterInfo addConnectionMasterInfo(ConnectionMasterInfo connectionMasterInfo) throws Exception {
+				return connectionMasterInfoRepository.save(connectionMasterInfo);
+		
 	}
 	
-	//TO SAVE ADDUSERDETAILS 
+	 
 		
 	
 //
 
-	public void editConnectionMasterById(@Valid ConnectionMasterInfoEditRequest connectionMasterInfoEditRequest) throws Exception {
+	public ConnectionMasterInfo editConnectionMasterById(@Valid ConnectionMasterInfoEditRequest connectionMasterInfoEditRequest) throws Exception {
 		
 		Optional<ConnectionMasterInfo> connectionMasterInfoEntity = connectionMasterInfoRepository.findById(connectionMasterInfoEditRequest.getId());
 		if(connectionMasterInfoEntity.isPresent()) {
@@ -131,7 +138,7 @@ public class ConnectionMasterInfoServiceImpl implements ConnectionMasterInfoServ
 			 modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
 			 modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
 			 modelMapper.map(connectionMasterInfoEditRequest,connectionMasterInfo );
-			 connectionMasterInfoRepository.save(connectionMasterInfo);
+			return connectionMasterInfoRepository.save(connectionMasterInfo);
 			
 		}else {
 			throw new Exception("Connection master not found with the provided ID : "+connectionMasterInfoEditRequest.getId());
@@ -246,6 +253,13 @@ public class ConnectionMasterInfoServiceImpl implements ConnectionMasterInfoServ
 		}
 		
 		
+	}
+
+	@Override
+	public List<Object> getAllBYDProject() {
+		System.out.println("testing======>");
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

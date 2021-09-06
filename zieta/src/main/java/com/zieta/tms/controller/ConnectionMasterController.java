@@ -89,30 +89,18 @@ public class ConnectionMasterController {
 	}
 	
 	
-	
+	//public ResponseEntity<String> addConnectionMasterInfo(@Valid @RequestBody ConnectionMasterInfo connectionMasterInfo) {
 	@ApiOperation(value = "creates entries in the connection_master table", notes = "Table reference: connection_master")
 	@RequestMapping(value = "addConnectionMasterInfo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> addConnectionMasterInfo(@Valid @RequestBody ConnectionMasterInfo connectionMasterInfo) {
-		try {
-			AddResponse response =connectionMasterInfoService.addConnectionMasterInfo(connectionMasterInfo);
-			if(response.getStatus()=="501") {				
-				 return new ResponseEntity<>("EmailId already exist", 
-						   HttpStatus.INTERNAL_SERVER_ERROR);
-			}else {
-				return new ResponseEntity<>("result successful result", 
-						   HttpStatus.OK);
-			}
-			//return userInfoService.addUsersInfo(userinfo);
-		}catch(Exception e) {
+	public  ConnectionMasterInfo  addConnectionMasterInfo( @RequestBody ConnectionMasterInfo connectionMasterInfo) throws Exception {
+			return connectionMasterInfoService.addConnectionMasterInfo(connectionMasterInfo);
 			
-		}
-		return null;
 	}
 	
 	@ApiOperation(value = "Updates the connection master Information for the provided Id", notes = "Table reference: connection_master")
 	@RequestMapping(value = "editConnectionMasterById", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-	public void editConnectionMasterById(@Valid @RequestBody ConnectionMasterInfoEditRequest connectionMasterInfoEditRequest) throws Exception {
-		connectionMasterInfoService.editConnectionMasterById(connectionMasterInfoEditRequest);
+	public ConnectionMasterInfo editConnectionMasterById(@Valid @RequestBody ConnectionMasterInfoEditRequest connectionMasterInfoEditRequest) throws Exception {
+		return connectionMasterInfoService.editConnectionMasterById(connectionMasterInfoEditRequest);
 		
 		
 	}

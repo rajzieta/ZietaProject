@@ -30,11 +30,18 @@ public interface ConnectionMasterInfoService {
 	public List<ConnectionMasterInfoDTO> findByClientId(Long client_id);
 	
 	
-	public AddResponse addConnectionMasterInfo(@Valid ConnectionMasterInfo connectionMasterInfo) throws Exception;
+	///public AddResponse addConnectionMasterInfo(@Valid ConnectionMasterInfo connectionMasterInfo) throws Exception;
 	
-	public void editConnectionMasterById(@Valid ConnectionMasterInfoEditRequest connectionMasterInfoEditRequest) throws Exception;
+	public ConnectionMasterInfo addConnectionMasterInfo(@Valid ConnectionMasterInfo connectionMasterInfo) throws Exception;
+	
+	///public void editConnectionMasterById(@Valid ConnectionMasterInfoEditRequest connectionMasterInfoEditRequest) throws Exception;
+	
+	public ConnectionMasterInfo editConnectionMasterById(@Valid ConnectionMasterInfoEditRequest connectionMasterInfoEditRequest) throws Exception;
 	
 	public void deleteConnectionMasterById(Long id, String modifiedBy) throws Exception;
+	
+	//for byd data
+	public List<Object> getAllBYDProject();
 	
 	
 }

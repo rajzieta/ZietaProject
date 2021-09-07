@@ -37,8 +37,7 @@ public class UserDetailsResponse implements Serializable {
 	private String orgNodeName;
 	private String reportingManagerName;
 	private short isTsOpen;
-	private short isExpOpen;
-	
+	private short isExpOpen;	
 	private List<ScreensMaster> screensByClient;
 	private List<String> accessTypesByClient;
 	private List<ScreenCategoryMaster> screenCategoryMaster;

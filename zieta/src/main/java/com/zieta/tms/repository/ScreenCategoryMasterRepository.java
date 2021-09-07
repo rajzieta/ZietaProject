@@ -21,6 +21,6 @@ public interface ScreenCategoryMasterRepository extends JpaRepository<ScreenCate
 	@Query(value ="select * from screens_category_master", nativeQuery=true)
 	List<ScreenCategoryMaster> findAllScreenCategoryMaster();
 	
-	ScreenCategoryMaster findScreenCategoryMasterById(long usreId);
+	ScreenCategoryMaster findScreenCategoryMasterById(long id);
 	
 }

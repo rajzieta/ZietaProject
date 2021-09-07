@@ -95,8 +95,7 @@ public class ScreenCategoryMasterServiceImpl implements ScreenCategoryMasterServ
 		if(screenCategoryMaster !=null) {
 			screenCategoryMasterDTO =  modelMapper.map(screenCategoryMaster, ScreenCategoryMasterDTO.class);
 		}
-		return screenCategoryMasterDTO;
-		
+		return screenCategoryMasterDTO;		
 	}
 
 	@Override

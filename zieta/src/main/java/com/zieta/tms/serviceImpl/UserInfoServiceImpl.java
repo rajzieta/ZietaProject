@@ -501,7 +501,7 @@ public UserDetailsDTO findUserDetailsByUserId(long userId) {
 	/*
 	 * TO UPLOAD USERDATA FROM EXCELSHEET
 	 * */
-	/*@Override
+	@Override
 	public void uploadUsersData(MultipartFile multipartFile, long clientId) {
 		//IMPLEMENTATION IS IN PROSSSSGRESS
 		
@@ -550,11 +550,11 @@ public UserDetailsDTO findUserDetailsByUserId(long userId) {
         }
 		
 		
-	}*/
+	}
 
-	@Override
+	/*@Override
 	public List<Object> getAllBYDProject() {
-		/*
+		
 		JAXBContext context;
 		try {
 			
@@ -623,10 +623,6 @@ public UserDetailsDTO findUserDetailsByUserId(long userId) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			
-			
-			
 			
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
@@ -634,12 +630,9 @@ public UserDetailsDTO findUserDetailsByUserId(long userId) {
 		}
 		;
 		// mar.marshal(request, new File("./book.xml"));
-		// mar.marshal(request, System.out);
-		
-
-		*/
+		// mar.marshal(request, System.out);		
 		return null;
-	}
+	}*/
 	
 	
 	private List<Pair<Integer, String>> bydHttpRequest(String finalString) throws ClientProtocolException, IOException {
@@ -757,11 +750,7 @@ public UserDetailsDTO findUserDetailsByUserId(long userId) {
 	    return sb.toString();
 	}
 
-	@Override
-	public void uploadUsersData(MultipartFile multipartFile, long clientId) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 	
 	
 	

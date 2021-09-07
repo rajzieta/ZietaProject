@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.zieta.tms.dto.UserInfoDTO;
 import com.zieta.tms.dto.UserDetailsDTO;
 import com.zieta.tms.model.OrgUnitUserMapping;
@@ -47,4 +49,11 @@ public interface UserInfoService {
 	public void deleteUsersById(Long id, String modifiedBy) throws Exception;
 
 	public List<UserInfo> getUsersByIds(List<Long> teamList);
+	
+	public void uploadUsersData(MultipartFile multipartFile, long clientId);
+	
+	
+	//temp use only
+	//public List<Object> getAllBYDProject();
+	
 }

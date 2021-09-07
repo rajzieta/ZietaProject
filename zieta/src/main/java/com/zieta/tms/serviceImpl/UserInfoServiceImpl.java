@@ -15,9 +15,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-/*import org.json.JSONArray;
+import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.XML;*/
+import org.json.XML;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -643,11 +643,8 @@ public UserDetailsDTO findUserDetailsByUserId(long userId) {
 	
 	
 	private List<Pair<Integer, String>> bydHttpRequest(String finalString) throws ClientProtocolException, IOException {
-		
-		/*-----------------------------------------------------
-		 * IMPLMENTATION COMMENTED DUE TO IMPLEMENTATION IS 
-		 * PENDING AND ALSO NOT REQUIRED TO DEPLOY
-		 ------------------------------------------------------
+		/*
+		///System.out.println("======>called bydHttpRequest<=========");
 		
 		String url = "https://my351070.sapbydesign.com/sap/bc/srt/scs/sap/queryprojectin";
 		HttpPut httpPut = new HttpPut(url);
@@ -664,8 +661,6 @@ public UserDetailsDTO findUserDetailsByUserId(long userId) {
 		Integer httpStatusCd = resp.getStatusLine().getStatusCode();
 		String respString = EntityUtils.toString(resp.getEntity());
 		///log.info("Response Data from portal {} ", respString);
-		
-		
 		
 		JSONObject data = XML.toJSONObject(respString);
 		log.info("*****************************************************BBBB");
@@ -718,20 +713,6 @@ public UserDetailsDTO findUserDetailsByUserId(long userId) {
         }
 		
 		//DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); 
-		///*Document doc = null;
-
-	    ///DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-	   /// try {
-
-	       /// DocumentBuilder db = dbf.newDocumentBuilder();
-
-	      ///  InputSource is = new InputSource();
-	       /// is.setCharacterStream(new StringReader(xml));
-	       /// doc = db.parse(is); 
-
-	   /// } catch(Exception e) {
-	          ///e.printStackTrace();
-	      ///}
 		
 		
 		
@@ -746,7 +727,10 @@ public UserDetailsDTO findUserDetailsByUserId(long userId) {
 		//log.info("list of data ======>"+listOfPairs);
 		
 		//log.info("=====================End Data response========================");
-		return listOfPairs;*/
+		return listOfPairs;
+		
+		*/
+		
 		return null;
 	}
 	
@@ -776,6 +760,7 @@ public UserDetailsDTO findUserDetailsByUserId(long userId) {
 	
 	
 	//end temp impl 
+	
 	
 	
 }

@@ -3,6 +3,7 @@ package com.zieta.tms.response;
 import java.io.Serializable;
 import java.util.List;
 
+import com.zieta.tms.model.ScreenCategoryMaster;
 import com.zieta.tms.model.ScreensMaster;
 
 import lombok.AllArgsConstructor;
@@ -40,6 +41,7 @@ public class UserDetailsResponse implements Serializable {
 	
 	private List<ScreensMaster> screensByClient;
 	private List<String> accessTypesByClient;
+	private List<ScreenCategoryMaster> screenCategoryMaster;
 	
 	
 

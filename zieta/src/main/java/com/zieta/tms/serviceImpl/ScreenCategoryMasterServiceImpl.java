@@ -98,6 +98,11 @@ public class ScreenCategoryMasterServiceImpl implements ScreenCategoryMasterServ
 		return screenCategoryMasterDTO;
 		
 	}
+
+	@Override
+	public List<ScreenCategoryMaster> getAllScreenMasterCategory() {		
+		return screenCategoryMasterRepository.findAll();
+	}
 	
 	
 	

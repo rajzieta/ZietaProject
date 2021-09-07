@@ -10,11 +10,14 @@ import com.zieta.tms.dto.ScreenCategoryMasterDTO;
 import com.zieta.tms.dto.UserDetailsDTO;
 import com.zieta.tms.model.ExpTemplateSteps;
 import com.zieta.tms.model.ExpenseTemplate;
+import com.zieta.tms.model.ScreenCategoryMaster;
 import com.zieta.tms.request.ExpenseTemplateEditRequest;
 
 public interface ScreenCategoryMasterService {
 	
 	public List<ScreenCategoryMasterDTO> getAllScreenCategoryMaster();
+	
+	public List<ScreenCategoryMaster> getAllScreenMasterCategory();
 	
 	public ScreenCategoryMasterDTO findScreenCategoryMasterById(long id);
 	

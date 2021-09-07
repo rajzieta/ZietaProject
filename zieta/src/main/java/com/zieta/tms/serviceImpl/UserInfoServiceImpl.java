@@ -501,7 +501,7 @@ public UserDetailsDTO findUserDetailsByUserId(long userId) {
 	/*
 	 * TO UPLOAD USERDATA FROM EXCELSHEET
 	 * */
-	@Override
+	/*@Override
 	public void uploadUsersData(MultipartFile multipartFile, long clientId) {
 		//IMPLEMENTATION IS IN PROSSSSGRESS
 		
@@ -550,7 +550,7 @@ public UserDetailsDTO findUserDetailsByUserId(long userId) {
         }
 		
 		
-	}
+	}*/
 
 	@Override
 	public List<Object> getAllBYDProject() {
@@ -755,6 +755,12 @@ public UserDetailsDTO findUserDetailsByUserId(long userId) {
 	        }
 	    }
 	    return sb.toString();
+	}
+
+	@Override
+	public void uploadUsersData(MultipartFile multipartFile, long clientId) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

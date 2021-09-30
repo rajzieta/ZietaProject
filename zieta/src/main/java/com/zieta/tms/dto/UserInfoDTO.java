@@ -15,16 +15,16 @@ public class UserInfoDTO {
 
     private Long id;
 	private Long clientId;
-	private Long expTemplateId;
+	//private Long expTemplateId;
 	private String userFname;
 	private String userMname;
 	private String userLname;
 	private String email;
 	private String empId;
 	private String extId;
-	private Long orgNode;
+	/*private Long orgNode; //REMOVED DUE TO TABLE SPLIT
 	private Long reportingMgr;
-	private Long accessTypeId;
+	private Long accessTypeId;*/
 	private String phoneNo;
 	private short isActive;
 	private String createdBy;

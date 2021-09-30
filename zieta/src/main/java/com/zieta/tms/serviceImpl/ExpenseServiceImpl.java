@@ -32,6 +32,7 @@ import com.zieta.tms.model.ExpenseWorkflowRequest;
 import com.zieta.tms.model.OrgInfo;
 import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.StatusMaster;
+import com.zieta.tms.model.UserConfig;
 import com.zieta.tms.model.UserInfo;
 import com.zieta.tms.model.WorkflowRequest;
 import com.zieta.tms.repository.CountryMasterRepository;
@@ -44,6 +45,7 @@ import com.zieta.tms.repository.ExpenseWorkflowRepository;
 import com.zieta.tms.repository.OrgInfoRepository;
 import com.zieta.tms.repository.ProjectInfoRepository;
 import com.zieta.tms.repository.StatusMasterRepository;
+import com.zieta.tms.repository.UserConfigRepository;
 import com.zieta.tms.repository.UserInfoRepository;
 import com.zieta.tms.service.ExpenseService;
 import com.zieta.tms.util.TSMUtil;
@@ -58,6 +60,9 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Autowired
 	ExpenseTypeMasterRepository expenseTypeMasterRepository;
+	
+	@Autowired
+	UserConfigRepository userConfigRepository;
 
 	@Autowired
 	CountryMasterRepository countryMasterRepository;
@@ -515,9 +520,21 @@ public class ExpenseServiceImpl implements ExpenseService {
 				///IMPLEMENTATION FOR MULTI LEVEL APPROVALBEING
 				UserInfo userInfo = userInfoRepository.findByUserId(expenseInfo.getUserId());						
 				List<ExpTemplateSteps>  expTemplateStepsList = null;
-				if(userInfo.getExpTemplateId()!=null) {
+				
+				
+				
+				/*if(userInfo.getExpTemplateId()!=null) {
 					expTemplateStepsList = expTemplateStepsRepository.findByTemplateIdOrderByStepId(userInfo.getExpTemplateId());
+				}*/
+				
+				//DUE TO TABLE SPLIT
+				short isDelete = 0;
+				UserConfig userConfig = userConfigRepository.findUserConfigByIdAndIsDelete(expenseInfo.getUserId(), isDelete);				
+
+				if(userConfig.getExpTemplateId()!=null) {
+					expTemplateStepsList = expTemplateStepsRepository.findByTemplateIdOrderByStepId(userConfig.getExpTemplateId());
 				}
+				
 					
 				///PREV BEING
 				if (expenseWorkflowRequestList.isEmpty()) {
@@ -533,7 +550,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 					long approverId = getApproverId(expenseInfo);//projectManagerId
 					
 					if(approverId == expenseInfo.getUserId()) {
-						expenseWorkflowRequest.setApproverId(userInfo.getReportingMgr());
+						expenseWorkflowRequest.setApproverId(userConfig.getReportingMgr());//CHNG userInfo to userConfig
 					}else {
 						expenseWorkflowRequest.setApproverId(approverId);
 					}
@@ -565,7 +582,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 						expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_OPEN));
 						///IN CASE REQUESTER  AND APPROVER IS SAME PERSON
 						if(expTemplateStep.getApproverId() == expenseInfo.getUserId()) {
-							expenseWorkflowRequest.setApproverId(userInfo.getReportingMgr());
+							expenseWorkflowRequest.setApproverId(userConfig.getReportingMgr());
 						}else {
 							expenseWorkflowRequest.setApproverId(expTemplateStep.getApproverId());
 						}						
@@ -622,14 +639,17 @@ public class ExpenseServiceImpl implements ExpenseService {
 				approverId = orgInfoRepository.findById(expenseInfo.getOrgUnitId()).get().getOrgManager();
 			}
 			
+			short isDelete = 0;
+			UserConfig userConfig = userConfigRepository.findUserConfigByIdAndIsDelete(expenseInfo.getId(), isDelete);
+			
 			if(expenseInfo.getUserId().equals(approverId)) {
 				
 				UserInfo userInfo = userInfoRepository.findById(expenseInfo.getUserId()).get();
-				if(userInfo.getReportingMgr() != null) {
+				if(userConfig.getReportingMgr() != null) {
 					
 					log.info("SubmiterId {} is same as ApproverId {}, hence switiching to RM {}",
-							expenseInfo.getUserId(),approverId,userInfo.getReportingMgr());
-					approverId = userInfo.getReportingMgr();
+							expenseInfo.getUserId(),approverId,userConfig.getReportingMgr());
+					approverId = userConfig.getReportingMgr();
 				}
 				
 			}

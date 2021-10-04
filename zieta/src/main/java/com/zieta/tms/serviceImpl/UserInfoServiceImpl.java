@@ -153,14 +153,14 @@ public class UserInfoServiceImpl implements UserInfoService {
 			userInfoDTO.setClientCode(clientInfoRepo.findById(userInfo.getClientId()).get().getClientCode());
 			userInfoDTO.setClientDescription(clientInfoRepo.findById(userInfo.getClientId()).get().getClientName());
 			userInfoDTO.setClientStatus(clientInfoRepo.findById(userInfo.getClientId()).get().getClientStatus());
-			///userInfoDTO.setAccessType(accessTypeMasterRepo.findById(userInfo.getAccessTypeId()).get().getAccessType());//due to table split
-			/*if(userInfo.getOrgNode()!=null) {
+			userInfoDTO.setAccessType(accessTypeMasterRepo.findById(userInfo.getAccessTypeId()).get().getAccessType());//due to table split
+			if(userInfo.getOrgNode()!=null) {
 				userInfoDTO.setOrgNodeName(orgInfoRepository.findById(userInfo.getOrgNode()).get().getOrgNodeName());
-			}*/
+			}
 		
 			String prjMgrName = StringUtils.EMPTY;
 			String rempId = StringUtils.EMPTY;
-			/*if(userInfo.getReportingMgr() !=null) { //DUE TO TABLE SPLIT
+			if(userInfo.getReportingMgr() !=null) { //DUE TO TABLE SPLIT
 				Optional<UserInfo> userInfos = userInfoRepositoryRepository.findById(userInfo.getReportingMgr());
 				if (userInfos.isPresent()) {
 					prjMgrName = TSMUtil.getFullName(userInfos.get());
@@ -169,7 +169,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 					userInfoDTO.setReportingMgrName(prjMgrName);
 					userInfoDTO.setReportingMgrEmpId(rempId);
 				}
-			}*/
+			}
 			 userInfoDTOs.add(userInfoDTO);
 		}
 	}
@@ -192,34 +192,31 @@ public class UserInfoServiceImpl implements UserInfoService {
 		UserInfo userInfo = userInfoRepositoryRepository.findByEmail(emailId);
 		String reportingManager = StringUtils.EMPTY;
 		
-		short isDelete = 0;
-		UserConfig userConfig = userConfigRepository.findUserConfigByIdAndIsDelete(userInfo.getId(), isDelete);
+		//short isDelete = 0;
+		//UserConfig userConfig = userConfigRepository.findUserConfigByIdAndIsDelete(userInfo.getId(), isDelete);
 		
-		/*
-		 DUE TABLE SPL IT COMMENTED 
+		
+		
 		  if(userInfo.getReportingMgr() != null) {
 			UserInfo rmInfo = userInfoRepositoryRepository.findById(userInfo.getReportingMgr()).get();
 			reportingManager = TSMUtil.getFullName(rmInfo);
-		}*/
-		
-		if(userConfig.getReportingMgr() != null) {
-			UserInfo rmInfo = userInfoRepositoryRepository.findById(userConfig.getReportingMgr()).get();
-			reportingManager = TSMUtil.getFullName(rmInfo);
 		}
 		
+		
+		
 		 List<Long> accessControlConfigList = accessControlConfigRepository.
-				 findByClientIdANDAccessTypeId(userInfo.getClientId(), userConfig.getAccessTypeId());
+				 findByClientIdANDAccessTypeId(userInfo.getClientId(), userInfo.getAccessTypeId());
 		 List<ScreensMaster> screensListByClientId = screensMasterService.getScreensByIds(accessControlConfigList);
 		 //GET SCREEN CATEGORY DATA
 		 List<ScreenCategoryMaster> screenCategoryMasterList = screenCategoryMasterService.getAllScreenMasterCategory();
 		 
-		 List<String> accessTypes = accessTypeMasterService.findByClientIdANDAccessTypeId(userInfo.getClientId(), userConfig.getAccessTypeId());
+		 List<String> accessTypes = accessTypeMasterService.findByClientIdANDAccessTypeId(userInfo.getClientId(), userInfo.getAccessTypeId());
 		 UserDetailsResponse userDetails = fillUserData(userInfo);
 		 userDetails.setReportingManagerName(reportingManager);
 		 userDetails.setClientCode(clientInfoRepo.findById(userInfo.getClientId()).get().getClientCode());
 		 userDetails.setClientDescription(clientInfoRepo.findById(userInfo.getClientId()).get().getClientName());
-		 if(userConfig.getOrgnode() !=null) {
-			 userDetails.setOrgNodeName(orgInfoRepository.findById(userConfig.getOrgnode()).get().getOrgNodeName());
+		 if(userInfo.getOrgNode() !=null) {
+			 userDetails.setOrgNodeName(orgInfoRepository.findById(userInfo.getOrgNode()).get().getOrgNodeName());
 		 }
 		 userDetails.setScreensByClient(screensListByClientId);
 		 userDetails.setAccessTypesByClient(accessTypes);
@@ -239,18 +236,17 @@ public class UserInfoServiceImpl implements UserInfoService {
 		userDetailsResponse.setLastName(userInfo.getUserLname());
 		userDetailsResponse.setUserEmailId(userInfo.getEmail());
 		userDetailsResponse.setEmpId(userInfo.getEmpId());
-		userDetailsResponse.setEmpId(userInfo.getExtId());
+		userDetailsResponse.setEmpId(userInfo.getExtId());		
+		//short isDelete = 0;
+		//UserConfig userConfig = userConfigRepository.findUserConfigByIdAndIsDelete(userInfo.getId(), isDelete);
 		
-		short isDelete = 0;
-		UserConfig userConfig = userConfigRepository.findUserConfigByIdAndIsDelete(userInfo.getId(), isDelete);
-		
-		if(userConfig.getOrgnode() !=null) {
-			userDetailsResponse.setOrgNode(userConfig.getOrgnode());
+		if(userInfo.getOrgNode() !=null) {
+			userDetailsResponse.setOrgNode(userInfo.getOrgNode());
 		}
-		if(userConfig.getReportingMgr() !=null) {
-			userDetailsResponse.setReportingMgr(userConfig.getReportingMgr());
+		if(userInfo.getReportingMgr() !=null) {
+			userDetailsResponse.setReportingMgr(userInfo.getReportingMgr());
 		}
-		userDetailsResponse.setAccessTypeId(userConfig.getAccessTypeId());
+		userDetailsResponse.setAccessTypeId(userInfo.getAccessTypeId());
 		userDetailsResponse.setStatus(userInfo.getIsActive());
 		userDetailsResponse.setUserId(userInfo.getId());
 		userDetailsResponse.setInfoMessage("User details after successful login");

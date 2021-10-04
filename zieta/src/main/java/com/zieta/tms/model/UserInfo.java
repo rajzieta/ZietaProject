@@ -31,8 +31,8 @@ public class UserInfo extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	//@Column(name = "exp_template_id")
-	//private Long expTemplateId;
+	@Column(name = "exp_template_id")
+	private Long expTemplateId;
 	
 	@Column(name = "client_id")
 	private Long clientId;
@@ -56,14 +56,14 @@ public class UserInfo extends BaseEntity {
 	@Column(name = "EMP_ID")
 	private String empId;
 	
-	/*@Column(name = "ORGNODE")
+	@Column(name = "ORGNODE")
 	private Long orgNode;
 	
 	@Column(name = "REPORTING_MGR")
 	private Long reportingMgr;
 	
 	@Column(name = "ACCESS_TYPE_ID")
-	private Long accessTypeId;*/
+	private Long accessTypeId;
 	
 	@Column(name = "phone_no")
 	private String phoneNo;

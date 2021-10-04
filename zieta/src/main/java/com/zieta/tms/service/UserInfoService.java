@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zieta.tms.dto.UserInfoDTO;
+import com.zieta.tms.dto.UsersInfoDTO;
 import com.zieta.tms.dto.UserDetailsDTO;
 import com.zieta.tms.model.OrgUnitUserMapping;
 import com.zieta.tms.model.UserInfo;
@@ -26,6 +27,8 @@ public interface UserInfoService {
 	public UserInfoDTO findByEmail(String email);//findUserDetailsByUserId
 	
 	public UserInfoDTO findByUserId(long userId);
+	
+	public UsersInfoDTO findByUsersId(long userId);
 	
 	public UserDetailsDTO findUserDetailsByUserId(long userId);
 	

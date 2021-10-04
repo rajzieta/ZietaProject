@@ -33,10 +33,12 @@ import com.sun.xml.txw2.Document;
 //import com.zieta.tms.byd.dto.ProjectByElementsQuery.ProjectSelectionByElements;
 import com.zieta.tms.common.MessagesConstants;
 import com.zieta.tms.dto.UserInfoDTO;
+import com.zieta.tms.dto.UsersInfoDTO;
 import com.zieta.tms.dto.UserDetailsDTO;
 import com.zieta.tms.model.ClientInfo;
 import com.zieta.tms.model.ScreenCategoryMaster;
 import com.zieta.tms.model.ScreensMaster;
+import com.zieta.tms.model.UserConfig;
 import com.zieta.tms.model.UserInfo;
 import com.zieta.tms.model.UserDetails;
 import com.zieta.tms.repository.AccessTypeMasterRepository;
@@ -44,6 +46,7 @@ import com.zieta.tms.repository.AccessTypeScreenMappingRepository;
 import com.zieta.tms.repository.ClientInfoRepository;
 import com.zieta.tms.repository.MessageMasterRepository;
 import com.zieta.tms.repository.OrgInfoRepository;
+import com.zieta.tms.repository.UserConfigRepository;
 import com.zieta.tms.repository.UserInfoRepository;
 import com.zieta.tms.repository.UserDetailsRepository;
 import com.zieta.tms.request.PasswordEditRequest;
@@ -90,24 +93,21 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Service;
 
-///
-
-
-
 @Service
 @Slf4j
 public class UserInfoServiceImpl implements UserInfoService {
-
 	
 	@Autowired
 	UserInfoRepository userInfoRepositoryRepository;
 	
 	@Autowired
+	UserConfigRepository userConfigRepository;
+	
+	@Autowired
 	UserDetailsRepository userDetailsRepository;
 	
 	@Autowired
-	AccessTypeScreenMappingRepository accessControlConfigRepository;
-	
+	AccessTypeScreenMappingRepository accessControlConfigRepository;	
 	
 	@Autowired
 	ScreensMasterService screensMasterService;
@@ -153,14 +153,14 @@ public class UserInfoServiceImpl implements UserInfoService {
 			userInfoDTO.setClientCode(clientInfoRepo.findById(userInfo.getClientId()).get().getClientCode());
 			userInfoDTO.setClientDescription(clientInfoRepo.findById(userInfo.getClientId()).get().getClientName());
 			userInfoDTO.setClientStatus(clientInfoRepo.findById(userInfo.getClientId()).get().getClientStatus());
-			userInfoDTO.setAccessType(accessTypeMasterRepo.findById(userInfo.getAccessTypeId()).get().getAccessType());
-			if(userInfo.getOrgNode() !=null) {
+			///userInfoDTO.setAccessType(accessTypeMasterRepo.findById(userInfo.getAccessTypeId()).get().getAccessType());//due to table split
+			/*if(userInfo.getOrgNode()!=null) {
 				userInfoDTO.setOrgNodeName(orgInfoRepository.findById(userInfo.getOrgNode()).get().getOrgNodeName());
-			}
+			}*/
 		
 			String prjMgrName = StringUtils.EMPTY;
 			String rempId = StringUtils.EMPTY;
-			if(userInfo.getReportingMgr() !=null) {
+			/*if(userInfo.getReportingMgr() !=null) { //DUE TO TABLE SPLIT
 				Optional<UserInfo> userInfos = userInfoRepositoryRepository.findById(userInfo.getReportingMgr());
 				if (userInfos.isPresent()) {
 					prjMgrName = TSMUtil.getFullName(userInfos.get());
@@ -169,7 +169,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 					userInfoDTO.setReportingMgrName(prjMgrName);
 					userInfoDTO.setReportingMgrEmpId(rempId);
 				}
-			}
+			}*/
 			 userInfoDTOs.add(userInfoDTO);
 		}
 	}
@@ -192,24 +192,34 @@ public class UserInfoServiceImpl implements UserInfoService {
 		UserInfo userInfo = userInfoRepositoryRepository.findByEmail(emailId);
 		String reportingManager = StringUtils.EMPTY;
 		
-		if(userInfo.getReportingMgr() != null) {
+		short isDelete = 0;
+		UserConfig userConfig = userConfigRepository.findUserConfigByIdAndIsDelete(userInfo.getId(), isDelete);
+		
+		/*
+		 DUE TABLE SPL IT COMMENTED 
+		  if(userInfo.getReportingMgr() != null) {
 			UserInfo rmInfo = userInfoRepositoryRepository.findById(userInfo.getReportingMgr()).get();
+			reportingManager = TSMUtil.getFullName(rmInfo);
+		}*/
+		
+		if(userConfig.getReportingMgr() != null) {
+			UserInfo rmInfo = userInfoRepositoryRepository.findById(userConfig.getReportingMgr()).get();
 			reportingManager = TSMUtil.getFullName(rmInfo);
 		}
 		
 		 List<Long> accessControlConfigList = accessControlConfigRepository.
-				 findByClientIdANDAccessTypeId(userInfo.getClientId(), userInfo.getAccessTypeId());
+				 findByClientIdANDAccessTypeId(userInfo.getClientId(), userConfig.getAccessTypeId());
 		 List<ScreensMaster> screensListByClientId = screensMasterService.getScreensByIds(accessControlConfigList);
 		 //GET SCREEN CATEGORY DATA
 		 List<ScreenCategoryMaster> screenCategoryMasterList = screenCategoryMasterService.getAllScreenMasterCategory();
 		 
-		 List<String> accessTypes = accessTypeMasterService.findByClientIdANDAccessTypeId(userInfo.getClientId(), userInfo.getAccessTypeId());
+		 List<String> accessTypes = accessTypeMasterService.findByClientIdANDAccessTypeId(userInfo.getClientId(), userConfig.getAccessTypeId());
 		 UserDetailsResponse userDetails = fillUserData(userInfo);
 		 userDetails.setReportingManagerName(reportingManager);
 		 userDetails.setClientCode(clientInfoRepo.findById(userInfo.getClientId()).get().getClientCode());
 		 userDetails.setClientDescription(clientInfoRepo.findById(userInfo.getClientId()).get().getClientName());
-		 if(userInfo.getOrgNode() !=null) {
-			 userDetails.setOrgNodeName(orgInfoRepository.findById(userInfo.getOrgNode()).get().getOrgNodeName());
+		 if(userConfig.getOrgnode() !=null) {
+			 userDetails.setOrgNodeName(orgInfoRepository.findById(userConfig.getOrgnode()).get().getOrgNodeName());
 		 }
 		 userDetails.setScreensByClient(screensListByClientId);
 		 userDetails.setAccessTypesByClient(accessTypes);
@@ -230,13 +240,17 @@ public class UserInfoServiceImpl implements UserInfoService {
 		userDetailsResponse.setUserEmailId(userInfo.getEmail());
 		userDetailsResponse.setEmpId(userInfo.getEmpId());
 		userDetailsResponse.setEmpId(userInfo.getExtId());
-		if(userInfo.getOrgNode() !=null) {
-			userDetailsResponse.setOrgNode(userInfo.getOrgNode());
+		
+		short isDelete = 0;
+		UserConfig userConfig = userConfigRepository.findUserConfigByIdAndIsDelete(userInfo.getId(), isDelete);
+		
+		if(userConfig.getOrgnode() !=null) {
+			userDetailsResponse.setOrgNode(userConfig.getOrgnode());
 		}
-		if(userInfo.getReportingMgr() !=null) {
-			userDetailsResponse.setReportingMgr(userInfo.getReportingMgr());
+		if(userConfig.getReportingMgr() !=null) {
+			userDetailsResponse.setReportingMgr(userConfig.getReportingMgr());
 		}
-		userDetailsResponse.setAccessTypeId(userInfo.getAccessTypeId());
+		userDetailsResponse.setAccessTypeId(userConfig.getAccessTypeId());
 		userDetailsResponse.setStatus(userInfo.getIsActive());
 		userDetailsResponse.setUserId(userInfo.getId());
 		userDetailsResponse.setInfoMessage("User details after successful login");
@@ -295,8 +309,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 	
 	
 	@Override
-	public AddUserResponse addUsersInfo(UserInfo userinfo) throws Exception {
-		
+	public AddUserResponse addUsersInfo(UserInfo userinfo) throws Exception {		
 		short notDeleted = 0;
 		AddUserResponse addUserResponse = new AddUserResponse();		
 		UserInfo userinfoEntities = userInfoRepositoryRepository.findByEmailAndIsDelete(userinfo.getEmail(),notDeleted);		
@@ -318,17 +331,14 @@ public class UserInfoServiceImpl implements UserInfoService {
 	
 	//TO SAVE ADDUSERDETAILS 
 	@Override
-	public UserDetails addUserDetails(UserDetails userDetails) throws Exception {
-		
-		short notDeleted = 0;
-				
+	public UserDetails addUserDetails(UserDetails userDetails) throws Exception {		
+		short notDeleted = 0;				
 		try {			
 			 userDetailsRepository.save(userDetails);				
 			
 		}catch(Exception e) {
 			
-		}
-			
+		}			
 		return userDetails;
 		
 	}
@@ -477,27 +487,57 @@ public UserDetailsDTO findUserDetailsByUserId(long userId) {
 	public UserInfoDTO findByUserId(long userId) {
 		UserInfoDTO userInfoDTO = null;
 		UserInfo userInfo = userInfoRepositoryRepository.findById(userId).get();
+		
+			
 		if(userInfo !=null) {
 			userInfoDTO =  modelMapper.map(userInfo, UserInfoDTO.class);
 			String reportingManager = StringUtils.EMPTY;
 			userInfoDTO.setPassword(StringUtils.EMPTY);
 			
-			if(userInfo.getReportingMgr() != null) {
+			/*if(userInfo.getReportingMgr() != null) {
 				UserInfo rmInfo = userInfoRepositoryRepository.findById(userInfo.getReportingMgr()).get();
 				reportingManager = TSMUtil.getFullName(rmInfo);
 				userInfoDTO.setReportingMgrEmpId(rmInfo.getEmpId());
-			}
+			}*/
 			userInfoDTO.setReportingMgrName(reportingManager);
 			ClientInfo clientInfo = clientInfoRepo.findById(userInfo.getClientId()).get();
 			userInfoDTO.setClientCode(clientInfo.getClientCode());
 			userInfoDTO.setClientDescription(clientInfo.getClientName());
 			userInfoDTO.setClientStatus(clientInfo.getClientStatus());
-			 if(userInfo.getOrgNode() !=null) {
+			/* if(userInfo.getOrgNode() !=null) {
 				 userInfoDTO.setOrgNodeName(orgInfoRepository.findById(userInfo.getOrgNode()).get().getOrgNodeName());
-			 }
+			 }*/
 		}
 		return userInfoDTO;
 	}
+	
+	/*
+	 * 
+	 * 
+	 */
+	@Override
+	public UsersInfoDTO findByUsersId(long userId) {
+		UsersInfoDTO userInfoDTO = null;
+		UserInfo userInfo = userInfoRepositoryRepository.findById(userId).get();
+		
+			
+		if(userInfo !=null) {
+			userInfoDTO =  modelMapper.map(userInfo, UsersInfoDTO.class);
+			String reportingManager = StringUtils.EMPTY;
+			userInfoDTO.setPassword(StringUtils.EMPTY);
+			
+			
+			
+		}
+		return userInfoDTO;
+	}
+	
+	
+	
+	
+	
+	
+	
 	/*
 	 * TO UPLOAD USERDATA FROM EXCELSHEET
 	 * */
@@ -517,22 +557,22 @@ public UserDetailsDTO findUserDetailsByUserId(long userId) {
 	            XSSFRow row = worksheet.getRow(i);
 
 	            tempUser.setId((long) row.getCell(0).getNumericCellValue());
-	            tempUser.setAccessTypeId((long) row.getCell(1).getNumericCellValue());
+	           /// tempUser.setAccessTypeId((long) row.getCell(1).getNumericCellValue());//DUE TO TABLE SPLIT
 	            tempUser.setClientId((long) row.getCell(2).getNumericCellValue());
 	            tempUser.setCreatedBy(row.getCell(1).getStringCellValue());
 	            tempUser.setEmail(row.getCell(1).getStringCellValue());
 	            tempUser.setEmpId(row.getCell(1).getStringCellValue());
-	            tempUser.setExpTemplateId((long) row.getCell(2).getNumericCellValue());
+	            ///tempUser.setExpTemplateId((long) row.getCell(2).getNumericCellValue());//DUE TO TABLE SPLIT
 	            tempUser.setExtId(row.getCell(1).getStringCellValue());
 	            tempUser.setIsActive((short) row.getCell(2).getNumericCellValue());
 	            tempUser.setIsDelete((short) row.getCell(2).getNumericCellValue());
 	            tempUser.setIsExpOpen((short) row.getCell(2).getNumericCellValue());
 	            tempUser.setIsTsOpen((short) row.getCell(2).getNumericCellValue());
 	            tempUser.setModifiedBy(row.getCell(1).getStringCellValue());
-	            //tempUser.setOrgNode((long) row.getCell(2).getNumericCellValue());
+	            ///tempUser.setOrgNode((long) row.getCell(2).getNumericCellValue());
 	            tempUser.setPassword(row.getCell(1).getStringCellValue());
 	            tempUser.setPhoneNo(row.getCell(1).getStringCellValue());
-	            tempUser.setReportingMgr((long) row.getCell(2).getNumericCellValue());
+	           //// tempUser.setReportingMgr((long) row.getCell(2).getNumericCellValue());//DUE TO TABLE SPLIT
 	            tempUser.setUserFname(row.getCell(1).getStringCellValue());	            
 	            tempUser.setUserLname(row.getCell(1).getStringCellValue());
 	            tempUser.setUserMname(row.getCell(1).getStringCellValue());

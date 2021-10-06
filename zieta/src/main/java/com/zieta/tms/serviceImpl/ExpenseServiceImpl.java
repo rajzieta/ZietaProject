@@ -379,7 +379,6 @@ public class ExpenseServiceImpl implements ExpenseService {
 		if (expenseEntriesEntity.isPresent()) {
 			ExpenseEntries expenseinfo = modelMapper.map(expenseEntriesDTO, ExpenseEntries.class);
 			expenseEntriesRepository.save(expenseinfo);
-
 		} else {
 			throw new Exception("expenseEntries not found with the provided ID : " + expenseEntriesDTO.getId());
 		}
@@ -414,12 +413,13 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Override
 	public void addExpenseInfo(@Valid ExpenseInfo expenseInfo) throws Exception {
+		System.out.println("in service exp info===>");
 		expenseInfoRepository.save(expenseInfo);
 	}
 
 	@Override
 	public List<ExpenseInfo> addExpenseInfo(List<ExpenseInfo> expenseInfo) throws Exception {
-
+		System.out.println("in service exp info 423===>");
 		//List<ExpenseInfo> expenseInfoList = expenseInfoRepository.saveAll(expenseInfo); //prev concept		
 		// BEING TO RESOLVE ORGUINTID ISSUE WITH ZERO VALUE
 		List<ExpenseInfo> expenseInfoLst = new ArrayList<ExpenseInfo>();
@@ -528,11 +528,11 @@ public class ExpenseServiceImpl implements ExpenseService {
 				}*/
 				
 				//DUE TO TABLE SPLIT
-				short isDelete = 0;
-				UserConfig userConfig = userConfigRepository.findUserConfigByIdAndIsDelete(expenseInfo.getUserId(), isDelete);				
+				//short isDelete = 0;
+				//UserConfig userConfig = userConfigRepository.findUserConfigByIdAndIsDelete(expenseInfo.getUserId(), isDelete);				
 
-				if(userConfig.getExpTemplateId()!=null) {
-					expTemplateStepsList = expTemplateStepsRepository.findByTemplateIdOrderByStepId(userConfig.getExpTemplateId());
+				if(userInfo.getExpTemplateId()!=null) {
+					expTemplateStepsList = expTemplateStepsRepository.findByTemplateIdOrderByStepId(userInfo.getExpTemplateId());
 				}
 				
 					
@@ -550,7 +550,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 					long approverId = getApproverId(expenseInfo);//projectManagerId
 					
 					if(approverId == expenseInfo.getUserId()) {
-						expenseWorkflowRequest.setApproverId(userConfig.getReportingMgr());//CHNG userInfo to userConfig
+						expenseWorkflowRequest.setApproverId(userInfo.getReportingMgr());//CHNG userInfo to userConfig
 					}else {
 						expenseWorkflowRequest.setApproverId(approverId);
 					}
@@ -582,7 +582,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 						expenseWorkflowRequest.setStateType(stateByName.get(TMSConstants.STATE_OPEN));
 						///IN CASE REQUESTER  AND APPROVER IS SAME PERSON
 						if(expTemplateStep.getApproverId() == expenseInfo.getUserId()) {
-							expenseWorkflowRequest.setApproverId(userConfig.getReportingMgr());
+							expenseWorkflowRequest.setApproverId(userInfo.getReportingMgr());
 						}else {
 							expenseWorkflowRequest.setApproverId(expTemplateStep.getApproverId());
 						}						

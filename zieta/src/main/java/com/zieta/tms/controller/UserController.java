@@ -149,9 +149,7 @@ public class UserController {
 			LOGGER.error("Error Occured in getting user details based on clientId",e);
 		}
 		return userDataList;
-	}
-	
-	
+	}	
 	
 	@RequestMapping(value = "getAllQualificationByUserId", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "lists userqualification based on the provided userId",notes="Table reference: user_qualification,"
@@ -164,27 +162,29 @@ public class UserController {
 			LOGGER.error("Error Occured in getting user details based on clientId",e);
 		}
 		return userQualificationDataList;
-	}
-	
-	
+	}	
 	
 	@ApiOperation(value = "creates entries in the user_info table", notes = "Table reference: user_info")
 	@RequestMapping(value = "addUsersInfo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> addUsersInfo(@Valid @RequestBody UserInfo userinfo) {
+	public AddUserResponse addUsersInfo(@Valid @RequestBody UserInfo userinfo) {
+		//public ResponseEntity<String> addUsersInfo(@Valid @RequestBody UserInfo userinfo) {
 		try {
 			AddUserResponse response =userInfoService.addUsersInfo(userinfo);
-			if(response.getStatus()=="501") {				
+			/*if(response.getStatus()=="501") {				
 				 return new ResponseEntity<>("EmailId already exist", 
 						   HttpStatus.INTERNAL_SERVER_ERROR);
 			}else {
 				return new ResponseEntity<>("result successful result", 
 						   HttpStatus.OK);
-			}
+			}*/
 			//return userInfoService.addUsersInfo(userinfo);
+			return response;
+			
 		}catch(Exception e) {
 			
 		}
 		return null;
+		
 	}
 	/*
 	 * ADD USER DETAILS DATA WITH RESPECT OT USER ID

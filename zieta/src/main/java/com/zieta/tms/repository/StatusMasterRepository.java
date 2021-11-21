@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.StatusMaster;
 
 
@@ -30,6 +31,9 @@ public interface StatusMasterRepository extends JpaRepository<StatusMaster, Long
 	
 	@Query("select id from StatusMaster where clientId=?1 and statusCode in ?2 and statusType=?3 ")
 	List<Long> getStatusIdByClientByCodeByType(Long clientId, List<String> statusCode, String statustype);
+	
+	@Query(value="select * from status_master where ext_id=?1", nativeQuery=true)
+	StatusMaster findByExtId(String extId);
 
 
 

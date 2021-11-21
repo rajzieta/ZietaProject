@@ -10,7 +10,8 @@ import lombok.Setter;
 @Setter
 public class UserConfigDTO {	
 	private Long id;	
-	private Long userId;	
+	private Long userId;
+	private Long roleId;
 	private Long orgnode;	
 	private Long reportingMgr;	
 	private Long accessTypeId;	

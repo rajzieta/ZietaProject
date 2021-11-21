@@ -45,7 +45,8 @@ public class ProjectMaster extends BaseEntity implements Serializable {
 	    @Column(name="client_id")
 	    private Long clientId;
 	
-
+	    @Column(name="ext_id")
+	    private String extId;
 	  
 	    @Column(name="type_name")
 	    private String typeName;

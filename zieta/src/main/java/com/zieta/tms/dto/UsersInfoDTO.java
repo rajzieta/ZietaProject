@@ -34,7 +34,8 @@ public class UsersInfoDTO {
 	private short isDelete;
 	private short isTsOpen;
 	private short isExpOpen;
-	private String password;	
+	private String password;
+	private Long roleId;
 
 	
 	

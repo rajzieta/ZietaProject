@@ -15,6 +15,7 @@ public class StatusMasterDTO extends BaseEntity {
 
 	private Long id;
 	private Long clientId;
+	private String extId;
 	private String clientCode;
     private String statusCode;
     private String statusDesc;

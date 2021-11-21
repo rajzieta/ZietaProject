@@ -12,6 +12,7 @@ public class UserInfoEditRequest {
 	
 	    private Long id;
 		private Long clientId;
+		private Long roleId;
 		private Long expTemplateId;//due to table split has commented
 		private String userFname;
 		private String userMname;

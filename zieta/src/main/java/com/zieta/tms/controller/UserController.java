@@ -71,14 +71,16 @@ public class UserController {
 	@RequestMapping(value = "getAllUsers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<UserInfoDTO> getAllUserDetails() {
 		List<UserInfoDTO> allUserData = null;
-		try {
+		System.out.println("in controller====>");
+		/*try {
 			
 			allUserData = userInfoService.getAllUserInfoDetails();
 			LOGGER.info("Total number of users: "+allUserData.size());
 		} catch (Exception e) {
 			LOGGER.error("Error Occured in getting all user details",e);
 		}
-		return allUserData;
+		return allUserData;*/
+		return null;
 	}
 
 	@PostMapping("/authenticate")

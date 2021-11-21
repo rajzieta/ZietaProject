@@ -10,7 +10,8 @@ import lombok.Setter;
 public class UserConfigEditRequest {
 
 	private Long id;	
-	private Long userId;	
+	private Long userId;
+	private Long roleId;
 	private Long orgnode;	
 	private Long reportingMgr;	
 	private Long accessTypeId;	

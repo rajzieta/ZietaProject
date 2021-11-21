@@ -12,8 +12,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.zieta.tms.dto.ClientInfoDTO;
 import com.zieta.tms.dto.ProjectMasterDTO;
+import com.zieta.tms.exception.ExternalIdException;
+import com.zieta.tms.model.BydProjectInfo;
 import com.zieta.tms.model.ClientInfo;
 import com.zieta.tms.model.CustInfo;
 import com.zieta.tms.model.ProcessMaster;
@@ -36,6 +37,7 @@ import com.zieta.tms.repository.UserInfoRepository;
 import com.zieta.tms.request.EditProjStatusRequest;
 import com.zieta.tms.request.ProjectMasterEditRequest;
 import com.zieta.tms.request.ProjectTypeEditRequest;
+import com.zieta.tms.response.AddProjectResponse;
 import com.zieta.tms.response.ProjectDetailsByUserModel;
 import com.zieta.tms.response.ProjectTypeByClientResponse;
 import com.zieta.tms.service.ProcessService;
@@ -104,6 +106,68 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	{
 		projectInfoRepository.save(projectinfo);
 	}
+	
+	
+	//ADD PROJECT IN PROJECT_INFO FROM BYD SYSTEM	
+	@Override
+	public AddProjectResponse addExternalProjectinfo(BydProjectInfo bydProjectinfo)
+	{		
+		ProjectInfo returnData =null;
+		AddProjectResponse responseData = new AddProjectResponse();
+		//manipulate bydprojectinfo data and set it to project info an save it
+		try {
+				
+			if(bydProjectinfo.getExtCustId() ==null || bydProjectinfo.getExtCustId()=="" ||
+				bydProjectinfo.getExtDirectApprover()==null || bydProjectinfo.getExtDirectApprover()==""||
+			    bydProjectinfo.getExtId() ==null || bydProjectinfo.getExtId()=="" ||bydProjectinfo.getExtProjectManagerId()==null || bydProjectinfo.getExtProjectManagerId()==""
+			     || bydProjectinfo.getExtProjectStatus() == null || bydProjectinfo.getExtProjectStatus() =="" ||
+			    bydProjectinfo.getExtProjectType() ==null || bydProjectinfo.getExtProjectType() =="" ||	
+			    bydProjectinfo.getExtProjectOrgNode() == null || bydProjectinfo.getExtProjectOrgNode() =="") {
+					
+					throw new ExternalIdException("ExternalId not found");
+				}else{
+					
+				    ProjectInfo chkExist = projectInfoRepository.findByExtId(bydProjectinfo.getExtId());
+					Long custId = custInfoRepository.findByExtId(bydProjectinfo.getExtCustId()).getCustInfoId();		
+					Long projectManager = userInfoRepository.findByExtId(bydProjectinfo.getExtProjectManagerId()).getId();
+					Long directApprover = userInfoRepository.findByExtId(bydProjectinfo.getExtDirectApprover()).getId();
+					Long projectStatus = statusMasterRepository.findByExtId(bydProjectinfo.getExtProjectStatus()).getId();
+					Long projectType = projectMasterRepository.findByExtId(bydProjectinfo.getExtProjectType()).getProjectTypeId();
+					Long orgNode = orgInfoRepository.findByExtId(bydProjectinfo.getExtProjectOrgNode()).getOrgUnitId();
+					
+					ProjectInfo projectInfo = new ProjectInfo();
+					
+					if(chkExist!= null) {
+						projectInfo.setProjectInfoId(chkExist.getProjectInfoId());
+					}
+					
+					projectInfo.setProjectInfoId(bydProjectinfo.getProjectInfoId());
+					projectInfo.setExtId(bydProjectinfo.getExtId());
+					projectInfo.setClientId(bydProjectinfo.getClientId());
+					projectInfo.setProjectName(bydProjectinfo.getProjectName());
+					projectInfo.setProjectType(projectType);
+					projectInfo.setProjectOrgNode(orgNode);
+					projectInfo.setProjectManager(projectManager);
+					projectInfo.setTemplateId(bydProjectinfo.getTemplateId());
+					projectInfo.setDirectApprover(directApprover);
+					projectInfo.setAllowUnplanned(bydProjectinfo.getAllowUnplanned());
+					projectInfo.setCustId(custId);
+					projectInfo.setProjectStatus(projectStatus);
+					projectInfo.setCreatedBy(bydProjectinfo.getCreatedBy());
+					projectInfo.setModifiedBy(bydProjectinfo.getCreatedBy());
+					
+					
+					 returnData = projectInfoRepository.save(projectInfo);
+					 responseData.setId(returnData.getProjectInfoId());
+					 responseData.setIsSaved(true);
+				}
+		}catch(Exception e) {
+			log.error(" Failed to add project from Byd");
+		}
+		
+		return responseData;
+	}
+	
 
 	@Override
 	public List<ProjectDetailsByUserModel> getProjectsByUser(long projectManagerId) {
@@ -357,8 +421,34 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		
 	}
 	
+	/**
+	 * GET ALL POJECT FROM BYD STSREM BY CLIENT ID
+	 * 
+	 */
+	@Override
+	public List<ProjectDetailsByUserModel> getBYDProjectsByClient(Long clientId) {
+		short notDeleted=0;
+		
+		log.info("in service impl...");
+		//CREATE CORRECT REQUEST STRUCTURE AND CALL BYD API
+		
+		
+		/*List<ProjectInfo> projectList = projectInfoRepository.findByClientIdAndIsDelete(clientId, notDeleted);
+		List<ProjectDetailsByUserModel> projectDetailsByUserList = new ArrayList<>();
+
+		fillProjectDetails(projectList, projectDetailsByUserList);
+
+		return projectDetailsByUserList;*/
+		return null;
+
+	}
 	
-	
+	//FIND PROJECT DETAILS BY PROJECTID
+	public ProjectInfo findByProjectId(Long projectId) {
+		
+		ProjectInfo projectInfo = projectInfoRepository.findById(projectId).get();
+		return projectInfo;
+	}
 	
 	
 	

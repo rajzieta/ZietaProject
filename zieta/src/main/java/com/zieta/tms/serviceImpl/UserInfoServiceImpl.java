@@ -140,6 +140,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 	public List<UserInfoDTO> getAllUserInfoDetails() {
 		short notDeleted = 0;
 		List<UserInfo> userInfoList= userInfoRepositoryRepository.findByIsDelete(notDeleted);
+		
 		List<UserInfoDTO> userInfoDTOs = new ArrayList<UserInfoDTO>();
 		mapUserInfoModelToDTO(userInfoList, userInfoDTOs);
 		return userInfoDTOs;

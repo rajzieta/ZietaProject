@@ -21,10 +21,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper=false)
 public class BydProjectInfo extends BaseEntity implements Serializable {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Long projectInfoId;
+	
 
 	@NotNull
 	@Column(name = "client_id")

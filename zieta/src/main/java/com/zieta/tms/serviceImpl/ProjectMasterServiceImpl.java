@@ -111,7 +111,9 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	//ADD PROJECT IN PROJECT_INFO FROM BYD SYSTEM	
 	@Override
 	public AddProjectResponse addExternalProjectinfo(BydProjectInfo bydProjectinfo)
-	{		
+	{
+		
+		
 		ProjectInfo returnData =null;
 		AddProjectResponse responseData = new AddProjectResponse();
 		//manipulate bydprojectinfo data and set it to project info an save it
@@ -141,7 +143,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 						projectInfo.setProjectInfoId(chkExist.getProjectInfoId());
 					}
 					
-					projectInfo.setProjectInfoId(bydProjectinfo.getProjectInfoId());
+					
 					projectInfo.setExtId(bydProjectinfo.getExtId());
 					projectInfo.setClientId(bydProjectinfo.getClientId());
 					projectInfo.setProjectName(bydProjectinfo.getProjectName());

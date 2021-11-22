@@ -144,6 +144,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 					}
 					
 					
+					
 					projectInfo.setExtId(bydProjectinfo.getExtId());
 					projectInfo.setClientId(bydProjectinfo.getClientId());
 					projectInfo.setProjectName(bydProjectinfo.getProjectName());

@@ -22,7 +22,6 @@ import lombok.EqualsAndHashCode;
 public class BydProjectInfo extends BaseEntity implements Serializable {
 
 	
-
 	@NotNull
 	@Column(name = "client_id")
 	private Long clientId;

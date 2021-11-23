@@ -57,6 +57,7 @@ public class TSReportServiceImpl implements TSReportService {
 	}
 	
 	
+	
 	@Override
 	public ByteArrayInputStream downloadTimeSheetReport(HttpServletResponse response,long clientId,
 			String startDate, String endDate, String projectId, String teamId, String empId) throws IOException {
@@ -112,7 +113,6 @@ public class TSReportServiceImpl implements TSReportService {
 		return timeSheetReportHelper.downloadSumReport(response, timeSheetReportList);
 		
 	}
-
 	
 	
 }

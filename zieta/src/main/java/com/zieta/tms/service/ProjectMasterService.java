@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import com.zieta.tms.dto.ExternalProjectMasterDTO;
 import com.zieta.tms.dto.ProjectMasterDTO;
-import com.zieta.tms.model.BydProjectInfo;
 import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.ProjectMaster;
 import com.zieta.tms.request.EditProjStatusRequest;

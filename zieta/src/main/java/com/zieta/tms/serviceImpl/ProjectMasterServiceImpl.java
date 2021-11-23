@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import com.zieta.tms.dto.ExternalProjectMasterDTO;
 import com.zieta.tms.dto.ProjectMasterDTO;
 import com.zieta.tms.exception.ExternalIdException;
-import com.zieta.tms.model.BydProjectInfo;
 import com.zieta.tms.model.ClientInfo;
 import com.zieta.tms.model.CustInfo;
 import com.zieta.tms.model.ProcessMaster;

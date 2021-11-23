@@ -37,6 +37,9 @@ public class UserInfo extends BaseEntity {
 	@Column(name = "client_id")
 	private Long clientId;
 	
+	@Column(name = "role_id")
+	private Long roleId;
+	
 
 	@Column(name = "user_fname")
 	private String userFname;

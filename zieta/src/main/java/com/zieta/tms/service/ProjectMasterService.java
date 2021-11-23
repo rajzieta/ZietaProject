@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.zieta.tms.dto.ExternalProjectMasterDTO;
 import com.zieta.tms.dto.ProjectMasterDTO;
 import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.ProjectMaster;
@@ -12,13 +13,16 @@ import com.zieta.tms.request.ProjectMasterEditRequest;
 import com.zieta.tms.request.ProjectTypeEditRequest;
 import com.zieta.tms.response.ProjectDetailsByUserModel;
 import com.zieta.tms.response.ProjectTypeByClientResponse;
-import com.zieta.tms.response.ProjectsByClientResponse;
+import com.zieta.tms.response.ResponseData;
 
 public interface ProjectMasterService {
 
 	public List<ProjectDetailsByUserModel> getAllProjects();
 
 	public void addProjectinfo(ProjectInfo projectinfo);
+	
+	//ADD PROJECT FROM BYD SYSTEM
+	public ResponseData addExternalProjectinfo(ExternalProjectMasterDTO bydProjectinfo);
 	
 	List<ProjectDetailsByUserModel> getProjectsByUser(long userId);
 
@@ -41,4 +45,8 @@ public interface ProjectMasterService {
 	public void editProjectTypesById(@Valid ProjectTypeEditRequest projectTypeEditRequest) throws Exception;
 
 	public void deleteProjectTypesById(Long id, String modifiedBy) throws Exception;
+	
+	List<ProjectDetailsByUserModel> getBYDProjectsByClient(Long clientId);
+	
+	public ProjectInfo findByProjectId(Long projectId);
 }

@@ -33,6 +33,7 @@ import com.zieta.tms.model.TSWorkflow;
 import com.zieta.tms.model.TaskInfo;
 import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.TimeType;
+import com.zieta.tms.model.UserConfig;
 import com.zieta.tms.model.WorkflowRequest;
 import com.zieta.tms.repository.ActivityMasterRepository;
 import com.zieta.tms.repository.ClientInfoRepository;
@@ -43,6 +44,7 @@ import com.zieta.tms.repository.TSInfoRepository;
 import com.zieta.tms.repository.TSTimeEntriesRepository;
 import com.zieta.tms.repository.TaskInfoRepository;
 import com.zieta.tms.repository.TimeTypeRepository;
+import com.zieta.tms.repository.UserConfigRepository;
 import com.zieta.tms.repository.UserInfoRepository;
 import com.zieta.tms.repository.WorkflowRepository;
 import com.zieta.tms.repository.WorkflowRequestRepository;
@@ -62,6 +64,9 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	
 	@Autowired
 	TSInfoRepository tSInfoRepository;
+	
+	@Autowired
+	UserConfigRepository userConfigRepository;
 	
 	@Autowired
 	ActivityMasterRepository  activityMasterRepository;
@@ -289,8 +294,16 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 								workflowRequest = new WorkflowRequest();
 								workflowRequest.setStepId(processStepsList.get(i).getStepId());
 								String approverId = approverIds[j];
+								
+								short isDelete = 0;
+								UserConfig userConfig = userConfigRepository.findUserConfigByIdAndIsDelete(tsInfo.getUserId(), isDelete);
+								
+								
+								
 								if(tsInfo.getUserId().toString().equals(approverIds[j])) {
-									Long rmId = userInfoRepository.findById(tsInfo.getUserId()).get().getReportingMgr();
+									//Long rmId = userInfoRepository.findById(tsInfo.getUserId()).get().getReportingMgr();//DUE TO TABLE SPLIT
+									
+									Long rmId = userConfig.getReportingMgr();
 									if(rmId != null){
 										approverId=  rmId.toString();
 									}
@@ -430,14 +443,10 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	public void updateTimeEntriesByID(@Valid TimeEntriesByTsIdRequest timeentriesByTsIdRequest) throws Exception {
 		// todo remove find by and use existsbyid
 		Optional<TSTimeEntries> tsTimeEntity = tstimeentriesRepository.findById(timeentriesByTsIdRequest.getId());
-		if(tsTimeEntity.isPresent()) {
-			
-			TSTimeEntries tstimeentry= modelMapper.map(timeentriesByTsIdRequest, TSTimeEntries.class);
-			
+		if(tsTimeEntity.isPresent()) {			
+			TSTimeEntries tstimeentry= modelMapper.map(timeentriesByTsIdRequest, TSTimeEntries.class);			
 			tstimeentriesRepository.save(tstimeentry);
-		}
-	
-		else {
+		}else{
 			throw new Exception("Timeentry not found with the provided ID : "+timeentriesByTsIdRequest.getId());
 		}
 	}

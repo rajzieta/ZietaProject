@@ -36,12 +36,11 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/api")
 @Api(tags = "Expense Template API")
 public class ExpenseTemplateController {
-
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExpenseTemplateController.class);
 
 	@Autowired
-	ExpenseTemplateService expenseTemplateService;
-	
+	ExpenseTemplateService expenseTemplateService;	
 
 	@ApiOperation(value = "List Expense Template Info", notes = "Table reference:expense_Template")
 	@RequestMapping(value = "getAllActiveExpenseTemplate", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -50,13 +49,28 @@ public class ExpenseTemplateController {
 		Short notDeleted =0;		
 		List<ExpenseTemplateDTO> expenseTemplates = null;
 		try {
-				expenseTemplates = expenseTemplateService.getAllActiveExpenseTemplate(clientId, notDeleted);
+				expenseTemplates = expenseTemplateService.getAllActiveExpenseTemplate(clientId, notDeleted);				
 
 		} catch (Exception e) {
 			LOGGER.error("Error Occured in ExpenseInfoController#getAllExpenses", e);
 		}
 		return expenseTemplates;
 	}
+	
+	//GET ALL ACTIVE EXPENSE TEMPLATE WITHOUT CLIENT ID
+	@ApiOperation(value = "List Expense Template ", notes = "Table reference:expense_Template")
+	@RequestMapping(value = "getAllExpenseTemplate", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<ExpenseTemplateDTO> getAllExpenseTemplate() {		
+		Short notDeleted =0;		
+		List<ExpenseTemplateDTO> expenseTemplates = null;
+		try {
+				expenseTemplates = expenseTemplateService.getAllExpenseTemplate(notDeleted);
+
+		} catch (Exception e) {
+			LOGGER.error("Error Occured in ExpenseInfoController#getAllExpenses", e);
+		}
+		return expenseTemplates;
+	}	
 	
 	@ApiOperation(value = "List Expense Template Step", notes = "Table reference:expense_Template_steps")
 	@RequestMapping(value = "getAllActiveExpenseTemplateStepByTemplateId", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -85,7 +99,6 @@ public class ExpenseTemplateController {
 	public ResponseEntity<List<ExpTemplateSteps>> addExpenseTemplateStepList(@Valid @RequestBody List<ExpTemplateSteps> expenseTemplateSteps)
 			throws Exception {
 		List<ExpTemplateSteps> expenseTemplateStepList = expenseTemplateService.addExpenseTemplateSteps(expenseTemplateSteps);
-
 		return new ResponseEntity<List<ExpTemplateSteps>>(expenseTemplateStepList, HttpStatus.OK);
 
 	}
@@ -96,6 +109,24 @@ public class ExpenseTemplateController {
 		expenseTemplateService.editExpenseTemplateStepById(expenseTemplateEditRequestList);
 
 	}*/
+	
+	
+	//DELETE EXPENSE TEMPLATE BY TEMPLATE ID	
+	@ApiOperation(value = "Deletes expense template from expense_template based on Id", notes = "Table reference: expense_template")
+	@RequestMapping(value = "deletetTemplateById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deletetTemplateById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		 expenseTemplateService.deletetTemplateById(id, modifiedBy);
+	} 
+	 
+	//DELETE EXPENSE TEMPLATE STEPS
+	@ApiOperation(value = "Delete Expense Tempalte Steps from expense_template_steps based on Id", notes = "Table reference: expense_template_steps")
+	@RequestMapping(value = "deletetTemplateStepById", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void deletetTemplateStepById(@RequestParam(required=true) Long[] id, @RequestParam(required=true) String modifiedBy) throws Exception {
+		 expenseTemplateService.deletetTemplateStepsById(id, modifiedBy);
+	}
+	 
+	 
+	 
 
 	
 }

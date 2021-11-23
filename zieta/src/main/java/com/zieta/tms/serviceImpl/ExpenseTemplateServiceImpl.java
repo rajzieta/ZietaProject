@@ -98,9 +98,29 @@ public class ExpenseTemplateServiceImpl implements ExpenseTemplateService {
 		}
 		return expenseTemplateDTOs;
 	}
+	
+	@Override
+	public List<ExpenseTemplateDTO> getAllExpenseTemplate(Short notDeleted) {
+		
+		List<ExpenseTemplate> expenseTemplateList = expenseTemplateRepository.findByIsDelete(notDeleted);
+		List<ExpenseTemplateDTO> expenseTemplateDTOs = new ArrayList<ExpenseTemplateDTO>();
+		
+		ExpenseTemplateDTO expenseTemplateDTO = null;
+		for (ExpenseTemplate expenseTemplate : expenseTemplateList) {
+			expenseTemplateDTO = modelMapper.map(expenseTemplate, ExpenseTemplateDTO.class);
+			expenseTemplateDTOs.add(expenseTemplateDTO);
+		}
+		return expenseTemplateDTOs;
+	}
+	
 
 	@Override
 	public ExpenseTemplate addExpenseTemplate(ExpenseTemplate expTemplate) throws Exception {
+				if(expTemplate.getTemplateName().toString().equalsIgnoreCase("default")) {
+			Short d = 1;
+			expTemplate.setIsDefault(d);			
+		}
+		
 		ExpenseTemplate expTmplt = expenseTemplateRepository.save(expTemplate);
 		return expTmplt;
 	}
@@ -151,5 +171,50 @@ public class ExpenseTemplateServiceImpl implements ExpenseTemplateService {
 		return expenseTemplateStepDTOs;
 		
 	}
+	
+	public void deletetTemplateById(Long id, String modifiedBy) throws Exception {
+		
+		log.info("Id ===>re"+id);
+		Optional<ExpenseTemplate> expenseTemplate = expenseTemplateRepository.findById(id);
+		if (expenseTemplate.isPresent()) {
+			log.info("Id 111111"+id);
+			ExpenseTemplate expenseTemplateEntitiy = expenseTemplate.get();
+			short delete = 1;
+			expenseTemplateEntitiy.setIsDelete(delete);
+			expenseTemplateEntitiy.setModifiedBy(modifiedBy);
+			expenseTemplateRepository.save(expenseTemplateEntitiy);
+
+		}else {
+			log.info("Id2222222==> "+id);
+			log.info("No Expense Template found with the provided ID{} in the DB",id);
+			throw new Exception("No ExpenseTemplate found with the provided ID in the DB :"+id);
+		}
+		
+		
+	}
+
+	public void deletetTemplateStepsById(Long[] id, String modifiedBy) throws Exception {
+		
+		for(int i=0;i<id.length;i++) {//TO 
+			Optional<ExpTemplateSteps> expTemplateSteps = expTemplateStepsRepository.findById(id[i]);		
+			
+			if (expTemplateSteps.isPresent()) {
+				ExpTemplateSteps expenseTemplateStepEntitiy = expTemplateSteps.get();
+				short delete = 1;
+				expenseTemplateStepEntitiy.setIsDelete(delete);
+				expenseTemplateStepEntitiy.setModifiedBy(modifiedBy);
+				expTemplateStepsRepository.save(expenseTemplateStepEntitiy);
+	
+			}else {
+				log.info("No Expense Template Steps found with the provided ID{} in the DB",id);
+				throw new Exception("No ExpenseTemplateSteps found with the provided ID in the DB :"+id);
+			}
+		
+		}
+		
+	}
+	
+	
+	
 	
 }

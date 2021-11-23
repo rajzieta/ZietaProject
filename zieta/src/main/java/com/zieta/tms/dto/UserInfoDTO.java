@@ -15,6 +15,7 @@ public class UserInfoDTO {
 
     private Long id;
 	private Long clientId;
+	private Long roleId;
 	private Long expTemplateId;
 	private String userFname;
 	private String userMname;

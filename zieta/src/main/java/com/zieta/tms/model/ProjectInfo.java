@@ -34,6 +34,9 @@ public class ProjectInfo extends BaseEntity implements Serializable {
 	//@Column(name = "project_code")
 //	private String projectCode;
 
+	@Column(name = "EXT_ID")
+	private String extId;
+	
 	@Column(name = "project_name")
 	private String projectName;
 

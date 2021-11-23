@@ -11,6 +11,7 @@ public class CustomerInfoModel {
 	
     private Long custInfoId;
     private Long clientId;
+    private String extId;
     private String custName;
     private String custAddress;
     private String custDetails;

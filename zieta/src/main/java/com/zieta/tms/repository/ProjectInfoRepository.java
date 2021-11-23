@@ -21,6 +21,8 @@ public interface ProjectInfoRepository extends JpaRepository<ProjectInfo, Long> 
 	List<ProjectInfo> findByClientIdAndIsDelete(Long clientId, short notDeleted);
 
 	//Optional<ProjectInfo> findByIdAndIsDelete(Long Id, short notDeleted);
+	
+	ProjectInfo findByExtId(String extId);
 
 
 

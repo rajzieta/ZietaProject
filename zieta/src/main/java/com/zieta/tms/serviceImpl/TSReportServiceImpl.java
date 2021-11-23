@@ -14,7 +14,7 @@ import com.zieta.tms.model.TSReport;
 import com.zieta.tms.model.TSSumReport;
 import com.zieta.tms.reports.TimeSheetReportHelper;
 import com.zieta.tms.repository.TSReportRepository;
-import com.zieta.tms.repository.TSEmployeeReportRepository;
+//import com.zieta.tms.repository.TSEmployeeReportRepository;
 import com.zieta.tms.repository.TSSumReportRepository;
 import com.zieta.tms.service.TSReportService;
 
@@ -29,13 +29,8 @@ public class TSReportServiceImpl implements TSReportService {
     @Autowired
     TimeSheetReportHelper timeSheetReportHelper;
     
-    @Autowired
-    TSEmployeeReportRepository tsEmployeeReportRepository;
-    
-   
-    
 	
-	
+    
 	@Override
 	public List<TSReport> getTSReportEntriesFromProcedure(long clientId, String startDate, String endDate) {
 		
@@ -43,13 +38,13 @@ public class TSReportServiceImpl implements TSReportService {
 		return tsReportList;
 	}
 	
-	//REPORT USING USERID AND DATE RANGE	
-	@Override
+	////REPORT USING USERID AND DATE RANGE	
+	/*@Override
 	public List<TSReport> getTSReportEntriesFromProcedureByEmployeeIdAndDateRange(long employeeId, String startDate, String endDate) {
 		
 		List<TSReport> tsReportList = tsEmployeeReportRepository.getTsByDateRangeSP(employeeId, startDate, endDate);
 		return tsReportList;
-	}
+	}*/
 	
 	
 	
@@ -60,6 +55,7 @@ public class TSReportServiceImpl implements TSReportService {
 		
 		return tsReportList;
 	}
+	
 	
 	
 	@Override
@@ -117,7 +113,6 @@ public class TSReportServiceImpl implements TSReportService {
 		return timeSheetReportHelper.downloadSumReport(response, timeSheetReportList);
 		
 	}
-
 	
 	
 }

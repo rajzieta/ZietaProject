@@ -41,6 +41,9 @@ import lombok.Data;
 	   
 	    @Column(name = "client_id")
 	    private Long clientId;
+	    
+	    @Column(name = "ext_id")
+	    private String extId;
 
 	    @Column(name = "cust_name")
 	    private String custName;

@@ -18,6 +18,9 @@ public interface OrgInfoRepository extends JpaRepository<OrgInfo, Long> {
 	
 	@Query(value="select * from orgunit_info where ext_id=?1", nativeQuery=true)
 	OrgInfo findByExtId(String extOrgNode);
+	
+	@Query(value="select * from orgunit_info where ext_id=?1 and client_id=?2", nativeQuery=true)
+	OrgInfo findByExtIdAndClientId(String extOrgNode, Long clientId);
 
 
 

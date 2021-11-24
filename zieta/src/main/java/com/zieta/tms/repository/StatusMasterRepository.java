@@ -34,6 +34,9 @@ public interface StatusMasterRepository extends JpaRepository<StatusMaster, Long
 	
 	@Query(value="select * from status_master where ext_id=?1", nativeQuery=true)
 	StatusMaster findByExtId(String extId);
+	
+	@Query(value="select * from status_master where ext_id=?1 and client_id=?2", nativeQuery=true)
+	StatusMaster findByExtIdAndClientId(String extId, Long clientId);
 
 
 

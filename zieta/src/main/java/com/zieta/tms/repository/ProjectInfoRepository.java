@@ -23,6 +23,8 @@ public interface ProjectInfoRepository extends JpaRepository<ProjectInfo, Long> 
 	//Optional<ProjectInfo> findByIdAndIsDelete(Long Id, short notDeleted);
 	
 	ProjectInfo findByExtId(String extId);
+	
+	ProjectInfo findByExtIdAndClientId(String extId, Long clientId);
 
 
 

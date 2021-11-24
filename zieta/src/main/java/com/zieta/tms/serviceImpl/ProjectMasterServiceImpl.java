@@ -128,13 +128,14 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 					
 				}else{
 					    log.error("Checking existing project");
-					    ProjectInfo chkExist = projectInfoRepository.findByExtId(bydProjectinfo.getExtId().trim());
-						Long custId = custInfoRepository.findByExtId(bydProjectinfo.getExtCustId().trim()).getCustInfoId();		
-						Long projectManager = userInfoRepository.findByExtId(bydProjectinfo.getExtProjectManagerId().trim()).getId();
-						Long directApprover = userInfoRepository.findByExtId(bydProjectinfo.getExtDirectApprover().trim()).getId();
-						Long projectStatus = statusMasterRepository.findByExtId(bydProjectinfo.getExtProjectStatus().trim()).getId();
-						Long projectType = projectMasterRepository.findByExtId(bydProjectinfo.getExtProjectType().trim()).getProjectTypeId();
-						Long orgNode = orgInfoRepository.findByExtId(bydProjectinfo.getExtProjectOrgNode().trim()).getOrgUnitId();
+					    ProjectInfo chkExist = projectInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtId().trim(),bydProjectinfo.getClientId());
+					    
+						Long custId = custInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtCustId().trim(), bydProjectinfo.getClientId()).getCustInfoId();						
+						Long projectManager = userInfoRepository.findByExtIdAndClintId(bydProjectinfo.getExtProjectManagerId().trim(), bydProjectinfo.getClientId()).getId();						
+						Long directApprover = userInfoRepository.findByExtIdAndClintId(bydProjectinfo.getExtDirectApprover().trim(), bydProjectinfo.getClientId()).getId();
+						Long projectStatus = statusMasterRepository.findByExtIdAndClientId(bydProjectinfo.getExtProjectStatus().trim(), bydProjectinfo.getClientId()).getId();
+						Long projectType = projectMasterRepository.findByExtIdAndClientId(bydProjectinfo.getExtProjectType().trim(), bydProjectinfo.getClientId()).getProjectTypeId();
+						Long orgNode = orgInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtProjectOrgNode().trim(), bydProjectinfo.getClientId()).getOrgUnitId();
 						
 						ProjectInfo projectInfo = new ProjectInfo();					
 						
@@ -160,7 +161,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 						returnData = projectInfoRepository.save(projectInfo);
 						responseData.setId(returnData.getProjectInfoId());
 						responseData.setIsSaved(true);
-						log.error("External project created");
+						log.error("External project Saved");
 				}
 		}catch(Exception e) {
 			log.error(" Failed to add project from Byd");

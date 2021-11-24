@@ -22,5 +22,8 @@ public interface CustInfoRepository extends JpaRepository<CustInfo, Long> {
 	@Query(value="select * from cust_info where ext_id=?1", nativeQuery=true)
 	CustInfo findByExtId(String extId);
 	
+	@Query(value="select * from cust_info where ext_id=?1 and client_id=?2", nativeQuery=true)
+	CustInfo findByExtIdAndClientId(String extId, Long clientId);
+	
 
 }

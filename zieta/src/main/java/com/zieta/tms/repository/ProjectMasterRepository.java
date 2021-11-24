@@ -23,4 +23,7 @@ public interface ProjectMasterRepository extends JpaRepository<ProjectMaster, Lo
 	@Query(value="select * from project_type_master where ext_id=?1", nativeQuery=true)
 	ProjectMaster findByExtId(String extId);
 	
+	@Query(value="select * from project_type_master where ext_id=?1 and client_id=?2", nativeQuery=true)
+	ProjectMaster findByExtIdAndClientId(String extId, Long clientId);
+	
 }

@@ -13,8 +13,9 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.zieta.tms.dto.SkillsetUserMappingDTO;
+import com.zieta.tms.dto.ExtTaskMasterDTO;
 import com.zieta.tms.dto.TaskMasterDTO;
+import com.zieta.tms.exception.ExternalIdException;
 import com.zieta.tms.model.ProcessSteps;
 import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.StatusMaster;
@@ -24,7 +25,9 @@ import com.zieta.tms.model.TaskTypeMaster;
 import com.zieta.tms.model.TasksByUser;
 import com.zieta.tms.model.UserInfo;
 import com.zieta.tms.repository.ClientInfoRepository;
+import com.zieta.tms.repository.CustInfoRepository;
 import com.zieta.tms.repository.ProcessConfigRepository;
+import com.zieta.tms.repository.ProcessMasterRepository;
 import com.zieta.tms.repository.ProcessStepsRepository;
 import com.zieta.tms.repository.ProjectInfoRepository;
 import com.zieta.tms.repository.StatusMasterRepository;
@@ -35,6 +38,8 @@ import com.zieta.tms.repository.UserInfoRepository;
 import com.zieta.tms.request.EditTasksByClientProjectRequest;
 import com.zieta.tms.request.TaskTypesByClientRequest;
 import com.zieta.tms.request.UpdateTaskInfoRequest;
+import com.zieta.tms.response.AddProjectResponse;
+import com.zieta.tms.response.ResponseData;
 import com.zieta.tms.response.TaskTypesByClientResponse;
 import com.zieta.tms.response.TasksByClientProjectResponse;
 import com.zieta.tms.response.TasksByUserModel;
@@ -82,6 +87,9 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 	
 	@Autowired
 	ModelMapper modelMapper;
+
+	@Autowired
+	TaskTypeMasterRepository taskTypeRepo;
 
 	@Override
 	public List<TaskMasterDTO> getAllTasks() {
@@ -233,7 +241,56 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 			log.error("Exception occured during the save task information",ex);
 		//	return false;
 		}
+	}
 
+	@Override
+	@Transactional
+	public ResponseData saveExternalTaskInfo(ExtTaskMasterDTO extTaskMaster) {
+		ResponseData responseData = new ResponseData();
+		try {
+			TaskInfo taskInfo = null;
+
+			
+			if (extTaskMaster.getExtProjectId() == null || extTaskMaster.getExtProjectId().isEmpty()
+					|| extTaskMaster.getExtTaskManager() == null || extTaskMaster.getExtTaskManager().isEmpty()
+					|| extTaskMaster.getExtTaskType() == null || extTaskMaster.getExtTaskType().isEmpty()
+					|| extTaskMaster.getExtTaskParent() == null || extTaskMaster.getExtTaskParent().isEmpty()
+					|| extTaskMaster.getExtTaskStatus() == null || extTaskMaster.getExtTaskStatus().isEmpty()
+					) {
+
+				throw new ExternalIdException("ExternalId not found");
+
+			} else {
+				TaskInfo chkExist = taskInfoRepository.findByExtIdAndClientId(extTaskMaster.getExtTaskInfoId(), extTaskMaster.getClientId());
+				UserInfo taskManagerId = userInfoRepository.findByExtIdAndClientId(extTaskMaster.getExtTaskManager(), extTaskMaster.getClientId());
+				TaskTypeMaster taskType = taskTypeRepo.findByExtIdAndClientId(extTaskMaster.getExtTaskType(), extTaskMaster.getClientId());
+				TaskInfo taskParent = taskInfoRepository.findByExtIdAndClientId(extTaskMaster.getExtTaskParent(), extTaskMaster.getClientId());
+				StatusMaster statusMaster = statusRepository.findByExtIdAndClientId(extTaskMaster.getExtTaskStatus(), extTaskMaster.getClientId());
+				ProjectInfo projectInfo =  projectInfoRepository.findByExtIdAndClientId(extTaskMaster.getExtProjectId(), extTaskMaster.getClientId());
+				// ExtTaskInfo info = new ExtTaskInfo();
+				TaskInfo tskInfo = new TaskInfo();
+				if (chkExist != null) {
+					tskInfo.setTaskInfoId(chkExist.getTaskInfoId());
+				}
+
+				
+				System.out.println("saving-");
+				tskInfo.setClientId(extTaskMaster.getClientId());
+				tskInfo.setProjectId(projectInfo.getProjectInfoId());
+				tskInfo.setTaskManager(taskManagerId.getId());
+				tskInfo.setTaskType(taskType.getTaskTypeId());
+				tskInfo.setTaskStatus(statusMaster.getId());
+				tskInfo.setTaskParent(taskParent.getTaskParent());
+				taskInfo = taskInfoRepository.save(tskInfo);
+				responseData.setId(taskInfo.getTaskInfoId());
+				responseData.setIsSaved(true);
+				// addExtTaskInfo(info);
+				log.error("Ext task info data saved");
+			}
+		} catch (Exception ex) {
+			log.error("Exception occured during the save task information", ex);
+		}
+		return responseData;
 	}
 
 
@@ -380,4 +437,6 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 		}
 
 	}
+
+	
 }

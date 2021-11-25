@@ -10,6 +10,10 @@ public class RecordNotFoundException {
 	private static final long serialVersionUID = 1L;
 
     public RecordNotFoundException(String message){
-        
+    	 System.out.println(message);
+    }
+    
+    public void RecordNotFoundException(String message,String msg){
+        System.out.println(message+" "+msg);
     }
 }

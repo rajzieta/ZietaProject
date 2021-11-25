@@ -1,5 +1,7 @@
 package com.zieta.tms.dto;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 
 import com.zieta.tms.model.BaseEntity;
@@ -11,16 +13,17 @@ import lombok.Setter;
 public class ProjectMasterDTO extends BaseEntity {
 	private Long projectTypeId;
     private Long clientId;
-  //  private String project_type;
-//    private String created_by;
-//    private String modified_by;
-//    private boolean IS_DELETE;
+    //private String project_type;
+    //private String created_by;
+    //private String modified_by;
+    //private boolean IS_DELETE;
     private String extId;
     private String clientCode;
     private Long clientStatus;
     private String clientDescription;
- //  private String projectCode;
+    //private String projectCode;
     private String typeName;
     private Boolean custMandatory;
     private Boolean isEditable;
+    private Date extFetchDate;
 }

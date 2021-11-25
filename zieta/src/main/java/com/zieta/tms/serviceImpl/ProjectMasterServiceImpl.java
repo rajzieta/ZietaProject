@@ -118,7 +118,6 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		//manipulate bydprojectinfo data and set it to project info an save it
 		try {				
 				if(bydProjectinfo.getExtCustId() ==null || bydProjectinfo.getExtCustId()=="" ||
-				bydProjectinfo.getExtDirectApprover()==null || bydProjectinfo.getExtDirectApprover()==""||
 			    bydProjectinfo.getExtId() ==null || bydProjectinfo.getExtId()=="" ||bydProjectinfo.getExtProjectManagerId()==null || bydProjectinfo.getExtProjectManagerId()==""
 			     || bydProjectinfo.getExtProjectStatus() == null || bydProjectinfo.getExtProjectStatus() =="" ||
 			    bydProjectinfo.getExtProjectType() ==null || bydProjectinfo.getExtProjectType() =="" ||	
@@ -128,21 +127,27 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 					
 				}else{
 					    log.error("Checking existing project");
+					    ProjectInfo projectInfo = new ProjectInfo();
 					    ProjectInfo chkExist = projectInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtId().trim(),bydProjectinfo.getClientId());
 					    
 						Long custId = custInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtCustId().trim(), bydProjectinfo.getClientId()).getCustInfoId();						
-						Long projectManager = userInfoRepository.findByExtIdAndClintId(bydProjectinfo.getExtProjectManagerId().trim(), bydProjectinfo.getClientId()).getId();						
-						Long directApprover = userInfoRepository.findByExtIdAndClintId(bydProjectinfo.getExtDirectApprover().trim(), bydProjectinfo.getClientId()).getId();
+						Long projectManager = userInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtProjectManagerId().trim(), bydProjectinfo.getClientId()).getId();						
+						Long directApprover =0L;
+						
+						if(!bydProjectinfo.getExtDirectApprover().isEmpty()) {						
+							directApprover = userInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtDirectApprover().trim(), bydProjectinfo.getClientId()).getId();
+							projectInfo.setDirectApprover(directApprover);
+						}
+						
 						Long projectStatus = statusMasterRepository.findByExtIdAndClientId(bydProjectinfo.getExtProjectStatus().trim(), bydProjectinfo.getClientId()).getId();
+						
 						Long projectType = projectMasterRepository.findByExtIdAndClientId(bydProjectinfo.getExtProjectType().trim(), bydProjectinfo.getClientId()).getProjectTypeId();
+						
 						Long orgNode = orgInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtProjectOrgNode().trim(), bydProjectinfo.getClientId()).getOrgUnitId();
-						
-						ProjectInfo projectInfo = new ProjectInfo();					
-						
+												
 						if(chkExist!= null) {
 							projectInfo.setProjectInfoId(chkExist.getProjectInfoId());
-						}
-					
+						}					
 						projectInfo.setExtId(bydProjectinfo.getExtId());
 						projectInfo.setClientId(bydProjectinfo.getClientId());
 						projectInfo.setProjectName(bydProjectinfo.getProjectName());
@@ -150,7 +155,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 						projectInfo.setProjectOrgNode(orgNode);
 						projectInfo.setProjectManager(projectManager);
 						projectInfo.setTemplateId(bydProjectinfo.getTemplateId());
-						projectInfo.setDirectApprover(directApprover);
+						
 						projectInfo.setAllowUnplanned(bydProjectinfo.getAllowUnplanned());
 						projectInfo.setCustId(custId);
 						projectInfo.setProjectStatus(projectStatus);

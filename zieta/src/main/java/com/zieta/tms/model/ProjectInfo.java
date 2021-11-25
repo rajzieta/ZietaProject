@@ -1,6 +1,7 @@
 package com.zieta.tms.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -63,5 +64,8 @@ public class ProjectInfo extends BaseEntity implements Serializable {
 
 	@Column( name = "project_status")
 	private Long projectStatus;
+	
+	@Column( name = "ext_fetch_date")
+	private Date extFetchDate;
 	
 }

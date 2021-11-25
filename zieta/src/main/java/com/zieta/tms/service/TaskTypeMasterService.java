@@ -4,12 +4,15 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.zieta.tms.dto.ExtTaskMasterDTO;
 import com.zieta.tms.dto.TaskMasterDTO;
 import com.zieta.tms.model.TaskInfo;
 import com.zieta.tms.model.TaskTypeMaster;
 import com.zieta.tms.request.EditTasksByClientProjectRequest;
 import com.zieta.tms.request.TaskTypesByClientRequest;
 import com.zieta.tms.request.UpdateTaskInfoRequest;
+import com.zieta.tms.response.AddProjectResponse;
+import com.zieta.tms.response.ResponseData;
 import com.zieta.tms.response.TaskTypesByClientResponse;
 import com.zieta.tms.response.TasksByClientProjectResponse;
 import com.zieta.tms.response.TasksByUserModel;
@@ -28,7 +31,7 @@ public interface TaskTypeMasterService {
 	public List<TaskTypesByClientResponse> getTasksByClient(Long clientId);
 	
 	public void saveTaskInfo(@Valid List<TaskInfo> taskInfo);
-
+	
 	public void editTaskTypesByClient(@Valid TaskTypesByClientRequest tasktypesbyclientRequest) throws Exception;
 
 	public void addTaskTypesByClient(@Valid TaskTypeMaster taskmaster);
@@ -43,5 +46,5 @@ public interface TaskTypeMasterService {
 
 	public void deleteTaskInfoByClient(Long taskInfoId, String modifiedBy) throws Exception;
 
-	
+	public ResponseData saveExternalTaskInfo(@Valid ExtTaskMasterDTO extTaskMaster);
 }

@@ -1,5 +1,6 @@
 package com.zieta.tms.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -9,6 +10,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,7 @@ import com.zieta.tms.model.TaskTypeMaster;
 import com.zieta.tms.request.EditTasksByClientProjectRequest;
 import com.zieta.tms.request.TaskTypesByClientRequest;
 import com.zieta.tms.request.UpdateTaskInfoRequest;
+import com.zieta.tms.response.FetchDataResponse;
 import com.zieta.tms.response.ResponseData;
 import com.zieta.tms.response.TaskTypesByClientResponse;
 import com.zieta.tms.response.TasksByClientProjectResponse;
@@ -177,4 +180,19 @@ public class TaskController {
 		taskTypeMasterService.updateTaskSortKeyByIDs(taskIdWithSortKeys);
 		
 	}
+	
+	@RequestMapping(value = "/fetchExternalTaskInfo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Fetch Sap Date based on the project id and clientId", notes = "Table reference: project_info,project_info_id,client_id")
+	public ResponseData fetchExternalTaskInfo(@RequestParam(required = true) String extProjectId, @RequestParam(required = true) Long clientId,
+			@RequestParam(required = false) String extFetchDate
+			) {
+		//FetchDataResponse response = projectmasterService.findBySapDate(id, clientId);
+		//return new ResponseEntity<FetchDataResponse>(response, HttpStatus.OK);
+		//Date extFetchDate = new Date();
+		return taskTypeMasterService.getExternalTaskInfoData(extFetchDate, extProjectId, clientId);
+	}
+	
+	
+	
+	
 }

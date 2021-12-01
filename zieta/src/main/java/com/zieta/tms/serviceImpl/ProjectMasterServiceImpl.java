@@ -1,6 +1,7 @@
 package com.zieta.tms.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -8,14 +9,26 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.amazonaws.services.directconnect.model.Connection;
 import com.zieta.tms.dto.ExternalProjectMasterDTO;
 import com.zieta.tms.dto.ProjectMasterDTO;
 import com.zieta.tms.exception.ExternalIdException;
 import com.zieta.tms.model.ClientInfo;
+import com.zieta.tms.model.ConnectionMasterInfo;
 import com.zieta.tms.model.CustInfo;
 import com.zieta.tms.model.ProcessMaster;
 import com.zieta.tms.model.ProcessSteps;
@@ -25,6 +38,7 @@ import com.zieta.tms.model.StatusMaster;
 import com.zieta.tms.model.TaskInfo;
 import com.zieta.tms.model.UserInfo;
 import com.zieta.tms.repository.ClientInfoRepository;
+import com.zieta.tms.repository.ConnectionMasterInfoRepository;
 import com.zieta.tms.repository.CustInfoRepository;
 import com.zieta.tms.repository.OrgInfoRepository;
 import com.zieta.tms.repository.ProcessMasterRepository;
@@ -38,6 +52,7 @@ import com.zieta.tms.request.EditProjStatusRequest;
 import com.zieta.tms.request.ProjectMasterEditRequest;
 import com.zieta.tms.request.ProjectTypeEditRequest;
 import com.zieta.tms.response.AddProjectResponse;
+import com.zieta.tms.response.FetchDataResponse;
 import com.zieta.tms.response.ProjectDetailsByUserModel;
 import com.zieta.tms.response.ProjectTypeByClientResponse;
 import com.zieta.tms.response.ResponseData;
@@ -66,8 +81,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	
 	@Autowired
 	ClientInfoRepository clientInfoRepository;
-	
-	
+		
 	@Autowired
 	UserInfoRepository userInfoRepository;
 	
@@ -85,6 +99,9 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	
 	@Autowired
 	ProcessService processService;
+	
+	@Autowired
+	ConnectionMasterInfoRepository connectionMasterInfoRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -455,14 +472,27 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		ProjectInfo projectInfo = projectInfoRepository.findById(projectId).get();
 		return projectInfo;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-}
 
+	public FetchDataResponse findBySapDate(Long id, Long clientId) {
+		short notDeleted = 0;
+		ProjectInfo projectInfo = projectInfoRepository.findByProjectInfoIdAndClientIdAndIsDelete(id, clientId,
+				notDeleted);
+		FetchDataResponse response = new FetchDataResponse();
+		response.setExtFetchDate(projectInfo.getExtFetchDate());
+
+		return response;
+	}
+
+	public void updateBySapDate(Long id, Long clientId) {
+		Date currentDate = new Date();
+		projectInfoRepository.updateExtFetchDateByProjectInfoIdAndClientId(id, clientId, currentDate);
+
+	}	
+	
+	
+	
+	
+	
+
+}
 	

@@ -1,5 +1,6 @@
 package com.zieta.tms.service;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -47,4 +48,6 @@ public interface TaskTypeMasterService {
 	public void deleteTaskInfoByClient(Long taskInfoId, String modifiedBy) throws Exception;
 
 	public ResponseData saveExternalTaskInfo(@Valid ExtTaskMasterDTO extTaskMaster);
+	
+	public ResponseData getExternalTaskInfoData(String extFetchDate, String ExtProjectId, Long clinetId);
 }

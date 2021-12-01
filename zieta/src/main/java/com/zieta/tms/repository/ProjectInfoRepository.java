@@ -1,9 +1,15 @@
 package com.zieta.tms.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.zieta.tms.model.ClientInfo;
 import com.zieta.tms.model.ProjectInfo;
@@ -26,8 +32,11 @@ public interface ProjectInfoRepository extends JpaRepository<ProjectInfo, Long> 
 	
 	ProjectInfo findByExtIdAndClientId(String extId, Long clientId);
 
+	ProjectInfo findByProjectInfoIdAndClientIdAndIsDelete(Long projectInfoId, Long clientId, short notDeleted);
 
-
-	
-
+	@Transactional
+	@Modifying
+	@Query("UPDATE ProjectInfo SET extFetchDate=:extFetchDate WHERE projectInfoId=:projectInfoId AND clientId=:clientId ")
+	void updateExtFetchDateByProjectInfoIdAndClientId(@Param("projectInfoId") Long projectInfoId,
+			@Param("clientId") Long clientId,@Param("extFetchDate") Date extFetchDate);
 }

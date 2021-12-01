@@ -9,6 +9,7 @@ public class TaskMasterDTO {
 	private Long taskTypeId;
     private Long clientId;
     private String taskTypeDescription;
+    private String extId;
     private String modifiedBy;
     private String createdBy;
     private boolean isDelete;

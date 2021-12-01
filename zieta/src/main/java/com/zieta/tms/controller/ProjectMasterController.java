@@ -28,6 +28,7 @@ import com.zieta.tms.request.ProjectMasterEditRequest;
 import com.zieta.tms.request.ProjectTypeEditRequest;
 import com.zieta.tms.request.RoleMasterEditRequest;
 import com.zieta.tms.response.AddProjectResponse;
+import com.zieta.tms.response.FetchDataResponse;
 import com.zieta.tms.response.ProjectDetailsByUserModel;
 import com.zieta.tms.response.ProjectTypeByClientResponse;
 import com.zieta.tms.response.ProjectsByClientResponse;
@@ -184,7 +185,22 @@ public class ProjectMasterController {
 			return new ResponseEntity<List<ProjectDetailsByUserModel>>(HttpStatus.NOT_FOUND);
 		}
 	}
+		
+	@RequestMapping(value = "/fetchSapDate", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Fetch Sap Date based on the project id and clientId", notes = "Table reference: project_info,project_info_id,client_id")
+	public ResponseEntity<FetchDataResponse> fetchSapDateResponse(@RequestParam(required = true) Long id,
+			@RequestParam(required = true) Long clientId) {
+		FetchDataResponse response = projectmasterService.findBySapDate(id, clientId);
+		return new ResponseEntity<FetchDataResponse>(response, HttpStatus.OK);
+	}
 	
+	
+
+	@RequestMapping(value = "/updateSapDate", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Update Sap Date based on the project id and clientId", notes = "Table reference: project_info,project_info_id,client_id")
+	public void addProjectMaster(@RequestParam(required = true) Long id, @RequestParam(required = true) Long clientId) {
+		projectmasterService.updateBySapDate(id, clientId);
+	}
 	
 	
 	

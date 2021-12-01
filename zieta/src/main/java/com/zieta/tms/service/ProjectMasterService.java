@@ -1,5 +1,6 @@
 package com.zieta.tms.service;
 
+import java.sql.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -11,6 +12,7 @@ import com.zieta.tms.model.ProjectMaster;
 import com.zieta.tms.request.EditProjStatusRequest;
 import com.zieta.tms.request.ProjectMasterEditRequest;
 import com.zieta.tms.request.ProjectTypeEditRequest;
+import com.zieta.tms.response.FetchDataResponse;
 import com.zieta.tms.response.ProjectDetailsByUserModel;
 import com.zieta.tms.response.ProjectTypeByClientResponse;
 import com.zieta.tms.response.ResponseData;
@@ -47,6 +49,9 @@ public interface ProjectMasterService {
 	public void deleteProjectTypesById(Long id, String modifiedBy) throws Exception;
 	
 	List<ProjectDetailsByUserModel> getBYDProjectsByClient(Long clientId);
-	
 	public ProjectInfo findByProjectId(Long projectId);
+
+	public FetchDataResponse findBySapDate(Long id, Long clientId);
+	//public ProjectInfo findByProjectId(Long projectId);
+	public void updateBySapDate(Long id, Long clientId);
 }

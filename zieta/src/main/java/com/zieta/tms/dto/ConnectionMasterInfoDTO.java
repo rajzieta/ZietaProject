@@ -16,11 +16,8 @@ public class ConnectionMasterInfoDTO {
     private Long id;
 	private Long clientId;	
 	private String connectionName;
-	private String sid;
-	private String protocol;
-	private String host;
-	private String port;
-	private String sourceType;
+	private String connectionStr;
+	private String parameterList;
 	private String loginId;
 	private String password;	
 	private String createdBy;

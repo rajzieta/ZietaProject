@@ -38,23 +38,13 @@ public class ConnectionMasterInfo extends BaseEntity {
 	@Column(name = "connection_name")
 	private String connectionName;
 	
+	@Column(name = "connection_str")
+	private String connectionStr;
+	
+	@Column(name = "parameter_list")
+	private String parameterList;
 	
 	
-	
-	@Column(name = "sid")
-	private String sid;	
-		
-	@Column(name = "protocol")
-	private String protocol;
-	
-	@Column(name = "host")
-	private String host;
-	
-	@Column(name = "port")
-	private String port;
-	
-	@Column(name = "source_type")
-	private String sourceType;
 	
 	@Column(name = "login_id")
 	private String loginId;

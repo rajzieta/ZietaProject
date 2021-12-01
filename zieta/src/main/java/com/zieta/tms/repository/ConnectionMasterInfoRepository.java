@@ -23,6 +23,9 @@ public interface ConnectionMasterInfoRepository extends JpaRepository<Connection
 	List<ConnectionMasterInfo> findByIsDelete(short notDeleted);
 
 	List<Long> findByClientId(Long clientId);
+	
+	@Query(value="select * from connection_master where client_id=?1 and connection_name=?2 and is_delete=?3", nativeQuery=true)
+	List<ConnectionMasterInfo> findByClientIdAndConnectionNameAndNotDeleted(Long clientId,String connName,short notDeleted);
 
 	/*@Query(value="select * from user_info where id=?1", nativeQuery=true)
 	UserInfo findByUserId(long userId);

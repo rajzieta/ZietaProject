@@ -184,11 +184,8 @@ public class TaskController {
 	@RequestMapping(value = "/fetchExternalTaskInfo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Fetch Sap Date based on the project id and clientId", notes = "Table reference: project_info,project_info_id,client_id")
 	public ResponseData fetchExternalTaskInfo(@RequestParam(required = true) String extProjectId, @RequestParam(required = true) Long clientId,
-			@RequestParam(required = false) String extFetchDate
-			) {
-		//FetchDataResponse response = projectmasterService.findBySapDate(id, clientId);
-		//return new ResponseEntity<FetchDataResponse>(response, HttpStatus.OK);
-		//Date extFetchDate = new Date();
+			@RequestParam(required = true) String extFetchDate
+			) {		
 		return taskTypeMasterService.getExternalTaskInfoData(extFetchDate, extProjectId, clientId);
 	}
 	

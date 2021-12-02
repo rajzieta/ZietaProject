@@ -151,10 +151,10 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 						Long projectManager = userInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtProjectManagerId().trim(), bydProjectinfo.getClientId()).getId();						
 						Long directApprover =0L;
 						
-						if(!bydProjectinfo.getExtDirectApprover().isEmpty()) {						
+						/*if(!bydProjectinfo.getExtDirectApprover().isEmpty()) {						
 							directApprover = userInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtDirectApprover().trim(), bydProjectinfo.getClientId()).getId();
 							projectInfo.setDirectApprover(directApprover);
-						}
+						}*/
 						
 						Long projectStatus = statusMasterRepository.findByExtIdAndClientId(bydProjectinfo.getExtProjectStatus().trim(), bydProjectinfo.getClientId()).getId();
 						
@@ -186,7 +186,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 						log.error("External project Saved");
 				}
 		}catch(Exception e) {
-			log.error(" Failed to add project from Byd");
+			log.error(" Failed to add project from Byd"+e);
 		}		
 		return responseData;
 	}

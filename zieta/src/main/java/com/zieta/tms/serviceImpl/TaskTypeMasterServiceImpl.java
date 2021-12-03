@@ -491,7 +491,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 			pass = listConnectionData.get(0).getPassword();
 			connStr = listConnectionData.get(0).getConnectionStr();
 		}
-		
+		log.error("Preparing for Byd url");
 		//bydUrl = "https://my351070.sapbydesign.com/sap/byd/odata/ana_businessanalytics_analytics.svc/RPZBE98B6E3996F2677BCC388QueryResults?$select=TCHANGE_USER,CE_PLAN_END_DAT,CE_PLAN_ST_DAT,Cs2ANsF48275C9927F86E,CRESP_EMP_UUID,CPROJECT_ID,TTASK_UUID,CTASK_ID,CSTATUS_LFC,TCREATION_USER&$format=json$filter=(CLAST_CHANGE_DATE_TIME ge '2021-10-01T00:00:00') and (CPROJECT_ID eq 'CPSO52')";
 		bydUrl = connStr+"&$filter=%28CLAST_CHANGE_DATE_TIME%20ge%20%27"+extFetchDate+"T00%3A00%3A00%27%29%20and%20%28CPROJECT_ID%20eq%20%27"+extProjectId+"%27%29";
 		
@@ -510,7 +510,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 			if(projectInfo!=null) {
 				responseData.setId(projectInfo.getProjectInfoId());
 			}
-			
+			log.error("Ready to call BYD url");
 			resp = client.execute(httpGet);			
 			String respString = EntityUtils.toString(resp.getEntity());		
 
@@ -579,7 +579,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
             	long lngEdate =  Long.parseLong(eDate);            	
             	Date startDate = new Date(lngSdate);
             	Date endDate = new Date(lngEdate);            	
-            	log.error("Preparing data to cal to save in db");
+            	log.error("Preparing data to call to save in db");
             	String projectExtId = jsnArray.getJSONObject(i).getString("CPROJECT_ID");
                 String createdBy = jsnArray.getJSONObject(i).getString("TCREATION_USER");
                 String modifiedBy = jsnArray.getJSONObject(i).getString("TCHANGE_USER");
@@ -604,7 +604,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
                 //extTaskMastreDTO.setModifiedDate(taskEndDate);
                 extTaskMastreDTO.setTaskStartDate(startDate);
                 extTaskMastreDTO.setTaskendDate(endDate);                
-                 log.error("Caled to save data in DB");              
+                 log.error("Called to save data in DB");              
                 //TO UPDATE OF CREATE TASK INFO DATA
                 saveExternalTaskInfo(extTaskMastreDTO);
                 log.error("Updated/Saved taskinfoData");

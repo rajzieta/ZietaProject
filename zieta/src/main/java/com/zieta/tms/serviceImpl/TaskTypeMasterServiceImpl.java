@@ -71,7 +71,6 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @Slf4j
 public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
-
 	
 	@Autowired
 	TaskTypeMasterRepository taskTypeMasterRepository;
@@ -279,7 +278,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 				throw new ExternalIdException("ExternalId not found");
 
 			} else {
-				
+				log.error("Preparing to add taskinfo data...");
 				TaskInfo chkExist = taskInfoRepository.findByExtIdAndClientId(extTaskMaster.getExtTaskInfoId(), extTaskMaster.getClientId());
 				UserInfo taskManager=null;
 				TaskInfo tskInfo = new TaskInfo();
@@ -299,7 +298,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 				 StatusMaster statusMaster = statusRepository.findByExtIdAndClientId(extTaskMaster.getExtTaskStatus(), extTaskMaster.getClientId());
 				ProjectInfo projectInfo =  projectInfoRepository.findByExtIdAndClientId(extTaskMaster.getExtProjectId(), extTaskMaster.getClientId());
 				// ExtTaskInfo info = new ExtTaskInfo();
-				
+				log.error("Checking taskInfo existance");
 				if (chkExist != null) {
 					tskInfo.setTaskInfoId(chkExist.getTaskInfoId());
 				}
@@ -580,7 +579,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
             	long lngEdate =  Long.parseLong(eDate);            	
             	Date startDate = new Date(lngSdate);
             	Date endDate = new Date(lngEdate);            	
-            	
+            	log.error("Preparing data to cal to save in db");
             	String projectExtId = jsnArray.getJSONObject(i).getString("CPROJECT_ID");
                 String createdBy = jsnArray.getJSONObject(i).getString("TCREATION_USER");
                 String modifiedBy = jsnArray.getJSONObject(i).getString("TCHANGE_USER");
@@ -605,7 +604,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
                 //extTaskMastreDTO.setModifiedDate(taskEndDate);
                 extTaskMastreDTO.setTaskStartDate(startDate);
                 extTaskMastreDTO.setTaskendDate(endDate);                
-                               
+                 log.error("Caled to save data in DB");              
                 //TO UPDATE OF CREATE TASK INFO DATA
                 saveExternalTaskInfo(extTaskMastreDTO);
                 log.error("Updated/Saved taskinfoData");
@@ -615,7 +614,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
             //JSONArray jsnObjArr = jsnObj.getJSONArray("results");
 			
 		} catch (ClientProtocolException e) {
-			
+			log.error("Failed to save taskInfoData");
 			e.printStackTrace();
 		} catch (IOException e) {
 			

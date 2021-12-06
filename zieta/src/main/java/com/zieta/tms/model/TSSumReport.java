@@ -20,6 +20,7 @@ public class TSSumReport {
 	public String tid;
 	public String task_name;
 	public String activity_desc;
+	public String total_submitted_time;
 	public String submitted_hrs;
 	public String approved_hrs;
 	public String total_planned_hrs;

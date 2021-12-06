@@ -40,6 +40,7 @@ public class TimeSheetReportHelper extends BaseHelper {
             createCell(row, columnCount++, timeSheetReport.getProject_name(), style);
             createCell(row, columnCount++, timeSheetReport.getTask_name(), style);
             createCell(row, columnCount++, timeSheetReport.getActivity_desc(), style);
+			createCell(row, columnCount++, timeSheetReport.getTotal_submitted_time(), style);
             createCell(row, columnCount++, timeSheetReport.getPlanned_hours(), style);
             createCell(row, columnCount++, timeSheetReport.getActual_hours(), style);
             createCell(row, columnCount++, timeSheetReport.getTs_date(), style);
@@ -51,7 +52,7 @@ public class TimeSheetReportHelper extends BaseHelper {
     }
      
     public ByteArrayInputStream downloadReport(HttpServletResponse response, List<TSReport> tsReportList) throws IOException {
-        String[] columNames = {"EMP_ID", "TEAM","EMPLOYEE_NAME","PROJECT_NAME","TASK_NAME","ACTIVITY_DESC",
+        String[] columNames = {"EMP_ID", "TEAM","EMPLOYEE_NAME","PROJECT_NAME","TASK_NAME","ACTIVITY_DESC","TOTAL_SUBMITTED_TIME",
         		"PLANNED_HOURS","ACTUAL_HOURS","TS_DATE","SUBMIT_DATE","SUBMITTED_HRS","APPROVED_HRS"};
     	writeHeaderLine("TimeSheet Details",columNames);
         writeDataLines(tsReportList);
@@ -85,6 +86,7 @@ public class TimeSheetReportHelper extends BaseHelper {
             createCell(row, columnCount++, timeSheetReport.getTid(), style);
             createCell(row, columnCount++, timeSheetReport.getTask_name(), style);
             createCell(row, columnCount++, timeSheetReport.getActivity_desc(), style);
+            createCell(row, columnCount++, timeSheetReport.getTotal_submitted_time(), style);
             createCell(row, columnCount++, timeSheetReport.getSubmitted_hrs(), style);
             createCell(row, columnCount++, timeSheetReport.getApproved_hrs(), style);
             createCell(row, columnCount++, timeSheetReport.getTotal_planned_hrs(), style);
@@ -95,7 +97,7 @@ public class TimeSheetReportHelper extends BaseHelper {
      
     public ByteArrayInputStream downloadSumReport(HttpServletResponse response, List<TSSumReport> tsReportList) throws IOException {
         String[] columNames = {"EMP_ID","TEAM","EMP_NAME", "PROJECT_NAME","TID","TASK_NAME",
-        		"ACTIVITY_DESC","SUBMITTED_HOURS","APPROVED_HOURS","TOTAL_PLANNED_HOURS","TOTAL_ACTUAL_HOURS"};
+        		"ACTIVITY_DESC","TOTAL_SUBMITTED_TIME","SUBMITTED_HOURS","APPROVED_HOURS","TOTAL_PLANNED_HOURS","TOTAL_ACTUAL_HOURS"};
     	writeHeaderLine("TimeSheetSummary",columNames);
         writeSumDataLines(tsReportList);
         ByteArrayOutputStream out = new ByteArrayOutputStream();

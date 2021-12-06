@@ -13,7 +13,7 @@ import com.zieta.tms.model.ProjectSummaryReport;
 @Repository
 public interface ProjectSummaryReportRepository extends JpaRepository<ProjectSummaryReport, Long> {
 
-	@Query(value = "CALL SP_proj_summary_new(:clientId,:start_date,:end_date)", nativeQuery = true)
+	@Query(value = "CALL SP_proj_summary(:clientId,:start_date,:end_date)", nativeQuery = true)
 	List<ProjectSummaryReport> getProjectSummaryReport(@Param("clientId") Long clientId, @Param("start_date") String startDate,
 			@Param("end_date") String endDate);
 

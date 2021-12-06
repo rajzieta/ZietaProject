@@ -13,7 +13,7 @@ import com.zieta.tms.model.TSSumReport;
 @Repository
 public interface TSSumReportRepository extends JpaRepository<TSSumReport, Integer> {
 
-	@Query(value = "CALL SP_ts_summary(:clientId,:start_date,:end_date)", nativeQuery = true)
+	@Query(value = "CALL SP_ts_summary_new(:clientId,:start_date,:end_date)", nativeQuery = true)
 	List<TSSumReport> getTsByDateRangeSumSP(@Param("clientId") Long year_in, @Param("start_date") String start_date,
 			@Param("end_date") String end_date);
 }

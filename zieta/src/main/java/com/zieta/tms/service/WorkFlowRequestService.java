@@ -4,15 +4,13 @@ import java.util.Date;
 import java.util.List;
 
 import com.zieta.tms.dto.TSWorkFlowRequestDTO;
+import com.zieta.tms.model.WorkFlowRequestComments;
 import com.zieta.tms.model.WorkflowRequest;
 import com.zieta.tms.request.WorkflowRequestProcessModel;
 import com.zieta.tms.response.WFRDetailsForApprover;
 import com.zieta.tms.response.WorkFlowComment;
 import com.zieta.tms.response.WorkFlowHistoryModel;
 import com.zieta.tms.response.WorkFlowRequestorData;
-
-
-
 
 public interface WorkFlowRequestService {
 
@@ -28,9 +26,6 @@ public interface WorkFlowRequestService {
 	//public List<WFRDetailsForApprover> findActiveWorkFlowRequestsByApproverIdAndTsDate(long approverId,long userId, Date startActiondate, Date endActionDate);
 	
 	
-	
-	
-	
 	public List<WFRDetailsForApprover> findWorkFlowRequestsByApproverId(long approverId, Date startActiondate, Date endActionDate);
 	
 	public List<WorkFlowRequestorData> findByRequestorId(long requestorId);
@@ -42,5 +37,7 @@ public interface WorkFlowRequestService {
 	public List<WorkFlowComment> getWFRCommentsChain(long tsId);
 	
 	public void processTSWorkFlow(TSWorkFlowRequestDTO tSWorkFlowRequestDTO) throws Exception;
+	
+	public List<WorkFlowRequestComments> findByTsIdDesc(long tsId);
 
 }

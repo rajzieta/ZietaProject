@@ -37,6 +37,7 @@ import com.zieta.tms.dto.EmployeeTime;
 import com.zieta.tms.dto.TSWorkFlowRequestDTO;
 import com.zieta.tms.dto.UserInfoDTO;
 import com.zieta.tms.model.ActivityMaster;
+import com.zieta.tms.model.ClientInfo;
 import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.TSInfo;
 import com.zieta.tms.model.TSTimeEntries;
@@ -446,12 +447,14 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				    tsInfoRepository.save(tsInfo);
 				    log.info("Workflow Final Approval done ... ");
 				    
-				    //*****************SYNC TIMESHEET DATA AT THE TIME OF FINAL APPROVAL****************************
-				    //need to check client has sap byd integration
-				    
-				   // employeeTimeService.syncTimesheetData(tsInfo);
-				    syncTimesheetData(tsInfo);
-				    
+				    //*****************SYNC TIMESHEET DATA AT THE TIME OF FINAL APPROVAL****************************			    
+			    	// employeeTimeService.syncTimesheetData(tsInfo);
+			    	Short isDelete=0;
+			    	ClientInfo clientInfo = clientInfoRepository.findByClientIdAndIsDelete(tsInfo.getClientId(),isDelete);
+			    	if(clientInfo.getExtConnection() ==1) {
+			    		log.error("called timesheet sync method");
+			    		syncTimesheetData(tsInfo);				    	
+			    	}
 				    //*****************END FINAL APPROVAL***********************************************************
 				    		    
 				}

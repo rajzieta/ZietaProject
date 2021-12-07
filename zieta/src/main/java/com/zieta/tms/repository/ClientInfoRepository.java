@@ -15,5 +15,8 @@ public interface ClientInfoRepository extends JpaRepository<ClientInfo, Long> {
 	
 	// @Query( "select o from ClientInfo o where o.IS_DELETE= :isDelete" )
 	  List<ClientInfo> findByIsDelete(Short notDeleted);
+	  
+	  @Query( value ="select * from client_info where id=?1 and is_delete=?2",nativeQuery=true)
+	  ClientInfo findByClientIdAndIsDelete(long id,short notDeleted );
 
 }

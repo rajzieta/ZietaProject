@@ -15,5 +15,6 @@ public class ClientInfoDTO extends BaseEntity {
     private Long clientStatus;
     private String clientComments;
     private short superAdmin;
+    private short extConnection;
     
 }

@@ -53,6 +53,9 @@ public class ClientInfo extends BaseEntity implements Serializable {
 	
 	@Column(name="is_superadmin")
 	private short superAdmin;
+	
+	@Column(name="ext_connection")
+	private short extConnection;
 
 	
 

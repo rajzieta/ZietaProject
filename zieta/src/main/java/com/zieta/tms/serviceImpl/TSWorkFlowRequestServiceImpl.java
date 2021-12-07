@@ -32,9 +32,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.zieta.tms.byd.dto.EmployeeTime;
-import com.zieta.tms.byd.service.EmployeeTimeService;
 import com.zieta.tms.common.TMSConstants;
+import com.zieta.tms.dto.EmployeeTime;
 import com.zieta.tms.dto.TSWorkFlowRequestDTO;
 import com.zieta.tms.dto.UserInfoDTO;
 import com.zieta.tms.model.ActivityMaster;
@@ -678,7 +677,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				ActivityMaster activityInfo = activityMasterRepository.findByActivityId(tsInfo.getActivityId());
 				//projectTaskConfirmation.setServiceProductInternalID(tsInfo.getActivityId().toString());
 				projectTaskConfirmation.setServiceProductInternalID(activityInfo.getExtId());
-				List<WorkFlowRequestComments> workFlowRequestComments = workFlowRequestService.findByTsIdDesc(tsInfo.getId());				
+				List<WorkFlowRequestComments> workFlowRequestComments = workFlowRequestService.findByTsIdDesc(tsInfo.getId());			
 				
 				System.out.println("test comment =====>"+workFlowRequestComments);
 				request.setTimeSheetDescription(workFlowRequestComments.get(0).getComments());
@@ -723,9 +722,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 					
 					e.printStackTrace();
 				}	
-
-				//return list;
-				
+				//return list;			
 				
 			}
 			

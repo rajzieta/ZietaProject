@@ -10,4 +10,5 @@ import lombok.Setter;
 public class FetchDataResponse {
 
 	private Date extFetchDate;
+	private String extId;
 }

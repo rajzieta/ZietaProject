@@ -678,8 +678,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				ActivityMaster activityInfo = activityMasterRepository.findByActivityId(tsInfo.getActivityId());
 				//projectTaskConfirmation.setServiceProductInternalID(tsInfo.getActivityId().toString());
 				projectTaskConfirmation.setServiceProductInternalID(activityInfo.getExtId());
-				List<WorkFlowRequestComments> workFlowRequestComments = workFlowRequestService.findByTsIdDesc(tsInfo.getId());
-				
+				List<WorkFlowRequestComments> workFlowRequestComments = workFlowRequestService.findByTsIdDesc(tsInfo.getId());				
 				
 				System.out.println("test comment =====>"+workFlowRequestComments);
 				request.setTimeSheetDescription(workFlowRequestComments.get(0).getComments());

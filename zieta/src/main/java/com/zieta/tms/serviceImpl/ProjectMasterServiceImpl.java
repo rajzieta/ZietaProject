@@ -478,6 +478,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 				notDeleted);
 		FetchDataResponse response = new FetchDataResponse();
 		response.setExtFetchDate(projectInfo.getExtFetchDate());
+		response.setExtId(projectInfo.getExtId());
 		return response;
 	}
 

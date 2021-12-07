@@ -198,8 +198,8 @@ public class ProjectMasterController {
 
 	@RequestMapping(value = "/updateSapDate", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Update Sap Date based on the project id and clientId", notes = "Table reference: project_info,project_info_id,client_id")
-	public void addProjectMaster(@RequestParam(required = true) Long id, @RequestParam(required = true) Long clientId) {
-		projectmasterService.updateBySapDate(id, clientId);
+	public ResponseData addProjectMaster(@RequestParam(required = true) Long id, @RequestParam(required = true) Long clientId) {
+		return projectmasterService.updateBySapDate(id, clientId);
 	}
 	
 	

@@ -1,12 +1,24 @@
 package com.zieta.tms.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
@@ -16,16 +28,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zieta.tms.dto.ActivityMasterDTO;
+import com.zieta.tms.dto.TaskActivityExtDTO;
+import com.zieta.tms.exception.ExternalIdException;
 import com.zieta.tms.model.ActivityMaster;
 import com.zieta.tms.model.ClientInfo;
+import com.zieta.tms.model.ConnectionMasterInfo;
 import com.zieta.tms.model.ProjectInfo;
+import com.zieta.tms.model.ProjectMaster;
 import com.zieta.tms.model.TaskActivity;
 import com.zieta.tms.model.TaskInfo;
+import com.zieta.tms.model.TaskTypeMaster;
 import com.zieta.tms.model.UserInfo;
 import com.zieta.tms.repository.ActivitiesTaskRepository;
 import com.zieta.tms.repository.ActivityMasterRepository;
 import com.zieta.tms.repository.ClientInfoRepository;
+import com.zieta.tms.repository.ConnectionMasterInfoRepository;
 import com.zieta.tms.repository.ProjectInfoRepository;
+import com.zieta.tms.repository.ProjectMasterRepository;
 import com.zieta.tms.repository.StatusMasterRepository;
 import com.zieta.tms.repository.TaskInfoRepository;
 import com.zieta.tms.repository.UserInfoRepository;
@@ -34,6 +53,8 @@ import com.zieta.tms.request.ActivityTaskUserMappingRequest;
 import com.zieta.tms.response.ActivitiesByClientProjectTaskResponse;
 import com.zieta.tms.response.ActivitiesByClientResponse;
 import com.zieta.tms.response.ActivitiesByClientUserModel;
+import com.zieta.tms.response.AddProjectResponse;
+import com.zieta.tms.response.ResponseData;
 import com.zieta.tms.service.ActivityService;
 import com.zieta.tms.util.TSMUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -66,8 +87,20 @@ public class ActivityServiceImpl implements ActivityService {
 	
 	@Autowired
 	TaskInfoRepository taskInfoRepository;
+		
+   @Autowired
+	ProjectMasterRepository projectMastRepository;
+   
+   @Autowired
+	ConnectionMasterInfoRepository connectionMasterInfoRepository;
+
+
+
+
+
 	
-	@Autowired
+
+       @Autowired
 	ModelMapper modelMapper;
 	
 	@Override
@@ -301,6 +334,137 @@ public class ActivityServiceImpl implements ActivityService {
 		
 	}
 	
+	@Override
+	public ResponseData addActivitiesByClientProjectTaskExternal(@Valid TaskActivityExtDTO taskActivityExtDto) {
+		ResponseData resp = new ResponseData();
+
+		try {
+			if (taskActivityExtDto.getExtProjectId() == null || taskActivityExtDto.getExtProjectId().isEmpty()
+					|| taskActivityExtDto.getExtActivityId() == null || taskActivityExtDto.getExtActivityId().isEmpty()
+					|| taskActivityExtDto.getExtTaskId() == null || taskActivityExtDto.getExtTaskId().isEmpty()) {
+				throw new ExternalIdException("ExternalId not found");
+			} else {
+				TaskActivity taskActivity = new TaskActivity();
+				TaskInfo chkExist = taskInfoRepository.findByExtIdAndClientId(taskActivityExtDto.getExtTaskId(),taskActivityExtDto.getClientId());
+				ProjectMaster projectMaster = projectMastRepository.findByExtIdAndClientId(taskActivityExtDto.getExtProjectId(),taskActivityExtDto.getClientId());
+				UserInfo userInfo = userInfoReposistory.findByExtIdAndClientId(taskActivityExtDto.getExtUserId(),taskActivityExtDto.getClientId());
+
+				if(chkExist!=null) {
+				 taskActivity.setTaskId(chkExist.getTaskInfoId());
+				}
+				taskActivity.setProjectId(projectMaster.getProjectTypeId());				
+				taskActivity.setUserId(userInfo.getId());
+
+				taskActivity.setActivityId(taskActivityExtDto.getActivityId());
+				taskActivity.setActualHrs(taskActivityExtDto.getActualHrs());
+				taskActivity.setPlannedHrs(taskActivityExtDto.getPlannedHrs());
+
+				taskActivity.setCreatedDate(new Date());
+				taskActivity.setCreatedBy("User");
+				taskActivity = activitiesTaskRepository.save(taskActivity);
+				resp.setId(taskActivity.getTaskActivityId());
+				resp.setIsSaved(true);
+			}
+		} catch (Exception e) {
+			log.error("Activeity by client project Task unable to add "+e);
+		}
+		return resp;
+	}
+
+	@Override
+	public ResponseData getActivitiesByClientProjectTask(String extProjectId, Long clientId, Long userId) {
+		ResponseData responseData = new ResponseData();		
+		String bydUrl ="";
+		short notDeleted =0;
+		String connName = "TaskAPI";
+		String loginId =null;
+		String pass =null;
+		String connStr = null;
+		List<ConnectionMasterInfo> listConnectionData = connectionMasterInfoRepository.findByClientIdAndConnectionNameAndNotDeleted(clientId,connName,notDeleted);
+		if(listConnectionData.size()>0) {
+			loginId = listConnectionData.get(0).getLoginId();
+			pass = listConnectionData.get(0).getPassword();
+			connStr = listConnectionData.get(0).getConnectionStr();
+		}
+		
+		String extFetchDate ="";
+		//bydUrl = "https://my351070.sapbydesign.com/sap/byd/odata/ana_businessanalytics_analytics.svc/RPZBE98B6E3996F2677BCC388QueryResults?$select=TCHANGE_USER,CE_PLAN_END_DAT,CE_PLAN_ST_DAT,Cs2ANsF48275C9927F86E,CRESP_EMP_UUID,CPROJECT_ID,TTASK_UUID,CTASK_ID,CSTATUS_LFC,TCREATION_USER&$format=json$filter=(CLAST_CHANGE_DATE_TIME ge '2021-10-01T00:00:00') and (CPROJECT_ID eq 'CPSO52')";
+		bydUrl = connStr+"&$filter=%28CLAST_CHANGE_DATE_TIME%20ge%20%27"+extFetchDate+"T00%3A00%3A00%27%29%20and%20%28CPROJECT_ID%20eq%20%27"+extProjectId+"%27%29";
+		
+		HttpGet httpGet = new HttpGet(bydUrl);
+		
+		httpGet.setHeader("content-type", "text/XML");			
+		CredentialsProvider provider = new BasicCredentialsProvider();
+		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(loginId, pass);
+		provider.setCredentials(AuthScope.ANY, credentials);
+		HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
+		
+		HttpResponse resp;
+		try {
+				ProjectInfo projectInfo = null;
+				
+				projectInfo = projectInfoRepository.findByExtIdAndClientId(extProjectId, clientId);
+				if(projectInfo!=null) {
+					responseData.setId(projectInfo.getProjectInfoId());
+				}
+				
+				resp = client.execute(httpGet);			
+				String respString = EntityUtils.toString(resp.getEntity());		
 	
-	
+	            // CONVERT RESPONSE STRING TO JSON ARRAY
+	            JSONObject jsonRespData = new JSONObject(respString);            
+	            JSONObject jsnObj = (JSONObject) jsonRespData.get("d");            
+	            JSONArray jsnArray = jsnObj.getJSONArray("results"); 
+	            List<TaskActivity> taskActivityList;
+	            
+	            for (int i = 0; i <jsnArray.length(); i++) {
+	            	TaskActivityExtDTO taskActivityData = new TaskActivityExtDTO();
+	            	
+	            	//RETRIGVING DATA FROM jsnArray
+	            	//String projectExtId = jsnArray.getJSONObject(i).getString("CPROJECT_ID");
+	            	
+	            	TaskActivity chkExist = null;
+	            	//set below param
+	            	if(chkExist!=null) {
+	            		taskActivityData.setActivityId(chkExist.getTaskActivityId());	
+	            	}
+	            	taskActivityData.setClientId(clientId);
+	            	taskActivityData.setExtActivityId("");
+	            	taskActivityData.setExtId("");
+	            	taskActivityData.setExtProjectId("");
+	            	taskActivityData.setExtUserId("");
+	            	taskActivityData.setCreatedBy("Abc");
+	            	taskActivityData.setModifiedBy("Bcd");
+	            	taskActivityData.setStartDate(new Date());
+	            	taskActivityData.setEndDate(new Date());
+	            	taskActivityData.setPlannedHrs(0);
+	            	
+	            	responseData = addActivitiesByClientProjectTaskExternal(taskActivityData);
+	            	
+	            	/*private long taskActivityId;
+						private long activityId;
+						private long taskId;
+						private long projectId;
+						private long clientId;
+						private String createdBy;
+						private String modifiedBy;
+						private Date startDate;
+						private Date endDate;
+						private float plannedHrs;
+						private float actualHrs;
+						private Long userId;
+	            	*/
+	            	
+	            }
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	            
+		
+		
+
+		
+		
+		return responseData;
+	}
 }

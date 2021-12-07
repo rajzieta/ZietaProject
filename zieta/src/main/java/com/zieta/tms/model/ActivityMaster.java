@@ -30,6 +30,9 @@ public class ActivityMaster extends BaseEntity implements Serializable{
     @Column(name="client_id")
     private Long clientId;
 
+    
+    @Column(name = "ext_id")
+    private String extId;
    
    // @Column(name = "activity_code")
   //  private String activityCode;

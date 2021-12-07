@@ -2,12 +2,16 @@ package com.zieta.tms.service;
 
 import java.util.List;
 import com.zieta.tms.dto.ActivityMasterDTO;
+import com.zieta.tms.dto.TaskActivityExtDTO;
 import com.zieta.tms.model.ActivityMaster;
 import com.zieta.tms.request.AcitivityRequest;
 import com.zieta.tms.request.ActivityTaskUserMappingRequest;
 import com.zieta.tms.response.ActivitiesByClientProjectTaskResponse;
 import com.zieta.tms.response.ActivitiesByClientResponse;
 import com.zieta.tms.response.ActivitiesByClientUserModel;
+import com.zieta.tms.response.AddProjectResponse;
+import com.zieta.tms.response.ResponseData;
+
 import javax.validation.Valid;
 
 
@@ -34,5 +38,9 @@ public interface ActivityService {
 	
 	public List<ActivitiesByClientUserModel> getActivitiesByClientUser(Long clientId, Long userId);
 
-	public void deleteActivityById(Long id, String modifiedBy) throws Exception;
+	  public void deleteActivityById(Long id, String modifiedBy) throws Exception;
+
+	public ResponseData addActivitiesByClientProjectTaskExternal(@Valid TaskActivityExtDTO taskActivityExtDto);
+	
+	public ResponseData getActivitiesByClientProjectTask(String extProjectId, Long clientId, Long userId);
 }

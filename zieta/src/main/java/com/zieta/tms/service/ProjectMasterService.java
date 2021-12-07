@@ -53,5 +53,5 @@ public interface ProjectMasterService {
 
 	public FetchDataResponse findBySapDate(Long id, Long clientId);
 	//public ProjectInfo findByProjectId(Long projectId);
-	public void updateBySapDate(Long id, Long clientId);
+	public ResponseData updateBySapDate(Long id, Long clientId);
 }

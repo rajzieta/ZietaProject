@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zieta.tms.dto.ActivityMasterDTO;
+import com.zieta.tms.dto.TaskActivityExtDTO;
 import com.zieta.tms.model.ActivityMaster;
 import com.zieta.tms.request.AcitivityRequest;
 import com.zieta.tms.request.ActivityTaskUserMappingRequest;
@@ -27,6 +28,8 @@ import com.zieta.tms.response.ActivitiesByClientProjectTaskResponse;
 import com.zieta.tms.response.ActivitiesByClientResponse;
 import com.zieta.tms.response.ActivitiesByClientUserModel;
 import com.zieta.tms.response.ActivitiesByTaskResponse;
+import com.zieta.tms.response.AddProjectResponse;
+import com.zieta.tms.response.ResponseData;
 import com.zieta.tms.service.ActivitiesByTaskService;
 import com.zieta.tms.service.ActivityService;
 
@@ -145,6 +148,26 @@ public class ActivityMasterController {
 	public void deleteActivityById(@RequestParam(required=true) Long id, @RequestParam(required=true) String modifiedBy) throws Exception {
 		activityService.deleteActivityById(id, modifiedBy);
 	}
+	@ApiOperation(value = "Update activities with task and then with user", notes = "Table reference: task_activity")
+	@RequestMapping(value = "addActivitiesByClientProjectTaskExternal", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseData addActivitiesByClientProjectTaskExternal(
+			@Valid @RequestBody TaskActivityExtDTO taskActivityExtDto) {
+		ResponseData resp = activityService.addActivitiesByClientProjectTaskExternal(taskActivityExtDto);
+		return resp;
+		//return new ResponseEntity<ResponseData>(resp, HttpStatus.OK);
+	}
+	
+	//addActivitiesByClientProjectTask
+	@RequestMapping(value = "/fetchExternalActivitiesByClientProjectTask", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Fetch Sap Date based on the project id and clientId", notes = "Table reference: task_activity,project_info_id,client_id")
+	public ResponseData fetchExternalActivitiesByClientProjectTask(@RequestParam(required = true) String extProjectId, @RequestParam(required = true) Long clientId,
+			@RequestParam(required = true) Long userId
+			) {		
+		return activityService.getActivitiesByClientProjectTask(extProjectId, clientId, userId);
+	}
+	
+	
+	
 	
 	
 	

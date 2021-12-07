@@ -270,6 +270,10 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 		try {
 			TaskInfo taskInfo = null;
 			//|| extTaskMaster.getExtTaskType() == null || extTaskMaster.getExtTaskType().isEmpty()
+			
+			log.error("extTaskMaster.getExtProjectId() ::"+extTaskMaster.getExtProjectId()+" extTaskMaster.getExtTaskParent()::"+extTaskMaster.getExtTaskParent());
+			log.error("extTaskMaster.getExtTaskStatus() ::"+extTaskMaster.getExtTaskStatus());
+			
 			if (extTaskMaster.getExtProjectId() == null || extTaskMaster.getExtProjectId().isEmpty()					
 					|| extTaskMaster.getExtTaskParent() == null || extTaskMaster.getExtTaskParent().isEmpty()
 					|| extTaskMaster.getExtTaskStatus() == null || extTaskMaster.getExtTaskStatus().isEmpty()
@@ -527,11 +531,11 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
                 String dt2 = jsnArray.getJSONObject(i).getString("CE_PLAN_END_DAT"); 
                 String sDate =  dt1.substring(dt1.indexOf("(") + 1, dt1.indexOf(")"));
                 String eDate =  dt2.substring(dt2.indexOf("(") + 1, dt2.indexOf(")"));
-               
+                
             	long lngSdate = Long.parseLong(sDate);
             	long lngEdate =  Long.parseLong(eDate);            	
             	Date startDate = new Date(lngSdate);
-            	Date endDate = new Date(lngEdate);            	
+            	Date endDate = new Date(lngEdate);      	
             	
             	String projectExtId = jsnArray.getJSONObject(i).getString("CPROJECT_ID");
                 String createdBy = jsnArray.getJSONObject(i).getString("TCREATION_USER");

@@ -467,8 +467,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	}
 	
 	//FIND PROJECT DETAILS BY PROJECTID
-	public ProjectInfo findByProjectId(Long projectId) {
-		
+	public ProjectInfo findByProjectId(Long projectId) {		
 		ProjectInfo projectInfo = projectInfoRepository.findById(projectId).get();
 		return projectInfo;
 	}
@@ -479,13 +478,21 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 				notDeleted);
 		FetchDataResponse response = new FetchDataResponse();
 		response.setExtFetchDate(projectInfo.getExtFetchDate());
-
 		return response;
 	}
 
-	public void updateBySapDate(Long id, Long clientId) {
+	public ResponseData updateBySapDate(Long id, Long clientId) {
+		ResponseData response = new ResponseData();
 		Date currentDate = new Date();
-		projectInfoRepository.updateExtFetchDateByProjectInfoIdAndClientId(id, clientId, currentDate);
+		try {
+			projectInfoRepository.updateExtFetchDateByProjectInfoIdAndClientId(id, clientId, currentDate);
+			log.error("Updated ext_fetch Date");
+		}catch(Exception e) {
+			log.error("Unable to update ext_fetch Date");
+		}
+		response.setId(id);
+		response.setIsSaved(true);
+		return response;
 
 	}	
 	

@@ -1,5 +1,7 @@
 package com.zieta.tms.serviceImpl;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -9,15 +11,34 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.transaction.Transactional;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.math3.util.Pair;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.zieta.tms.byd.dto.EmployeeTime;
+import com.zieta.tms.byd.service.EmployeeTimeService;
 import com.zieta.tms.common.TMSConstants;
 import com.zieta.tms.dto.TSWorkFlowRequestDTO;
+import com.zieta.tms.dto.UserInfoDTO;
 import com.zieta.tms.model.ActivityMaster;
+import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.TSInfo;
 import com.zieta.tms.model.TSTimeEntries;
 import com.zieta.tms.model.TaskActivity;
@@ -45,7 +66,9 @@ import com.zieta.tms.response.WFTSTimeEntries;
 import com.zieta.tms.response.WorkFlowComment;
 import com.zieta.tms.response.WorkFlowHistoryModel;
 import com.zieta.tms.response.WorkFlowRequestorData;
+import com.zieta.tms.service.ProjectMasterService;
 import com.zieta.tms.service.TimeSheetService;
+import com.zieta.tms.service.UserInfoService;
 import com.zieta.tms.service.WorkFlowRequestService;
 import com.zieta.tms.util.CurrentWeekUtil;
 import com.zieta.tms.util.TSMUtil;
@@ -106,6 +129,19 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	
 	@Autowired
 	TimeSheetService timeSheetService;
+	
+	//@Autowired
+	//EmployeeTimeService employeeTimeService;
+	
+	
+	@Autowired
+	UserInfoService userInfoService;
+	
+	@Autowired
+	ProjectMasterService projectMasterService;
+	
+	@Autowired
+	WorkFlowRequestService workFlowRequestService;
 
 	@Autowired
 	@Qualifier("stateByName")
@@ -158,19 +194,17 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	
 	
 	//findActiveWorkFlowRequestsByApproverIdAndEmployeeId
+	
 	@Override
 	public List<WFRDetailsForApprover> findActiveWorkFlowRequestsByApproverIdAndEmployeeId(long approverId, long uId) {
 		Long currentStepPointer = 1L;
 		List<Long> actionTypes = new ArrayList<Long>();
 		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
 		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REJECT));
-		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REVISE));
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REVISE));		
 		
-		
-		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndCurrentStepAndActionTypeNotInAndUserId(approverId,currentStepPointer,actionTypes,uId);
-		
+		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndCurrentStepAndActionTypeNotInAndUserId(approverId,currentStepPointer,actionTypes,uId);		
 		List<WFRDetailsForApprover> wFRDetailsForApproverList = getWorkFlowRequestDetails(workFlowRequestList);
-
 		return wFRDetailsForApproverList;
 	}
 	
@@ -180,21 +214,11 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 		List<Long> actionTypes = new ArrayList<Long>();
 		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_APPROVE));
 		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REJECT));
-		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REVISE));
-		
-		
+		actionTypes.add(actionTypeByName.get(TMSConstants.ACTION_REVISE));			
 		List<WorkflowRequest> workFlowRequestList = workflowRequestRepository.findByApproverIdAndCurrentStepAndActionTypeNotInAndTsDate(approverId,currentStepPointer,actionTypes,startDate,endDate);
-		
 		List<WFRDetailsForApprover> wFRDetailsForApproverList = getWorkFlowRequestDetails(workFlowRequestList);
-
 		return wFRDetailsForApproverList;
 	}
-
-	
-	
-	
-	
-	
 	
 
 	private List<WFRDetailsForApprover> getWorkFlowRequestDetails(List<WorkflowRequest> workFlowRequestList) {
@@ -208,11 +232,9 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			wFRDetailsForApprover.setWorkFlowCommentList(workFlowCommentList);
 			TSInfo tsInfo = tsInfoRepository.findById(workflowRequest.getTsId()).get();
 			
-			
 			//TSInfo tsInfo2 = tsInfoRepository.findByIdAndTsDate(workflowRequest.getTsId(),"2020-12-14","2020-12-14").get();
 			//log.info("184 "+tsInfo2);
-			wFRDetailsForApprover.setTsinfo(tsInfo);
-			
+			wFRDetailsForApprover.setTsinfo(tsInfo);			
 			short delFlag = 0;
 			List<TSTimeEntries> tsTimeEntriesList = tSTimeEntriesRepository.findByTsIdAndIsDelete(tsInfo.getId(),delFlag);
 			List<WFTSTimeEntries> wfTSTimeEntrieslist = buildWfTsTimeEtnries(tsTimeEntriesList);
@@ -231,35 +253,33 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			TaskInfo taskInfoMaster = taskInfoRepository.findById(tsInfo.getTaskId()).get();
 			wFRDetailsForApprover.setTaskName(taskInfoMaster.getTaskDescription());
 			}
-			else {
+			else 
+			{
 				log.info(" task record: taskid {}, tsId {}",tsInfo.getTaskId(),tsInfo.getId());
-				}
-			
+			}			
 			
 			if(tsInfo.getActivityId() != null && tsInfo.getActivityId() !=0) {
-			ActivityMaster activityMaster = activityMasterRepository.findById(tsInfo.getActivityId()).get();
-			wFRDetailsForApprover.setActivityName(activityMaster.getActivityDesc());
+				ActivityMaster activityMaster = activityMasterRepository.findById(tsInfo.getActivityId()).get();
+				wFRDetailsForApprover.setActivityName(activityMaster.getActivityDesc());
 			}
 			
-			else {
+			else 
+			{
 				log.info(" Activity record: activityid {}, tsId {}",tsInfo.getActivityId(),tsInfo.getId());
-				}
-			
+			}			
 			
 			if(tsInfo.getTaskActivityId() != null && tsInfo.getTaskActivityId() !=0) {
-			TaskActivity taskactivity = activitiesTaskRepository.findById(tsInfo.getTaskActivityId()).get();
-			wFRDetailsForApprover.setPlannedHours(taskactivity.getPlannedHrs());
-			wFRDetailsForApprover.setActualHours(taskactivity.getActualHrs());
+				TaskActivity taskactivity = activitiesTaskRepository.findById(tsInfo.getTaskActivityId()).get();
+				wFRDetailsForApprover.setPlannedHours(taskactivity.getPlannedHrs());
+				wFRDetailsForApprover.setActualHours(taskactivity.getActualHrs());
 			}	
-			else {
-				log.info(" taskactivity record: taskactivityid {}, tsId {}",tsInfo.getTaskActivityId(),tsInfo.getId());
-		    	
+			else 
+			{
+				log.info(" taskactivity record: taskactivityid {}, tsId {}",tsInfo.getTaskActivityId(),tsInfo.getId());		    	
 				wFRDetailsForApprover.setPlannedHours(0.0f);
 				wFRDetailsForApprover.setActualHours(0.0f);
-				}
-
+			}
 			wFRDetailsForApproverList.add(wFRDetailsForApprover);
-
 		}
 		return wFRDetailsForApproverList;
 	}
@@ -279,6 +299,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
  @Override
 	public List<WorkFlowRequestorData> findByRequestorId(long requestorId) {
+	 
 		Long currentStepPointer = 1L;
 		List<WorkflowRequest> workFlowRequestorItems = workflowRequestRepository.findByRequestorIdAndCurrentStep(requestorId, currentStepPointer);
 		List<WorkFlowRequestorData> workFlowRequestorDataList = new ArrayList<WorkFlowRequestorData>();
@@ -293,44 +314,31 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			workFlowRequestorData.setTotalSubmittedTime(tsInfo.getTsTotalSubmittedTime());
 			workFlowRequestorData.setTotalApprovedTime(tsInfo.getTsTotalApprovedTime());
 			if (workflowRequest.getStateType() == stateByName.get(TMSConstants.STATE_COMPLETE)) {
-
 				workFlowRequestorData.setApprovedDate(workflowRequest.getActionDate());
 			}
-
 			if (workflowRequest.getStateType() == stateByName.get(TMSConstants.STATE_REJECT)) {
-
 				workFlowRequestorData.setRejectedDate(workflowRequest.getActionDate());
 			}
 			workFlowRequestorData.setSubmittedDate(workflowRequest.getRequestDate());
-			workFlowRequestorData
-					.setStatus(stateTypeMasterRepository.findById(workflowRequest.getStateType()).get().getStateName());
-			
+			workFlowRequestorData.setStatus(stateTypeMasterRepository.findById(workflowRequest.getStateType()).get().getStateName());			
 			List<TSTimeEntries> tsTElist = tSTimeEntriesRepository.findByTsId(tsInfo.getId());
 			workFlowRequestorData.setTsInfo(tsInfo);
 			workFlowRequestorData.setTsTimeEntries(tsTElist);
-			workFlowRequestorData
-					.setProjectName(projectInfoRepository.findById(tsInfo.getProjectId()).get().getProjectName());
-			workFlowRequestorData
-					.setClientName(clientInfoRepository.findById(workflowRequest.getClientId()).get().getClientName());
+			workFlowRequestorData.setProjectName(projectInfoRepository.findById(tsInfo.getProjectId()).get().getProjectName());
+			workFlowRequestorData.setClientName(clientInfoRepository.findById(workflowRequest.getClientId()).get().getClientName());
 			TaskInfo taskInfoMaster = taskInfoRepository.findById(tsInfo.getTaskId()).get();
 			workFlowRequestorData.setTaskName(taskInfoMaster.getTaskDescription());
-
 			ActivityMaster activityMaster = activityMasterRepository.findById(tsInfo.getActivityId()).get();
-			workFlowRequestorData.setActivityName(activityMaster.getActivityDesc());
-
-
+			workFlowRequestorData.setActivityName(activityMaster.getActivityDesc());			
 			workFlowRequestorDataList.add(workFlowRequestorData);
 		}
 		return workFlowRequestorDataList;
 	}
 
-
 	@Override
 	public WorkflowRequest findByTsIdAndApproverId(long tsId, long approverId) {
 		return workflowRequestRepository.findByTsIdAndApproverId(tsId, approverId);
 	}
-	
-	
 	
 	private void processWorkFlow(WorkflowRequestProcessModel workflowRequestProcessModel) {
 		
@@ -339,20 +347,16 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 		int workFlowDepth = workflowRequestRepository.countByStepIdFromTsId(currentStepWorkFlowRequest.getTsId());
 		
 		TSInfo tsInfo = tsInfoRepository.findById(currentStepWorkFlowRequest.getTsId()).get();
-		long nextStep = currentStepWorkFlowRequest.getStepId() +1;
-		
+		long nextStep = currentStepWorkFlowRequest.getStepId() +1;		
 		List<WorkflowRequest> currentStepWorkFlowRequestList = workflowRequestRepository.findByTsIdAndStepId(currentStepWorkFlowRequest.getTsId(),
 				currentStepWorkFlowRequest.getStepId());
 		for (int i = 0; currentStepWorkFlowRequestList != null && i < currentStepWorkFlowRequestList.size(); i++) {
-
 			if (currentStepWorkFlowRequestList.get(i).getId() != workflowRequestProcessModel.getWorkFlowRequestId()) {
 				// we are in the situation, where the current step having multiple approvers, so the current step with the other approvers are made zero
 				currentStepWorkFlowRequestList.get(i).setCurrentStep(0L);
 			} else {
-				workFlowInAction(workflowRequestProcessModel, currentStepWorkFlowRequestList.get(i), workFlowDepth,
-						tsInfo);
+				workFlowInAction(workflowRequestProcessModel, currentStepWorkFlowRequestList.get(i), workFlowDepth,	tsInfo);
 			}
-
 		}
 		log.info("Workflow completed ...");
 	}
@@ -442,6 +446,15 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 					
 				    tsInfoRepository.save(tsInfo);
 				    log.info("Workflow Final Approval done ... ");
+				    
+				    //*****************SYNC TIMESHEET DATA AT THE TIME OF FINAL APPROVAL****************************
+				    //need to check client has sap byd integration
+				    
+				   // employeeTimeService.syncTimesheetData(tsInfo);
+				    syncTimesheetData(tsInfo);
+				    
+				    //*****************END FINAL APPROVAL***********************************************************
+				    		    
 				}
 
 		} else if (workflowRequestProcessModel.getActionType() == actionTypeByName.get(TMSConstants.ACTION_REJECT)) {
@@ -455,9 +468,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			// reduce the total rejected timeentries time from the total submitted time
 			float totalApprovedTime = tsInfo.getTsTotalSubmittedTime() - totalRejectTime;
 			tsInfo.setTsTotalApprovedTime(totalApprovedTime);
-			tsInfoRepository.save(tsInfo);
-			
-			
+			tsInfoRepository.save(tsInfo);			
 			nullifyNextSteps(workFlowRequest, workFlowDepth);
 			//Marking the current step(where final action taken) as 1 which is made by the previous step, 
 			//change request raise by Santhosh, for reporting purpose.
@@ -620,5 +631,130 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 		processWorkFlow(tSWorkFlowRequestDTO.getWorkflowRequestProcessModel());
 		
 	}
+	
+	@Override
+	public List<WorkFlowRequestComments> findByTsIdDesc(long tsId) {
+		return workflowRequestCommentRepository.findByTsIdDesc(tsId);
+	}
+	
+	
+	
+	
+	//////////////////////////////////////////////////////////////////////////
+	//IMPLEMENTATION FOR BYD INTEGRATION
+	//SYNC TIMESHEETDATA	
+	public void syncTimesheetData(TSInfo tsInfo) {
+				log.error("Called SYNC method for timesheet Data");
+				UserInfoDTO userInfo = userInfoService.findByUserId(tsInfo.getUserId());
+				EmployeeTime request = new EmployeeTime();
+				request.setObjectNodeSenderTechnicalID("1");
+				request.setEmployeeID(userInfo.getExtId());
+				//System.out.println("===>"+userInfo.get);
+				//request.setEmployeeID(extId);
+				request.setItemTypeCode("IN0010");
+				EmployeeTime.DatePeriod datePeroid = new EmployeeTime.DatePeriod();
+				
+				String dt[] = tsInfo.getTsDate().toString().split("\\s");
+				datePeroid.setEndDate(dt[0]);
+				datePeroid.setStartDate(dt[0]);
+				request.setDatePeriod(datePeroid);
+				EmployeeTime.TimePeriod timePeroid = new EmployeeTime.TimePeriod();
+				///timePeroid.setEndTime("09:00:00");
+				///timePeroid.setStartTime("17:00:00");
+				request.setTimePeriod(timePeroid);		
+				String duartion = tsInfo.getTsTotalSubmittedTime().toString();		
+				//request.setDuration("PT17H00M");
+				String[] parts = duartion.split("\\.");
+				//converting duration to require format 
+				String cusDuration = "PT"+parts[0]+"H"+parts[1]+"M";
+				request.setDuration(cusDuration);
+				request.setDifferentBillableTimeRecordedIndicator1(false);	
+				
+				ProjectInfo projectInfo = projectMasterService.findByProjectId(tsInfo.getProjectId());		
+				EmployeeTime.ProjectTaskConfirmation projectTaskConfirmation = new EmployeeTime.ProjectTaskConfirmation();
+				projectTaskConfirmation.setProjectElementID(projectInfo.getExtId());
+				//projectTaskConfirmation.setServiceProductInternalID("20000005");//need to talk about this
+				
+				ActivityMaster activityInfo = activityMasterRepository.findByActivityId(tsInfo.getActivityId());
+				//projectTaskConfirmation.setServiceProductInternalID(tsInfo.getActivityId().toString());
+				projectTaskConfirmation.setServiceProductInternalID(activityInfo.getExtId());
+				List<WorkFlowRequestComments> workFlowRequestComments = workFlowRequestService.findByTsIdDesc(tsInfo.getId());
+				
+				
+				System.out.println("test comment =====>"+workFlowRequestComments);
+				request.setTimeSheetDescription(workFlowRequestComments.get(0).getComments());
+				
+				projectTaskConfirmation.setCompletedIndicator("false");		
+				request.setProjectTaskConfirmation(projectTaskConfirmation);
+				List<Pair<Integer, String>> list = null;		
+
+				JAXBContext context;
+				try {
+					context = JAXBContext.newInstance(EmployeeTime.class);
+					Marshaller mar = context.createMarshaller();
+					mar.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+					StringWriter sw = new StringWriter();
+					mar.marshal(request, sw);
+					String result = sw.toString();
+					String requestData = result.replace("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>", "");
+					String data = requestData.replace("<EmployeeTime>", "<EmployeeTime actionCode=\"01\">");
+					
+					data = data.replace("<TimeSheetDescription>", "<a3x:TimeSheetDescription>");
+					data = data.replace("</TimeSheetDescription>", "</a3x:TimeSheetDescription>");
+
+					String finalString = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:glob=\"http://sap.com/xi/SAPGlobal20/Global\">\n"
+							+ "<soapenv:Header/>\n" + "<soapenv:Body>\n" + "<glob:EmployeeTimeBundleMaintainRequest_sync>\n"
+							+ "<BasicMessageHeader>\n" + "</BasicMessageHeader>" + data
+							+ "</glob:EmployeeTimeBundleMaintainRequest_sync>\n" + "</soapenv:Body>\n" + "</soapenv:Envelope>";
+					
+					System.out.println("finalString" + finalString);			
+					try {
+						list = bydHttpRequest(finalString);
+						//SET RESPONSE IN TRCKING TABLE	
+						log.error("Timesheet Response ==>"+list);
+						
+					} catch (IOException e) {
+						//SET RESPONSE IN TRCKING TABLE
+						
+						e.printStackTrace();
+					}
+					System.out.println("HttpRequest Output" + list);		
+					
+				} catch (JAXBException e) {
+					
+					e.printStackTrace();
+				}	
+
+				//return list;
+				
+				
+			}
+			
+			private List<Pair<Integer, String>> bydHttpRequest(String finalString) throws ClientProtocolException, IOException {
+				String url = "https://my351070.sapbydesign.com/sap/bc/srt/scs/sap/manageemployeetimein";
+				HttpPut httpPut = new HttpPut(url);
+
+				httpPut.setHeader("content-type", "text/xml");
+				CredentialsProvider provider = new BasicCredentialsProvider();
+				UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("zietauser", "Welcome123");
+				provider.setCredentials(AuthScope.ANY, credentials);
+				HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
+				StringEntity entity = new StringEntity(finalString);
+				httpPut.setEntity(entity);
+
+				HttpResponse resp = client.execute(httpPut);
+				Integer httpStatusCd = resp.getStatusLine().getStatusCode();
+				String respString = EntityUtils.toString(resp.getEntity());
+				
+				log.error("Response Data  ::"+respString);
+				//log.info("Response Data from portal {} ", respString);
+				List<Pair<Integer, String>> listOfPairs = new ArrayList<>();
+				listOfPairs.add(new Pair<>(httpStatusCd, respString));
+				//log.info("Status_Code and Response Binded to listOfPairs {} ", listOfPairs);
+				return listOfPairs;
+			}
+		
+	/////////////////////////////////////////////////////////////////////////
+	
 
 }

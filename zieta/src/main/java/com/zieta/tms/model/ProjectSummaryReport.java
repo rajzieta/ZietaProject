@@ -13,6 +13,8 @@ public class ProjectSummaryReport {
 	private Long row_num;
 
 	private String emp_id;
+	
+	private String is_active;
 
 	private String team_id;
 

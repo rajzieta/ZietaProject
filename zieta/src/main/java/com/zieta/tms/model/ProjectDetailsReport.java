@@ -67,5 +67,7 @@ public class ProjectDetailsReport {
 	private String timeentry_status;
 
 	private String timeentry_status_desc;
+	
+	private String is_active;
 
 }

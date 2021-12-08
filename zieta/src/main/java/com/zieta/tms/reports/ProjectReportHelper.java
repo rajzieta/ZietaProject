@@ -61,6 +61,7 @@ public class ProjectReportHelper extends BaseHelper {
             createCell(row, columnCount++, projectReport.getTimeentry_status(), style);
             createCell(row, columnCount++, projectReport.getTimeentry_status_desc(), style);
             createCell(row, columnCount++, projectReport.getTeam(), style);
+            createCell(row, columnCount++, projectReport.getIs_active(), style);
             
             
         }
@@ -71,7 +72,7 @@ public class ProjectReportHelper extends BaseHelper {
     	String [] columnNames = {"Client Code","Client Name","Project_Name","Project_Manager","PM_Name",
     			"Employee_Name","Emp_Id","TS_ID", "TS_Date", "Submit_Date", "Task_Name", "Task_Code", "Activity_Code", "Activity_Desc", 
     			"Timesheet_Status", "TimesheetStatus_Desc",  "Ts_Start_Time", "TS_End_Time", "TimeEntry_Duration",  "TimeEntry_Desc", 
-    			 "Time_Type", "TimeEntry_Status", "TimeEntry_Status_Desc", "TEAM"};
+    			 "Time_Type", "TimeEntry_Status", "TimeEntry_Status_Desc", "TEAM","IS_ACTIVE"};
         writeHeaderLine( "ProjectDetailsReport",columnNames);
         writeProjectDetailsData(projectList);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -99,6 +100,7 @@ public class ProjectReportHelper extends BaseHelper {
             
             
             createCell(row, columnCount++, projectSummaryReport.getEmp_id(), style);
+            createCell(row, columnCount++, projectSummaryReport.getIs_active(), style);
             createCell(row, columnCount++, projectSummaryReport.getTeam(), style);
             createCell(row, columnCount++, projectSummaryReport.getEmployee_name(), style);
             createCell(row, columnCount++, projectSummaryReport.getProject_name(), style);
@@ -112,7 +114,7 @@ public class ProjectReportHelper extends BaseHelper {
      
     public ByteArrayInputStream downloadProjectSummaryReport(HttpServletResponse response, List<ProjectSummaryReport> projectSummaryList) throws IOException {
     	
-    	String [] columnNames = {"EMP_ID","TEAM","EMPLOYEE_NAME","PROJECT_NAME","SUBMITTED_HRS",
+    	String [] columnNames = {"EMP_ID","IS_ACTIVE","TEAM","EMPLOYEE_NAME","PROJECT_NAME","SUBMITTED_HRS",
     			"APPROVED_HRS","TOTAL_PLANNED_HRS","TOTAL_ACTUAL_HRS","PM_NAME"};
         writeHeaderLine( "ProjectSummaryReport",columnNames);
         writeProjectSummaryData(projectSummaryList);

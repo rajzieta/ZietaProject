@@ -317,6 +317,9 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 				tskInfo.setTaskStatus(statusMaster.getId());
 				if(taskParent!=null) {					
 					tskInfo.setTaskParent(taskParent.getTaskInfoId());
+				}else {
+					//IN CASE TASKPARENT NOT AVAILABLE SET IT AS 0
+					tskInfo.setTaskParent(0L);
 				}
 				tskInfo.setExtId(extTaskMaster.getExtTaskInfoId());
 				tskInfo.setTaskDescription(extTaskMaster.getTaskDescription());

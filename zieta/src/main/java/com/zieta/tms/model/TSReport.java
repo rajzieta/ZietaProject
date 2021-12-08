@@ -21,7 +21,7 @@ public class TSReport {
 	public String project_name;
 	public String task_name;
 	public String activity_desc;
-	public String total_submitted_time;
+	//public String total_submitted_time;
 	public String planned_hours;
 	public String actual_hours;
 	public String ts_date;

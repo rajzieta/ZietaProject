@@ -34,7 +34,8 @@ public class TimeSheetReportHelper extends BaseHelper {
             Row row = sheet.createRow(rowCount++);
             int columnCount = 0;
              
-            createCell(row, columnCount++, timeSheetReport.getEmp_id(), style);
+            createCell(row, columnCount++, timeSheetReport.getEmp_id(), style);//IS_ACTIVE
+            createCell(row, columnCount++, timeSheetReport.getIs_active(), style);
             createCell(row, columnCount++, timeSheetReport.getTeam(), style);
             createCell(row, columnCount++, timeSheetReport.getEmployee_name(), style);
             createCell(row, columnCount++, timeSheetReport.getProject_name(), style);
@@ -52,7 +53,7 @@ public class TimeSheetReportHelper extends BaseHelper {
     }
      
     public ByteArrayInputStream downloadReport(HttpServletResponse response, List<TSReport> tsReportList) throws IOException {
-        String[] columNames = {"EMP_ID", "TEAM","EMPLOYEE_NAME","PROJECT_NAME","TASK_NAME","ACTIVITY_DESC","TOTAL_SUBMITTED_TIME",
+        String[] columNames = {"EMP_ID","IS_ACTIVE", "TEAM","EMPLOYEE_NAME","PROJECT_NAME","TASK_NAME","ACTIVITY_DESC","TOTAL_SUBMITTED_TIME",
         		"PLANNED_HOURS","ACTUAL_HOURS","TS_DATE","SUBMIT_DATE","SUBMITTED_HRS","APPROVED_HRS"};
     	writeHeaderLine("TimeSheet Details",columNames);
         writeDataLines(tsReportList);
@@ -80,6 +81,7 @@ public class TimeSheetReportHelper extends BaseHelper {
             int columnCount = 0;
              
             createCell(row, columnCount++, timeSheetReport.getEmp_id(), style);
+            createCell(row, columnCount++, timeSheetReport.getIs_active(), style);
             createCell(row, columnCount++, timeSheetReport.getTeam(), style);
             createCell(row, columnCount++, timeSheetReport.getEmployee_name(), style);
             createCell(row, columnCount++, timeSheetReport.getProject_name(), style);
@@ -96,7 +98,7 @@ public class TimeSheetReportHelper extends BaseHelper {
     }
      
     public ByteArrayInputStream downloadSumReport(HttpServletResponse response, List<TSSumReport> tsReportList) throws IOException {
-        String[] columNames = {"EMP_ID","TEAM","EMP_NAME", "PROJECT_NAME","TID","TASK_NAME",
+        String[] columNames = {"EMP_ID","IS_ACTIVE","TEAM","EMP_NAME", "PROJECT_NAME","TID","TASK_NAME",
         		"ACTIVITY_DESC","TOTAL_SUBMITTED_TIME","SUBMITTED_HOURS","APPROVED_HOURS","TOTAL_PLANNED_HOURS","TOTAL_ACTUAL_HOURS"};
     	writeHeaderLine("TimeSheetSummary",columNames);
         writeSumDataLines(tsReportList);

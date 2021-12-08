@@ -12,7 +12,7 @@ public class TSSumReport {
     @Column(name = "row_num")
     private Integer id;
 	public String emp_id ;
-	public Integer is_active;
+	public String is_active;
 	public String team_id;
 	public String team;
 	public String employee_name;

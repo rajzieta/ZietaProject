@@ -451,10 +451,10 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			    	// employeeTimeService.syncTimesheetData(tsInfo);
 			    	Short isDelete=0;
 			    	ClientInfo clientInfo = clientInfoRepository.findByClientIdAndIsDelete(tsInfo.getClientId(),isDelete);
-			    	//if(clientInfo.getExtConnection() ==1) {
+			    	if(clientInfo.getExtConnection() ==1) {
 			    		log.error("called timesheet sync method");
 			    		syncTimesheetData(tsInfo);				    	
-			    	//}
+			    	}
 				    //*****************END FINAL APPROVAL***********************************************************
 				    		    
 				}
@@ -735,7 +735,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
 				httpPut.setHeader("content-type", "text/xml");
 				CredentialsProvider provider = new BasicCredentialsProvider();
-				UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("ZPORTAL", "Welcome123");
+				UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("_ZPORTAL", "Welcome123");
 				provider.setCredentials(AuthScope.ANY, credentials);
 				HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
 				StringEntity entity = new StringEntity(finalString);

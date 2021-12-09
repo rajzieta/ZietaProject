@@ -735,7 +735,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
 				httpPut.setHeader("content-type", "text/xml");
 				CredentialsProvider provider = new BasicCredentialsProvider();
-				UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("_ZPORTAL", "Welcome123");
+				UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("ZPORTAL", "Welcome123");
 				provider.setCredentials(AuthScope.ANY, credentials);
 				HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
 				StringEntity entity = new StringEntity(finalString);

@@ -500,7 +500,10 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 		}
 		log.error("Preparing for Byd url");
 		//bydUrl = "https://my351070.sapbydesign.com/sap/byd/odata/ana_businessanalytics_analytics.svc/RPZBE98B6E3996F2677BCC388QueryResults?$select=TCHANGE_USER,CE_PLAN_END_DAT,CE_PLAN_ST_DAT,Cs2ANsF48275C9927F86E,CRESP_EMP_UUID,CPROJECT_ID,TTASK_UUID,CTASK_ID,CSTATUS_LFC,TCREATION_USER&$format=json$filter=(CLAST_CHANGE_DATE_TIME ge '2021-10-01T00:00:00') and (CPROJECT_ID eq 'CPSO52')";
-		bydUrl = connStr+"&$filter=%28CLAST_CHANGE_DATE_TIME%20ge%20%27"+extFetchDate+"T00%3A00%3A00%27%29%20and%20%28CPROJECT_ID%20eq%20%27"+extProjectId+"%27%29";
+		//bydUrl = connStr+"&$filter=%28CLAST_CHANGE_DATE_TIME%20ge%20%27"+extFetchDate+"T00%3A00%3A00%27%29%20and%20%28CPROJECT_ID%20eq%20%27"+extProjectId+"%27%29";
+		
+		//date format will be 09.12.2021(i.e.DD.MM.YYYY)
+		bydUrl = connStr+"&$filter=%28CLAST_CHANGE_DATE_TIME%20ge%20%27"+extFetchDate+"%2000%3A00%3A00%20UTC%27%29%20and%20%28CPROJECT_ID%20eq%20%27"+extProjectId+"%27%29";
 		
 		HttpGet httpGet = new HttpGet(bydUrl);
 		
@@ -524,7 +527,8 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
             // CONVERT RESPONSE STRING TO JSON ARRAY
             JSONObject jsonRespData = new JSONObject(respString);            
             JSONObject jsnObj = (JSONObject) jsonRespData.get("d");            
-            JSONArray jsnArray = jsnObj.getJSONArray("results");            
+            JSONArray jsnArray = jsnObj.getJSONArray("results"); 
+            log.error("respString::"+respString);
             
             for (int i = 0; i <jsnArray.length(); i++) {
             	

@@ -337,33 +337,41 @@ public class ActivityServiceImpl implements ActivityService {
 	@Override
 	public ResponseData addActivitiesByClientProjectTaskExternal(@Valid TaskActivityExtDTO taskActivityExtDto) {
 		ResponseData resp = new ResponseData();
-
+			log.error("Add external task activity");
 		try {
 			if (taskActivityExtDto.getExtProjectId() == null || taskActivityExtDto.getExtProjectId().isEmpty()
-					|| taskActivityExtDto.getExtActivityId() == null || taskActivityExtDto.getExtActivityId().isEmpty()
-					|| taskActivityExtDto.getExtTaskId() == null || taskActivityExtDto.getExtTaskId().isEmpty()) {
+				|| taskActivityExtDto.getExtTaskId() == null || taskActivityExtDto.getExtTaskId().isEmpty()
+				|| taskActivityExtDto.getExtUserId() == null || taskActivityExtDto.getExtUserId().isEmpty()
+				|| taskActivityExtDto.getExtActivityId() == null || taskActivityExtDto.getExtActivityId().isEmpty()	
+				) {		
+				
 				throw new ExternalIdException("ExternalId not found");
+				
 			} else {
 				TaskActivity taskActivity = new TaskActivity();
-				TaskInfo chkExist = taskInfoRepository.findByExtIdAndClientId(taskActivityExtDto.getExtTaskId(),taskActivityExtDto.getClientId());
-				ProjectMaster projectMaster = projectMastRepository.findByExtIdAndClientId(taskActivityExtDto.getExtProjectId(),taskActivityExtDto.getClientId());
+				TaskInfo taskInfo = taskInfoRepository.findByExtIdAndClientId(taskActivityExtDto.getExtTaskId(), taskActivityExtDto.getClientId());
+				ProjectInfo projectInfo = projectInfoRepository.findByExtIdAndClientId(taskActivityExtDto.getExtProjectId(),taskActivityExtDto.getClientId());
 				UserInfo userInfo = userInfoReposistory.findByExtIdAndClientId(taskActivityExtDto.getExtUserId(),taskActivityExtDto.getClientId());
-
-				if(chkExist!=null) {
-				 taskActivity.setTaskId(chkExist.getTaskInfoId());
+				ActivityMaster activityInfo = activityMasterRepository.findByExtId(taskActivityExtDto.getExtActivityId());
+				
+				//TaskActivity checkExist = ActivitiesTaskRepository.findByUserIdAndClientIdAndProjectId();
+				if(taskInfo!=null) {
+					taskActivity.setTaskId(taskInfo.getTaskInfoId());
 				}
-				taskActivity.setProjectId(projectMaster.getProjectTypeId());				
-				taskActivity.setUserId(userInfo.getId());
-
-				taskActivity.setActivityId(taskActivityExtDto.getActivityId());
-				taskActivity.setActualHrs(taskActivityExtDto.getActualHrs());
+				if(projectInfo!=null) {
+					taskActivity.setProjectId(projectInfo.getProjectInfoId());
+				}				
+				taskActivity.setUserId(userInfo.getId());				
+				taskActivity.setActivityId(activityInfo.getActivityId());
+				//taskActivity.setActualHrs(taskActivityExtDto.getActualHrs());
 				taskActivity.setPlannedHrs(taskActivityExtDto.getPlannedHrs());
-
-				taskActivity.setCreatedDate(new Date());
-				taskActivity.setCreatedBy("User");
-				taskActivity = activitiesTaskRepository.save(taskActivity);
+				taskActivity.setCreatedDate(taskActivityExtDto.getCreatedDate());
+				taskActivity.setCreatedBy(taskActivityExtDto.getCreatedBy());				
+				log.error("call to save task activity");
+				taskActivity = activitiesTaskRepository.save(taskActivity);				
 				resp.setId(taskActivity.getTaskActivityId());
 				resp.setIsSaved(true);
+				log.error("Saved Task Activity Data");
 			}
 		} catch (Exception e) {
 			log.error("Activeity by client project Task unable to add "+e);
@@ -426,11 +434,11 @@ public class ActivityServiceImpl implements ActivityService {
 	            	TaskActivity chkExist = null;
 	            	//set below param
 	            	if(chkExist!=null) {
-	            		taskActivityData.setActivityId(chkExist.getTaskActivityId());	
+	            		//taskActivityData.setActivityId(chkExist.getTaskActivityId());	
 	            	}
 	            	taskActivityData.setClientId(clientId);
 	            	taskActivityData.setExtActivityId("");
-	            	taskActivityData.setExtId("");
+	            	//taskActivityData.setExtId("");
 	            	taskActivityData.setExtProjectId("");
 	            	taskActivityData.setExtUserId("");
 	            	taskActivityData.setCreatedBy("Abc");

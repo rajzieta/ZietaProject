@@ -19,4 +19,7 @@ public interface ActivityMasterRepository extends JpaRepository<ActivityMaster, 
 	
 	@Query(value ="select * from activity_master where id=?1", nativeQuery=true)
 	ActivityMaster findByActivityId(Long id);
+	
+	@Query(value ="select * from activity_master where ext_id=?1", nativeQuery=true)
+	ActivityMaster findByExtId(String extId);
 }

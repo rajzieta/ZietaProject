@@ -13,19 +13,16 @@ import lombok.Setter;
 @Setter
 public class TaskActivityExtDTO extends BaseEntity {
 
-	private Long clientId;
-	private String extId;
+	private Long clientId;	
 	private String extActivityId;
 	private String extTaskId;
 	private String extProjectId;
-	private String extUserId;
-	private Long activityId;
+	private String extUserId;	
 	private String createdBy;
 	private String modifiedBy;
 	private Date startDate;
 	private Date endDate;
 	private float plannedHrs;
-	private float actualHrs;
-	private Long userId;
+	
 
 }

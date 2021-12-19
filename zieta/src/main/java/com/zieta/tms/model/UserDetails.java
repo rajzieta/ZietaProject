@@ -22,10 +22,8 @@ import lombok.Data;
 
 @Entity
 @Table(name = "user_details")
-//@Unique(columns = { @UniqueColumn(fields= "email_id")})
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = {"created_date", "modified_date"}, 
-        allowGetters = true)
+@JsonIgnoreProperties(value = {"created_date", "modified_date"}, allowGetters = true)
 @Data
 public class UserDetails extends BaseEntity {
 

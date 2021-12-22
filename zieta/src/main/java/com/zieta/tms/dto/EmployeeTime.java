@@ -21,10 +21,8 @@ import lombok.Data;
     "ObjectNodeSenderTechnicalID",
     "EmployeeID",
     "ItemTypeCode",
-    "DatePeriod",
-    "TimePeriod",
+    "DatePeriod",    
     "Duration",
-    "DifferentBillableTimeRecordedIndicator1",
     "ProjectTaskConfirmation",
     "TimeSheetDescription"
     
@@ -43,12 +41,12 @@ public class EmployeeTime {
 	protected String ItemTypeCode;
 	@XmlElement(name = "DatePeriod")
 	protected EmployeeTime.DatePeriod DatePeriod;
-	@XmlElement(name = "TimePeriod")
-	protected EmployeeTime.TimePeriod TimePeriod;	
+	//@XmlElement(name = "TimePeriod")
+	//protected EmployeeTime.TimePeriod TimePeriod;	
 	@XmlElement(name = "Duration")
 	protected String Duration;
-	@XmlElement(name = "DifferentBillableTimeRecordedIndicator1")
-	protected boolean DifferentBillableTimeRecordedIndicator1;
+	//@XmlElement(name = "DifferentBillableTimeRecordedIndicator1")
+	//protected boolean DifferentBillableTimeRecordedIndicator1;
 	
 	@XmlElement(name = "TimeSheetDescription")
 	protected String TimeSheetDescription;

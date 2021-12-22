@@ -451,10 +451,10 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			    	// employeeTimeService.syncTimesheetData(tsInfo);
 			    	Short isDelete=0;
 			    	ClientInfo clientInfo = clientInfoRepository.findByClientIdAndIsDelete(tsInfo.getClientId(),isDelete);
-			    	if(clientInfo.getExtConnection() ==1) {
+			    	//if(clientInfo.getExtConnection() ==1) {
 			    		log.error("called timesheet sync method");
 			    		syncTimesheetData(tsInfo);				    	
-			    	}
+			    	//}
 				    //*****************END FINAL APPROVAL***********************************************************
 				    		    
 				}
@@ -637,22 +637,18 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	@Override
 	public List<WorkFlowRequestComments> findByTsIdDesc(long tsId) {
 		return workflowRequestCommentRepository.findByTsIdDesc(tsId);
-	}
+	}	
 	
 	
-	
-	
-	//////////////////////////////////////////////////////////////////////////
 	//IMPLEMENTATION FOR BYD INTEGRATION
 	//SYNC TIMESHEETDATA	
 	public void syncTimesheetData(TSInfo tsInfo) {
 				log.error("Called SYNC method for timesheet Data");
+				//log.error("userId "+tsInfo.getUserId());
 				UserInfoDTO userInfo = userInfoService.findByUserId(tsInfo.getUserId());
 				EmployeeTime request = new EmployeeTime();
 				request.setObjectNodeSenderTechnicalID("1");
-				request.setEmployeeID(userInfo.getExtId());
-				//System.out.println("===>"+userInfo.get);
-				//request.setEmployeeID(extId);
+				request.setEmployeeID(userInfo.getExtId());			
 				request.setItemTypeCode("IN0010");
 				EmployeeTime.DatePeriod datePeroid = new EmployeeTime.DatePeriod();
 				
@@ -663,28 +659,27 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				EmployeeTime.TimePeriod timePeroid = new EmployeeTime.TimePeriod();
 				///timePeroid.setEndTime("09:00:00");
 				///timePeroid.setStartTime("17:00:00");
-				request.setTimePeriod(timePeroid);		
+				//request.setTimePeriod(timePeroid);		
 				String duartion = tsInfo.getTsTotalSubmittedTime().toString();		
 				//request.setDuration("PT17H00M");
 				String[] parts = duartion.split("\\.");
 				//converting duration to require format 
 				String cusDuration = "PT"+parts[0]+"H"+parts[1]+"M";
 				request.setDuration(cusDuration);
-				request.setDifferentBillableTimeRecordedIndicator1(false);	
+				//request.setDifferentBillableTimeRecordedIndicator1(false);	
 				
 				ProjectInfo projectInfo = projectMasterService.findByProjectId(tsInfo.getProjectId());		
 				EmployeeTime.ProjectTaskConfirmation projectTaskConfirmation = new EmployeeTime.ProjectTaskConfirmation();
-				projectTaskConfirmation.setProjectElementID(projectInfo.getExtId());
-				//projectTaskConfirmation.setServiceProductInternalID("20000005");//need to talk about this
 				
+				List<WorkFlowRequestComments> workFlowRequestComments = workFlowRequestService.findByTsIdDesc(tsInfo.getId());		
+				
+				request.setTimeSheetDescription(workFlowRequestComments.get(0).getComments());
 				ActivityMaster activityInfo = activityMasterRepository.findByActivityId(tsInfo.getActivityId());
 				//projectTaskConfirmation.setServiceProductInternalID(tsInfo.getActivityId().toString());
 				projectTaskConfirmation.setServiceProductInternalID(activityInfo.getExtId());
-				List<WorkFlowRequestComments> workFlowRequestComments = workFlowRequestService.findByTsIdDesc(tsInfo.getId());			
 				
-				System.out.println("test comment =====>"+workFlowRequestComments);
-				request.setTimeSheetDescription(workFlowRequestComments.get(0).getComments());
-				
+				//projectTaskConfirmation.setServiceProductInternalID("20000005");//need to talk about this
+				projectTaskConfirmation.setProjectElementID(projectInfo.getExtId());
 				projectTaskConfirmation.setCompletedIndicator("false");		
 				request.setProjectTaskConfirmation(projectTaskConfirmation);
 				List<Pair<Integer, String>> list = null;		
@@ -703,23 +698,23 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 					data = data.replace("<TimeSheetDescription>", "<a3x:TimeSheetDescription>");
 					data = data.replace("</TimeSheetDescription>", "</a3x:TimeSheetDescription>");
 
-					String finalString = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:glob=\"http://sap.com/xi/SAPGlobal20/Global\">\n"
-							+ "<soapenv:Header/>\n" + "<soapenv:Body>\n" + "<glob:EmployeeTimeBundleMaintainRequest_sync>\n"
-							+ "<BasicMessageHeader>\n" + "</BasicMessageHeader>" + data
-							+ "</glob:EmployeeTimeBundleMaintainRequest_sync>\n" + "</soapenv:Body>\n" + "</soapenv:Envelope>";
+					String finalString = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:glob=\"http://sap.com/xi/SAPGlobal20/Global\" xmlns:a3x=\"http://sap.com/xi/AP/CustomerExtension/BYD/A3XM9\">\n"
+							+ "<soapenv:Header/>\n" + "<soapenv:Body>\n" + "<glob:EmployeeTimeAsBundleMaintainRequest_sync>\n"
+							+  data
+							+ "</glob:EmployeeTimeAsBundleMaintainRequest_sync>\n" + "</soapenv:Body>\n" + "</soapenv:Envelope>";
 					
 					System.out.println("finalString" + finalString);			
 					try {
 						list = bydHttpRequest(finalString);
 						//SET RESPONSE IN TRCKING TABLE	
-						log.error("Timesheet Response ==>"+list);
+						//log.error("Timesheet Response ==>"+list);
 						
 					} catch (IOException e) {
 						//SET RESPONSE IN TRCKING TABLE
 						
 						e.printStackTrace();
 					}
-					System.out.println("HttpRequest Output" + list);		
+						
 					
 				} catch (JAXBException e) {
 					
@@ -745,7 +740,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				Integer httpStatusCd = resp.getStatusLine().getStatusCode();
 				String respString = EntityUtils.toString(resp.getEntity());
 				
-				log.error("Response Data  ::"+respString);
+				//log.error("Response Data  ::"+respString);
 				//log.info("Response Data from portal {} ", respString);
 				List<Pair<Integer, String>> listOfPairs = new ArrayList<>();
 				listOfPairs.add(new Pair<>(httpStatusCd, respString));

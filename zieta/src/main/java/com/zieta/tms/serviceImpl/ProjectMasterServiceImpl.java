@@ -187,9 +187,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 						logMsg = logMsg+" ProjectManager info doesn't exist";
 						responseData.setMessage(logMsg);							
 					}
-				}
-				
-				
+				}				
 				
 				/*if(!bydProjectinfo.getExtDirectApprover().isEmpty()) {						
 					directApprover = userInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtDirectApprover().trim(), bydProjectinfo.getClientId()).getId();

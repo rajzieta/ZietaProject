@@ -451,10 +451,10 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			    	// employeeTimeService.syncTimesheetData(tsInfo);
 			    	Short isDelete=0;
 			    	ClientInfo clientInfo = clientInfoRepository.findByClientIdAndIsDelete(tsInfo.getClientId(),isDelete);
-			    	//if(clientInfo.getExtConnection() ==1) {
+			    	if(clientInfo.getExtConnection() ==1) {
 			    		log.error("called timesheet sync method");
 			    		syncTimesheetData(tsInfo);				    	
-			    	//}
+			    	}
 				    //*****************END FINAL APPROVAL***********************************************************
 				    		    
 				}

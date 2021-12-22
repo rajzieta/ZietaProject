@@ -136,135 +136,140 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		String logMsg ="";
 		//manipulate bydprojectinfo data and set it to project info an save it
 		try {
-			log.error("bydProjectinfo.getExtCustId()  ===>"+bydProjectinfo.getExtCustId());			
-				if(bydProjectinfo.getExtCustId() ==null || bydProjectinfo.getExtCustId().isEmpty()||
-			    bydProjectinfo.getExtId() ==null || bydProjectinfo.getExtId().isEmpty()||bydProjectinfo.getExtProjectManagerId()==null ||
-			    bydProjectinfo.getExtProjectManagerId().isEmpty() || bydProjectinfo.getExtProjectStatus() == null || 
-			    bydProjectinfo.getExtProjectStatus().isEmpty()|| bydProjectinfo.getExtProjectType() ==null || bydProjectinfo.getExtProjectType().isEmpty() ||	
-			    bydProjectinfo.getExtProjectOrgNode() == null || bydProjectinfo.getExtProjectOrgNode().isEmpty()) {
+		
+			    log.error("Checking existing project");
+			    ProjectInfo projectInfo = new ProjectInfo();
+				log.error("Ext Id ::"+bydProjectinfo.getExtId().trim());
+				
+				
+				Long custId =0L;
+				Long projectManagerId =0L;
+				Long directApprover =0L;
+				Long projectStatusId = 0L;
+				Long projectTypeId = 0L;
+				Long orgNodeId = 0L;
+				ProjectInfo chkExist =null;
+				CustInfo custInfo =null;
+				UserInfo projectManagerInfo = null;
+				StatusMaster projectStatusInfo = null;
+				ProjectMaster projectTypeInfo = null;
+				OrgInfo orgNodeInfo = null;
+				
+				if(bydProjectinfo.getExtId() ==null || bydProjectinfo.getExtId().isEmpty()){
+					logMsg = logMsg+" Project extId is empty,";
+				}else {
+			     chkExist = projectInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtId().trim(),bydProjectinfo.getClientId());
+				}
+				if(bydProjectinfo.getExtCustId() ==null || bydProjectinfo.getExtCustId().isEmpty()){
+					logMsg = logMsg+" Cutomer  extId is empty";		
+				}else {
 					
+					custInfo = custInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtCustId(), bydProjectinfo.getClientId());						
 					
-					//Configure error string
-					if(bydProjectinfo.getExtCustId() ==null || bydProjectinfo.getExtCustId().isEmpty()){
-						logMsg = logMsg+" Cutomer ,";		
+					if(custInfo!=null){
+						custId = custInfo.getCustInfoId();
+					}else{
+						logMsg = logMsg+" Customer info doesn't exit,";
+						responseData.setMessage(logMsg);
+						//throw new ExternalIdException("customer not found");
 					}
-					if(bydProjectinfo.getExtId() ==null || bydProjectinfo.getExtId().isEmpty()){
-						logMsg = logMsg+" Project ,";
+					
+				}
+				
+				if(bydProjectinfo.getExtProjectManagerId()==null || bydProjectinfo.getExtProjectManagerId().isEmpty()){
+					logMsg = logMsg+" Project Manager  extId is empty";
+				}else {
+					projectManagerInfo = userInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtProjectManagerId().trim(), bydProjectinfo.getClientId());						
+					 
+					if(projectManagerInfo!=null){
+						projectManagerId = projectManagerInfo.getId();
+					}else{
+						logMsg = logMsg+" ProjectManager info doesn't exist";
+						responseData.setMessage(logMsg);							
 					}
-					
-					if(bydProjectinfo.getExtProjectManagerId()==null || bydProjectinfo.getExtProjectManagerId().isEmpty()){
-						logMsg = logMsg+" Project Manager ,";
+				}
+				
+				
+				
+				/*if(!bydProjectinfo.getExtDirectApprover().isEmpty()) {						
+					directApprover = userInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtDirectApprover().trim(), bydProjectinfo.getClientId()).getId();
+					projectInfo.setDirectApprover(directApprover);
+				}*/
+				if(bydProjectinfo.getExtProjectStatus()==null || bydProjectinfo.getExtProjectStatus().isEmpty()){
+					logMsg = logMsg+" Project Status  extId is empty,";
+				}else {
+					projectStatusInfo = statusMasterRepository.findByExtIdAndClientId(bydProjectinfo.getExtProjectStatus().trim(), bydProjectinfo.getClientId());
+					if(projectStatusInfo!=null){
+						projectStatusId = projectStatusInfo.getId();
+					}else{
+						logMsg = logMsg+" ProjectStatus info doesn't exist,";
+						responseData.setMessage(logMsg);
+						//throw new ExternalIdException("Project Status not found");
 					}
-					
-					if(bydProjectinfo.getExtProjectStatus()==null || bydProjectinfo.getExtProjectStatus().isEmpty()){
-						logMsg = logMsg+" Project Status ,";
-					}
-					
-					if(bydProjectinfo.getExtProjectType()==null || bydProjectinfo.getExtProjectType().isEmpty()){
-						logMsg = logMsg+" Project Type,";
-					}
-					
-					if(bydProjectinfo.getExtProjectOrgNode()==null || bydProjectinfo.getExtProjectOrgNode().isEmpty()){
-						logMsg = logMsg+" Project OrgNode,";
-					}
-					
-					logMsg = logMsg+" External Id Not Found";					
-					responseData.setMessage(logMsg);					
-					
-					//throw new ExternalIdException("ExternalId not found");
-					
-				}else{
-					    log.error("Checking existing project");
-					    ProjectInfo projectInfo = new ProjectInfo();
-						log.error("Ext Id ::"+bydProjectinfo.getExtId().trim());
-					    ProjectInfo chkExist = projectInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtId().trim(),bydProjectinfo.getClientId());
-					   
-						Long custId =0L;
-						Long projectManagerId =0L;
-						Long directApprover =0L;
-						Long projectStatusId = 0L;
-						Long projectTypeId = 0L;
-						Long orgNodeId = 0L;
-						CustInfo custInfo = custInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtCustId(), bydProjectinfo.getClientId());						
-						 log.error("custInfo====>"+custInfo);
-						if(custInfo!=null){
-							custId = custInfo.getCustInfoId();
-						}else{
-							logMsg = logMsg+" Customer info doesn't exit";
-							responseData.setMessage(logMsg);
-							throw new ExternalIdException("customer not found");
-						}
-						
-						
-						UserInfo projectManagerInfo = userInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtProjectManagerId().trim(), bydProjectinfo.getClientId());						
-						 
-						if(projectManagerInfo!=null){
-							projectManagerId = projectManagerInfo.getId();
-						}else{
-							logMsg = logMsg+" ProjectManager info doesn't exit";
-							responseData.setMessage(logMsg);
-							throw new ExternalIdException("Project Manager not found");
-						}
-						
-						/*if(!bydProjectinfo.getExtDirectApprover().isEmpty()) {						
-							directApprover = userInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtDirectApprover().trim(), bydProjectinfo.getClientId()).getId();
-							projectInfo.setDirectApprover(directApprover);
-						}*/
-						
-						StatusMaster projectStatusInfo = statusMasterRepository.findByExtIdAndClientId(bydProjectinfo.getExtProjectStatus().trim(), bydProjectinfo.getClientId());
-						if(projectStatusInfo!=null){
-							projectStatusId = projectStatusInfo.getId();
-						}else{
-							logMsg = logMsg+" ProjectStatus info doesn't exit";
-							responseData.setMessage(logMsg);
-							throw new ExternalIdException("Project Status not found");
-						}
-						ProjectMaster projectTypeInfo = projectMasterRepository.findByExtIdAndClientId(bydProjectinfo.getExtProjectType().trim(), bydProjectinfo.getClientId());
+				}
+				
+				if(bydProjectinfo.getExtProjectType()==null || bydProjectinfo.getExtProjectType().isEmpty()){
+					logMsg = logMsg+" Project Type  extId is empty,";
+				}else {
+					 projectTypeInfo = projectMasterRepository.findByExtIdAndClientId(bydProjectinfo.getExtProjectType().trim(), bydProjectinfo.getClientId());
 						if(projectTypeInfo!=null){
 							projectTypeId = projectTypeInfo.getProjectTypeId();
 						}else{
-							logMsg = logMsg+" ProjectType info doesn't exit";
+							logMsg = logMsg+" ProjectType info doesn't exist,";
 							responseData.setMessage(logMsg);
-							throw new ExternalIdException("Project Type not found");
+							//throw new ExternalIdException("Project Type not found");
 						
 						}
-						OrgInfo orgNodeInfo = orgInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtProjectOrgNode().trim(), bydProjectinfo.getClientId());
-						if(orgNodeInfo!=null){
-							orgNodeId = orgNodeInfo.getOrgUnitId();
-						}else{
-							logMsg = logMsg+" OrgNode info doesn't exit";
-							responseData.setMessage(logMsg);
-							throw new ExternalIdException("OrgNode not found");
-						}
-										
-						if(chkExist!= null) {
-							projectInfo.setProjectInfoId(chkExist.getProjectInfoId());
-						}	
-												
-						projectInfo.setExtId(bydProjectinfo.getExtId());
-						projectInfo.setClientId(bydProjectinfo.getClientId());
-						projectInfo.setProjectName(bydProjectinfo.getProjectName());
-						
-						projectInfo.setProjectType(projectTypeId);
-						projectInfo.setProjectOrgNode(orgNodeId);
-						projectInfo.setProjectManager(projectManagerId);
-						projectInfo.setTemplateId(bydProjectinfo.getTemplateId());
-						
-						projectInfo.setAllowUnplanned(bydProjectinfo.getAllowUnplanned());
-						projectInfo.setCustId(custId);
-						projectInfo.setProjectStatus(projectStatusId);
-						
-						projectInfo.setCreatedBy(bydProjectinfo.getCreatedBy());
-						projectInfo.setModifiedBy(bydProjectinfo.getCreatedBy());			
-						
-						returnData = projectInfoRepository.save(projectInfo);
-						responseData.setId(returnData.getProjectInfoId());						
-						logMsg = "Project Save/Update Successfully ";
-						responseData.setIsSaved(true);
-						responseData.setMessage(logMsg);
-						log.error("External project Saved");
-						
 				}
+				
+				if(bydProjectinfo.getExtProjectOrgNode()==null || bydProjectinfo.getExtProjectOrgNode().isEmpty()){
+					logMsg = logMsg+" Project OrgNode  extId is empty,";
+				}else {
+					orgNodeInfo = orgInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtProjectOrgNode().trim(), bydProjectinfo.getClientId());
+					if(orgNodeInfo!=null){
+						orgNodeId = orgNodeInfo.getOrgUnitId();
+					}else{
+						logMsg = logMsg+" OrgNode info doesn't exist";
+						responseData.setMessage(logMsg);
+						//throw new ExternalIdException("OrgNode not found");
+					}
+				}
+				
+								
+				if(chkExist!= null) {
+					projectInfo.setProjectInfoId(chkExist.getProjectInfoId());
+				}	
+										
+				projectInfo.setExtId(bydProjectinfo.getExtId());
+				projectInfo.setClientId(bydProjectinfo.getClientId());
+				projectInfo.setProjectName(bydProjectinfo.getProjectName());
+				
+				projectInfo.setProjectType(projectTypeId);
+				projectInfo.setProjectOrgNode(orgNodeId);
+				projectInfo.setProjectManager(projectManagerId);
+				projectInfo.setTemplateId(bydProjectinfo.getTemplateId());
+				
+				projectInfo.setAllowUnplanned(bydProjectinfo.getAllowUnplanned());
+				projectInfo.setCustId(custId);
+				projectInfo.setProjectStatus(projectStatusId);
+				
+				projectInfo.setCreatedBy(bydProjectinfo.getCreatedBy());
+				projectInfo.setModifiedBy(bydProjectinfo.getCreatedBy());			
+				responseData.setMessage(logMsg);//setting log message
+				if(responseData.getMessage().isEmpty()) {
+					returnData = projectInfoRepository.save(projectInfo);
+					responseData.setId(returnData.getProjectInfoId());						
+					logMsg = "Project Save/Update Successfully ";
+					responseData.setIsSaved(true);
+					log.error("External project Saved");
+				}else {
+					log.error("Failed to save external project info due to :"+responseData.getMessage());
+				}
+						
+						
+						
+						
+				
 		}catch(Exception e) {
 			//responseData.setMessage(e.getMessage());
 			log.error(" Failed to add project from Byd"+e);

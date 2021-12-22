@@ -42,5 +42,9 @@ public interface ActivityService {
 
 	public ResponseData addActivitiesByClientProjectTaskExternal(@Valid TaskActivityExtDTO taskActivityExtDto);
 	
-	public ResponseData getActivitiesByClientProjectTask(String extProjectId, Long clientId, Long userId);
+	//public ResponseData getActivitiesByClientProjectTask(String extProjectId, Long clientId, Long userId);
+	
+	public ResponseData getActivitiesByClientProjectTask(String extProjectId, Long clientId, String date);
+
+
 }

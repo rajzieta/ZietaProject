@@ -338,14 +338,34 @@ public class ActivityServiceImpl implements ActivityService {
 	public ResponseData addActivitiesByClientProjectTaskExternal(@Valid TaskActivityExtDTO taskActivityExtDto) {
 		ResponseData resp = new ResponseData();
 			log.error("Add external task activity");
+			String logMsg ="";
 		try {
 			if (taskActivityExtDto.getExtProjectId() == null || taskActivityExtDto.getExtProjectId().isEmpty()
 				|| taskActivityExtDto.getExtTaskId() == null || taskActivityExtDto.getExtTaskId().isEmpty()
 				|| taskActivityExtDto.getExtUserId() == null || taskActivityExtDto.getExtUserId().isEmpty()
 				|| taskActivityExtDto.getExtActivityId() == null || taskActivityExtDto.getExtActivityId().isEmpty()	
-				) {		
+				) {	
+
+					if(taskActivityExtDto.getExtProjectId() ==null || taskActivityExtDto.getExtProjectId().isEmpty()){
+						logMsg = logMsg+" Project ,";		
+					}
+					if(taskActivityExtDto.getExtTaskId() ==null || taskActivityExtDto.getExtTaskId().isEmpty()){
+						logMsg = logMsg+" Task ,";		
+					}
+					
+					if(taskActivityExtDto.getExtUserId() ==null || taskActivityExtDto.getExtUserId().isEmpty()){
+						logMsg = logMsg+" User ,";
+					}
+					
+					if(taskActivityExtDto.getExtActivityId() ==null || taskActivityExtDto.getExtActivityId().isEmpty()){
+						logMsg = logMsg+" Activity ,";
+					}
+					
+					
+					logMsg = logMsg+" External Id is empty";					
+					resp.setMessage(logMsg);	
 				
-				throw new ExternalIdException("ExternalId not found");
+				throw new ExternalIdException("External Id is empty");
 				
 			} else {
 				TaskActivity taskActivity = new TaskActivity();
@@ -357,12 +377,41 @@ public class ActivityServiceImpl implements ActivityService {
 				//TaskActivity checkExist = ActivitiesTaskRepository.findByUserIdAndClientIdAndProjectId();
 				if(taskInfo!=null) {
 					taskActivity.setTaskId(taskInfo.getTaskInfoId());
+				}else {
+					logMsg = logMsg+" TaskInfo Does not Exist";					
+					resp.setMessage(logMsg);
+					throw new ExternalIdException("TaskInfo Does not Exist");
 				}
 				if(projectInfo!=null) {
 					taskActivity.setProjectId(projectInfo.getProjectInfoId());
-				}				
-				taskActivity.setUserId(userInfo.getId());				
-				taskActivity.setActivityId(activityInfo.getActivityId());
+					
+				}else {
+					logMsg = logMsg+" ProjectInfo Does not Exist";					
+					resp.setMessage(logMsg);
+					throw new ExternalIdException("ProjectInfo Does not Exist");
+				}
+				
+				Long activityId = 0L;
+				if(activityInfo!=null) {
+					activityId = activityInfo.getActivityId(); 
+					
+				}else {
+					logMsg = logMsg+" ActivityInfo Does not Exist";					
+					resp.setMessage(logMsg);
+					throw new ExternalIdException("ActivityInfo Does not Exist");
+				}
+				
+				Long userId =0L;
+				if(userInfo!=null) {
+					userId = userInfo.getId();
+				}else {
+					logMsg = logMsg+" UserInfo Does not Exist";					
+					resp.setMessage(logMsg);
+					throw new ExternalIdException("UserInfo Does not Exist");
+				}
+			    
+				taskActivity.setUserId(userId);				
+				taskActivity.setActivityId(activityId);
 				//taskActivity.setActualHrs(taskActivityExtDto.getActualHrs());
 				taskActivity.setPlannedHrs(taskActivityExtDto.getPlannedHrs());
 				taskActivity.setCreatedDate(taskActivityExtDto.getCreatedDate());
@@ -371,39 +420,47 @@ public class ActivityServiceImpl implements ActivityService {
 				taskActivity = activitiesTaskRepository.save(taskActivity);				
 				resp.setId(taskActivity.getTaskActivityId());
 				resp.setIsSaved(true);
+				logMsg = "Project Actvity Successfully saved/Updated";
 				log.error("Saved Task Activity Data");
+				resp.setMessage(logMsg);
 			}
 		} catch (Exception e) {
+			//resp.setMessage(e.getMessage());
 			log.error("Activeity by client project Task unable to add "+e);
 		}
 		return resp;
 	}
 
 	@Override
-	public ResponseData getActivitiesByClientProjectTask(String extProjectId, Long clientId, Long userId) {
+	public ResponseData getActivitiesByClientProjectTask(String extProjectId, Long clientId, String date) {
 		ResponseData responseData = new ResponseData();		
 		String bydUrl ="";
 		short notDeleted =0;
-		String connName = "TaskAPI";
+		String connName = "ActivityAPI";
 		String loginId =null;
 		String pass =null;
 		String connStr = null;
-		List<ConnectionMasterInfo> listConnectionData = connectionMasterInfoRepository.findByClientIdAndConnectionNameAndNotDeleted(clientId,connName,notDeleted);
+		/*List<ConnectionMasterInfo> listConnectionData = connectionMasterInfoRepository.findByClientIdAndConnectionNameAndNotDeleted(clientId,connName,notDeleted);
 		if(listConnectionData.size()>0) {
 			loginId = listConnectionData.get(0).getLoginId();
 			pass = listConnectionData.get(0).getPassword();
 			connStr = listConnectionData.get(0).getConnectionStr();
-		}
+		}*/
 		
 		String extFetchDate ="";
-		//bydUrl = "https://my351070.sapbydesign.com/sap/byd/odata/ana_businessanalytics_analytics.svc/RPZBE98B6E3996F2677BCC388QueryResults?$select=TCHANGE_USER,CE_PLAN_END_DAT,CE_PLAN_ST_DAT,Cs2ANsF48275C9927F86E,CRESP_EMP_UUID,CPROJECT_ID,TTASK_UUID,CTASK_ID,CSTATUS_LFC,TCREATION_USER&$format=json$filter=(CLAST_CHANGE_DATE_TIME ge '2021-10-01T00:00:00') and (CPROJECT_ID eq 'CPSO52')";
-		bydUrl = connStr+"&$filter=%28CLAST_CHANGE_DATE_TIME%20ge%20%27"+extFetchDate+"T00%3A00%3A00%27%29%20and%20%28CPROJECT_ID%20eq%20%27"+extProjectId+"%27%29";
+		//bydUrl = "https://my351070.sapbydesign.com/sap/byd/odata/ana_businessanalytics_analytics.svc/RPZ75BAE8B00CF5C49B68CC07QueryResults?$inlinecount=allpages&$select=CTASK_UUID,CSERVICE_UUID,CASSI_EMP_UUID,CTS_START_DATE,CTS_END_DATE,KCPLAN_WORK_H_TS&$filter=(Cs2ANsA0CE1245BC75D5A ge '20211217034706.0000000') and (CPROJECT_UUID eq 'CPSO75')&$format=json";
+		bydUrl = "https://my351070.sapbydesign.com/sap/byd/odata/ana_businessanalytics_analytics.svc/RPZ75BAE8B00CF5C49B68CC07QueryResults?$inlinecount=allpages&$select=CTASK_UUID,CSERVICE_UUID,CASSI_EMP_UUID,CTS_START_DATE,CTS_END_DATE,KCPLAN_WORK_H_TS&$filter=(Cs2ANsA0CE1245BC75D5A%20ge%20%2720211217034706.0000000%27)%20and%20(CPROJECT_UUID%20eq%20%27CPSO75%27)&$format=json";
+		
+		//bydUrl = "https://my351070.sapbydesign.com/sap/byd/odata/ana_businessanalytics_analytics.svc/RPZ75BAE8B00CF5C49B68CC07QueryResults?$inlinecount=allpages&$select=CTASK_UUID%2CCSERVICE_UUID%2CCASSI_EMP_UUID%2CCTS_START_DATE%2CCTS_END_DATE%2CKCPLAN_WORK_H_TS%26%24filter%3D(Cs2ANsA0CE1245BC75D5A%20ge%20%2720211217034706.0000000%27)%20and%20(CPROJECT_UUID%20eq%20%27CPSO75%27)%26%24format%3Djson";
+		
+		//bydUrl = connStr+"&$filter=%28CLAST_CHANGE_DATE_TIME%20ge%20%27"+extFetchDate+"T00%3A00%3A00%27%29%20and%20%28CPROJECT_ID%20eq%20%27"+extProjectId+"%27%29";
 		
 		HttpGet httpGet = new HttpGet(bydUrl);
 		
 		httpGet.setHeader("content-type", "text/XML");			
 		CredentialsProvider provider = new BasicCredentialsProvider();
-		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(loginId, pass);
+		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("ZIETAUSER", "Welcome1234");
+		//UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(loginId, pass);
 		provider.setCredentials(AuthScope.ANY, credentials);
 		HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
 		
@@ -416,7 +473,8 @@ public class ActivityServiceImpl implements ActivityService {
 					responseData.setId(projectInfo.getProjectInfoId());
 				}
 				
-				resp = client.execute(httpGet);			
+				resp = client.execute(httpGet);	
+				log.error("Response ====>"+resp);	
 				String respString = EntityUtils.toString(resp.getEntity());		
 	
 	            // CONVERT RESPONSE STRING TO JSON ARRAY
@@ -436,32 +494,35 @@ public class ActivityServiceImpl implements ActivityService {
 	            	if(chkExist!=null) {
 	            		//taskActivityData.setActivityId(chkExist.getTaskActivityId());	
 	            	}
-	            	taskActivityData.setClientId(clientId);
-	            	taskActivityData.setExtActivityId("");
-	            	//taskActivityData.setExtId("");
-	            	taskActivityData.setExtProjectId("");
-	            	taskActivityData.setExtUserId("");
-	            	taskActivityData.setCreatedBy("Abc");
-	            	taskActivityData.setModifiedBy("Bcd");
-	            	taskActivityData.setStartDate(new Date());
-	            	taskActivityData.setEndDate(new Date());
-	            	taskActivityData.setPlannedHrs(0);
+					
 	            	
+					
+					//String dt1 = jsnArray.getJSONObject(i).getString("CTS_START_DATE");
+					//String dt2 = jsnArray.getJSONObject(i).getString("CTS_END_DATE"); 
+					///String sDate =  jsnArray.getJSONObject(i).getString("CTS_START_DATE").substring(jsnArray.getJSONObject(i).getString("CTS_START_DATE").indexOf("(") + 1, jsnArray.getJSONObject(i).getString("CTS_START_DATE").indexOf(")"));
+					///String eDate =  jsnArray.getJSONObject(i).getString("CTS_END_DATE").substring(jsnArray.getJSONObject(i).getString("CTS_END_DATE").indexOf("(") + 1, jsnArray.getJSONObject(i).getString("CTS_END_DATE").indexOf(")"));
+                
+					//long lngSdate = Long.parseLong(sDate);
+					// lngEdate =  Long.parseLong(eDate);            	
+					//Date startDate = new Date(lngSdate);
+					//Date endDate = new Date(lngEdate);
+					Date startDate = new Date();
+					Date endDate = new Date();
+					
+					taskActivityData.setClientId(clientId);
+	            	taskActivityData.setExtActivityId(jsnArray.getJSONObject(i).getString("CSERVICE_UUID"));            	
+	            	taskActivityData.setExtProjectId(extProjectId);
+	            	taskActivityData.setExtUserId(jsnArray.getJSONObject(i).getString("CASSI_EMP_UUID"));
+					taskActivityData.setExtTaskId(jsnArray.getJSONObject(i).getString("CTASK_UUID"));
+	            	taskActivityData.setCreatedBy("byd user");
+	            	taskActivityData.setModifiedBy("byd user");					
+	            	taskActivityData.setStartDate(startDate);
+	            	taskActivityData.setEndDate(endDate);
+	            	taskActivityData.setPlannedHrs(Float.parseFloat(jsnArray.getJSONObject(i).getString("KCPLAN_WORK_H_TS")));
+	            	
+					
 	            	responseData = addActivitiesByClientProjectTaskExternal(taskActivityData);
 	            	
-	            	/*private long taskActivityId;
-						private long activityId;
-						private long taskId;
-						private long projectId;
-						private long clientId;
-						private String createdBy;
-						private String modifiedBy;
-						private Date startDate;
-						private Date endDate;
-						private float plannedHrs;
-						private float actualHrs;
-						private Long userId;
-	            	*/
 	            	
 	            }
 		}catch(Exception e) {

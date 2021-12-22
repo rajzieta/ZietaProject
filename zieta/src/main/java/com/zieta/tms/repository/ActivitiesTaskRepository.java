@@ -17,5 +17,7 @@ public interface ActivitiesTaskRepository extends JpaRepository <TaskActivity, L
 	List<TaskActivity> findByClientIdAndUserIdAndIsDelete(Long clientId, Long userId, Short notDeleted);
 	
 	TaskActivity findByTaskActivityIdAndUserId(Long id, Long userId);
+	
+	TaskActivity findByUserIdAndClientIdAndProjectIdAndTaskIdAndActivityId( Long userId,Long clientId, Long projectId, Long taskId, Long activityId);
 }
 

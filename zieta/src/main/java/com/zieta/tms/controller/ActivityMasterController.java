@@ -161,10 +161,19 @@ public class ActivityMasterController {
 	@RequestMapping(value = "/fetchExternalActivitiesByClientProjectTask", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Fetch Sap Date based on the project id and clientId", notes = "Table reference: task_activity,project_info_id,client_id")
 	public ResponseData fetchExternalActivitiesByClientProjectTask(@RequestParam(required = true) String extProjectId, @RequestParam(required = true) Long clientId,
+			@RequestParam(required = true) String date
+			) {	
+				
+		return activityService.getActivitiesByClientProjectTask(extProjectId, clientId, date);
+	}
+	
+	/*@RequestMapping(value = "/fetchExternalActivitiesByClientProjectTask", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Fetch Sap Date based on the project id and clientId", notes = "Table reference: task_activity,project_info_id,client_id")
+	public ResponseData fetchExternalActivitiesByClientProjectTask(@RequestParam(required = true) String extProjectId, @RequestParam(required = true) Long clientId,
 			@RequestParam(required = true) Long userId
 			) {		
 		return activityService.getActivitiesByClientProjectTask(extProjectId, clientId, userId);
-	}
+	}*/
 	
 	
 	

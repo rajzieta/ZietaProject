@@ -38,6 +38,7 @@ import com.zieta.tms.dto.TSWorkFlowRequestDTO;
 import com.zieta.tms.dto.UserInfoDTO;
 import com.zieta.tms.model.ActivityMaster;
 import com.zieta.tms.model.ClientInfo;
+import com.zieta.tms.model.ConnectionMasterInfo;
 import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.TSInfo;
 import com.zieta.tms.model.TSTimeEntries;
@@ -49,6 +50,7 @@ import com.zieta.tms.model.WorkflowRequest;
 import com.zieta.tms.repository.ActivitiesTaskRepository;
 import com.zieta.tms.repository.ActivityMasterRepository;
 import com.zieta.tms.repository.ClientInfoRepository;
+import com.zieta.tms.repository.ConnectionMasterInfoRepository;
 import com.zieta.tms.repository.ProcessStepsRepository;
 import com.zieta.tms.repository.ProjectInfoRepository;
 import com.zieta.tms.repository.StateTypeMasterRepository;
@@ -81,6 +83,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
+	@Autowired
+	ConnectionMasterInfoRepository connectionMasterInfoRepository;
+	   
 	@Autowired
 	WorkflowRequestRepository workflowRequestRepository;
 	
@@ -705,7 +710,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 					
 					System.out.println("finalString" + finalString);			
 					try {
-						list = bydHttpRequest(finalString);
+						list = bydHttpRequest(finalString,tsInfo.getClientId());
 						//SET RESPONSE IN TRCKING TABLE	
 						//log.error("Timesheet Response ==>"+list);
 						
@@ -724,13 +729,30 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				
 			}
 			
-			private List<Pair<Integer, String>> bydHttpRequest(String finalString) throws ClientProtocolException, IOException {
-				String url = "https://my351070.sapbydesign.com/sap/bc/srt/scs/sap/manageemployeetimein";
+			private List<Pair<Integer, String>> bydHttpRequest(String finalString, Long clientId) throws ClientProtocolException, IOException {
+				
+				String connName = "TimesheetAPI";
+				String loginId =null;
+				String pass =null;
+				String connStr = null;
+				short notDeleted =0;
+				ArrayList<String> errorList = new ArrayList<String>();
+				List<ConnectionMasterInfo> listConnectionData = connectionMasterInfoRepository.findByClientIdAndConnectionNameAndNotDeleted(clientId,connName,notDeleted);
+				if(listConnectionData.size()>0) {
+					loginId = listConnectionData.get(0).getLoginId();
+					pass = listConnectionData.get(0).getPassword();
+					connStr = listConnectionData.get(0).getConnectionStr();
+				}
+				
+				
+				//String url = "https://my351070.sapbydesign.com/sap/bc/srt/scs/sap/manageemployeetimein";
+				String url = connStr;
 				HttpPut httpPut = new HttpPut(url);
 
 				httpPut.setHeader("content-type", "text/xml");
 				CredentialsProvider provider = new BasicCredentialsProvider();
-				UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("_ZPORTAL", "Welcome123");
+				//UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("_ZPORTAL", "Welcome123");
+				UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(loginId, pass);
 				provider.setCredentials(AuthScope.ANY, credentials);
 				HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
 				StringEntity entity = new StringEntity(finalString);
@@ -748,7 +770,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				return listOfPairs;
 			}
 		
-	/////////////////////////////////////////////////////////////////////////
+
 	
 
 }

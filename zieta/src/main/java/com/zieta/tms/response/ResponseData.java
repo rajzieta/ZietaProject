@@ -14,6 +14,7 @@ import lombok.Setter;
 public class ResponseData {
 	Long id;
 	Boolean isSaved = false;
+	String message;
 	
 
 }

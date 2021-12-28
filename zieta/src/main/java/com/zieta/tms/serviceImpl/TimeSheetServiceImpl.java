@@ -238,8 +238,9 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 				List<WorkflowRequest> workflowRequestList = new ArrayList<WorkflowRequest>();
 				WorkflowRequest workflowRequest = null;
 				for (TSInfo tsInfo : tsInfoList) {
-					log.error("240 Called to submit timesheet====>");
+					
 					workflowRequestList = workflowRequestRepository.findByTsIdOrderByStepId(tsInfo.getId());
+					log.error("240 Called to submit timesheet====>"+workflowRequestList);
 					Long statusId = statusMasterRepository
 							.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(tsInfo.getClientId(),
 									TMSConstants.TIMESHEET, TMSConstants.TIMESHEET_SUBMITTED, (short) 0)
@@ -248,6 +249,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 					tsInfo.setStatusId(statusId);
 					tSInfoRepository.save(tsInfo);
 					if (workflowRequestList.isEmpty()) {
+						log.error("252empty workflowreq data===>");
 						// get the approverid from the process_step based on the clientId, projectId and taskId
 						List<ProcessSteps> processStepsList = processStepsRepository
 								.findByClientIdAndProjectIdAndProjectTaskIdOrderByStepId(tsInfo.getClientId(),
@@ -320,6 +322,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 							}
 	
 						}
+						log.error("323 save data workflow request====>");
 						workflowRequestRepository.saveAll(workflowRequestList);
 					} else {
 						log.error("324 Called to submit timesheet====>");

@@ -582,7 +582,9 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 	    				if(extProjectId ==null || extProjectId.isEmpty()){
 							logMsg = logMsg+" Project ExtId Is Empty,";		
 						}else {
+							
 							projectInfo = projectInfoRepository.findByExtIdAndClientId(extProjectId,clientId);
+							
 							if(projectInfo!=null) {
 								tskInfo.setProjectId(projectInfo.getProjectInfoId());
 								
@@ -654,7 +656,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 	    				}
 	    				
 	    				tskInfo.setClientId(clientId);
-	    				tskInfo.setProjectId(projectInfo.getProjectInfoId());
+	    				//tskInfo.setProjectId(projectInfo.getProjectInfoId());
 	    				//tskInfo.set
 	    				
 	    				
@@ -670,9 +672,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 	    				responseData.setId(taskInfo.getTaskInfoId());
 	    				responseData.setIsSaved(true);*/
 	    				// addExtTaskInfo(info);
-	    				log.error("Ext task info data saved");
-	    			
-	                
+	    				
 	                
 	                extTaskMastreDTO.setClientId(clientId);
 	                extTaskMastreDTO.setExtProjectId(extProjectId);
@@ -689,7 +689,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 	                extTaskMastreDTO.setTaskStartDate(startDate);
 	                extTaskMastreDTO.setTaskendDate(endDate); 
 	                errorList.add(errorData.getMessage());
-	                
+	              
 	                if(errorList.size()==0) {
 	                	taskInfoList.add(extTaskMastreDTO);
 	                }                
@@ -701,6 +701,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 	            	}  
             }
             ErrorLog logData = new ErrorLog();
+           
             if(errorList.size()==0){            	
             	//READY TO CALL SAVE DATA
             	 responseData = saveAllExternalTaskInfo(taskInfoList);
@@ -708,18 +709,19 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
             	 responseData.setMessage("TaskInfo Successfully Saved/Updated");
             	 logData.setLogTime(new Date());
              	errorLogMasterRepository.save(logData);
-            }else {
+            }else{
             	
             	
             	logData.setLogSource("TaskActivity");
             	logData.setLogMessage(errorList.toString());
             	logData.setLogTime(new Date());
             	errorLogMasterRepository.save(logData);
+            	responseData.setMessage(errorList.toString());
 	            
             }
            
 			
-			log.error("Updated/Saved taskinfoData");
+			//log.error("Updated/Saved taskinfoData");
             //JSONArray jsnObjArr = jsnObj.getJSONArray("results");
 			
 		} catch (ClientProtocolException e) {

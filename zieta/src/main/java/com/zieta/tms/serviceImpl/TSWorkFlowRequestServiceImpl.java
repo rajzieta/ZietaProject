@@ -676,9 +676,14 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				ProjectInfo projectInfo = projectMasterService.findByProjectId(tsInfo.getProjectId());		
 				EmployeeTime.ProjectTaskConfirmation projectTaskConfirmation = new EmployeeTime.ProjectTaskConfirmation();
 				
-				List<WorkFlowRequestComments> workFlowRequestComments = workFlowRequestService.findByTsIdDesc(tsInfo.getId());		
+				List<WorkFlowRequestComments> workFlowRequestComments = workFlowRequestService.findByTsIdDesc(tsInfo.getId());
 				
-				request.setTimeSheetDescription(workFlowRequestComments.get(0).getComments());
+				if(workFlowRequestComments.size()>0) {
+					request.setTimeSheetDescription(workFlowRequestComments.get(0).getComments());
+				}else {
+					request.setTimeSheetDescription("");
+				}
+				
 				ActivityMaster activityInfo = activityMasterRepository.findByActivityId(tsInfo.getActivityId());
 				//projectTaskConfirmation.setServiceProductInternalID(tsInfo.getActivityId().toString());
 				projectTaskConfirmation.setServiceProductInternalID(activityInfo.getExtId());
@@ -737,7 +742,9 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				String connStr = null;
 				short notDeleted =0;
 				ArrayList<String> errorList = new ArrayList<String>();
+				
 				List<ConnectionMasterInfo> listConnectionData = connectionMasterInfoRepository.findByClientIdAndConnectionNameAndNotDeleted(clientId,connName,notDeleted);
+				
 				if(listConnectionData.size()>0) {
 					loginId = listConnectionData.get(0).getLoginId();
 					pass = listConnectionData.get(0).getPassword();
@@ -747,6 +754,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				
 				//String url = "https://my351070.sapbydesign.com/sap/bc/srt/scs/sap/manageemployeetimein";
 				String url = connStr;
+				
 				HttpPut httpPut = new HttpPut(url);
 
 				httpPut.setHeader("content-type", "text/xml");

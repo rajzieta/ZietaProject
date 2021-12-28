@@ -33,6 +33,7 @@ import com.zieta.tms.dto.ExtTaskMasterDTO;
 import com.zieta.tms.dto.TaskMasterDTO;
 import com.zieta.tms.exception.ExternalIdException;
 import com.zieta.tms.model.ConnectionMasterInfo;
+import com.zieta.tms.model.ErrorLog;
 import com.zieta.tms.model.ProcessSteps;
 import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.StatusMaster;
@@ -44,6 +45,7 @@ import com.zieta.tms.model.UserInfo;
 import com.zieta.tms.repository.ClientInfoRepository;
 import com.zieta.tms.repository.ConnectionMasterInfoRepository;
 import com.zieta.tms.repository.CustInfoRepository;
+import com.zieta.tms.repository.ErrorLogMasterRepository;
 import com.zieta.tms.repository.ProcessConfigRepository;
 import com.zieta.tms.repository.ProcessMasterRepository;
 import com.zieta.tms.repository.ProcessStepsRepository;
@@ -105,6 +107,9 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 	@Autowired
 	ConnectionMasterInfoRepository connectionMasterInfoRepository;
 	
+   @Autowired
+   ErrorLogMasterRepository errorLogMasterRepository;
+
 	@Autowired
 	ModelMapper modelMapper;
 
@@ -339,6 +344,16 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 		}
 		return responseData;
 	}
+	
+	public ResponseData saveAllExternalTaskInfo(List<ExtTaskMasterDTO> extTaskMasterDTOList) {
+		
+		ResponseData response = null;
+		for(ExtTaskMasterDTO extTaskMasterDTOData:extTaskMasterDTOList) {
+			response =saveExternalTaskInfo(extTaskMasterDTOData);
+		}
+		return response;
+	}
+	
 
 
 	
@@ -487,11 +502,14 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 		
 		ResponseData responseData = new ResponseData();		
 		String bydUrl ="";
+		String logMsg ="";
 		short notDeleted =0;
 		String connName = "TaskAPI";
 		String loginId =null;
 		String pass =null;
 		String connStr = null;
+		ArrayList<String> errorList = new ArrayList<String>();
+		ArrayList<ExtTaskMasterDTO> taskInfoList = new ArrayList<ExtTaskMasterDTO>();
 		List<ConnectionMasterInfo> listConnectionData = connectionMasterInfoRepository.findByClientIdAndConnectionNameAndNotDeleted(clientId,connName,notDeleted);
 		if(listConnectionData.size()>0) {
 			loginId = listConnectionData.get(0).getLoginId();
@@ -499,9 +517,6 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 			connStr = listConnectionData.get(0).getConnectionStr();
 		}
 		log.error("Preparing for Byd url");
-		//bydUrl = "https://my351070.sapbydesign.com/sap/byd/odata/ana_businessanalytics_analytics.svc/RPZBE98B6E3996F2677BCC388QueryResults?$select=TCHANGE_USER,CE_PLAN_END_DAT,CE_PLAN_ST_DAT,Cs2ANsF48275C9927F86E,CRESP_EMP_UUID,CPROJECT_ID,TTASK_UUID,CTASK_ID,CSTATUS_LFC,TCREATION_USER&$format=json$filter=(CLAST_CHANGE_DATE_TIME ge '2021-10-01T00:00:00') and (CPROJECT_ID eq 'CPSO52')";
-		//bydUrl = connStr+"&$filter=%28CLAST_CHANGE_DATE_TIME%20ge%20%27"+extFetchDate+"T00%3A00%3A00%27%29%20and%20%28CPROJECT_ID%20eq%20%27"+extProjectId+"%27%29";
-		
 		//date format will be 09.12.2021(i.e.DD.MM.YYYY)
 		bydUrl = connStr+"&$filter=%28CLAST_CHANGE_DATE_TIME%20ge%20%27"+extFetchDate+"%2000%3A00%3A00%20UTC%27%29%20and%20%28CPROJECT_ID%20eq%20%27"+extProjectId+"%27%29";
 		
@@ -529,99 +544,182 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
             JSONObject jsnObj = (JSONObject) jsonRespData.get("d");            
             JSONArray jsnArray = jsnObj.getJSONArray("results"); 
             log.error("respString::"+respString);
-            
-            for (int i = 0; i <jsnArray.length(); i++) {
+            for(int itr =0; itr<=1;itr++) {
+	            for (int i = 0; i <jsnArray.length(); i++) {
+	            	ResponseData errorData = new ResponseData();
+	            	ExtTaskMasterDTO extTaskMastreDTO = new ExtTaskMasterDTO();
+	            	//TAKE STRING DATE  AND CONVERT IT TO DATE FORMATE
+	            	String dt1 = jsnArray.getJSONObject(i).getString("CE_PLAN_ST_DAT");
+	                String dt2 = jsnArray.getJSONObject(i).getString("CE_PLAN_END_DAT"); 
+	                String sDate =  dt1.substring(dt1.indexOf("(") + 1, dt1.indexOf(")"));
+	                String eDate =  dt2.substring(dt2.indexOf("(") + 1, dt2.indexOf(")"));
+	                
+	            	long lngSdate = Long.parseLong(sDate);
+	            	long lngEdate =  Long.parseLong(eDate);            	
+	            	Date startDate = new Date(lngSdate);
+	            	Date endDate = new Date(lngEdate);      	
+	            	
+	            	//GETTING EXTERNAL ID'S FROM BYD SYSTEM
+	            	String projectExtId = jsnArray.getJSONObject(i).getString("CPROJECT_ID");
+	                String createdBy = jsnArray.getJSONObject(i).getString("TCREATION_USER");
+	                String modifiedBy = jsnArray.getJSONObject(i).getString("TCHANGE_USER");
+	                String taskDesc = jsnArray.getJSONObject(i).getString("TTASK_UUID");
+	                String extTaskInfoId = jsnArray.getJSONObject(i).getString("CTASK_ID");
+	                String extTaskManager = jsnArray.getJSONObject(i).getString("CRESP_EMP_UUID");
+	                String extTaskParent = jsnArray.getJSONObject(i).getString("Cs2ANsF48275C9927F86E");
+	                String extTaskStatus = jsnArray.getJSONObject(i).getString("CSTATUS_LFC");
+	                
+	                String extTaskType = "";  
+	                
+	                TaskInfo taskParent = null;
+	                StatusMaster statusMaster =null;
+	                	log.error("Preparing to add taskinfo data...");
+	    				TaskInfo chkExist = taskInfoRepository.findByExtIdAndClientId(extTaskInfoId, clientId);
+	    				UserInfo taskManager=null;
+	    				TaskInfo tskInfo = new TaskInfo();
+	    				
+	    				tskInfo.setClientId(clientId);
+	    				if(extProjectId ==null || extProjectId.isEmpty()){
+							logMsg = logMsg+" Project ExtId Is Empty,";		
+						}else {
+							projectInfo = projectInfoRepository.findByExtIdAndClientId(extProjectId,clientId);
+							if(projectInfo!=null) {
+								tskInfo.setProjectId(projectInfo.getProjectInfoId());
+								
+							}else {
+								logMsg = logMsg+" ProjectInfo Does not Exist";					
+								
+								//throw new ExternalIdException("ProjectInfo Does not Exist");
+							}
+						}
+	    				
+	    				if(extTaskManager ==null || extTaskManager.isEmpty()){
+							logMsg = logMsg+" TaskManager ExtId Is Empty,";		
+						}else {
+							 taskManager = userInfoRepository.findByExtIdAndClientId(extTaskManager, clientId);
+		    				 
+							if(taskManager!=null) {
+								tskInfo.setTaskManager(taskManager.getId());
+								
+							}else {
+								logMsg = logMsg+" TaskManager Does not Exist";					
+								
+								
+							}
+						}
+	    				
+	    				
+	    				if(extTaskParent ==null || extTaskParent.isEmpty()){
+							logMsg = logMsg+" TaskParent ExtId Is Empty,";		
+						}else {
+							 taskParent = taskInfoRepository.findByExtIdAndClientId(extTaskParent, clientId);
+			    					    				
+								if(taskParent!=null) {					
+			    					tskInfo.setTaskParent(taskParent.getTaskInfoId());
+			    				}else {
+			    					//IN CASE TASKPARENT NOT AVAILABLE SET IT AS 0
+			    					tskInfo.setTaskParent(0L);
+			    				}
+								
+							
+						}
+	    				 
+	    				
+	    				//extTaskStatus
+	    				
+	    				if(extTaskStatus ==null || extTaskStatus.isEmpty()){
+							logMsg = logMsg+" Status Master ExtId Is Empty,";		
+						}else {
+							statusMaster = statusRepository.findByExtIdAndClientId(extTaskStatus,clientId);
+		    				
+		    				
+							if(statusMaster!=null) {
+								tskInfo.setTaskStatus(statusMaster.getId());
+								
+							}else {
+								logMsg = logMsg+" Task Status Does not Exist";					
+								
+								
+							}
+						}
+	    				
+	    				errorData.setMessage(logMsg);
+	    				/*if(extTaskMaster.getExtTaskType()==null || extTaskMaster.getExtTaskType()=="") {
+	    				 taskType = taskTypeRepo.findByExtIdAndClientId(extTaskMaster.getExtTaskType(), extTaskMaster.getClientId());
+	    				}*/
+	    				// ExtTaskInfo info = new ExtTaskInfo();
+	    				log.error("Checking taskInfo existance");
+	    				if (chkExist != null) {
+	    					tskInfo.setTaskInfoId(chkExist.getTaskInfoId());
+	    				}
+	    				
+	    				tskInfo.setClientId(clientId);
+	    				tskInfo.setProjectId(projectInfo.getProjectInfoId());
+	    				//tskInfo.set
+	    				
+	    				
+	    				
+	    				/*tskInfo.setExtId(extTaskMaster.getExtTaskInfoId());
+	    				tskInfo.setTaskDescription(extTaskMaster.getTaskDescription());
+	    				tskInfo.setTaskStartDate(extTaskMaster.getTaskStartDate());
+	    				tskInfo.setTaskendDate(extTaskMaster.getTaskendDate());
+	    				tskInfo.setCreatedBy(extTaskMaster.getCreatedBy());
+	    				tskInfo.setModifiedBy(extTaskMaster.getModifiedBy());
+	    				
+	    				//taskInfo = taskInfoRepository.save(tskInfo);
+	    				responseData.setId(taskInfo.getTaskInfoId());
+	    				responseData.setIsSaved(true);*/
+	    				// addExtTaskInfo(info);
+	    				log.error("Ext task info data saved");
+	    			
+	                
+	                
+	                extTaskMastreDTO.setClientId(clientId);
+	                extTaskMastreDTO.setExtProjectId(extProjectId);
+	                extTaskMastreDTO.setCreatedBy(createdBy);
+	                extTaskMastreDTO.setModifiedBy(modifiedBy);
+	                extTaskMastreDTO.setTaskDescription(taskDesc);
+	                extTaskMastreDTO.setExtTaskInfoId(extTaskInfoId);
+	                extTaskMastreDTO.setExtTaskManager(extTaskManager);
+	                extTaskMastreDTO.setExtTaskParent(extTaskParent);
+	                extTaskMastreDTO.setExtTaskStatus(extTaskStatus);
+	               // extTaskMastreDTO.setCreatedDate(taskStartDate);
+	                extTaskMastreDTO.setExtTaskType(extTaskType);
+	                //extTaskMastreDTO.setModifiedDate(taskEndDate);
+	                extTaskMastreDTO.setTaskStartDate(startDate);
+	                extTaskMastreDTO.setTaskendDate(endDate); 
+	                errorList.add(errorData.getMessage());
+	                
+	                if(errorList.size()==0) {
+	                	taskInfoList.add(extTaskMastreDTO);
+	                }                
+	                
+	                              
+	                //TO UPDATE OF CREATE TASK INFO DATA
+	               //saveExternalTaskInfo(extTaskMastreDTO);  				
+	            	
+	            	}  
+            }
+            ErrorLog logData = new ErrorLog();
+            if(errorList.size()==0){            	
+            	//READY TO CALL SAVE DATA
+            	 responseData = saveAllExternalTaskInfo(taskInfoList);
+            	 responseData.setIsSaved(true);
+            	 responseData.setMessage("TaskInfo Successfully Saved/Updated");
+            	 logData.setLogTime(new Date());
+             	errorLogMasterRepository.save(logData);
+            }else {
             	
-            	ExtTaskMasterDTO extTaskMastreDTO = new ExtTaskMasterDTO();
-            	//TAKE STRING DATE  AND CONVERT IT TO DATE FORMATE
-            	String dt1 = jsnArray.getJSONObject(i).getString("CE_PLAN_ST_DAT");
-                String dt2 = jsnArray.getJSONObject(i).getString("CE_PLAN_END_DAT"); 
-                String sDate =  dt1.substring(dt1.indexOf("(") + 1, dt1.indexOf(")"));
-                String eDate =  dt2.substring(dt2.indexOf("(") + 1, dt2.indexOf(")"));
-                
-            	long lngSdate = Long.parseLong(sDate);
-            	long lngEdate =  Long.parseLong(eDate);            	
-            	Date startDate = new Date(lngSdate);
-            	Date endDate = new Date(lngEdate);      	
             	
-            	String projectExtId = jsnArray.getJSONObject(i).getString("CPROJECT_ID");
-                String createdBy = jsnArray.getJSONObject(i).getString("TCREATION_USER");
-                String modifiedBy = jsnArray.getJSONObject(i).getString("TCHANGE_USER");
-                String taskDesc = jsnArray.getJSONObject(i).getString("TTASK_UUID");
-                String extTaskInfoId = jsnArray.getJSONObject(i).getString("CTASK_ID");
-                String extTaskManager = jsnArray.getJSONObject(i).getString("CRESP_EMP_UUID");
-                String extTaskParent = jsnArray.getJSONObject(i).getString("Cs2ANsF48275C9927F86E");
-                String extTaskStatus = jsnArray.getJSONObject(i).getString("CSTATUS_LFC");
-                
-                String extTaskType = "";                
-                extTaskMastreDTO.setClientId(clientId);
-                extTaskMastreDTO.setExtProjectId(extProjectId);
-                extTaskMastreDTO.setCreatedBy(createdBy);
-                extTaskMastreDTO.setModifiedBy(modifiedBy);
-                extTaskMastreDTO.setTaskDescription(taskDesc);
-                extTaskMastreDTO.setExtTaskInfoId(extTaskInfoId);
-                extTaskMastreDTO.setExtTaskManager(extTaskManager);
-                extTaskMastreDTO.setExtTaskParent(extTaskParent);
-                extTaskMastreDTO.setExtTaskStatus(extTaskStatus);
-               // extTaskMastreDTO.setCreatedDate(taskStartDate);
-                extTaskMastreDTO.setExtTaskType(extTaskType);
-                //extTaskMastreDTO.setModifiedDate(taskEndDate);
-                extTaskMastreDTO.setTaskStartDate(startDate);
-                extTaskMastreDTO.setTaskendDate(endDate);        
-                              
-                //TO UPDATE OF CREATE TASK INFO DATA
-               saveExternalTaskInfo(extTaskMastreDTO);  				
-            	
-            }   
-            
-            
-            //LOOP TO UPDATE TASKINFO DATA WITH PERENT ID
-        for (int i = 0; i <jsnArray.length(); i++) {
-            	
-            	ExtTaskMasterDTO extTaskMastreDTO = new ExtTaskMasterDTO();
-            	//TAKE STRING DATE  AND CONVERT IT TO DATE FORMATE
-            	String dt1 = jsnArray.getJSONObject(i).getString("CE_PLAN_ST_DAT");
-                String dt2 = jsnArray.getJSONObject(i).getString("CE_PLAN_END_DAT"); 
-               String sDate =  dt1.substring(dt1.indexOf("(") + 1, dt1.indexOf(")"));
-               String eDate =  dt2.substring(dt2.indexOf("(") + 1, dt2.indexOf(")"));
-               
-            	/*eDt = dt2.substring(dt2.indexOf(")"));*/
-            	long lngSdate = Long.parseLong(sDate);
-            	long lngEdate =  Long.parseLong(eDate);            	
-            	Date startDate = new Date(lngSdate);
-            	Date endDate = new Date(lngEdate);            	
-            	log.error("Preparing data to call to save in db");
-            	String projectExtId = jsnArray.getJSONObject(i).getString("CPROJECT_ID");
-                String createdBy = jsnArray.getJSONObject(i).getString("TCREATION_USER");
-                String modifiedBy = jsnArray.getJSONObject(i).getString("TCHANGE_USER");
-                String taskDesc = jsnArray.getJSONObject(i).getString("TTASK_UUID");
-                String extTaskInfoId = jsnArray.getJSONObject(i).getString("CTASK_ID");
-                String extTaskManager = jsnArray.getJSONObject(i).getString("CRESP_EMP_UUID");
-                String extTaskParent = jsnArray.getJSONObject(i).getString("Cs2ANsF48275C9927F86E");
-                String extTaskStatus = jsnArray.getJSONObject(i).getString("CSTATUS_LFC");
-                
-                String extTaskType = "";                
-                extTaskMastreDTO.setClientId(clientId);
-                extTaskMastreDTO.setExtProjectId(extProjectId);
-                extTaskMastreDTO.setCreatedBy(createdBy);
-                extTaskMastreDTO.setModifiedBy(modifiedBy);
-                extTaskMastreDTO.setTaskDescription(taskDesc);
-                extTaskMastreDTO.setExtTaskInfoId(extTaskInfoId);
-                extTaskMastreDTO.setExtTaskManager(extTaskManager);
-                extTaskMastreDTO.setExtTaskParent(extTaskParent);
-                extTaskMastreDTO.setExtTaskStatus(extTaskStatus);
-               // extTaskMastreDTO.setCreatedDate(taskStartDate);
-                extTaskMastreDTO.setExtTaskType(extTaskType);
-                //extTaskMastreDTO.setModifiedDate(taskEndDate);
-                extTaskMastreDTO.setTaskStartDate(startDate);
-                extTaskMastreDTO.setTaskendDate(endDate);                
-                 log.error("Called to save data in DB");              
-                //TO UPDATE OF CREATE TASK INFO DATA
-                saveExternalTaskInfo(extTaskMastreDTO);
-                log.error("Updated/Saved taskinfoData");
-            }  
-
-			responseData.setIsSaved(true);			
+            	logData.setLogSource("TaskActivity");
+            	logData.setLogMessage(errorList.toString());
+            	logData.setLogTime(new Date());
+            	errorLogMasterRepository.save(logData);
+	            
+            }
+           
+			
+			log.error("Updated/Saved taskinfoData");
             //JSONArray jsnObjArr = jsnObj.getJSONArray("results");
 			
 		} catch (ClientProtocolException e) {

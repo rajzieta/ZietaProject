@@ -232,12 +232,13 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	@Transactional
 	public boolean submitTimeSheet(@Valid List<TSInfo> tsInfoList) {
 		// call to save workflow_request
+		
 		try {
-			
+			log.error("236 Called to submit timesheet====>");
 				List<WorkflowRequest> workflowRequestList = new ArrayList<WorkflowRequest>();
 				WorkflowRequest workflowRequest = null;
 				for (TSInfo tsInfo : tsInfoList) {
-	
+					log.error("240 Called to submit timesheet====>");
 					workflowRequestList = workflowRequestRepository.findByTsIdOrderByStepId(tsInfo.getId());
 					Long statusId = statusMasterRepository
 							.findByClientIdAndStatusTypeAndStatusCodeAndIsDelete(tsInfo.getClientId(),
@@ -301,9 +302,9 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 								
 								
 								if(tsInfo.getUserId().toString().equals(approverIds[j])) {
-									//Long rmId = userInfoRepository.findById(tsInfo.getUserId()).get().getReportingMgr();//DUE TO TABLE SPLIT
+									Long rmId = userInfoRepository.findById(tsInfo.getUserId()).get().getReportingMgr();//DUE TO TABLE SPLIT
 									
-									Long rmId = userConfig.getReportingMgr();
+									
 									if(rmId != null){
 										approverId=  rmId.toString();
 									}
@@ -321,6 +322,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 						}
 						workflowRequestRepository.saveAll(workflowRequestList);
 					} else {
+						log.error("324 Called to submit timesheet====>");
 						// old workflow objects came for revision
 						for(WorkflowRequest oldWorkflowRequest: workflowRequestList ) {
 	
@@ -345,7 +347,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 					}
 	
 				}
-
+				log.error("349 Called to submit timesheet====>");
 		} catch (Exception e) {
 			log.error("Exception occured while populating workflow request", e);
 			return false;

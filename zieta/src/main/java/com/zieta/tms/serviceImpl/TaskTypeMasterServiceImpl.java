@@ -519,12 +519,15 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 		log.error("Preparing for Byd url");
 		//date format will be 09.12.2021(i.e.DD.MM.YYYY)
 		bydUrl = connStr+"&$filter=%28CLAST_CHANGE_DATE_TIME%20ge%20%27"+extFetchDate+"%2000%3A00%3A00%20UTC%27%29%20and%20%28CPROJECT_ID%20eq%20%27"+extProjectId+"%27%29";
+		log.error("str:"+bydUrl);
+		log.error(loginId +"str:"+pass);
 		
 		HttpGet httpGet = new HttpGet(bydUrl);
 		
 		httpGet.setHeader("content-type", "text/XML");			
 		CredentialsProvider provider = new BasicCredentialsProvider();
 		UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(loginId, pass);
+		log.error("credentials::"+credentials);
 		provider.setCredentials(AuthScope.ANY, credentials);
 		HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
 		
@@ -690,9 +693,9 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 	                extTaskMastreDTO.setTaskendDate(endDate); 
 	                errorList.add(errorData.getMessage());
 	              
-	                if(errorList.size()==0) {
+	               // if(errorList.size()==0) {
 	                	taskInfoList.add(extTaskMastreDTO);
-	                }                
+	               // }                
 	                
 	                              
 	                //TO UPDATE OF CREATE TASK INFO DATA
@@ -702,14 +705,14 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
             }
             ErrorLog logData = new ErrorLog();
            
-            if(errorList.size()==0){            	
+           // if(errorList.size()==0){            	
             	//READY TO CALL SAVE DATA
             	 responseData = saveAllExternalTaskInfo(taskInfoList);
             	 responseData.setIsSaved(true);
             	 responseData.setMessage("TaskInfo Successfully Saved/Updated");
             	 logData.setLogTime(new Date());
              	errorLogMasterRepository.save(logData);
-            }else{
+           /* }else{
             	
             	
             	logData.setLogSource("TaskActivity");
@@ -718,7 +721,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
             	errorLogMasterRepository.save(logData);
             	responseData.setMessage(errorList.toString());
 	            
-            }
+            }*/
            
 			
 			//log.error("Updated/Saved taskinfoData");

@@ -463,12 +463,13 @@ public class ActivityServiceImpl implements ActivityService {
 			pass = listConnectionData.get(0).getPassword();
 			connStr = listConnectionData.get(0).getConnectionStr();
 		}
-		
+		log.error(loginId+"::"+pass);
+		log.error("connStr"+connStr);
 		String extFetchDate ="";
 		
 		//bydUrl = "https://my351070.sapbydesign.com/sap/byd/odata/ana_businessanalytics_analytics.svc/RPZ75BAE8B00CF5C49B68CC07QueryResults?$inlinecount=allpages&$select=CTASK_UUID,CSERVICE_UUID,CASSI_EMP_UUID,CTS_START_DATE,CTS_END_DATE,KCPLAN_WORK_H_TS&$filter=(Cs2ANsA0CE1245BC75D5A%20ge%20%2720211217034706.0000000%27)%20and%20(CPROJECT_UUID%20eq%20%27CPSO75%27)&$format=json";
 		bydUrl = connStr+"$filter=(Cs2ANsA0CE1245BC75D5A%20ge%20%27"+date+".0000000%27)%20and%20(CPROJECT_UUID%20eq%20%27"+extProjectId+"%27)&$format=json";
-		
+		log.error("cstr::"+bydUrl);
 		HttpGet httpGet = new HttpGet(bydUrl);
 		
 		httpGet.setHeader("content-type", "text/XML");			
@@ -602,15 +603,15 @@ public class ActivityServiceImpl implements ActivityService {
 		            		            	
 		            }
 	            //CALL FOR SAVE DATA
-	            if(errorList.size()==0) {
+	           // if(errorList.size()==0) {
 	            	response =addBulkActivitiesByClientProjectTaskExternal(taskActivityDataList);
-	            }else {
+	            /*}else {
 	            	ErrorLog logData = new ErrorLog();
 	            	logData.setLogSource("TaskActivity");
 	            	logData.setLogMessage(errorList.toString());
 	            	logData.setLogTime(new Date());
 	            	errorLogMasterRepository.save(logData);
-	            }
+	            }*/
 	         }
 		}catch(Exception e) {
 			e.printStackTrace();

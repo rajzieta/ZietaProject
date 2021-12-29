@@ -689,6 +689,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				projectTaskConfirmation.setServiceProductInternalID(activityInfo.getExtId());
 				
 				//projectTaskConfirmation.setServiceProductInternalID("20000005");//need to talk about this
+				log.error("projectInfo.getExtId()===>"+projectInfo.getExtId());
 				projectTaskConfirmation.setProjectElementID(projectInfo.getExtId());
 				projectTaskConfirmation.setCompletedIndicator("false");		
 				request.setProjectTaskConfirmation(projectTaskConfirmation);
@@ -709,11 +710,11 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 					data = data.replace("</TimeSheetDescription>", "</a3x:TimeSheetDescription>");
 
 					String finalString = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:glob=\"http://sap.com/xi/SAPGlobal20/Global\" xmlns:a3x=\"http://sap.com/xi/AP/CustomerExtension/BYD/A3XM9\">\n"
-							+ "<soapenv:Header/>\n" + "<soapenv:Body>\n" + "<glob:EmployeeTimeAsBundleMaintainRequest_sync>\n"
+							+ "<soap:Header/>\n" + "<soap:Body>\n" + "<glob:EmployeeTimeAsBundleMaintainRequest_sync>\n"
 							+  data
-							+ "</glob:EmployeeTimeAsBundleMaintainRequest_sync>\n" + "</soapenv:Body>\n" + "</soapenv:Envelope>";
+							+ "</glob:EmployeeTimeAsBundleMaintainRequest_sync>\n" + "</soap:Body>\n" + "</soap:Envelope>";
 					
-					System.out.println("finalString" + finalString);			
+					System.out.println("finalString:" +finalString+":");			
 					try {
 						list = bydHttpRequest(finalString,tsInfo.getClientId());
 						//SET RESPONSE IN TRCKING TABLE	
@@ -756,10 +757,11 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				String url = connStr;
 				
 				HttpPut httpPut = new HttpPut(url);
-
+				log.error("url "+url);
 				httpPut.setHeader("content-type", "text/xml");
 				CredentialsProvider provider = new BasicCredentialsProvider();
 				//UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("_ZPORTAL", "Welcome123");
+			    log.error(loginId+" "+pass);
 				UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(loginId, pass);
 				provider.setCredentials(AuthScope.ANY, credentials);
 				HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
@@ -770,7 +772,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				Integer httpStatusCd = resp.getStatusLine().getStatusCode();
 				String respString = EntityUtils.toString(resp.getEntity());
 				
-				//log.error("Response Data  ::"+respString);
+				log.error("Response Data  ::"+respString);
 				//log.info("Response Data from portal {} ", respString);
 				List<Pair<Integer, String>> listOfPairs = new ArrayList<>();
 				listOfPairs.add(new Pair<>(httpStatusCd, respString));

@@ -273,14 +273,14 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 	public ResponseData saveExternalTaskInfo(ExtTaskMasterDTO extTaskMaster) {
 		ResponseData responseData = new ResponseData();
 		try {
+			log.error("extTaskMaster ===>"+extTaskMaster);
 			TaskInfo taskInfo = null;
 			//|| extTaskMaster.getExtTaskType() == null || extTaskMaster.getExtTaskType().isEmpty()
 			
 			log.error("extTaskMaster.getExtProjectId() ::"+extTaskMaster.getExtProjectId()+" extTaskMaster.getExtTaskParent()::"+extTaskMaster.getExtTaskParent());
 			log.error("extTaskMaster.getExtTaskStatus() ::"+extTaskMaster.getExtTaskStatus());
-			
+			//|| extTaskMaster.getExtTaskParent() == null || extTaskMaster.getExtTaskParent().isEmpty()//29122021
 			if (extTaskMaster.getExtProjectId() == null || extTaskMaster.getExtProjectId().isEmpty()					
-					|| extTaskMaster.getExtTaskParent() == null || extTaskMaster.getExtTaskParent().isEmpty()
 					|| extTaskMaster.getExtTaskStatus() == null || extTaskMaster.getExtTaskStatus().isEmpty()
 					) {
 
@@ -302,7 +302,8 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 				 taskType = taskTypeRepo.findByExtIdAndClientId(extTaskMaster.getExtTaskType(), extTaskMaster.getClientId());
 				}
 				TaskInfo taskParent = null;
-				 taskParent = taskInfoRepository.findByExtIdAndClientId(extTaskMaster.getExtTaskParent(), extTaskMaster.getClientId());
+				if(extTaskMaster.getExtTaskParent()!=null || !extTaskMaster.getExtTaskParent().isEmpty())
+				  taskParent = taskInfoRepository.findByExtIdAndClientId(extTaskMaster.getExtTaskParent(), extTaskMaster.getClientId());
 				//System.out.println("298 taskParent ===>"+taskParent);
 				 StatusMaster statusMaster = statusRepository.findByExtIdAndClientId(extTaskMaster.getExtTaskStatus(), extTaskMaster.getClientId());
 				ProjectInfo projectInfo =  projectInfoRepository.findByExtIdAndClientId(extTaskMaster.getExtProjectId(), extTaskMaster.getClientId());

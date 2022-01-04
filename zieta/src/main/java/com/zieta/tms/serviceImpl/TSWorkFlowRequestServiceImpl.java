@@ -23,6 +23,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
+//import javax.net.ssl.HttpsURLConnection;//
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -653,7 +654,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				UserInfoDTO userInfo = userInfoService.findByUserId(tsInfo.getUserId());
 				EmployeeTime request = new EmployeeTime();
 				request.setObjectNodeSenderTechnicalID("1");
-				request.setEmployeeID(userInfo.getExtId());			
+				request.setEmployeeID(userInfo.getExtId());					
 				request.setItemTypeCode("IN0010");
 				EmployeeTime.DatePeriod datePeroid = new EmployeeTime.DatePeriod();
 				
@@ -716,15 +717,14 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 					
 					System.out.println("finalString:" +finalString+":");			
 					try {
-						list = bydHttpRequest(finalString,tsInfo.getClientId());
-						//SET RESPONSE IN TRCKING TABLE	
-						//log.error("Timesheet Response ==>"+list);
-						
-					} catch (IOException e) {
-						//SET RESPONSE IN TRCKING TABLE
-						
-						e.printStackTrace();
-					}
+							list = bydHttpRequest(finalString,tsInfo.getClientId());
+							//SET RESPONSE IN TRCKING TABLE
+							//log.error("Timesheet Response ==>"+list);
+							
+						} catch (IOException e) {
+							//SET RESPONSE IN TRCKING TABLE						
+							e.printStackTrace();
+						}
 						
 					
 				} catch (JAXBException e) {
@@ -757,21 +757,20 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				String url = connStr;
 				
 				HttpPut httpPut = new HttpPut(url);
-				log.error("url "+url);
-				httpPut.setHeader("content-type", "text/xml");
+				//.setHeader("content-type", "text/xml");
+				httpPut.setHeader("content-type", "application/soap+xml");
+				//application/soap+xml
 				CredentialsProvider provider = new BasicCredentialsProvider();
-				//UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("_ZPORTAL", "Welcome123");
-			    log.error(loginId+" "+pass);
+				//UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("_ZPORTAL", "Welcome1234");			    
 				UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(loginId, pass);
 				provider.setCredentials(AuthScope.ANY, credentials);
+				//HttpsClient 
 				HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
 				StringEntity entity = new StringEntity(finalString);
 				httpPut.setEntity(entity);
-
 				HttpResponse resp = client.execute(httpPut);
 				Integer httpStatusCd = resp.getStatusLine().getStatusCode();
-				String respString = EntityUtils.toString(resp.getEntity());
-				
+				String respString = EntityUtils.toString(resp.getEntity());				
 				log.error("Response Data  ::"+respString);
 				//log.info("Response Data from portal {} ", respString);
 				List<Pair<Integer, String>> listOfPairs = new ArrayList<>();

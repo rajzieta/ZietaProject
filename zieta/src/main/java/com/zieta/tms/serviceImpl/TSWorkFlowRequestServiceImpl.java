@@ -673,7 +673,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				String cusDuration = "PT"+parts[0]+"H"+parts[1]+"M";
 				request.setDuration(cusDuration);
 				//request.setDifferentBillableTimeRecordedIndicator1(false);	
-				
+				log.error("project data===>  "+tsInfo.getProjectId());
 				ProjectInfo projectInfo = projectMasterService.findByProjectId(tsInfo.getProjectId());		
 				EmployeeTime.ProjectTaskConfirmation projectTaskConfirmation = new EmployeeTime.ProjectTaskConfirmation();
 				
@@ -715,7 +715,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 							+  data
 							+ "</glob:EmployeeTimeAsBundleMaintainRequest_sync>\n" + "</soap:Body>\n" + "</soap:Envelope>";
 					
-					System.out.println("finalString: " +finalString+":");			
+					log.error("finalString: " +finalString+":");			
 					try {
 							list = bydHttpRequest(finalString,tsInfo.getClientId());
 							//SET RESPONSE IN TRCKING TABLE

@@ -715,7 +715,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 							+  data
 							+ "</glob:EmployeeTimeAsBundleMaintainRequest_sync>\n" + "</soap:Body>\n" + "</soap:Envelope>";
 					
-					System.out.println("finalString:" +finalString+":");			
+					System.out.println("finalString: " +finalString+":");			
 					try {
 							list = bydHttpRequest(finalString,tsInfo.getClientId());
 							//SET RESPONSE IN TRCKING TABLE

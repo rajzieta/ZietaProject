@@ -70,6 +70,7 @@ import com.zieta.tms.response.WorkFlowComment;
 import com.zieta.tms.response.WorkFlowHistoryModel;
 import com.zieta.tms.response.WorkFlowRequestorData;
 import com.zieta.tms.service.ProjectMasterService;
+import com.zieta.tms.service.TaskTypeMasterService;
 import com.zieta.tms.service.TimeSheetService;
 import com.zieta.tms.service.UserInfoService;
 import com.zieta.tms.service.WorkFlowRequestService;
@@ -123,6 +124,9 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	
 	@Autowired
 	TimeTypeRepository timeTypeRepository;
+	
+	@Autowired
+	TaskTypeMasterService taskTypeMasterService;
 	
 	@Autowired
 	TaskInfoRepository taskInfoRepository;
@@ -673,27 +677,36 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				String cusDuration = "PT"+parts[0]+"H"+parts[1]+"M";
 				request.setDuration(cusDuration);
 				//request.setDifferentBillableTimeRecordedIndicator1(false);	
-				log.error("project data===>  "+tsInfo.getProjectId());
-				ProjectInfo projectInfo = projectMasterService.findByProjectId(tsInfo.getProjectId());		
-				EmployeeTime.ProjectTaskConfirmation projectTaskConfirmation = new EmployeeTime.ProjectTaskConfirmation();
+				//log.error("project data===>  "+tsInfo.getProjectId());
+				ProjectInfo projectInfo = projectMasterService.findByProjectId(tsInfo.getProjectId());	
+				TaskInfo taskInfo = taskTypeMasterService.findByClientIdAndTaskId(tsInfo.getClientId(), tsInfo.getTaskId());
+				request.setProjectElementID(taskInfo.getExtId());
+				//EmployeeTime.ProjectTaskConfirmation projectTaskConfirmation = new EmployeeTime.ProjectTaskConfirmation();
 				
 				List<WorkFlowRequestComments> workFlowRequestComments = workFlowRequestService.findByTsIdDesc(tsInfo.getId());
 				
-				if(workFlowRequestComments.size()>0) {
+				/*if(workFlowRequestComments.size()>0) {
 					request.setTimeSheetDescription(workFlowRequestComments.get(0).getComments());
 				}else {
 					request.setTimeSheetDescription("");
-				}
+				}*/
 				
 				ActivityMaster activityInfo = activityMasterRepository.findByActivityId(tsInfo.getActivityId());
+				if(activityInfo!=null) {
+					request.setServiceProductInternalID(activityInfo.getExtId());
+				}
+				if(workFlowRequestComments.size()>0) {
+					request.setWorkDescriptionText(workFlowRequestComments.get(0).getComments());
+				}
+				
 				//projectTaskConfirmation.setServiceProductInternalID(tsInfo.getActivityId().toString());
-				projectTaskConfirmation.setServiceProductInternalID(activityInfo.getExtId());
+				//projectTaskConfirmation.setServiceProductInternalID(activityInfo.getExtId());
 				
 				//projectTaskConfirmation.setServiceProductInternalID("20000005");//need to talk about this
 				log.error("projectInfo.getExtId()===>"+projectInfo.getExtId());
-				projectTaskConfirmation.setProjectElementID(projectInfo.getExtId());
-				projectTaskConfirmation.setCompletedIndicator("false");		
-				request.setProjectTaskConfirmation(projectTaskConfirmation);
+				//projectTaskConfirmation.setProjectElementID(projectInfo.getExtId());
+				//projectTaskConfirmation.setCompletedIndicator("false");		
+				//request.setProjectTaskConfirmation(projectTaskConfirmation);
 				List<Pair<Integer, String>> list = null;		
 
 				JAXBContext context;
@@ -707,8 +720,8 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 					String requestData = result.replace("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>", "");
 					String data = requestData.replace("<EmployeeTime>", "<EmployeeTime actionCode=\"01\">");
 					
-					data = data.replace("<TimeSheetDescription>", "<a3x:TimeSheetDescription>");
-					data = data.replace("</TimeSheetDescription>", "</a3x:TimeSheetDescription>");
+					data = data.replace("<WorkDescriptionText>", "<WorkDescriptionText languageCode=\"EN\">");
+					//data = data.replace("</TimeSheetDescription>", "</a3x:TimeSheetDescription>");
 
 					String finalString = "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:glob=\"http://sap.com/xi/SAPGlobal20/Global\" xmlns:a3x=\"http://sap.com/xi/AP/CustomerExtension/BYD/A3XM9\">\n"
 							+ "<soap:Header/>\n" + "<soap:Body>\n" + "<glob:EmployeeTimeAsBundleMaintainRequest_sync>\n"

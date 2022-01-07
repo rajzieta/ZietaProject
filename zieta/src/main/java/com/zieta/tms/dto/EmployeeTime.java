@@ -23,8 +23,9 @@ import lombok.Data;
     "ItemTypeCode",
     "DatePeriod",    
     "Duration",
-    "ProjectTaskConfirmation",
-    "TimeSheetDescription"
+    "ProjectElementID",
+    "ServiceProductInternalID",
+    "WorkDescriptionText"
     
 })
 @XmlRootElement(name = "EmployeeTime")
@@ -48,11 +49,14 @@ public class EmployeeTime {
 	//@XmlElement(name = "DifferentBillableTimeRecordedIndicator1")
 	//protected boolean DifferentBillableTimeRecordedIndicator1;
 	
-	@XmlElement(name = "TimeSheetDescription")
-	protected String TimeSheetDescription;
+	@XmlElement(name = "ProjectElementID")
+	protected String ProjectElementID;
 	
-	@XmlElement(name = "ProjectTaskConfirmation")
-	protected EmployeeTime.ProjectTaskConfirmation ProjectTaskConfirmation;	
+	@XmlElement(name = "ServiceProductInternalID")
+	protected String ServiceProductInternalID;	
+	
+	@XmlElement(name = "WorkDescriptionText")
+	protected String WorkDescriptionText;
 	
 	@Data
 	@XmlAccessorType(XmlAccessType.FIELD)
@@ -72,7 +76,7 @@ public class EmployeeTime {
 	}
 	
 	
-	@Data
+	/*@Data
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public static class ProjectTaskConfirmation {
 		@XmlElement(name = "ProjectElementID")
@@ -81,5 +85,5 @@ public class EmployeeTime {
 		protected String ServiceProductInternalID;
 		@XmlElement(name = "CompletedIndicator")
 		protected String CompletedIndicator;
-	}
+	}*/
 }

@@ -330,7 +330,19 @@ public class UserInfoServiceImpl implements UserInfoService {
 	@Override
 	public UserDetails addUserDetails(UserDetails userDetails) throws Exception {		
 		short notDeleted = 0;				
-		try {			
+		try {
+				//CHECK DUPLICATE ENTRY
+				UserDetails checkExist = null;
+				if(userDetails.getUserId()!=null) {
+					checkExist = userDetailsRepository.findUserDetailsByUserId(userDetails.getUserId());
+				}
+			    if(checkExist!=null) {
+			    	userDetails.setId(checkExist.getId());
+			    	
+			    }
+			
+			
+			
 			 userDetailsRepository.save(userDetails);				
 			
 		}catch(Exception e) {

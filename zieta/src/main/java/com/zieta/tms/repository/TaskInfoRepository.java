@@ -22,6 +22,9 @@ public interface TaskInfoRepository extends JpaRepository<TaskInfo, Long> {
 	@Query(value="select * from task_info where ext_id=?1 and client_id=?2", nativeQuery=true)
 	TaskInfo findByExtIdAndClientId(String extId, Long clientId);
 	
+	@Query(value="select * from task_info where client_id=?1 and id=?2", nativeQuery=true)
+	TaskInfo findByClientIdAndTaskId(Long extId, Long clientId);
+	
 	//TaskInfo findByExtIdAndClientId()
 
 }

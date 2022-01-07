@@ -23,6 +23,7 @@ public class OrgNodesByClientResponse {
      String clientDescription;
 //	 String orgNodeCode;
 	 String orgNodeName;
+	 String extId;
 	 Long orgManager;
 	 Boolean isCompany;
 	 Boolean isDept;

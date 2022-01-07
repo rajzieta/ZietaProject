@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.zieta.tms.dto.ExtTaskMasterDTO;
 import com.zieta.tms.dto.TaskMasterDTO;
 import com.zieta.tms.model.TaskInfo;
@@ -50,4 +52,8 @@ public interface TaskTypeMasterService {
 	public ResponseData saveExternalTaskInfo(@Valid ExtTaskMasterDTO extTaskMaster);
 	
 	public ResponseData getExternalTaskInfoData(String extFetchDate, String ExtProjectId, Long clinetId);
+	
+	public void readTaskInfoFromExcel(MultipartFile projectExcelData);
+	
+	public TaskInfo findByClientIdAndTaskId(Long clientId, Long taskId);
 }

@@ -244,7 +244,7 @@ public List<ProcessMasterDTO> getAllProcess() {
 			processSteps = new  ProcessSteps();
 			processSteps.setClientId(taskInfo.getClientId());
 			processSteps.setProjectId(taskInfo.getProjectId());
-			processSteps.setTemplateId(taskInfo.getProjectId());
+			//processSteps.setTemplateId(taskInfo.getProjectId());
 			processSteps.setTemplateId(projectInfo.getTemplateId());
 			processSteps.setProjectTaskId(taskInfo.getTaskInfoId());
 			processSteps.setStepId(processConfig.getStepId());

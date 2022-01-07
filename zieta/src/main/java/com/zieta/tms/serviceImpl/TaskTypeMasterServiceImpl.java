@@ -338,9 +338,10 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 				tskInfo.setCreatedBy(extTaskMaster.getCreatedBy());
 				tskInfo.setModifiedBy(extTaskMaster.getModifiedBy());
 				
-				taskInfo = taskInfoRepository.save(tskInfo);
-				responseData.setId(taskInfo.getTaskInfoId());
-				responseData.setIsSaved(true);
+				//taskInfo = taskInfoRepository.save(tskInfo);
+				boolean isTaskSaved =  addTaskInfo(tskInfo);//TO CREATE TASKINFO AND PROCESS STEPS ALSO
+				//responseData.setId(taskInfo.getTaskInfoId());
+				responseData.setIsSaved(isTaskSaved);
 				// addExtTaskInfo(info);
 				log.error("Ext task info data saved");
 			}

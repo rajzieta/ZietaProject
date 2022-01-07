@@ -102,6 +102,9 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 	UserInfoRepository userInfoRepository;
 	
 	@Autowired
+	TSTimeEntriesRepository tsTimeEntriesRepository;
+	
+	@Autowired
 	ProjectInfoRepository projectInfoRepository;
 	
 	@Autowired
@@ -681,9 +684,9 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				ProjectInfo projectInfo = projectMasterService.findByProjectId(tsInfo.getProjectId());	
 				TaskInfo taskInfo = taskTypeMasterService.findByClientIdAndTaskId(tsInfo.getClientId(), tsInfo.getTaskId());
 				request.setProjectElementID(taskInfo.getExtId());
-				//EmployeeTime.ProjectTaskConfirmation projectTaskConfirmation = new EmployeeTime.ProjectTaskConfirmation();
 				
-				List<WorkFlowRequestComments> workFlowRequestComments = workFlowRequestService.findByTsIdDesc(tsInfo.getId());
+				//List<WorkFlowRequestComments> workFlowRequestComments = workFlowRequestService.findByTsIdDesc(tsInfo.getId());
+				List<TSTimeEntries> tsTimesheetEntriesList = tsTimeEntriesRepository.findByTsId(tsInfo.getId());
 				
 				/*if(workFlowRequestComments.size()>0) {
 					request.setTimeSheetDescription(workFlowRequestComments.get(0).getComments());
@@ -695,18 +698,18 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				if(activityInfo!=null) {
 					request.setServiceProductInternalID(activityInfo.getExtId());
 				}
-				if(workFlowRequestComments.size()>0) {
-					request.setWorkDescriptionText(workFlowRequestComments.get(0).getComments());
+				
+				if(tsTimesheetEntriesList.size()>0) {
+					String comments ="";
+					for(TSTimeEntries tsTimeEntries:tsTimesheetEntriesList) {
+						comments = comments + "||"+tsTimeEntries.getTimeDesc();
+					}
+					
+					request.setWorkDescriptionText(comments);
 				}
 				
-				//projectTaskConfirmation.setServiceProductInternalID(tsInfo.getActivityId().toString());
-				//projectTaskConfirmation.setServiceProductInternalID(activityInfo.getExtId());
 				
-				//projectTaskConfirmation.setServiceProductInternalID("20000005");//need to talk about this
-				log.error("projectInfo.getExtId()===>"+projectInfo.getExtId());
-				//projectTaskConfirmation.setProjectElementID(projectInfo.getExtId());
-				//projectTaskConfirmation.setCompletedIndicator("false");		
-				//request.setProjectTaskConfirmation(projectTaskConfirmation);
+				log.error("projectInfo.getExtId()===>"+projectInfo.getExtId());				
 				List<Pair<Integer, String>> list = null;		
 
 				JAXBContext context;

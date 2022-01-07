@@ -54,7 +54,6 @@ public interface TaskTypeMasterService {
 	public ResponseData getExternalTaskInfoData(String extFetchDate, String ExtProjectId, Long clinetId);
 	
 	public void readTaskInfoFromExcel(MultipartFile projectExcelData);
-	
-	
+		
 	public TaskInfo findByClientIdAndTaskId(Long clientId, Long taskId);
 }

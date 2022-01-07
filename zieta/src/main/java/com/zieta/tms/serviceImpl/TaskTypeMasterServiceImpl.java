@@ -22,12 +22,16 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.zieta.tms.dto.ExtTaskMasterDTO;
 import com.zieta.tms.dto.TaskMasterDTO;
@@ -736,9 +740,71 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 			e.printStackTrace();
 		}
 				
-		return responseData;
+		return responseData;	
 		
+	}
+	
+	@Override
+	public void readTaskInfoFromExcel(MultipartFile projectExcelData) {
+		log.error("749 called task service method");  
+		List<ProjectInfo> tempProjectList = new ArrayList<ProjectInfo>();
+	    XSSFWorkbook workbook;
+		try {
+			workbook = new XSSFWorkbook(projectExcelData.getInputStream());
+			XSSFSheet worksheet = workbook.getSheetAt(0);
+			
+		    for(int i=1;i<worksheet.getPhysicalNumberOfRows()-1 ;i++) {
+		    	
+		        ProjectInfo tempProjectInfo = new ProjectInfo();		       
+		        XSSFRow row = worksheet.getRow(i);
+		        log.error("value==>"+row.getCell(0));
+		        if(row.getCell(0)==null) {
+		        	break;
+			     }else {
+			        	log.error("=====inside===>");
+				        log.error("765 inside loop"+row.getCell(0).getNumericCellValue());  
 		
+			            tempProjectInfo.setProjectInfoId((long) row.getCell(0).getNumericCellValue());
+			            
+			            
+			           /// tempUser.setAccessTypeId((long) row.getCell(1).getNumericCellValue());//DUE TO TABLE SPLIT
+			           /* tempUser.setClientId((long) row.getCell(2).getNumericCellValue());
+			            tempUser.setCreatedBy(row.getCell(1).getStringCellValue());
+			            tempUser.setEmail(row.getCell(1).getStringCellValue());
+			            tempUser.setEmpId(row.getCell(1).getStringCellValue());
+			            ///tempUser.setExpTemplateId((long) row.getCell(2).getNumericCellValue());//DUE TO TABLE SPLIT
+			            tempUser.setExtId(row.getCell(1).getStringCellValue());
+			            tempUser.setIsActive((short) row.getCell(2).getNumericCellValue());
+			            tempUser.setIsDelete((short) row.getCell(2).getNumericCellValue());
+			            tempUser.setIsExpOpen((short) row.getCell(2).getNumericCellValue());
+			            tempUser.setIsTsOpen((short) row.getCell(2).getNumericCellValue());
+			            tempUser.setModifiedBy(row.getCell(1).getStringCellValue());
+			            ///tempUser.setOrgNode((long) row.getCell(2).getNumericCellValue());
+			            tempUser.setPassword(row.getCell(1).getStringCellValue());
+			            tempUser.setPhoneNo(row.getCell(1).getStringCellValue());
+			           //// tempUser.setReportingMgr((long) row.getCell(2).getNumericCellValue());//DUE TO TABLE SPLIT
+			            tempUser.setUserFname(row.getCell(1).getStringCellValue());	            
+			            tempUser.setUserLname(row.getCell(1).getStringCellValue());
+			            tempUser.setUserMname(row.getCell(1).getStringCellValue());*/
+		            
+		            
+		            	tempProjectList.add(tempProjectInfo);
+			       }
+		    }
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    if(tempProjectList.size()>0) {
+	    	//CALL SAVE ALL METHOD
+	    }
+		
+	}
+	
+	@Override
+	public TaskInfo findByClientIdAndTaskId(Long clientId, Long taskId) {
+		
+		return taskInfoRepository.findByClientIdAndTaskId(clientId,taskId);
 	}
 
 	

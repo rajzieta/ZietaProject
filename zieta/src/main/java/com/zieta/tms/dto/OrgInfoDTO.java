@@ -23,6 +23,7 @@ public class OrgInfoDTO extends BaseEntity {
     private Long clientId;
  //   private String orgNodeCode;
     private String orgNodeName;
+    
     private Long orgManager;
     private Long extId;
     private Boolean isCompany;

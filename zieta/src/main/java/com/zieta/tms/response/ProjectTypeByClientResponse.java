@@ -9,6 +9,7 @@ public class ProjectTypeByClientResponse {
 
 	private Long projectTypeId;
     private Long clientId;
+    private String extId;
     private String clientCode;
     private String clientDescription;
     private String typeName;

@@ -13,6 +13,7 @@ public class ProjectDetailsByUserModel {
 	long projectInfoId;
 	long clientId;
 //	String projectCode;
+	String extId;
 	String projectName;
 	long projectType;
 	long projectOrgNode;

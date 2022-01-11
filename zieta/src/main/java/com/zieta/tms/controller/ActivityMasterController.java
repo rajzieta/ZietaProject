@@ -176,6 +176,7 @@ public class ActivityMasterController {
 	}*/
 	
 	
+	@RequestMapping(value = "/uploadTaskActivityData", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	
 	
 	

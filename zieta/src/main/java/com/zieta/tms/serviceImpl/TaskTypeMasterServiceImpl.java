@@ -323,8 +323,10 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 				if(taskType!=null) {
 					tskInfo.setTaskType(taskType.getTaskTypeId());
 				}
-				log.error("going well...");
-				tskInfo.setTaskStatus(statusMaster.getId());
+				
+				if(statusMaster!=null) {
+				  tskInfo.setTaskStatus(statusMaster.getId());
+				}
 				if(taskParent!=null) {					
 					tskInfo.setTaskParent(taskParent.getTaskInfoId());
 				}else {
@@ -332,11 +334,14 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 					tskInfo.setTaskParent(0L);
 				}
 				tskInfo.setExtId(extTaskMaster.getExtTaskInfoId());
+				log.error("going well...");
 				tskInfo.setTaskDescription(extTaskMaster.getTaskDescription());
 				tskInfo.setTaskStartDate(extTaskMaster.getTaskStartDate());
 				tskInfo.setTaskendDate(extTaskMaster.getTaskendDate());
+				log.error("341==>");
 				tskInfo.setCreatedBy(extTaskMaster.getCreatedBy());
 				tskInfo.setModifiedBy(extTaskMaster.getModifiedBy());
+				log.error("'Ready to save data");
 				
 				//taskInfo = taskInfoRepository.save(tskInfo);
 				boolean isTaskSaved =  addTaskInfo(tskInfo);//TO CREATE TASKINFO AND PROCESS STEPS ALSO
@@ -366,18 +371,18 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 	public boolean addTaskInfo(TaskInfo tskInfo)
 	{
 		try {
-			
+			log.error("called to save task info into DB");
 			TaskInfo taskInfoDB = taskInfoRepository.save(tskInfo);
-			
+			log.error("finding project info");
 			ProjectInfo projectInfo = projectInfoRepository.findById(tskInfo.getProjectId()).get();
-			
+			log.error("Ready to create process steps");
 			List<ProcessSteps> processStepsList = processService.createProcessSteps(taskInfoDB, projectInfo);
-			
+			log.error("Saving all process steps");
 			processStepsRepository.saveAll(processStepsList);
 			
 			return true;
 		} catch (Exception ex) {
-			log.error("Exception occured during the save task information",ex);
+			log.error("Exception occured during the save task information and process steps",ex);
 			return false;
 		}
 

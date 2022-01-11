@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.zieta.tms.dto.ActivityMasterDTO;
 import com.zieta.tms.dto.TaskActivityExtDTO;
@@ -175,8 +177,13 @@ public class ActivityMasterController {
 		return activityService.getActivitiesByClientProjectTask(extProjectId, clientId, userId);
 	}*/
 	
-	
+	//UPLOAD ACTIVITY FROM EXCELSHEET
 	@RequestMapping(value = "/uploadTaskActivityData", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Upload task activity from excelsheet", notes = "Table reference: project_info,project_info_id,client_id")
+	public ResponseData uploadTaskActivityData(@RequestPart(required=true,value = "multipartFile") MultipartFile multipartFile, @RequestParam(required = true) Long clientId) {
+		//activityService.readTaskActivityFromExcel(multipartFile);		
+		return null;
+	}
 	
 	
 	

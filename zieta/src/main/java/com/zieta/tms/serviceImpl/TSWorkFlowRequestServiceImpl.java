@@ -2,6 +2,7 @@ package com.zieta.tms.serviceImpl;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -85,6 +86,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 
+	private static final DecimalFormat df = new DecimalFormat("0.00");
 	@Autowired
 	ConnectionMasterInfoRepository connectionMasterInfoRepository;
 	   
@@ -465,7 +467,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			    	Short isDelete=0;
 			    	ClientInfo clientInfo = clientInfoRepository.findByClientIdAndIsDelete(tsInfo.getClientId(),isDelete);
 			    	if(clientInfo.getExtConnection() ==1) {
-			    		log.error("called timesheet sync method");
+			    		log.error("Ready to call timesheet sync method");
 			    		syncTimesheetData(tsInfo);				    	
 			    	}
 				    //*****************END FINAL APPROVAL***********************************************************
@@ -591,7 +593,7 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			endRequestDate =  TSMUtil.getFormattedDate(endRequestDate);
 			Calendar c = Calendar.getInstance();
 			c.setTime(endRequestDate);
-//			c.add(Calendar.DATE, 1);
+		    //c.add(Calendar.DATE, 1);
 			endRequestDate = c.getTime();
 		}
 		
@@ -672,8 +674,9 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				EmployeeTime.TimePeriod timePeroid = new EmployeeTime.TimePeriod();
 				///timePeroid.setEndTime("09:00:00");
 				///timePeroid.setStartTime("17:00:00");
-				//request.setTimePeriod(timePeroid);		
-				String duartion = tsInfo.getTsTotalSubmittedTime().toString();		
+				//request.setTimePeriod(timePeroid);
+				log.error(df.format(tsInfo.getTsTotalSubmittedTime()));
+				String duartion =df.format(tsInfo.getTsTotalSubmittedTime()).toString();				
 				//request.setDuration("PT17H00M");
 				String[] parts = duartion.split("\\.");
 				//converting duration to require format 

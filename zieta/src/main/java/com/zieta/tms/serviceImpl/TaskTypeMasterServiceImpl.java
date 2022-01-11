@@ -302,7 +302,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 				}
 				
 				TaskTypeMaster taskType = null;
-				if(extTaskMaster.getExtTaskType()==null || extTaskMaster.getExtTaskType()=="") {
+				if(extTaskMaster.getExtTaskType()!=null || extTaskMaster.getExtTaskType()!="") {
 				 taskType = taskTypeRepo.findByExtIdAndClientId(extTaskMaster.getExtTaskType(), extTaskMaster.getClientId());
 				}
 				TaskInfo taskParent = null;
@@ -323,7 +323,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 				if(taskType!=null) {
 					tskInfo.setTaskType(taskType.getTaskTypeId());
 				}
-				
+				log.error("going well...");
 				tskInfo.setTaskStatus(statusMaster.getId());
 				if(taskParent!=null) {					
 					tskInfo.setTaskParent(taskParent.getTaskInfoId());
@@ -655,6 +655,7 @@ public class TaskTypeMasterServiceImpl implements TaskTypeMasterService {
 						}
 	    				
 	    				errorData.setMessage(logMsg);
+	    				log.error(logMsg);
 	    				/*if(extTaskMaster.getExtTaskType()==null || extTaskMaster.getExtTaskType()=="") {
 	    				 taskType = taskTypeRepo.findByExtIdAndClientId(extTaskMaster.getExtTaskType(), extTaskMaster.getClientId());
 	    				}*/

@@ -1,5 +1,6 @@
 package com.zieta.tms.response;
 
+import java.sql.Time;
 import java.util.List;
 
 import com.zieta.tms.model.TSInfo;
@@ -25,7 +26,7 @@ public class WFRDetailsForApprover {
 	String wfStateType;
 	String taskName;
 	String activityName;
-	Float PlannedHours;
-	Float ActualHours;
+	Time PlannedHours;
+	Time ActualHours;
 	List<WorkFlowComment> workFlowCommentList;
 }

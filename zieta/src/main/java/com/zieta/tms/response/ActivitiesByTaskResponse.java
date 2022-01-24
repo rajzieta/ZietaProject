@@ -1,5 +1,7 @@
 package com.zieta.tms.response;
 
+import java.sql.Time;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,8 +19,8 @@ public class ActivitiesByTaskResponse {
     private Long userId;
 	private String startDate;
 	private String endDate;
-	private float plannedHrs;
-	private float actualHrs;
+	private Time plannedHrs;//float to time
+	private Time actualHrs;
 	
 	 
 }

@@ -1,5 +1,6 @@
 package com.zieta.tms.response;
 
+import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 
@@ -14,8 +15,8 @@ import lombok.Setter;
 public class WorkFlowRequestorData {
 	
 	String requestorName;
-	Float totalApprovedTime;
-	Float totalSubmittedTime;
+	Time totalApprovedTime;//convert float to time
+	Time totalSubmittedTime;
 	Date submittedDate;
 	Date approvedDate;
 	Date rejectedDate;

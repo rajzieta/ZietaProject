@@ -1,6 +1,7 @@
 package com.zieta.tms.model;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -49,10 +50,10 @@ public class TaskActivity extends BaseEntity implements Serializable {
 	private Date endDate;
 	
 	@Column(nullable=true, name= "PLANNED_HOURS", precision=10, scale=2)
-	private float plannedHrs;
+	private Time plannedHrs;
 	
 	@Column(nullable=true, name= "ACTUAL_HOURS", precision=10, scale=2)
-	private float actualHrs;
+	private Time actualHrs;
 	
 
 	

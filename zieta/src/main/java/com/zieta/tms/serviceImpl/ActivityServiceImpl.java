@@ -1,5 +1,7 @@
 package com.zieta.tms.serviceImpl;
 
+import java.io.IOException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +19,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
@@ -26,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.zieta.tms.dto.ActivityMasterDTO;
 import com.zieta.tms.dto.TaskActivityExtDTO;
@@ -422,7 +428,7 @@ public class ActivityServiceImpl implements ActivityService {
 				taskActivity.setUserId(userId);				
 				taskActivity.setActivityId(activityId);
 				//taskActivity.setActualHrs(taskActivityExtDto.getActualHrs());
-				taskActivity.setPlannedHrs(taskActivityExtDto.getPlannedHrs());
+				//taskActivity.setPlannedHrs(taskActivityExtDto.getPlannedHrs());// updatetion nrequired from string to time
 				taskActivity.setCreatedDate(taskActivityExtDto.getCreatedDate());
 				taskActivity.setCreatedBy(taskActivityExtDto.getCreatedBy());
 				taskActivity.setClientId(taskActivityExtDto.getClientId());
@@ -533,7 +539,11 @@ public class ActivityServiceImpl implements ActivityService {
 		            	taskActivityData.setModifiedBy("byd user");					
 		            	taskActivityData.setStartDate(startDate);
 		            	taskActivityData.setEndDate(endDate);
-		            	taskActivityData.setPlannedHrs(Float.parseFloat(jsnArray.getJSONObject(i).getString("KCPLAN_WORK_H_TS")));
+		            	//NEED TO UPDATE FOR ACTUAL TIME FROM FLOAT TO TIME 
+		            	//taskActivityData.setPlannedHrs(Float.parseFloat(jsnArray.getJSONObject(i).getString("KCPLAN_WORK_H_TS")));
+		            	//String timeStr = jsnArray.getJSONObject(i).getString("KCPLAN_WORK_H_TS").toString();
+		            	//Time startingTime = new Time (timeStr);
+		            	//taskActivityData.setPlannedHrs(new Time(jsnArray.getJSONObject(i).getString("KCPLAN_WORK_H_TS").toString()));
 		            	
 						TaskActivity taskActivity = new TaskActivity();
 						TaskInfo taskInfo = null;
@@ -630,6 +640,62 @@ public class ActivityServiceImpl implements ActivityService {
 			resposne =	addActivitiesByClientProjectTaskExternal(taskActivityData);
 		}
 		return resposne;
+	}
+	
+	@Override
+	public void readTaskActivityFromExcel(MultipartFile projectExcelData) {
+		log.error("642 called task activity service method");  
+		List<ProjectInfo> tempProjectList = new ArrayList<ProjectInfo>();
+	    XSSFWorkbook workbook;
+		try {
+			workbook = new XSSFWorkbook(projectExcelData.getInputStream());
+			XSSFSheet worksheet = workbook.getSheetAt(0);
+			
+		    for(int i=1;i<worksheet.getPhysicalNumberOfRows()-1 ;i++) {
+		    	
+		        ProjectInfo tempProjectInfo = new ProjectInfo();		       
+		        XSSFRow row = worksheet.getRow(i);
+		        log.error("value==>"+row.getCell(0));
+		        if(row.getCell(0)==null) {
+		        	break;
+			     }else {
+			        	log.error("=====inside===>");
+				       
+		
+			            tempProjectInfo.setProjectInfoId((long) row.getCell(0).getNumericCellValue());			            
+			            
+			           /// tempUser.setAccessTypeId((long) row.getCell(1).getNumericCellValue());//DUE TO TABLE SPLIT
+			           /* tempUser.setClientId((long) row.getCell(2).getNumericCellValue());
+			            tempUser.setCreatedBy(row.getCell(1).getStringCellValue());
+			            tempUser.setEmail(row.getCell(1).getStringCellValue());
+			            tempUser.setEmpId(row.getCell(1).getStringCellValue());
+			            ///tempUser.setExpTemplateId((long) row.getCell(2).getNumericCellValue());//DUE TO TABLE SPLIT
+			            tempUser.setExtId(row.getCell(1).getStringCellValue());
+			            tempUser.setIsActive((short) row.getCell(2).getNumericCellValue());
+			            tempUser.setIsDelete((short) row.getCell(2).getNumericCellValue());
+			            tempUser.setIsExpOpen((short) row.getCell(2).getNumericCellValue());
+			            tempUser.setIsTsOpen((short) row.getCell(2).getNumericCellValue());
+			            tempUser.setModifiedBy(row.getCell(1).getStringCellValue());
+			            ///tempUser.setOrgNode((long) row.getCell(2).getNumericCellValue());
+			            tempUser.setPassword(row.getCell(1).getStringCellValue());
+			            tempUser.setPhoneNo(row.getCell(1).getStringCellValue());
+			           //// tempUser.setReportingMgr((long) row.getCell(2).getNumericCellValue());//DUE TO TABLE SPLIT
+			            tempUser.setUserFname(row.getCell(1).getStringCellValue());	            
+			            tempUser.setUserLname(row.getCell(1).getStringCellValue());
+			            tempUser.setUserMname(row.getCell(1).getStringCellValue());*/
+		            
+		            
+		            	tempProjectList.add(tempProjectInfo);
+			       }
+		    }
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    if(tempProjectList.size()>0) {
+	    	//CALL SAVE ALL METHOD
+	    }
+		
 	}
 	
 }

@@ -250,6 +250,13 @@ public List<ProcessMasterDTO> getAllProcess() {
 			processSteps.setStepId(processConfig.getStepId());
 			String approverId = TSMUtil.getApproverId(taskInfo, projectInfo, processConfig);
 			processSteps.setApproverId(approverId);
+			
+			//CHECK EXISTANCE IN PROCESS STEP TABLE
+			ProcessSteps checkExit = processStepsRepository.getProcessStepByClientIdAndTemplateIdAndProjectIdAndProjectTaskIdAndStepId(
+			taskInfo.getClientId(),projectInfo.getTemplateId(),taskInfo.getProjectId(),taskInfo.getTaskInfoId(),processConfig.getStepId());
+			if(checkExit!=null) {
+				processSteps.setId(checkExit.getId());
+			}
 			processStepsList.add(processSteps);
 		}
 		return processStepsList;

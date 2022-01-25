@@ -50,10 +50,10 @@ public class TaskActivity extends BaseEntity implements Serializable {
 	private Date endDate;
 	
 	@Column(nullable=true, name= "PLANNED_HOURS", precision=10, scale=2)
-	private Time plannedHrs;
+	private float plannedHrs;
 	
 	@Column(nullable=true, name= "ACTUAL_HOURS", precision=10, scale=2)
-	private Time actualHrs;
+	private float actualHrs;
 	
 
 	

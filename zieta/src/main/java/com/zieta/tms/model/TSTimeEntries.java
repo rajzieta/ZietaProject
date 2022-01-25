@@ -32,13 +32,13 @@ public class TSTimeEntries extends BaseEntity implements Serializable {
     private Long statusId;
     
 	@Column(name="TS_START_TIME")
-    private  float tsStartTime;
+    private  float tsStartTime;//convert float to string
     
 	@Column(name="TS_END_TIME")
-    private  float tsEndTime;
+    private  float tsEndTime;//convert float to string
     
 	@Column(name="TS_DURATION")
-    private  float tsDuration;
+    private  float tsDuration;//convert float to string
     
 	@Column(name="TIME_DESC")
     private  String timeDesc;

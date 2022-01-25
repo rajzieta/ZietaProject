@@ -14,9 +14,9 @@ public class TimeEntriesByTsIdRequest {
 
 	private Long timeType;
 	private Long statusId;
-	 private  float tsStartTime;
-	 private  float tsEndTime;
-	 private  float tsDuration;
+	 private  float tsStartTime;//convert Float to String
+	 private  float tsEndTime;//convert Float to String
+	 private  float tsDuration;//convert Float to String
 	 private  String timeDesc;
 	 private String createdBy;
 	 private String modifiedBy;

@@ -251,8 +251,8 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 					tSInfoRepository.save(tsInfo);
 					if (workflowRequestList.isEmpty()) {
 						log.error("===252 new timesheet submit===");
-						short isDelete=0;
-						ProjectInfo projectInfo = projectInfoRepository.findByProjectInfoIdAndClientIdAndIsDelete(tsInfo.getProjectId(), tsInfo.getClientId(),isDelete);
+						short deleted=0;
+						ProjectInfo projectInfo = projectInfoRepository.findByProjectInfoIdAndClientIdAndIsDelete(tsInfo.getProjectId(), tsInfo.getClientId(),deleted);
 						// get the approverid from the process_step based on the clientId, projectId and taskId
 						List<ProcessSteps> processStepsList = processStepsRepository
 								.findByClientIdAndProjectIdAndProjectTaskIdAndTemplateIdOrderByStepId(tsInfo.getClientId(),

@@ -424,10 +424,11 @@ public class ActivityServiceImpl implements ActivityService {
 				log.error("checkExistance ====>"+checkExist);
 				if(checkExist!=null) {
 					taskActivity.setTaskActivityId(checkExist.getTaskActivityId());
+					taskActivity.setActualHrs(checkExist.getActualHrs());
 				}
 				taskActivity.setUserId(userId);				
 				taskActivity.setActivityId(activityId);
-				//taskActivity.setActualHrs(taskActivityExtDto.getActualHrs());
+				
 				taskActivity.setPlannedHrs(taskActivityExtDto.getPlannedHrs());// updatetion nrequired from string to time
 				taskActivity.setCreatedDate(taskActivityExtDto.getCreatedDate());
 				taskActivity.setCreatedBy(taskActivityExtDto.getCreatedBy());

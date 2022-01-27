@@ -13,8 +13,8 @@ import com.zieta.tms.model.ProcessSteps;
 @Repository
 public interface ProcessStepsRepository extends JpaRepository<ProcessSteps, Long> {
 
-	public List<ProcessSteps> findByClientIdAndProjectIdAndProjectTaskIdOrderByStepId(
-			long clientId, long projectId, long taskId);
+	public List<ProcessSteps> findByClientIdAndProjectIdAndProjectTaskIdAndTemplateIdOrderByStepId(
+			long clientId, long projectId, long taskId,long templateId);
 	
 	public List<ProcessSteps> findByProjectId(long projectId);
 	

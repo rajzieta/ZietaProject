@@ -62,6 +62,7 @@ import java.time.LocalDateTime;
 @Slf4j
 public class TimeSheetServiceImpl implements TimeSheetService {
 	
+	
 	@Autowired
 	TSInfoRepository tSInfoRepository;
 	
@@ -231,7 +232,7 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	
 	@Transactional
 	public boolean submitTimeSheet(@Valid List<TSInfo> tsInfoList) {
-		// call to save workflow_request
+		// call to save workflow_request	
 		
 		try {
 			
@@ -249,12 +250,14 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 					tsInfo.setStatusId(statusId);
 					tSInfoRepository.save(tsInfo);
 					if (workflowRequestList.isEmpty()) {
-						
+						log.error("===252 new timesheet submit===");
+						short isDelete=0;
+						ProjectInfo projectInfo = projectInfoRepository.findByProjectInfoIdAndClientIdAndIsDelete(tsInfo.getProjectId(), tsInfo.getClientId(),isDelete);
 						// get the approverid from the process_step based on the clientId, projectId and taskId
 						List<ProcessSteps> processStepsList = processStepsRepository
-								.findByClientIdAndProjectIdAndProjectTaskIdOrderByStepId(tsInfo.getClientId(),
-										tsInfo.getProjectId(), tsInfo.getTaskId());
-						
+								.findByClientIdAndProjectIdAndProjectTaskIdAndTemplateIdOrderByStepId(tsInfo.getClientId(),
+										tsInfo.getProjectId(), tsInfo.getTaskId(),projectInfo.getTemplateId());
+						log.error("257 ==>"+processStepsList);
 						// approver id will be null only incase of template-id=1(no approval)
 						if (processStepsList != null && processStepsList.size() == 1
 								&& processStepsList.get(0).getApproverId() == null) {
@@ -325,6 +328,8 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 						
 						workflowRequestRepository.saveAll(workflowRequestList);
 					} else {
+						
+						log.error("===329 else for timesheet submit===");
 						
 						// old workflow objects came for revision
 						for(WorkflowRequest oldWorkflowRequest: workflowRequestList ) {
@@ -399,9 +404,11 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 	@Override
 	@Transactional
 	public void addTimeEntriesByTsId(@Valid List<TimeEntriesByTsIdRequest> timeentriesbytsidRequestList) throws Exception {
+		log.error("403 ==>addTimeEntriesByTimesheetID");
 			for (TimeEntriesByTsIdRequest timeEntriesByTsIdRequest : timeentriesbytsidRequestList) {
 				TSTimeEntries tstimeentries = modelMapper.map(timeEntriesByTsIdRequest, TSTimeEntries.class);
 				tstimeentriesRepository.save(tstimeentries);
+				log.error("407 ===>Saved timesheet entries");
 			}
 
 	}

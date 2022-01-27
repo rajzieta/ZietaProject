@@ -428,7 +428,7 @@ public class ActivityServiceImpl implements ActivityService {
 				taskActivity.setUserId(userId);				
 				taskActivity.setActivityId(activityId);
 				//taskActivity.setActualHrs(taskActivityExtDto.getActualHrs());
-				//taskActivity.setPlannedHrs(taskActivityExtDto.getPlannedHrs());// updatetion nrequired from string to time
+				taskActivity.setPlannedHrs(taskActivityExtDto.getPlannedHrs());// updatetion nrequired from string to time
 				taskActivity.setCreatedDate(taskActivityExtDto.getCreatedDate());
 				taskActivity.setCreatedBy(taskActivityExtDto.getCreatedBy());
 				taskActivity.setClientId(taskActivityExtDto.getClientId());

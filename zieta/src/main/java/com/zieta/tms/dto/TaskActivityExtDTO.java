@@ -23,7 +23,7 @@ public class TaskActivityExtDTO extends BaseEntity {
 	private String modifiedBy;
 	private Date startDate;
 	private Date endDate;
-	private String plannedHrs;
+	private float plannedHrs;
 	
 	
 

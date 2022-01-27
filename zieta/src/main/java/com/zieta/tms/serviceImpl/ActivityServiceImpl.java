@@ -539,9 +539,10 @@ public class ActivityServiceImpl implements ActivityService {
 		            	taskActivityData.setModifiedBy("byd user");					
 		            	taskActivityData.setStartDate(startDate);
 		            	taskActivityData.setEndDate(endDate);
+		            	
+		            	taskActivityData.setPlannedHrs(Float.parseFloat(jsnArray.getJSONObject(i).getString("KCPLAN_WORK_H_TS")));
+		            	String timeStr = jsnArray.getJSONObject(i).getString("KCPLAN_WORK_H_TS").toString();
 		            	//NEED TO UPDATE FOR ACTUAL TIME FROM FLOAT TO TIME 
-		            	//taskActivityData.setPlannedHrs(Float.parseFloat(jsnArray.getJSONObject(i).getString("KCPLAN_WORK_H_TS")));
-		            	//String timeStr = jsnArray.getJSONObject(i).getString("KCPLAN_WORK_H_TS").toString();
 		            	//Time startingTime = new Time (timeStr);
 		            	//taskActivityData.setPlannedHrs(new Time(jsnArray.getJSONObject(i).getString("KCPLAN_WORK_H_TS").toString()));
 		            	

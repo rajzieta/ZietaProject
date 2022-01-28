@@ -610,7 +610,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	}
 
 	//@Override
-	public void readProjectFromExcel(MultipartFile projectExcelData) {
+	/*public void readProjectFromExcel(MultipartFile projectExcelData) {
 		log.error("593 called service method");  
 		List<ProjectInfo> tempProjectList = new ArrayList<ProjectInfo>();
 	    XSSFWorkbook workbook;
@@ -678,7 +678,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 			           //// tempUser.setReportingMgr((long) row.getCell(2).getNumericCellValue());//DUE TO TABLE SPLIT
 			            tempUser.setUserFname(row.getCell(1).getStringCellValue());	            
 			            tempUser.setUserLname(row.getCell(1).getStringCellValue());
-			            tempUser.setUserMname(row.getCell(1).getStringCellValue());*/
+			            tempUser.setUserMname(row.getCell(1).getStringCellValue());
 		            
 		            
 		            	tempProjectList.add(tempProjectInfo);
@@ -692,7 +692,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	    	//CALL SAVE ALL METHOD
 	    }
 		
-	}
+	}*/
 	
 	
 	

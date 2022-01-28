@@ -17,10 +17,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.zieta.tms.dto.ExternalProjectMasterDTO;
+import com.zieta.tms.dto.ProjectInfoDTO;
 import com.zieta.tms.dto.ProjectMasterDTO;
+import com.zieta.tms.dto.UsersInfoDTO;
 import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.ProjectMaster;
 import com.zieta.tms.request.EditProjStatusRequest;
@@ -101,6 +105,15 @@ public class ProjectMasterController {
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<List<ProjectDetailsByUserModel>>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	
+	@GetMapping("/getProjectsById")
+	@ApiOperation(value = "List Projects based on the projectId", notes = "Table reference: project_type_master,user_info,project_info,org_info,cust_info")
+	public ProjectInfoDTO getProjectsById(@RequestParam(required = true) Long projectId) {
+		ProjectInfoDTO projectDetails = projectmasterService.findByProjectsId(projectId);
+		
+		return projectDetails;
 	}
 	
 	@RequestMapping(value = "getAllProjectTypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -202,7 +215,13 @@ public class ProjectMasterController {
 		return projectmasterService.updateBySapDate(id, clientId);
 	}
 	
-	
+	//UPLOAD PROJECT FROM EXCELSHEET
+	/*@RequestMapping(value = "/uploadProjectData", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Upload project from excelsheet", notes = "Table reference: project_info,project_info_id,client_id")
+	public ResponseData uploadProject(@RequestPart(required=true,value = "multipartFile") MultipartFile multipartFile, @RequestParam(required = true) Long clientId) {
+		projectmasterService.readProjectFromExcel(multipartFile);		
+		return null;
+	}*/
 	
 	
 	

@@ -1,11 +1,15 @@
 package com.zieta.tms.service;
 
+import java.io.File;
 import java.sql.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.zieta.tms.dto.ExternalProjectMasterDTO;
+import com.zieta.tms.dto.ProjectInfoDTO;
 import com.zieta.tms.dto.ProjectMasterDTO;
 import com.zieta.tms.model.ProjectInfo;
 import com.zieta.tms.model.ProjectMaster;
@@ -29,7 +33,7 @@ public interface ProjectMasterService {
 	List<ProjectDetailsByUserModel> getProjectsByUser(long userId);
 
 	List<ProjectDetailsByUserModel> getProjectsByClient(Long clientId);
-
+	
 	public void editProjectStatus(@Valid EditProjStatusRequest editprojStatusRequest) throws Exception;
 
 	public List<ProjectTypeByClientResponse> getProjecttypessByClient(Long clientId);
@@ -49,9 +53,14 @@ public interface ProjectMasterService {
 	public void deleteProjectTypesById(Long id, String modifiedBy) throws Exception;
 	
 	List<ProjectDetailsByUserModel> getBYDProjectsByClient(Long clientId);
+	
 	public ProjectInfo findByProjectId(Long projectId);
+	
+	public ProjectInfoDTO findByProjectsId(Long projectId);
 
 	public FetchDataResponse findBySapDate(Long id, Long clientId);
 	//public ProjectInfo findByProjectId(Long projectId);
 	public ResponseData updateBySapDate(Long id, Long clientId);
+	
+	//public void readProjectFromExcel(MultipartFile projectExcelData);
 }

@@ -609,7 +609,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 
 	}
 
-	@Override
+	//@Override
 	public void readProjectFromExcel(MultipartFile projectExcelData) {
 		log.error("593 called service method");  
 		List<ProjectInfo> tempProjectList = new ArrayList<ProjectInfo>();

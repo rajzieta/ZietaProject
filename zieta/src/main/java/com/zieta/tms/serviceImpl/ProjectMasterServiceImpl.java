@@ -1,5 +1,7 @@
 package com.zieta.tms.serviceImpl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,13 +21,20 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.devicefarm.model.Test;
 import com.amazonaws.services.directconnect.model.Connection;
 import com.zieta.tms.dto.ExternalProjectMasterDTO;
+import com.zieta.tms.dto.ProjectInfoDTO;
 import com.zieta.tms.dto.ProjectMasterDTO;
+import com.zieta.tms.dto.UsersInfoDTO;
 import com.zieta.tms.exception.ExternalIdException;
 import com.zieta.tms.model.ClientInfo;
 import com.zieta.tms.model.ConnectionMasterInfo;
@@ -115,9 +124,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		List<ProjectDetailsByUserModel> projectsByClientResponseList = new ArrayList<>();
 
 		fillProjectDetails(projectList, projectsByClientResponseList);
-
 		return projectsByClientResponseList;
-
 	}
 	
 	@Override
@@ -236,6 +243,9 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 								
 				if(chkExist!= null) {
 					projectInfo.setProjectInfoId(chkExist.getProjectInfoId());
+					//TO REMOVE EXIST PROCESS STEPS AN ADD AS PER CURRECT TEMPLATE
+					editProjectByTemplate(chkExist.getProjectInfoId(),bydProjectinfo.getTemplateId());
+					
 				}	
 										
 				projectInfo.setExtId(bydProjectinfo.getExtId());
@@ -303,6 +313,24 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		fillProjectDetails(projectList, projectDetailsByUserList);
 
 		return projectDetailsByUserList;
+
+	}
+	
+	
+	@Override
+	public ProjectInfoDTO findByProjectsId(Long projectId) {
+		short notDeleted=0;
+		
+		//ProjectInfo projectInfo= projectInfoRepository.findByProjectInfoIdAndIsDelete(projectId, notDeleted);
+		ProjectInfoDTO projectInfoDTO = null;
+		ProjectInfo projectInfo = projectInfoRepository.findById(projectId).get();
+		
+			
+		if(projectInfo !=null) {
+			projectInfoDTO =  modelMapper.map(projectInfo, ProjectInfoDTO.class);	
+			
+		}
+		return projectInfoDTO;
 
 	}
 
@@ -579,8 +607,92 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		response.setIsSaved(true);
 		return response;
 
-	}	
-	
+	}
+
+	@Override
+	public void readProjectFromExcel(MultipartFile projectExcelData) {
+		log.error("593 called service method");  
+		List<ProjectInfo> tempProjectList = new ArrayList<ProjectInfo>();
+	    XSSFWorkbook workbook;
+		try {
+			workbook = new XSSFWorkbook(projectExcelData.getInputStream());
+			XSSFSheet worksheet = workbook.getSheetAt(0);
+			
+		    for(int i=1;i<worksheet.getPhysicalNumberOfRows()-1 ;i++) {
+		    	
+		        ProjectInfo tempProjectInfo = new ProjectInfo();		       
+		        XSSFRow row = worksheet.getRow(i);
+		        log.error("value==>"+row.getCell(0));
+		        if(row.getCell(0)==null) {
+		        	break;
+			     }else {
+			        	log.error("=====inside===>");
+				        log.error("601 inside loop"+row.getCell(0).getNumericCellValue());  
+		
+			            tempProjectInfo.setProjectInfoId((long) row.getCell(0).getNumericCellValue());
+			            Long clientId =0L;
+			           
+			            String ExtId ="";
+			            String desc = "";
+			            String projectTypeExtId ="";
+			            String projectName ="";
+			            String orgNodeExtId ="";
+			            String projectMngrExtId ="";
+			            Long templateId= 0L;
+			            String directApprovalExtId ="";
+			            int allowedPlaned =0;
+			            String customerExtId = "";
+			            int projectStatu=0;
+			            Date extFetchdate = new Date();
+			            String createdBy = "";
+			            Date createdDate = new Date();
+			            String modifiedBy = "";
+			            Date modifiedDate = new Date();
+			            
+			            clientId = (long) row.getCell(1).getNumericCellValue();
+			            projectTypeExtId = row.getCell(2).getStringCellValue();
+			            projectName = row.getCell(3).getStringCellValue();
+			            projectTypeExtId = row.getCell(4).getStringCellValue();
+			            orgNodeExtId = row.getCell(5).getStringCellValue();
+			            
+			            projectMngrExtId = row.getCell(6).getStringCellValue();
+			            templateId = (long)row.getCell(7).getNumericCellValue();
+			            directApprovalExtId = row.getCell(8).getStringCellValue();
+			            
+			            log.error("clientId: "+clientId+" projectTypeExtId: "+projectTypeExtId+" projectName: "+projectName);
+			           /// tempUser.setAccessTypeId((long) row.getCell(1).getNumericCellValue());//DUE TO TABLE SPLIT
+			           /* tempUser.setClientId((long) row.getCell(2).getNumericCellValue());
+			            tempUser.setCreatedBy(row.getCell(1).getStringCellValue());
+			            tempUser.setEmail(row.getCell(1).getStringCellValue());
+			            tempUser.setEmpId(row.getCell(1).getStringCellValue());
+			            ///tempUser.setExpTemplateId((long) row.getCell(2).getNumericCellValue());//DUE TO TABLE SPLIT
+			            tempUser.setExtId(row.getCell(1).getStringCellValue());
+			            tempUser.setIsActive((short) row.getCell(2).getNumericCellValue());
+			            tempUser.setIsDelete((short) row.getCell(2).getNumericCellValue());
+			            tempUser.setIsExpOpen((short) row.getCell(2).getNumericCellValue());
+			            tempUser.setIsTsOpen((short) row.getCell(2).getNumericCellValue());
+			            tempUser.setModifiedBy(row.getCell(1).getStringCellValue());
+			            ///tempUser.setOrgNode((long) row.getCell(2).getNumericCellValue());
+			            tempUser.setPassword(row.getCell(1).getStringCellValue());
+			            tempUser.setPhoneNo(row.getCell(1).getStringCellValue());
+			           //// tempUser.setReportingMgr((long) row.getCell(2).getNumericCellValue());//DUE TO TABLE SPLIT
+			            tempUser.setUserFname(row.getCell(1).getStringCellValue());	            
+			            tempUser.setUserLname(row.getCell(1).getStringCellValue());
+			            tempUser.setUserMname(row.getCell(1).getStringCellValue());*/
+		            
+		            
+		            	tempProjectList.add(tempProjectInfo);
+			       }
+		    }
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    if(tempProjectList.size()>0) {
+	    	//CALL SAVE ALL METHOD
+	    }
+		
+	}
 	
 	
 	

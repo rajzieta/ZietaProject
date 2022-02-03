@@ -25,4 +25,7 @@ public class ActivitiesByClientUserModel {
 	
 	private String clientCode;
 	private String clientDescription;
+	
+	private String extProjectId;
+	private String extTaskId;
 }

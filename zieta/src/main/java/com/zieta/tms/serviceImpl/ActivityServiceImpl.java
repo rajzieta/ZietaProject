@@ -300,6 +300,7 @@ public class ActivityServiceImpl implements ActivityService {
 				// activitiesByClientUserModel.setProjectCode(projectInfo.getProjectCode());
 				activitiesByClientUserModel.setProjectName(projectInfo.getProjectName());
 				activitiesByClientUserModel.setAllowUnplanned(projectInfo.getAllowUnplanned());
+				activitiesByClientUserModel.setExtProjectId(projectInfo.getExtId());
 
 				// if(taskInfoList!=null) {
 
@@ -307,6 +308,7 @@ public class ActivityServiceImpl implements ActivityService {
 				// activitiesByClientUserModel.setTaskCode(taskInfo.getTaskCode());
 				activitiesByClientUserModel.setTaskDescription(taskInfo.getTaskDescription());
 				activitiesByClientUserModel.setTaskActivityId(taskActivity.getTaskActivityId());
+				activitiesByClientUserModel.setExtTaskId(taskInfo.getExtId());
 				// }
 
 				ClientInfo clientInfo = clientInfoRepository.findById(taskActivity.getClientId()).get();

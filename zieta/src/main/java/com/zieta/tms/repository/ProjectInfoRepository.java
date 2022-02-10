@@ -26,11 +26,13 @@ public interface ProjectInfoRepository extends JpaRepository<ProjectInfo, Long> 
 	List<ProjectInfo> findByProjectManagerAndIsDelete(long projectManagerId, short notDeleted);
 
 	List<ProjectInfo> findByClientIdAndIsDelete(Long clientId, short notDeleted);
-
+	
 	
 	@Query(value="select * from  project_info  WHERE id=?1 AND is_delete=?2", nativeQuery=true)
 	ProjectInfo findByProjectInfoIdAndIsDelete(Long projectId, short notDeleted);
 	
+	@Query(value="select * from  project_info  WHERE ext_id=?1 AND is_delete=?2", nativeQuery=true)
+	ProjectInfo findByExtIdAndIsDelete(String extId, short notDeleted);
 	//Optional<ProjectInfo> findByIdAndIsDelete(Long Id, short notDeleted);
 	
 	ProjectInfo findByExtId(String extId);
@@ -38,6 +40,9 @@ public interface ProjectInfoRepository extends JpaRepository<ProjectInfo, Long> 
 	//ProjectInfo findById(Long id);
 	
 	ProjectInfo findByExtIdAndClientId(String extId, Long clientId);
+	
+	@Query(value="select * from  project_info  WHERE ext_id=?1 AND client_id=?2 AND is_delete=?3", nativeQuery=true)
+	ProjectInfo findByExtIdAndClientIdAndIsdelete(String extId, Long clientId,short isDelete);
 
 	ProjectInfo findByProjectInfoIdAndClientIdAndIsDelete(Long projectInfoId, Long clientId, short notDeleted);
 

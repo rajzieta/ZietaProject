@@ -130,7 +130,20 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	@Override
 	public void addProjectinfo(ProjectInfo projectinfo)
 	{
+		ProjectInfo checkExist = null;
+		short isDelete =0;
+		try {
+		//VALIDATE  EXISTANCE BY EXTERNAL_ID
+		if(projectinfo.getExtId()!=null || !projectinfo.getExtId().isEmpty()) {
+			checkExist = projectInfoRepository.findByExtIdAndIsDelete(projectinfo.getExtId(),isDelete);
+		}
+		if(checkExist!=null) {
+			projectinfo.setProjectInfoId(checkExist.getProjectInfoId());
+		}
 		projectInfoRepository.save(projectinfo);
+		}catch(Exception e) {
+			log.error("Error occure  while adding project data "+e);
+		}
 	}
 	
 	
@@ -161,11 +174,14 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 				StatusMaster projectStatusInfo = null;
 				ProjectMaster projectTypeInfo = null;
 				OrgInfo orgNodeInfo = null;
-				
+				Short isDelete =0;
 				if(bydProjectinfo.getExtId() ==null || bydProjectinfo.getExtId().isEmpty()){
 					logMsg = logMsg+" Project extId is empty,";
 				}else {
-			     chkExist = projectInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtId().trim(),bydProjectinfo.getClientId());
+					log.error("Check exist for project by extId, clientId and isDelete");
+			     //chkExist = projectInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtId().trim(),bydProjectinfo.getClientId());
+			     chkExist = projectInfoRepository.findByExtIdAndClientIdAndIsdelete(bydProjectinfo.getExtId().trim(),bydProjectinfo.getClientId(),isDelete);
+					
 				}
 				if(bydProjectinfo.getExtCustId() ==null || bydProjectinfo.getExtCustId().isEmpty()){
 					logMsg = logMsg+" Cutomer  extId is empty";		

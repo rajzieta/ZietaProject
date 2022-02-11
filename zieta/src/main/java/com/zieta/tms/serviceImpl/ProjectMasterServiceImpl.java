@@ -133,9 +133,9 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 		ProjectInfo checkExist = null;
 		short isDelete =0;
 		try {
-		//VALIDATE  EXISTANCE BY EXTERNAL_ID
+		//VALIDATE PROJECT EXISTANCE BY EXTERNAL_ID, CLIENT_ID AND IS_DELETE FALSE
 		if(projectinfo.getExtId()!=null || !projectinfo.getExtId().isEmpty()) {
-			checkExist = projectInfoRepository.findByExtIdAndIsDelete(projectinfo.getExtId(),isDelete);
+			checkExist = projectInfoRepository.findByExtIdAndClientIdAndIsdelete(projectinfo.getExtId(),projectinfo.getClientId(),isDelete);
 		}
 		if(checkExist!=null) {
 			projectinfo.setProjectInfoId(checkExist.getProjectInfoId());

@@ -51,6 +51,15 @@ public class ClientInfo extends BaseEntity implements Serializable {
 	@Column(name="client_comments")
 	private String clientComments;
 	
+	@Column(name="auth_token")
+	private String authToken;
+	
+	@Column(name="login_id")
+	private String loginId;
+	
+	@Column(name="password")
+	private String password;
+	
 	@Column(name="is_superadmin")
 	private short superAdmin;
 	

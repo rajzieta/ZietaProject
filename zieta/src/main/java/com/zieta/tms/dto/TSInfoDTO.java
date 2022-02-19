@@ -23,8 +23,11 @@ public class TSInfoDTO {
 	private boolean plannedActivity;	
 	private String tsDate;
 	private String submitDate;
-	private float tsTotalSubmittedTime;//convert float to DATE 24012022
-	private float tsTotalApprovedTime;//convert float to DATE 24012022	
+	//private float tsTotalSubmittedTime;//convert float to TIME 00:00:00
+	//private float tsTotalApprovedTime;//convert float to TIME 00:00:00
+	
+	private String tsTotalSubmittedTime;
+	private String tsTotalApprovedTime;	
 	private String createdBy;
 	private String modifiedBy;	
 	private short isDelete;	

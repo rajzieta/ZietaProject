@@ -132,15 +132,8 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 	{
 		ProjectInfo checkExist = null;
 		short isDelete =0;
-		try {
-		//VALIDATE PROJECT EXISTANCE BY EXTERNAL_ID, CLIENT_ID AND IS_DELETE FALSE
-		if(projectinfo.getExtId()!=null || !projectinfo.getExtId().isEmpty()) {
-			checkExist = projectInfoRepository.findByExtIdAndClientIdAndIsdelete(projectinfo.getExtId(),projectinfo.getClientId(),isDelete);
-		}
-		if(checkExist!=null) {
-			projectinfo.setProjectInfoId(checkExist.getProjectInfoId());
-		}
-		projectInfoRepository.save(projectinfo);
+		try {		
+		    projectInfoRepository.save(projectinfo);
 		}catch(Exception e) {
 			log.error("Error occure  while adding project data "+e);
 		}
@@ -178,6 +171,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 				if(bydProjectinfo.getExtId() ==null || bydProjectinfo.getExtId().isEmpty()){
 					logMsg = logMsg+" Project extId is empty,";
 				}else {
+					//VALIDATE PROJECT EXISTANCE BY EXTERNAL_ID, CLIENT_ID AND IS_DELETE FALSE
 					log.error("Check exist for project by extId, clientId and isDelete");
 			     //chkExist = projectInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtId().trim(),bydProjectinfo.getClientId());
 			     chkExist = projectInfoRepository.findByExtIdAndClientIdAndIsdelete(bydProjectinfo.getExtId().trim(),bydProjectinfo.getClientId(),isDelete);
@@ -212,10 +206,10 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 					}
 				}				
 				
-				/*if(!bydProjectinfo.getExtDirectApprover().isEmpty()) {						
+				if(!bydProjectinfo.getExtDirectApprover().isEmpty()) {						
 					directApprover = userInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtDirectApprover().trim(), bydProjectinfo.getClientId()).getId();
 					projectInfo.setDirectApprover(directApprover);
-				}*/
+				}
 				if(bydProjectinfo.getExtProjectStatus()==null || bydProjectinfo.getExtProjectStatus().isEmpty()){
 					logMsg = logMsg+" Project Status  extId is empty,";
 				}else {

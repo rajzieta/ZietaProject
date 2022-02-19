@@ -32,6 +32,9 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, Long>{
 	@Query(value="select * from user_info where ext_id=?1 and client_id=?2", nativeQuery=true)
 	UserInfo findByExtIdAndClientId(String extId, Long clientId);
 	
+	@Query(value="select * from user_info where email_id=?1 and pass=?2", nativeQuery=true)
+	UserInfo authenticate(String emailId, String passs);
+	
 	//UserInfo findByExpTemplateId(Long expTemplateId);
 
 	

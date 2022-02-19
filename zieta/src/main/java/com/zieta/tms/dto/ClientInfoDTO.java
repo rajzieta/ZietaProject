@@ -14,6 +14,9 @@ public class ClientInfoDTO extends BaseEntity {
     private String clientName;
     private Long clientStatus;
     private String clientComments;
+    private String authToken;
+	private String loginId;
+	private String password;
     private short superAdmin;
     private short extConnection;
     

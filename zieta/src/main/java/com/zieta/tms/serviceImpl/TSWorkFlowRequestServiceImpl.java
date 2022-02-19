@@ -3,6 +3,7 @@ package com.zieta.tms.serviceImpl;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.DecimalFormat;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,6 +31,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -290,9 +292,12 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			}	
 			else 
 			{
-				log.info(" taskactivity record: taskactivityid {}, tsId {}",tsInfo.getTaskActivityId(),tsInfo.getId());		    	
-				wFRDetailsForApprover.setPlannedHours(0.0f);
-				wFRDetailsForApprover.setActualHours(0.0f);
+				log.info(" taskactivity record: taskactivityid {}, tsId {}",tsInfo.getTaskActivityId(),tsInfo.getId());	
+				/*wFRDetailsForApprover.setPlannedHours(0.0f);
+				wFRDetailsForApprover.setActualHours(0.0f);*/
+								
+				wFRDetailsForApprover.setPlannedHours("00:00:00");
+				wFRDetailsForApprover.setActualHours("00:00:00");
 			}
 			wFRDetailsForApproverList.add(wFRDetailsForApprover);
 		}
@@ -423,10 +428,48 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 					tsInfo.setStatusId(statusId);
 					float totalRejectTime = getTotalRejectedTime(tsInfo);
 					// reduce the total rejected timeentries time from the total submitted time
-					float totalApprovedTime = tsInfo.getTsTotalSubmittedTime() - totalRejectTime;
-					tsInfo.setTsTotalApprovedTime(totalApprovedTime);
+					/*float totalApprovedTime = tsInfo.getTsTotalSubmittedTime() - totalRejectTime;//COMMENT DUE TO TOTALSUBMITEDTIME FORMATE CHANGE FROM FLOAT TO TIME(00:00:00)
+					tsInfo.setTsTotalApprovedTime(totalApprovedTime);*/
+										
 					
+					//IMPLEMENT FOR FLOAT TO TIME CONVERSION
+					int totApproveHour = 0;
+					int totApproveMinute = 0;
+					int totApproveSecond = 0;
+					String approveHHPrefix ="";
+					String approveMMPrefix ="";
+					String approveSSPrefix ="";
+					String totRejectTimeString = String.valueOf(totalRejectTime);
+					String[] splitRejectTime = totRejectTimeString.split("[.]");
+					int rejectHH = Integer.parseInt(splitRejectTime[0]);
+					int rejectMM = Integer.parseInt(splitRejectTime[1]);
 					
+					String totalSubmitedTime = tsInfo.getTsTotalSubmittedTime(); 
+					if(totalSubmitedTime!=null) {
+						String[] splitSubmitTime = totalSubmitedTime.split(":");
+						int submitHH = Integer.parseInt(splitSubmitTime[0]);
+						int submitMM = Integer.parseInt(splitSubmitTime[1]);
+						int submitSS = Integer.parseInt(splitSubmitTime[2]);
+						// reduce the total rejected timeentries time from the total submitted time
+						//String totApproveTime = '"'+(submitHH-rejectHH)+":"+(submitMM-rejectMM)+":"+submitSS+'"';
+									
+						
+					    totApproveHour = (submitHH-rejectHH);
+					    if(totApproveHour<10) {
+					    	approveHHPrefix = "0";
+					    }				    
+					    totApproveMinute = (submitMM-rejectMM);
+					    if(totApproveMinute<10) {
+					    	approveMMPrefix = "0";
+					    }
+					    totApproveSecond = submitSS;
+					    if(totApproveSecond<10) {
+					    	approveSSPrefix = "0";
+					    }
+					}
+					String totalApproveTime = approveHHPrefix+totApproveHour+":"+approveMMPrefix+totApproveMinute+":00";
+					tsInfo.setTsTotalApprovedTime(totalApproveTime);	
+					//END CONVERSION
 //					activitiesTaskRepository
 				    Long taskActivityId = tsInfo.getTaskActivityId();
 				    TaskActivity taskActivity =  activitiesTaskRepository.findByTaskActivityIdAndUserId(taskActivityId,tsInfo.getUserId());
@@ -434,10 +477,47 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				    if(taskActivityId !=null &&  taskActivityId.longValue() != 0 && taskActivity != null ) {
 				    	 log.info("Actual hoours before updating {}",taskActivity.getActualHrs());
 				    	//adding the totalapproved to actualhours.
-				    	float totalActualHours =  totalApprovedTime + taskActivity.getActualHrs();
-				    	taskActivity.setActualHrs(totalActualHours);
+				    	/*float totalActualHours =  totalApprovedTime + taskActivity.getActualHrs();//COMMENT DUE TO ACTUAL HOUT FORMAT CHANGE FROM FLOAT TO TIME
+				    	taskActivity.setActualHrs(totalActualHours);*/
+				    	//CALCULATING ACTUALHOURS IN TIME FORMATE
+				    	 String hhPrefix ="";
+						 String mmPrefix ="";
+						 String ssPrefix ="";
+						 int actualHH=0;
+						 int actualMM =0;
+						 int actualSS =0;
+						 int totActualHH =0;
+						 int totAtualMM =0;
+						 int totAtualSS = 0;
+						// String[] splitActualHr;
+				    	String actualHour = taskActivity.getActualHrs();
+				    	if(actualHour!=null) {
+					    	String[] splitActualHr = actualHour.split(":");
+					    	actualHH = Integer.parseInt(splitActualHr[0]);
+					    	actualMM = Integer.parseInt(splitActualHr[1]);
+					    	actualSS = Integer.parseInt(splitActualHr[2]);
+					    	
+					    	totActualHH = actualHH + totApproveHour;
+					    	if(totActualHH<10) {
+					    		hhPrefix = "0";
+					    	}
+					    	totAtualMM = actualMM + totApproveMinute;
+					    	if(totAtualMM<10) {
+					    		mmPrefix = "0";
+					    	}
+					    	totAtualSS = actualSS;
+					    	if(totAtualSS<10) {
+					    		ssPrefix = "0";				    
+					    		}
+				    	}
+				    	String totActualHour =  hhPrefix+totActualHH+":"+mmPrefix+totAtualMM+":"+ssPrefix+actualSS;
+				    	
+				    	taskActivity.setActualHrs(totActualHour);
+				    	//END CONVERSION
+				    	
+				    	
 				    	log.info("updating the existing taskactivity record: taskactivityid {}, userid {}",taskActivityId,tsInfo.getUserId());
-				    	log.info("Total approved time {}, actualhours {}, rejectedhrs {}", totalApprovedTime,taskActivity.getActualHrs(),totalRejectTime);
+				    	log.info("Total approved time {}, actualhours {}, rejectedhrs {}", totalApproveTime,taskActivity.getActualHrs(),totalRejectTime);
 				    	
 				    }else {
 				    	//we are in the situation to handle unplanned activity here.
@@ -447,15 +527,19 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				    	 taskActivity.setTaskId(tsInfo.getTaskId());
 				    	 taskActivity.setActivityId(tsInfo.getActivityId());
 				    	 taskActivity.setUserId(tsInfo.getUserId());
-				    	 taskActivity.setPlannedHrs(0.0f);
-				    	 taskActivity.setActualHrs(totalApprovedTime);
+				    	 /*taskActivity.setPlannedHrs(0.0f); //COMMENT DUE TO PLANNEDHOUR CHANGE FROM FLOAT TO TIME(00:00:00)
+				    	 taskActivity.setActualHrs(totalApprovedTime);*/
+				    	 
+				    	 taskActivity.setPlannedHrs("00:00:00");
+				    	 taskActivity.setActualHrs(totalApproveTime);
 				    	 taskActivity.setCreatedDate(new Date());
 				    	 taskActivity.setModifiedDate(new Date());
+				    	 
 				    	 
 				    	 taskActivity =  activitiesTaskRepository.save(taskActivity);
 				    	 tsInfo.setTaskActivityId(taskActivity.getTaskActivityId());
 				    	 log.info("Creating  he new taskactivity record: taskactivityid {}, userid {}, taskActivityid {}",taskActivityId,tsInfo.getUserId(),taskActivity);
-				    	 log.info("Total approved time {}, actualhours {}, rejectedhrs {}", totalApprovedTime,taskActivity.getActualHrs(),totalRejectTime);
+				    	 log.info("Total approved time {}, actualhours {}, rejectedhrs {}", totalApproveTime,taskActivity.getActualHrs(),totalRejectTime);
 				    	 
 				    }
 					
@@ -465,10 +549,15 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 				    //*****************SYNC TIMESHEET DATA AT THE TIME OF FINAL APPROVAL****************************			    
 			    	// employeeTimeService.syncTimesheetData(tsInfo);
 			    	Short isDelete=0;
-			    	ClientInfo clientInfo = clientInfoRepository.findByClientIdAndIsDelete(tsInfo.getClientId(),isDelete);
-			    	if(clientInfo.getExtConnection() ==1) {
+			    	ClientInfo clientInfo = clientInfoRepository.findByClientIdAndIsDelete(tsInfo.getClientId(),isDelete);			    	
+			    	ProjectInfo projectData = projectInfoRepository.findByProjectInfoIdAndIsDelete(tsInfo.getProjectId(), isDelete);
+			    	
+			    	String projectExtId =  projectData.getExtId().replaceAll("\\W+","");
+			    	if(clientInfo.getExtConnection() ==1 && (projectExtId!=null && !projectExtId.isEmpty())) {
+			    		System.out.println("====validate project extid and push to BYD======");
 			    		log.error("Ready to call timesheet sync method");
-			    		syncTimesheetData(tsInfo);				    	
+			    		syncTimesheetData(tsInfo);	
+			    		log.error("Called to sysnc timesheet data");
 			    	}
 				    //*****************END FINAL APPROVAL***********************************************************
 				    		    
@@ -483,8 +572,50 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 			//change request raise by Santhosh, for reporting purpose.
 			float totalRejectTime = getTotalRejectedTime(tsInfo);
 			// reduce the total rejected timeentries time from the total submitted time
-			float totalApprovedTime = tsInfo.getTsTotalSubmittedTime() - totalRejectTime;
-			tsInfo.setTsTotalApprovedTime(totalApprovedTime);
+			/*float totalApprovedTime = tsInfo.getTsTotalSubmittedTime() - totalRejectTime; //COMMNET DUE TO TIME FORM CHANGE FROM FLOAT TO TIME(00:00:00)
+			tsInfo.setTsTotalApprovedTime(totalApprovedTime);*/
+			//CONVERT TIME FROM FLOAT TO tIME 00:00:00
+			int rejectHH =0;
+			int rejectMM = 0;
+			int submitedHH = 0;
+			int submitedMM = 0;
+			int submitedSS = 0;
+			String hhPrefix ="";
+			String mmPrefix ="";
+			String ssPrefix ="";
+			int totApproveHH=0;
+			int totApproveMM =0;
+			int totApproveSS =0;
+			String totRejectedTime = String.valueOf(totalRejectTime);
+			String[] splitRejectTime = totRejectedTime.split("[.]");
+			rejectHH = Integer.parseInt(splitRejectTime[0]);
+			rejectMM = Integer.parseInt(splitRejectTime[1]);
+			
+			String totSubmitedTime = tsInfo.getTsTotalSubmittedTime();
+			if(totSubmitedTime!=null) {
+				String[] splitSubmitedTime = totSubmitedTime.split(":");
+				submitedHH = Integer.parseInt(splitSubmitedTime[0]);
+				submitedMM = Integer.parseInt(splitSubmitedTime[1]);
+				submitedSS = Integer.parseInt(splitSubmitedTime[2]);
+				
+				totApproveHH = submitedHH-rejectHH;
+				if(totApproveHH<10) {
+					hhPrefix ="0";
+				}
+				
+				totApproveMM = submitedHH-rejectMM;
+				if(totApproveMM<10) {
+					mmPrefix ="0";
+				}
+				totApproveSS = submitedSS;
+				if(totApproveSS<10) {
+					ssPrefix = "0";
+				}
+			}
+			String totApproveTime = '"'+hhPrefix+(submitedHH-rejectHH) +":"+mmPrefix+(submitedMM-rejectMM)+":"+ssPrefix+submitedSS+'"';
+			//END TIME FORMATE CALCULATION
+			tsInfo.setTsTotalApprovedTime(totApproveTime);
+			
 			tsInfoRepository.save(tsInfo);			
 			nullifyNextSteps(workFlowRequest, workFlowDepth);
 			//Marking the current step(where final action taken) as 1 which is made by the previous step, 

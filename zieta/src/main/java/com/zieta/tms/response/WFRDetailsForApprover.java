@@ -1,5 +1,6 @@
 package com.zieta.tms.response;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import com.zieta.tms.model.TSInfo;
@@ -25,7 +26,10 @@ public class WFRDetailsForApprover {
 	String wfStateType;
 	String taskName;
 	String activityName;
-	Float PlannedHours;
-	Float ActualHours;
+	/*Float PlannedHours;//float converted to LocalTime
+	Float ActualHours;*/
+	
+	String PlannedHours;
+	String ActualHours;
 	List<WorkFlowComment> workFlowCommentList;
 }

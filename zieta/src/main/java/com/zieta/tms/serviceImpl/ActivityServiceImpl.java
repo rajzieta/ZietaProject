@@ -2,6 +2,7 @@ package com.zieta.tms.serviceImpl;
 
 import java.io.IOException;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -543,7 +544,9 @@ public class ActivityServiceImpl implements ActivityService {
 		            	taskActivityData.setStartDate(startDate);
 		            	taskActivityData.setEndDate(endDate);
 		            	
-		            	taskActivityData.setPlannedHrs(Float.parseFloat(jsnArray.getJSONObject(i).getString("KCPLAN_WORK_H_TS")));
+		            	taskActivityData.setPlannedHrs((jsnArray.getJSONObject(i).getString("KCPLAN_WORK_H_TS")));//converted from float to string
+		            	//LocalTime planedHours = LocalTime.parse( jsnArray.getJSONObject(i).getString("KCPLAN_WORK_H_TS").toString());
+		            	//taskActivityData.setPlannedHrs(planedHours);
 		            	String timeStr = jsnArray.getJSONObject(i).getString("KCPLAN_WORK_H_TS").toString();
 		            	//NEED TO UPDATE FOR ACTUAL TIME FROM FLOAT TO TIME 
 		            	//Time startingTime = new Time (timeStr);

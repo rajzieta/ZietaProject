@@ -1,5 +1,6 @@
 package com.zieta.tms.request;
 
+import java.time.LocalTime;
 import java.util.Date;
 
 import lombok.Getter;
@@ -32,8 +33,10 @@ public class ActivityTaskUserMappingRequest {
 		private String modifiedBy;
 		private Date startDate;
 		private Date endDate;
-		private float plannedHrs;
-		private float actualHrs;
+		/*private float plannedHrs;
+		private float actualHrs;*/
+		private String plannedHrs;
+		private String actualHrs;
 		private Long userId;
 	}
 

@@ -14,8 +14,11 @@ import lombok.Setter;
 public class WorkFlowRequestorData {
 	
 	String requestorName;
-	Float totalApprovedTime;
-	Float totalSubmittedTime;
+	/*Float totalApprovedTime;//DUE TO CONVERT FROM FLOAT TO TIME(00:00:00)
+	Float totalSubmittedTime;*/
+	
+	String totalApprovedTime;
+	String totalSubmittedTime;
 	Date submittedDate;
 	Date approvedDate;
 	Date rejectedDate;

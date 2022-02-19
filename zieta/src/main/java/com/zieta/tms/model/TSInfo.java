@@ -62,11 +62,18 @@ public class TSInfo extends BaseEntity implements Serializable {
 	@Column(name="submit_date")
     private Date submitDate;
   
-	@Column(name="ts_total_submitted_time")
+	/*@Column(name="ts_total_submitted_time")//DUE TO CONVERT FORM FLOAT TO TIME(00:00:00)
     private  Float tsTotalSubmittedTime;
 	
 	@Column(name="ts_total_approved_time")
-    private  Float tsTotalApprovedTime;
+    private  Float tsTotalApprovedTime;*/
+	
+	
+	@Column(name="ts_total_submitted_time")
+    private  String tsTotalSubmittedTime;
+	
+	@Column(name="ts_total_approved_time")
+    private  String tsTotalApprovedTime;
 	
 	
 }

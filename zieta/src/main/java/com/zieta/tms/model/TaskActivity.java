@@ -2,6 +2,7 @@ package com.zieta.tms.model;
 
 import java.io.Serializable;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -12,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -49,13 +52,22 @@ public class TaskActivity extends BaseEntity implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endDate;
 	
-	@Column(nullable=true, name= "PLANNED_HOURS", precision=10, scale=2)
+	/*(nullable=true, name= "PLANNED_HOURS", precision=10, scale=2) //change from float to time
 	private float plannedHrs;
 	
 	@Column(nullable=true, name= "ACTUAL_HOURS", precision=10, scale=2)
-	private float actualHrs;
+	private LocalTime actualHrs;*/
 	
-
+	
+	//@Temporal(TemporalType.TIME)
+	//@JsonFormat(pattern="HH:mm:ss")
+	@Column(nullable=true, name= "PLANNED_HOURS")
+	private String plannedHrs;
+	
+		//@Temporal(TemporalType.TIME)
+	//@JsonFormat(pattern="HH:mm:ss")
+	@Column(nullable=true, name= "ACTUAL_HOURS")
+	private String actualHrs;
 	
 
 }

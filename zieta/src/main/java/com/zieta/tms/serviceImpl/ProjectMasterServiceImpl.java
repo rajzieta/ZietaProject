@@ -206,7 +206,7 @@ public class ProjectMasterServiceImpl implements ProjectMasterService{
 					}
 				}				
 				
-				if(!bydProjectinfo.getExtDirectApprover().isEmpty()) {						
+				if(bydProjectinfo.getExtDirectApprover()!=null) {						
 					directApprover = userInfoRepository.findByExtIdAndClientId(bydProjectinfo.getExtDirectApprover().trim(), bydProjectinfo.getClientId()).getId();
 					projectInfo.setDirectApprover(directApprover);
 				}

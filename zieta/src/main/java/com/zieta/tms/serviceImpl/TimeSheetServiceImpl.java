@@ -218,7 +218,15 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 
 		
 		for (TSInfo tsInfo : tsInfoList) {
+			System.out.println(tsInfo);
+			//BEING TIME CONVERSION	
+			log.error("Calling to convert float time to time format like 00:00:00");
+			String totSubmitTime = timeFormatBuilder(tsInfo.getTsTotalSubmittedTime());
+			String totApproveTime = timeFormatBuilder(tsInfo.getTsTotalApprovedTime());			
+			//END TIME CONVERTION
 			
+			tsInfo.setTsTotalSubmittedTime(totSubmitTime);//SETTING TIME INTO 00:00:00 FORMAT
+			tsInfo.setTsTotalApprovedTime(totApproveTime);//SETTING TIME INTO 00:00:00 FORMAT
 			//Setting the statusId which is marked as default in the DB for the corresponding the statustype, doing
 			// as per change request.
 			Long statuId = statusMasterRepository.findByClientIdAndStatusTypeAndIsDefaultAndIsDelete(tsInfo.getClientId(),
@@ -228,7 +236,34 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		
 		return tSInfoRepository.saveAll(tsInfoList);
 	}
-	
+	//CONVERTINTO TIME FORMAT AS STRING 00:00:00
+	public String timeFormatBuilder(String floatTime) {
+		log.error("Called to build time format");
+		String hr="0";
+		String min ="0";				
+		String hrPrefix ="";
+		String minPrefix ="";		
+		String totalSubmitedTime = floatTime;
+		String splitSubmitTime[] = totalSubmitedTime.split("[.]");
+		if(splitSubmitTime.length>0) {
+			if(splitSubmitTime.length==2) {
+			  hr = splitSubmitTime[0];
+			  min = splitSubmitTime[1];
+			  }else if(splitSubmitTime.length==1) {
+				  hr = splitSubmitTime[0];  
+			  }
+			}else {
+			hr = totalSubmitedTime;
+		}
+		if(hr.length()==1) {
+			hrPrefix ="0";
+		}
+		if(min.length()==1) {
+			minPrefix = "0";
+		}
+		String totSubmitTime = hrPrefix+hr+":"+minPrefix+min+":00";		
+		return totSubmitTime;
+	}
 	
 	@Transactional
 	public boolean submitTimeSheet(@Valid List<TSInfo> tsInfoList) {
@@ -407,6 +442,15 @@ public class TimeSheetServiceImpl implements TimeSheetService {
 		log.error("403 ==>addTimeEntriesByTimesheetID");
 			for (TimeEntriesByTsIdRequest timeEntriesByTsIdRequest : timeentriesbytsidRequestList) {
 				TSTimeEntries tstimeentries = modelMapper.map(timeEntriesByTsIdRequest, TSTimeEntries.class);
+				log.error("tstimeentries::"+tstimeentries);
+				//BEING CONVERT AND SET AS TIME FORMATE
+				String tsEndTime = timeFormatBuilder(String.valueOf(tstimeentries.getTsEndTime()));
+				String tsStartTime = timeFormatBuilder(String.valueOf(tstimeentries.getTsStartTime()));
+				String tsDuration = timeFormatBuilder(String.valueOf(tstimeentries.getTsDuration()));
+				tstimeentries.setTsStartTime(tsStartTime);
+				tstimeentries.setTsEndTime(tsEndTime);
+				tstimeentries.setTsDuration(tsDuration);
+				//END TIME FORMAT CONVERTER
 				tstimeentriesRepository.save(tstimeentries);
 				log.error("407 ===>Saved timesheet entries");
 			}

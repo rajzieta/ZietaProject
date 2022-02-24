@@ -677,8 +677,21 @@ public class TSWorkFlowRequestServiceImpl implements WorkFlowRequestService {
 		 log.info("Getting rejected time: timeEntryRejectStatusId {}, tsInfo.getId() {}, rejectedTimeEntriesList.size {} ",timeEntryRejectStatusId, tsInfo.getId(),rejectedTimeEntriesList.size());
 		 float totalRejectTime = 0.0f;
 		 for (TSTimeEntries tsTimeEntries : rejectedTimeEntriesList) {
-			 
-			 totalRejectTime += tsTimeEntries.getTsDuration();
+			  String tsDuration = tsTimeEntries.getTsDuration();
+			  float hr = 0.0f;
+			  float min = 0.0f;
+			  float sec = 0.0f;
+			  if(tsDuration!=null) {
+				 String[] splitTime =tsDuration.split(":"); 
+				 hr = Integer.parseInt(splitTime[0]);
+				 min = Integer.parseInt(splitTime[1]);
+				 sec = Integer.parseInt(splitTime[2]);
+				 
+			  }
+			  float time = Integer.parseInt(hr+"."+min);
+			  
+			 // totalRejectTime += tsTimeEntries.getTsDuration();
+			 totalRejectTime += time;
 		}
 		return totalRejectTime;
 	}

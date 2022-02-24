@@ -31,7 +31,7 @@ public class TSTimeEntries extends BaseEntity implements Serializable {
 	@Column(name="status_id")
     private Long statusId;
     
-	@Column(name="TS_START_TIME")
+	/*@Column(name="TS_START_TIME")
     private  float tsStartTime;//convert float to string
     
 	@Column(name="TS_END_TIME")
@@ -39,6 +39,18 @@ public class TSTimeEntries extends BaseEntity implements Serializable {
     
 	@Column(name="TS_DURATION")
     private  float tsDuration;//convert float to string
+	*/
+	@Column(name="TS_START_TIME")
+    private  String tsStartTime;//convert float to string
+    
+	@Column(name="TS_END_TIME")
+    private  String tsEndTime;//convert float to string
+    
+	@Column(name="TS_DURATION")
+    private  String tsDuration;//convert float to string
+	
+	
+	
     
 	@Column(name="TIME_DESC")
     private  String timeDesc;
